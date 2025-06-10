@@ -5,14 +5,13 @@
       <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div class="flex items-center justify-between mb-6">
           <div class="flex items-center space-x-4">
-            <RouterLink to="/project">
-              <button
-                class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
-              >
-                <Plus class="w-5 h-5" />
-                <span>Create New</span>
-              </button>
-            </RouterLink>
+            <button
+              class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+              @click="newProject"
+            >
+              <Plus class="w-5 h-5" />
+              <span>Create New</span>
+            </button>
             <div class="flex items-center space-x-2 bg-white rounded-lg border border-gray-200 p-1">
               <button
                 @click="viewMode = 'list'"
@@ -54,7 +53,9 @@
 <script lang="ts">
 import { ref, defineComponent } from "vue";
 import { Plus, List, Grid } from "lucide-vue-next";
-import { RouterLink } from "vue-router";
+//import { RouterLink } from "vue-router";
+import { useRouter } from "vue-router";
+
 import Layout from "@/components/Layout.vue";
 import ListView from "./components/ListView.vue";
 import GridView from "./components/GridView.vue";
@@ -67,7 +68,14 @@ export default defineComponent({
   },
   setup() {
     const viewMode = ref<"list" | "grid">("list");
+    const router = useRouter();
 
+    const newProject = async () => {
+      const id =
+        new Date().toISOString().slice(0, 16).replace(/[-T:]/g, "") + "-" + Math.random().toString(36).slice(2, 8);
+      await window.electronAPI.createProject(id);
+      router.push("/project/" + id);
+    };
     const projects = [
       {
         id: 1,
@@ -130,10 +138,10 @@ export default defineComponent({
       },
     ];
     return {
+      newProject,
       projects,
       viewMode,
     };
-    
   },
 });
 // TODO: Audio play functionality to be implemented later

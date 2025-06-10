@@ -4,6 +4,8 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 contextBridge.exposeInMainWorld("electronAPI", {
+  createProject: (projectId) => ipcRenderer.invoke("mulmo:createProject", projectId),
+
   openFile: () => ipcRenderer.invoke("dialog:openFile"),
   mulmoTest: (option) => ipcRenderer.invoke("mulmo:test", option),
   onProgress: (callback) => ipcRenderer.on("progress-update", callback),

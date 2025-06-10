@@ -3,6 +3,7 @@ import path from "node:path";
 import started from "electron-squirrel-startup";
 
 import { mulmoTest } from "./mulmo/test";
+import { mulmoCreateProject } from "./mulmo/create_project";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -75,4 +76,8 @@ ipcMain.handle("dialog:openFile", async () => {
 ipcMain.handle("mulmo:test", async (event, option) => {
   const webContents = event.sender;
   mulmoTest(option, webContents);
+});
+
+ipcMain.handle("mulmo:createProject", async (__event, projectId) => {
+  mulmoCreateProject(projectId);
 });
