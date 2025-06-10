@@ -141,7 +141,8 @@ export default defineComponent({
 
     const projects = ref(dummyProject);
     const loadProjects = async () => {
-      projects.value = await window.electronAPI.loadProjects();
+      const data = await window.electronAPI.loadProjects();
+      projects.value = [...data, ...dummyProject];
       console.log(projects.value);
     };
     loadProjects();
