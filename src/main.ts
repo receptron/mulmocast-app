@@ -4,6 +4,7 @@ import started from "electron-squirrel-startup";
 
 import { mulmoTest } from "./mulmo/test";
 import { mulmoCreateProject } from "./mulmo/create_project";
+import { mulmoLoadProjects } from "./mulmo/load_projects";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -80,4 +81,8 @@ ipcMain.handle("mulmo:test", async (event, option) => {
 
 ipcMain.handle("mulmo:createProject", async (__event, projectId) => {
   mulmoCreateProject(projectId);
+});
+
+ipcMain.handle("mulmo:loadProjects", async (__event) => {
+  return mulmoLoadProjects();
 });
