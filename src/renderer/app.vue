@@ -1,4 +1,5 @@
 <template>
+  <Toaster richColors />
   <div>
     <router-view />
   </div>
@@ -7,8 +8,13 @@
 <script lang="ts">
 import { defineComponent, onMounted } from "vue";
 import { useStore } from "./store";
+import { Toaster } from "@/components/ui/sonner";
+import "vue-sonner/style.css";
 
 export default defineComponent({
+  components: {
+    Toaster,
+  },
   setup() {
     const store = useStore();
 

@@ -28,6 +28,7 @@
             size="sm"
             class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 m-1 rounded-md"
             @click="submitText(events[0])"
+            :disabled="isCreatingScript"
           >
             <Send :size="16" />
           </Button>
@@ -46,16 +47,20 @@
             <select
               v-model="selectedTemplateFileName"
               class="template-dropdown border-2 border-gray-300 rounded-full px-4 py-2 text-sm text-gray-700 hover:border-gray-500 hover:bg-gray-50 transition-all duration-200"
+              :disabled="isCreatingScript"
             >
               <option v-for="(template, k) in templates" :key="k" :value="template.filename">
                 {{ template.title }}
               </option>
             </select>
-            <Button size="sm" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full" @click="copy">
-              Copy
-            </Button>
-            <Button size="sm" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full">
-              Create Script
+            <Button
+              size="sm"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full"
+              @click="createScript"
+              :disabled="isCreatingScript"
+            >
+              <Loader2 v-if="isCreatingScript" class="w-4 h-4 mr-1 animate-spin" />
+              {{ isCreatingScript ? "Creating..." : "Create Script" }}
             </Button>
           </div>
         </div>
@@ -65,7 +70,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { Loader2 } from "lucide-vue-next";
+import { ref, onMounted } from "vue";
 import { Send } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 
@@ -78,9 +84,10 @@ import UserMessage from "./user_message.vue";
 
 import * as agents from "@graphai/vanilla";
 import { openAIAgent } from "@graphai/llm_agents";
-import type { MulmoScriptTemplate, MulmoScript } from "mulmocast";
+import type { MulmoScript, MulmoScriptTemplateFile } from "mulmocast";
 import { ChatMessage } from "@/types";
 import { useAutoScroll } from "@/pages/project/composable/use_auto_scroll";
+import { notifyError } from "@/lib/notification";
 
 const { initialMessages = [] } = defineProps<{
   initialMessages: ChatMessage[];
@@ -122,19 +129,6 @@ const graphChat: GraphData = {
         isResult: true,
       },
       inputs: { messages: ":messages", prompt: ":userInput.text" },
-    },
-    output: {
-      agent: "stringTemplateAgent",
-      inputs: {
-        text: "\x1b[32mAgent\x1b[0m: ${:llm.text}",
-      },
-    },
-    json: {
-      console: { after: true },
-      agent: "copyAgent",
-      inputs: {
-        json: ":llm.text.codeBlock().jsonParse()",
-      },
     },
     reducer: {
       agent: "pushAgent",
@@ -185,33 +179,33 @@ const run = async (initialMessages: ChatMessage[]) => {
   graphai.registerCallback(streamPlugin(streamNodes));
   graphai.registerCallback(chatMessagePlugin(outputNodes));
   graphai.injectValue("messages", initialMessages);
-  graphai.registerCallback((log) => {
-    console.log(log);
-    if (log.nodeId === "json" && log.state === "completed") {
-      console.log(log.result.json);
-      emit("update:updateMulmoScript", log.result.json);
-    }
-  });
   await graphai.run();
 };
 
-// TODO MulmoScriptTemplateFile
-const templates = ref<MulmoScriptTemplate & { filename: string }[]>([]);
+const isCreatingScript = ref(false);
+const createScript = async () => {
+  try {
+    isCreatingScript.value = true;
+    const script = await window.electronAPI.mulmoHandler(
+      "createMulmoScript",
+      messages.value.map((m) => ({ role: m.role, content: m.content })),
+      selectedTemplateFileName.value,
+    );
+    emit("update:updateMulmoScript", script as MulmoScript);
+  } catch (error) {
+    console.error("Failed to create script:", error);
+    notifyError("Failed to create script", "Please try again");
+  } finally {
+    isCreatingScript.value = false;
+  }
+};
+
+const templates = ref<MulmoScriptTemplateFile[]>([]);
 onMounted(async () => {
   run(initialMessages);
   templates.value = await window.electronAPI.mulmoHandler("getAvailableTemplates");
   selectedTemplateFileName.value = templates.value[0].filename;
 });
-const selectTemplate = computed(() => {
-  return templates.value.find((template) => template.filename === selectedTemplateFileName.value);
-});
-
-const copy = async () => {
-  // const prompt = await window.electronAPI.mulmoHandler("readTemplatePrompt", "podcast_standard");
-  if (selectTemplate.value) {
-    userInput.value = selectTemplate.value.systemPrompt;
-  }
-};
 
 const handleKeydown = (e: KeyboardEvent) => {
   // Mac: command + enter, Win: ctrl + enter

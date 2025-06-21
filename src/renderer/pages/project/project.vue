@@ -316,6 +316,7 @@ import {
   getTimelineFocusClass,
 } from "./composable/style";
 import { ChatMessage } from "@/types";
+import { notifySuccess } from "@/lib/notification";
 
 // State
 const route = useRoute();
@@ -354,6 +355,8 @@ onMounted(async () => {
 
 const handleUpdateScript = (script: MulmoScript) => {
   mulmoScript.value = script;
+  isScriptViewerOpen.value = true;
+  notifySuccess("Script created successfully 🎉");
 };
 
 const handleUpdateChatMessages = async (messages: ChatMessage[]) => {
