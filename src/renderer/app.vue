@@ -29,10 +29,14 @@ export default defineComponent({
           store.graphaiLogCallback(message);
         }
         if (message.type === "error") {
-          if (message.data?.message) {
+          if (typeof message.data?.message) {
             notifyError("Error", message.data.message);
           }
-          console.log(message);
+        }
+
+        if (message.type === "zod_error") {
+          console.log("FFF", message);
+          store.zodErrorLogCallback(message);
         }
       });
     });

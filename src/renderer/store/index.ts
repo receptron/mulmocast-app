@@ -11,6 +11,7 @@ type SessionState = Record<string, { beat: BeatSessionStateEntry; artifact: Sess
 export const useStore = defineStore("store", () => {
   const mulmoEvent = ref<Record<string, SessionProgressEvent>>({});
   const sessionState = ref<SessionState>({});
+  const zodError = ref<Record<string, unknown>>({});
 
   const graphaiDebugLog = ref<Record<string, unknown[]>>({});
 
@@ -51,6 +52,14 @@ export const useStore = defineStore("store", () => {
     }
     graphaiDebugLog.value[projectId].push(data);
   };
+  const zodErrorLogCallback = (log: { projectId: string; data: unknown }) => {
+    const { projectId, data } = log;
+    if (!zodError.value[projectId]) {
+      zodError.value[projectId] = [];
+    }
+    zodError.value[projectId].push(data);
+  };
+
   const isArtifactGenerating = computed(() => {
     return Object.keys(sessionState.value).reduce((tmp: Record<string, boolean>, projectId) => {
       tmp[projectId] = Object.values(sessionState.value[projectId]["artifact"]).some((state) => state);
@@ -73,6 +82,9 @@ export const useStore = defineStore("store", () => {
 
     graphaiDebugLog,
     graphaiLogCallback,
+
+    zodErrorLogCallback,
+    zodError,
 
     isArtifactGenerating,
     isBeatGenerating,
