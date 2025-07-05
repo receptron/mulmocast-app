@@ -61,6 +61,7 @@
         <CodeEditor
           v-model="yamlText"
           language="yaml"
+          :jsonSchema="mulmoJsonSchema"
           @update:modelValue="onYamlInput"
           @focus="onFocus"
           @blur="onBlur"

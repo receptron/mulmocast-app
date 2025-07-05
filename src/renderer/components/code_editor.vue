@@ -4,8 +4,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, shallowRef } from "vue";
-import loader from "@monaco-editor/loader";
+import loader, { type Monaco } from "@monaco-editor/loader";
 import type { editor } from "monaco-editor";
+import { configureMonacoYaml } from "monaco-yaml";
 
 interface Props {
   modelValue: string;
@@ -26,30 +27,37 @@ const emit = defineEmits<{
 
 const editorContainer = ref<HTMLDivElement | null>(null);
 const editorInstance = shallowRef<editor.IStandaloneCodeEditor | null>(null);
-const monacoRef = shallowRef<typeof import("monaco-editor") | null>(null);
+const monacoRef = shallowRef<Monaco | null>(null);
 
 let isUpdatingModel = false;
 
-const setDiagnosticsOptions = (monaco: typeof import("monaco-editor")) => {
-  monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-    validate: true,
-    schemas: [
-      {
-        uri: "mulmocast://schema.json",
-        fileMatch: ["*"],
-        schema: props.jsonSchema,
-      },
-    ],
-  });
+const setDiagnosticsOptions = (monaco: Monaco, language: "json" | "yaml") => {
+  const schema = {
+    uri: "mulmocast://schema.json",
+    fileMatch: ["*"],
+    schema: props.jsonSchema,
+  };
+
+  switch (language) {
+    case "json":
+      monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+        validate: true,
+        schemas: [schema],
+      });
+      break;
+    case "yaml":
+      configureMonacoYaml(monaco, {
+        schemas: [schema],
+      });
+      break;
+  }
 };
 
 onMounted(async () => {
   const monaco = await loader.init();
   monacoRef.value = monaco;
 
-  if (props.language === "json" && props.jsonSchema) {
-    setDiagnosticsOptions(monaco);
-  }
+  setDiagnosticsOptions(monaco, props.language);
 
   if (editorContainer.value) {
     editorInstance.value = monaco.editor.create(editorContainer.value as unknown as HTMLElement, {
@@ -125,9 +133,7 @@ watch(
       if (model) {
         monacoRef.value.editor.setModelLanguage(model, newLanguage);
 
-        if (newLanguage === "json" && props.jsonSchema) {
-          setDiagnosticsOptions(monacoRef.value);
-        }
+        setDiagnosticsOptions(monacoRef.value, newLanguage);
       }
     }
   },
