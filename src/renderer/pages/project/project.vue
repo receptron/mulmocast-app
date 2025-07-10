@@ -1,7 +1,7 @@
 <template>
   <Layout>
     <TooltipProvider>
-      <div :class="`${isSplitView ? 'max-w-[95%]' : 'max-w-7xl'} mx-auto ${getCardPadding} ${getContainerSpacing}`">
+      <div :class="`${viewMode !== 'single' ? 'max-w-[95%]' : 'max-w-7xl'} mx-auto ${getCardPadding} ${getContainerSpacing}`">
         <!-- Developer Mode Toggle - Always at the top -->
         <div class="bg-gray-50 dark:bg-gray-900 border rounded-lg p-3" v-if="false">
           <div class="flex items-center justify-between space-x-2 text-sm">
@@ -41,15 +41,46 @@
             </div>
           </div>
           <div>
-            <Button variant="outline" size="sm" @click="isSplitView = !isSplitView">
-              <Columns :size="16" class="mr-2" />
-              {{ isSplitView ? 'Single View' : 'Split View' }}
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger as-child>
+                <Button variant="outline" size="sm">
+                  <component :is="viewMode === 'split3' || viewMode === 'split3mobile' ? Layers : Columns" :size="16" class="mr-2" />
+                  {{ 
+                    viewMode === 'single' ? 'Single View' : 
+                    viewMode === 'split2' ? '2 Split' : 
+                    viewMode === 'split3' ? '3 Split' : 
+                    '3 Split (Mobile)'
+                  }}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem @click="viewMode = 'single'">
+                  <Columns :size="16" class="mr-2" />
+                  Single View
+                  <Check v-if="viewMode === 'single'" :size="16" class="ml-auto" />
+                </DropdownMenuItem>
+                <DropdownMenuItem @click="viewMode = 'split2'">
+                  <Columns :size="16" class="mr-2" />
+                  2 Split
+                  <Check v-if="viewMode === 'split2'" :size="16" class="ml-auto" />
+                </DropdownMenuItem>
+                <DropdownMenuItem @click="viewMode = 'split3'">
+                  <Layers :size="16" class="mr-2" />
+                  3 Split
+                  <Check v-if="viewMode === 'split3'" :size="16" class="ml-auto" />
+                </DropdownMenuItem>
+                <DropdownMenuItem @click="viewMode = 'split3mobile'">
+                  <Layers :size="16" class="mr-2" />
+                  3 Split (Mobile)
+                  <Check v-if="viewMode === 'split3mobile'" :size="16" class="ml-auto" />
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
         <!-- Main Content Area -->
-        <div v-if="!isSplitView" class="space-y-6">
+        <div v-if="viewMode === 'single'" class="space-y-6">
           <!-- AI Assistant Section -->
           <Card :class="`bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 ${getTimelineFocusClass}`">
           <CardHeader :class="selectedTheme === 'compact' ? 'pb-3' : ''">
@@ -277,8 +308,8 @@
           <ConcurrentTaskStatus :projectId="projectId" />
         </div>
 
-        <!-- Split View Layout -->
-        <div v-if="isSplitView" class="grid grid-cols-1 lg:grid-cols-[40%_1fr] gap-6 h-[calc(100vh-200px)]">
+        <!-- 2 Split View Layout -->
+        <div v-if="viewMode === 'split2'" class="grid grid-cols-1 lg:grid-cols-[40%_1fr] gap-6 h-[calc(100vh-200px)]">
           <!-- Left Column -->
           <div class="space-y-6 overflow-y-auto pr-4">
             <!-- AI Assistant Section -->
@@ -491,6 +522,198 @@
           </div>
         </div>
 
+        <!-- 3 Split View Layout -->
+        <div v-if="viewMode === 'split3'" class="grid grid-cols-1 lg:grid-cols-[25%_45%_1fr] gap-4 h-[calc(100vh-200px)]">
+          <!-- Left Column - AI Chat -->
+          <div class="h-full overflow-y-auto pr-2">
+            <Collapsible v-model:open="isAIAssistantOpen" class="h-full">
+              <Card :class="`bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 h-full flex flex-col ${getTimelineFocusClass}`">
+                <CardHeader :class="`flex-shrink-0 ${selectedTheme === 'compact' ? 'pb-3' : ''}`">
+                  <div class="flex items-center justify-between">
+                    <CollapsibleTrigger as-child>
+                      <CardTitle
+                        :class="`flex items-center space-x-2 text-blue-700 cursor-pointer ${selectedTheme === 'compact' ? 'text-base' : ''}`"
+                      >
+                        <component :is="selectedTheme === 'beginner' ? Bot : Lightbulb" :size="20" />
+                        <span>
+                          {{ selectedTheme === "beginner" ? "AI Assistant Chat" : "AI-Powered MulmoScript Generation Guide" }}
+                        </span>
+                      </CardTitle>
+                    </CollapsibleTrigger>
+                    <CollapsibleTrigger as-child>
+                      <Button variant="ghost" size="sm">
+                        <component :is="isAIAssistantOpen ? ChevronUp : ChevronDown" :size="16" />
+                      </Button>
+                    </CollapsibleTrigger>
+                  </div>
+                  <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
+                    {{
+                      selectedTheme === "beginner"
+                        ? "Let's Create Scripts Through Conversation with AI Assistants"
+                        : "Use ChatGPT or other AI tools to generate your Script content with these proven prompts"
+                    }}
+                  </p>
+                </CardHeader>
+                <CollapsibleContent class="flex-1 overflow-hidden flex flex-col">
+                  <CardContent :class="`flex-1 flex flex-col overflow-hidden ${selectedTheme === 'compact' ? 'pt-0' : ''}`" v-if="project">
+                    <component
+                      :is="selectedTheme === 'beginner' ? Chat : PromptGuide"
+                      :selectedTheme="selectedTheme"
+                      :initialMessages="project?.chatMessages"
+                      @update:updateChatMessages="handleUpdateChatMessages"
+                      @update:updateMulmoScript="handleUpdateScript"
+                      class="h-full flex flex-col"
+                    />
+                  </CardContent>
+                </CollapsibleContent>
+              </Card>
+            </Collapsible>
+          </div>
+
+          <!-- Middle Column - Script Editor -->
+          <div class="h-full">
+            <Collapsible v-if="hasProjectData" v-model:open="isScriptViewerOpen" class="h-full">
+              <Card class="h-full flex flex-col">
+                <CardHeader class="flex-shrink-0">
+                  <div class="flex items-center justify-between">
+                    <CollapsibleTrigger as-child>
+                      <CardTitle class="flex items-center space-x-2 cursor-pointer">
+                        <Code2 :size="20" />
+                        <span>Script</span>
+                      </CardTitle>
+                    </CollapsibleTrigger>
+                    <div class="flex items-center space-x-2">
+                      <!-- Validation Status -->
+                      <div class="flex items-center space-x-2">
+                        <div v-if="isValidScriptData" class="group relative">
+                          <CheckCircle :size="16" class="text-green-500 group-hover:text-green-600 cursor-pointer" />
+                          <span
+                            class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap"
+                          >
+                            Validation Status
+                          </span>
+                        </div>
+                        <XCircle v-if="!isValidScriptData" :size="16" class="text-red-500" />
+                        <span v-if="!isValidScriptData" class="text-sm text-gray-600">
+                          {{ validationMessage }}
+                        </span>
+                      </div>
+                      <!-- Undo/Redo buttons -->
+                      <Button variant="ghost" size="sm" :disabled="!store.undoable" @click="store.undo">
+                        <Undo :size="16" :class="store.undoable ? 'text-black' : 'text-gray-400'" />
+                      </Button>
+                      <Button variant="ghost" size="sm" :disabled="!store.redoable" @click="store.redo">
+                        <Redo :size="16" :class="store.redoable ? 'text-black' : 'text-gray-400'" />
+                      </Button>
+                      <!-- Collapse/Expand Button -->
+                      <CollapsibleTrigger as-child>
+                        <Button variant="ghost" size="sm">
+                          <component :is="isScriptViewerOpen ? ChevronUp : ChevronDown" :size="16" />
+                        </Button>
+                      </CollapsibleTrigger>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CollapsibleContent
+                  :class="`transition-all duration-300 overflow-hidden flex-1 ${
+                    isScriptViewerOpen ? 'h-full' : 'max-h-[180px]'
+                  }`"
+                >
+                  <CardContent class="h-full">
+                    <ScriptEditor
+                      :mulmoValue="store.currentMulmoScript"
+                      :imageFiles="imageFiles"
+                      @update:mulmoValue="store.updateMulmoScript"
+                      :isValidScriptData="isValidScriptData"
+                      @update:isValidScriptData="(val) => (isValidScriptData = val)"
+                      @generateImage="(val) => generateImage(val)"
+                      @generateAudio="(val) => generateAudio(val)"
+                      @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
+                      :audioFiles="audioFiles"
+                      :mulmoError="mulmoError"
+                    />
+                  </CardContent>
+                </CollapsibleContent>
+              </Card>
+            </Collapsible>
+          </div>
+
+          <!-- Right Column - Product & Output -->
+          <div class="space-y-4 overflow-y-auto pl-2">
+            <!-- Output Section -->
+            <Card v-if="hasProjectData">
+              <CardHeader>
+                <CardTitle class="flex items-center space-x-2">
+                  <Settings :size="20" />
+                  <span>Output Settings & Generation</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent class="p-4">
+                <div class="space-y-6">
+                  <!-- General Settings -->
+                  <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="text-sm font-medium mb-4">General Settings</h3>
+                    <div class="space-y-4">
+                      <!-- Cache Toggle -->
+                      <div class="flex items-center justify-between p-4 bg-white rounded-lg">
+                        <div class="flex flex-col">
+                          <Label for="cache-toggle" class="text-sm font-medium"> Use Cache </Label>
+                          <p class="text-xs text-gray-500 mt-1">Enable caching for faster output generation</p>
+                        </div>
+                        <Switch
+                          id="cache-toggle"
+                          :model-value="project?.useCache ?? false"
+                          @update:model-value="saveCacheEnabled"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Output Buttons -->
+                  <div class="grid grid-cols-1 gap-2">
+                    <Button
+                      class="flex items-center justify-center space-x-2 h-auto py-3"
+                      @click="generateMovie"
+                      :disabled="store.isArtifactGenerating[projectId]"
+                    >
+                      <Monitor :size="20" />
+                      <span>Generate Movie</span>
+                    </Button>
+                    <Button
+                      class="flex items-center justify-center space-x-2 h-auto py-3"
+                      :disabled="store.isArtifactGenerating[projectId]"
+                    >
+                      <FileText :size="20" />
+                      <span>Generate PDF</span>
+                    </Button>
+                    <Button
+                      class="flex items-center justify-center space-x-2 h-auto py-3"
+                      @click="generatePodcast"
+                      :disabled="store.isArtifactGenerating[projectId]"
+                    >
+                      <Globe :size="20" />
+                      <span>Generate Podcast</span>
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <!-- Product Section -->
+            <Card v-if="hasProjectData">
+              <CardHeader>
+                <CardTitle class="flex items-center space-x-2">
+                  <Play :size="20" />
+                  <span>Product</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ProductTabs :videoUrl="videoUrl" @playVideo="playVideo" />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
         <ConcurrentTaskStatus :projectId="projectId" />
       </div>
     </TooltipProvider>
@@ -519,6 +742,8 @@ import {
   Lightbulb,
   Bot,
   Columns,
+  Layers,
+  Check,
 } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -529,6 +754,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // Import sub-components (to be created)
 import Layout from "@/components/layout.vue";
@@ -574,7 +805,7 @@ const project = ref<ProjectMetadata | null>(null);
 const hasProjectData = computed(() => true); // Todo
 
 const isDevMode = ref(false);
-const isSplitView = ref(false);
+const viewMode = ref<'single' | 'split2' | 'split3' | 'split3mobile'>('single');
 const isAIAssistantOpen = ref(true);
 
 const validationMessage = ref("");
@@ -582,6 +813,7 @@ const validationMessage = ref("");
 const currentBeatIndex = ref(0);
 const timelinePosition = ref(0);
 const isPreviewAreaVisible = ref(false);
+
 
 // Load project data on mount
 onMounted(async () => {

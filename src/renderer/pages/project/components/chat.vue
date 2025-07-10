@@ -1,9 +1,9 @@
 <template>
-  <div class="space-y-4">
-    <!-- Chat history -->
+  <div class="h-full flex flex-col">
+    <!-- Chat history (flexible height) -->
     <div
       ref="chatHistoryRef"
-      class="bg-white border rounded-lg p-4 h-80 overflow-y-auto space-y-4"
+      class="flex-1 bg-white border rounded-lg p-4 overflow-y-auto space-y-4 min-h-0"
       v-show="messages.length > 0"
     >
       <div v-for="(message, key) in messages" :key="key">
@@ -13,8 +13,8 @@
       <BotMessage v-if="isStreaming['llm']" :message="streamData['llm'] ?? ''" time="14:30" />
     </div>
 
-    <!-- Chat input area - Slack-style design -->
-    <div class="space-y-4">
+    <!-- Chat input area (fixed height) -->
+    <div class="flex-shrink-0 space-y-4 pt-4">
       <!-- Message input field -->
       <div class="chat-input-wrapper">
         <Label class="mb-2"> Enter your message: </Label>
