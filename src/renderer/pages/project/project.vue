@@ -282,34 +282,47 @@
           <!-- Left Column -->
           <div class="space-y-6 overflow-y-auto pr-4">
             <!-- AI Assistant Section -->
-            <Card :class="`bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 ${getTimelineFocusClass}`">
-              <CardHeader :class="selectedTheme === 'compact' ? 'pb-3' : ''">
-                <CardTitle
-                  :class="`flex items-center space-x-2 text-blue-700 ${selectedTheme === 'compact' ? 'text-base' : ''}`"
-                >
-                  <component :is="selectedTheme === 'beginner' ? Bot : Lightbulb" :size="20" />
-                  <span>
-                    {{ selectedTheme === "beginner" ? "AI Assistant Chat" : "AI-Powered MulmoScript Generation Guide" }}
-                  </span>
-                </CardTitle>
-                <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
-                  {{
-                    selectedTheme === "beginner"
-                      ? "Let's Create Scripts Through Conversation with AI Assistants"
-                      : "Use ChatGPT or other AI tools to generate your Script content with these proven prompts"
-                  }}
-                </p>
-              </CardHeader>
-              <CardContent :class="selectedTheme === 'compact' ? 'pt-0' : ''" v-if="project">
-                <component
-                  :is="selectedTheme === 'beginner' ? Chat : PromptGuide"
-                  :selectedTheme="selectedTheme"
-                  :initialMessages="project?.chatMessages"
-                  @update:updateChatMessages="handleUpdateChatMessages"
-                  @update:updateMulmoScript="handleUpdateScript"
-                />
-              </CardContent>
-            </Card>
+            <Collapsible v-model:open="isAIAssistantOpen">
+              <Card :class="`bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 ${getTimelineFocusClass}`">
+                <CardHeader :class="selectedTheme === 'compact' ? 'pb-3' : ''">
+                  <div class="flex items-center justify-between">
+                    <CollapsibleTrigger as-child>
+                      <CardTitle
+                        :class="`flex items-center space-x-2 text-blue-700 cursor-pointer ${selectedTheme === 'compact' ? 'text-base' : ''}`"
+                      >
+                        <component :is="selectedTheme === 'beginner' ? Bot : Lightbulb" :size="20" />
+                        <span>
+                          {{ selectedTheme === "beginner" ? "AI Assistant Chat" : "AI-Powered MulmoScript Generation Guide" }}
+                        </span>
+                      </CardTitle>
+                    </CollapsibleTrigger>
+                    <CollapsibleTrigger as-child>
+                      <Button variant="ghost" size="sm">
+                        <component :is="isAIAssistantOpen ? ChevronUp : ChevronDown" :size="16" />
+                      </Button>
+                    </CollapsibleTrigger>
+                  </div>
+                  <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
+                    {{
+                      selectedTheme === "beginner"
+                        ? "Let's Create Scripts Through Conversation with AI Assistants"
+                        : "Use ChatGPT or other AI tools to generate your Script content with these proven prompts"
+                    }}
+                  </p>
+                </CardHeader>
+                <CollapsibleContent>
+                  <CardContent :class="selectedTheme === 'compact' ? 'pt-0' : ''" v-if="project">
+                    <component
+                      :is="selectedTheme === 'beginner' ? Chat : PromptGuide"
+                      :selectedTheme="selectedTheme"
+                      :initialMessages="project?.chatMessages"
+                      @update:updateChatMessages="handleUpdateChatMessages"
+                      @update:updateMulmoScript="handleUpdateScript"
+                    />
+                  </CardContent>
+                </CollapsibleContent>
+              </Card>
+            </Collapsible>
 
             <!-- Output Section -->
             <Card v-if="hasProjectData">
@@ -562,6 +575,7 @@ const hasProjectData = computed(() => true); // Todo
 
 const isDevMode = ref(false);
 const isSplitView = ref(false);
+const isAIAssistantOpen = ref(true);
 
 const validationMessage = ref("");
 
