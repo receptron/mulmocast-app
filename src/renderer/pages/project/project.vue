@@ -40,7 +40,7 @@
               <p :class="`text-gray-600 ${selectedTheme === 'compact' ? 'text-sm' : ''}`">{{ project?.description }}</p>
             </div>
           </div>
-          <div>
+          <div class="flex items-center space-x-2">
             <DropdownMenu>
               <DropdownMenuTrigger as-child>
                 <Button variant="outline" size="sm">
@@ -523,51 +523,38 @@
         </div>
 
         <!-- 3 Split View Layout -->
-        <div v-if="viewMode === 'split3'" class="grid grid-cols-1 lg:grid-cols-[25%_45%_1fr] gap-4 h-[calc(100vh-200px)]">
+        <div v-if="viewMode === 'split3'" :class="`grid grid-cols-1 gap-4 h-[calc(100vh-200px)] ${isRightColumnOpen ? 'lg:grid-cols-[20%_40%_1fr]' : 'lg:grid-cols-[30%_1fr_80px]'}`">
           <!-- Left Column - AI Chat -->
           <div class="h-full overflow-y-auto pr-2">
-            <Collapsible v-model:open="isAIAssistantOpen" class="h-full">
-              <Card :class="`bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 h-full flex flex-col ${getTimelineFocusClass}`">
-                <CardHeader :class="`flex-shrink-0 ${selectedTheme === 'compact' ? 'pb-3' : ''}`">
-                  <div class="flex items-center justify-between">
-                    <CollapsibleTrigger as-child>
-                      <CardTitle
-                        :class="`flex items-center space-x-2 text-blue-700 cursor-pointer ${selectedTheme === 'compact' ? 'text-base' : ''}`"
-                      >
-                        <component :is="selectedTheme === 'beginner' ? Bot : Lightbulb" :size="20" />
-                        <span>
-                          {{ selectedTheme === "beginner" ? "AI Assistant Chat" : "AI-Powered MulmoScript Generation Guide" }}
-                        </span>
-                      </CardTitle>
-                    </CollapsibleTrigger>
-                    <CollapsibleTrigger as-child>
-                      <Button variant="ghost" size="sm">
-                        <component :is="isAIAssistantOpen ? ChevronUp : ChevronDown" :size="16" />
-                      </Button>
-                    </CollapsibleTrigger>
-                  </div>
-                  <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
-                    {{
-                      selectedTheme === "beginner"
-                        ? "Let's Create Scripts Through Conversation with AI Assistants"
-                        : "Use ChatGPT or other AI tools to generate your Script content with these proven prompts"
-                    }}
-                  </p>
-                </CardHeader>
-                <CollapsibleContent class="flex-1 overflow-hidden flex flex-col">
-                  <CardContent :class="`flex-1 flex flex-col overflow-hidden ${selectedTheme === 'compact' ? 'pt-0' : ''}`" v-if="project">
-                    <component
-                      :is="selectedTheme === 'beginner' ? Chat : PromptGuide"
-                      :selectedTheme="selectedTheme"
-                      :initialMessages="project?.chatMessages"
-                      @update:updateChatMessages="handleUpdateChatMessages"
-                      @update:updateMulmoScript="handleUpdateScript"
-                      class="h-full flex flex-col"
-                    />
-                  </CardContent>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
+            <Card :class="`bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 h-full flex flex-col ${getTimelineFocusClass}`">
+              <CardHeader :class="`flex-shrink-0 ${selectedTheme === 'compact' ? 'pb-3' : ''}`">
+                <CardTitle
+                  :class="`flex items-center space-x-2 text-blue-700 ${selectedTheme === 'compact' ? 'text-base' : ''}`"
+                >
+                  <component :is="selectedTheme === 'beginner' ? Bot : Lightbulb" :size="20" />
+                  <span>
+                    {{ selectedTheme === "beginner" ? "AI Assistant Chat" : "AI-Powered MulmoScript Generation Guide" }}
+                  </span>
+                </CardTitle>
+                <p :class="`text-blue-600 ${selectedTheme === 'compact' ? 'text-xs' : 'text-sm'}`">
+                  {{
+                    selectedTheme === "beginner"
+                      ? "Let's Create Scripts Through Conversation with AI Assistants"
+                      : "Use ChatGPT or other AI tools to generate your Script content with these proven prompts"
+                  }}
+                </p>
+              </CardHeader>
+              <CardContent :class="`flex-1 flex flex-col overflow-hidden ${selectedTheme === 'compact' ? 'pt-0' : ''}`" v-if="project">
+                <component
+                  :is="selectedTheme === 'beginner' ? Chat : PromptGuide"
+                  :selectedTheme="selectedTheme"
+                  :initialMessages="project?.chatMessages"
+                  @update:updateChatMessages="handleUpdateChatMessages"
+                  @update:updateMulmoScript="handleUpdateScript"
+                  class="h-full flex flex-col"
+                />
+              </CardContent>
+            </Card>
           </div>
 
           <!-- Middle Column - Script Editor -->
@@ -639,14 +626,54 @@
           </div>
 
           <!-- Right Column - Product & Output -->
-          <div class="space-y-4 overflow-y-auto pl-2">
+          <div class="h-full flex">
+            <!-- Collapsed state - vertical sidebar -->
+            <div v-if="!isRightColumnOpen" class="flex flex-col bg-gray-50 border-l border-gray-200 w-20 py-4 px-2 h-full">
+              <!-- Settings Section -->
+              <div class="flex flex-col items-center mb-6">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  @click="isRightColumnOpen = true"
+                  class="mb-2 p-2"
+                  title="Open Settings Panel"
+                >
+                  <Settings :size="16" />
+                </Button>
+                <div class="writing-mode-vertical text-xs text-gray-600 select-none font-medium">
+                  Output Settings
+                </div>
+              </div>
+              
+              <!-- Product Section -->
+              <div class="flex flex-col items-center">
+                <div class="mb-2 p-2 rounded bg-blue-100">
+                  <Play :size="16" class="text-blue-600" />
+                </div>
+                <div class="writing-mode-vertical text-xs text-gray-600 select-none font-medium">
+                  Product
+                </div>
+              </div>
+            </div>
+            <!-- Expanded state - full content -->
+            <div v-if="isRightColumnOpen" class="space-y-4 overflow-y-auto pl-2 flex-1 h-full">
             <!-- Output Section -->
             <Card v-if="hasProjectData">
               <CardHeader>
-                <CardTitle class="flex items-center space-x-2">
-                  <Settings :size="20" />
-                  <span>Output Settings & Generation</span>
-                </CardTitle>
+                <div class="flex items-center justify-between">
+                  <CardTitle class="flex items-center space-x-2">
+                    <Settings :size="20" />
+                    <span>Output Settings & Generation</span>
+                  </CardTitle>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    @click="isRightColumnOpen = false"
+                    title="Close Right Panel"
+                  >
+                    <ChevronRight :size="16" />
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent class="p-4">
                 <div class="space-y-6">
@@ -670,29 +697,29 @@
                   </div>
 
                   <!-- Output Buttons -->
-                  <div class="grid grid-cols-1 gap-2">
+                  <div class="grid grid-cols-3 gap-2">
                     <Button
-                      class="flex items-center justify-center space-x-2 h-auto py-3"
+                      class="flex flex-col items-center space-y-1 h-auto py-2 text-xs"
                       @click="generateMovie"
                       :disabled="store.isArtifactGenerating[projectId]"
                     >
-                      <Monitor :size="20" />
-                      <span>Generate Movie</span>
+                      <Monitor :size="16" />
+                      <span>Movie</span>
                     </Button>
                     <Button
-                      class="flex items-center justify-center space-x-2 h-auto py-3"
+                      class="flex flex-col items-center space-y-1 h-auto py-2 text-xs"
                       :disabled="store.isArtifactGenerating[projectId]"
                     >
-                      <FileText :size="20" />
-                      <span>Generate PDF</span>
+                      <FileText :size="16" />
+                      <span>PDF</span>
                     </Button>
                     <Button
-                      class="flex items-center justify-center space-x-2 h-auto py-3"
+                      class="flex flex-col items-center space-y-1 h-auto py-2 text-xs"
                       @click="generatePodcast"
                       :disabled="store.isArtifactGenerating[projectId]"
                     >
-                      <Globe :size="20" />
-                      <span>Generate Podcast</span>
+                      <Globe :size="16" />
+                      <span>Podcast</span>
                     </Button>
                   </div>
                 </div>
@@ -711,8 +738,194 @@
                 <ProductTabs :videoUrl="videoUrl" @playVideo="playVideo" />
               </CardContent>
             </Card>
+            </div>
           </div>
         </div>
+
+        <!-- 3 Split Mobile View Layout -->
+        <div v-if="viewMode === 'split3mobile'" class="h-[calc(100vh-200px)] flex flex-col">
+          <!-- Main Content Area -->
+          <div class="flex-1 overflow-hidden">
+            <!-- Script Tab -->
+            <Card v-if="activeTab === 'script'" class="h-full flex flex-col">
+              <CardHeader class="flex-shrink-0">
+                <div class="flex items-center justify-between">
+                  <CardTitle class="flex items-center space-x-2">
+                    <Code2 :size="20" />
+                    <span>Script</span>
+                  </CardTitle>
+                  <div class="flex items-center space-x-2">
+                    <!-- Validation Status -->
+                    <div class="flex items-center space-x-2">
+                      <div v-if="isValidScriptData" class="group relative">
+                        <CheckCircle :size="16" class="text-green-500 group-hover:text-green-600 cursor-pointer" />
+                      </div>
+                      <XCircle v-if="!isValidScriptData" :size="16" class="text-red-500" />
+                    </div>
+                    <!-- Undo/Redo buttons -->
+                    <Button variant="ghost" size="sm" :disabled="!store.undoable" @click="store.undo">
+                      <Undo :size="16" :class="store.undoable ? 'text-black' : 'text-gray-400'" />
+                    </Button>
+                    <Button variant="ghost" size="sm" :disabled="!store.redoable" @click="store.redo">
+                      <Redo :size="16" :class="store.redoable ? 'text-black' : 'text-gray-400'" />
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent class="flex-1 overflow-hidden">
+                <ScriptEditor
+                  :mulmoValue="store.currentMulmoScript"
+                  :imageFiles="imageFiles"
+                  @update:mulmoValue="store.updateMulmoScript"
+                  :isValidScriptData="isValidScriptData"
+                  @update:isValidScriptData="(val) => (isValidScriptData = val)"
+                  @generateImage="(val) => generateImage(val)"
+                  @generateAudio="(val) => generateAudio(val)"
+                  @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
+                  :audioFiles="audioFiles"
+                  :mulmoError="mulmoError"
+                />
+              </CardContent>
+            </Card>
+
+            <!-- Chat Tab -->
+            <Card v-if="activeTab === 'chat'" class="h-full flex flex-col">
+              <CardHeader class="flex-shrink-0">
+                <CardTitle class="flex items-center space-x-2">
+                  <Bot :size="20" />
+                  <span>AI Assistant Chat</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent class="flex-1 overflow-hidden" v-if="project">
+                <Chat
+                  :selectedTheme="selectedTheme"
+                  :initialMessages="project?.chatMessages"
+                  @update:updateChatMessages="handleUpdateChatMessages"
+                  @update:updateMulmoScript="handleUpdateScript"
+                  class="h-full"
+                />
+              </CardContent>
+            </Card>
+
+            <!-- Generate Tab -->
+            <Card v-if="activeTab === 'generate'" class="h-full flex flex-col">
+              <CardHeader class="flex-shrink-0">
+                <CardTitle class="flex items-center space-x-2">
+                  <Settings :size="20" />
+                  <span>Output Settings & Generation</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent class="flex-1 overflow-y-auto">
+                <div class="space-y-6">
+                  <!-- General Settings -->
+                  <div class="border rounded-lg p-4 bg-gray-50">
+                    <h3 class="text-sm font-medium mb-4">General Settings</h3>
+                    <div class="space-y-4">
+                      <!-- Cache Toggle -->
+                      <div class="flex items-center justify-between p-4 bg-white rounded-lg">
+                        <div class="flex flex-col">
+                          <Label for="cache-toggle" class="text-sm font-medium"> Use Cache </Label>
+                          <p class="text-xs text-gray-500 mt-1">Enable caching for faster output generation</p>
+                        </div>
+                        <Switch
+                          id="cache-toggle"
+                          :model-value="project?.useCache ?? false"
+                          @update:model-value="saveCacheEnabled"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Output Buttons -->
+                  <div class="grid grid-cols-1 gap-3">
+                    <Button
+                      class="flex items-center justify-center space-x-2 h-auto py-4"
+                      @click="generateMovie"
+                      :disabled="store.isArtifactGenerating[projectId]"
+                    >
+                      <Monitor :size="24" />
+                      <span class="text-lg">Generate Movie</span>
+                    </Button>
+                    <Button
+                      class="flex items-center justify-center space-x-2 h-auto py-4"
+                      :disabled="store.isArtifactGenerating[projectId]"
+                    >
+                      <FileText :size="24" />
+                      <span class="text-lg">Generate PDF</span>
+                    </Button>
+                    <Button
+                      class="flex items-center justify-center space-x-2 h-auto py-4"
+                      @click="generatePodcast"
+                      :disabled="store.isArtifactGenerating[projectId]"
+                    >
+                      <Globe :size="24" />
+                      <span class="text-lg">Generate Podcast</span>
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <!-- Viewer Tab -->
+            <Card v-if="activeTab === 'viewer'" class="h-full flex flex-col">
+              <CardHeader class="flex-shrink-0">
+                <CardTitle class="flex items-center space-x-2">
+                  <Play :size="20" />
+                  <span>Product Viewer</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent class="flex-1 overflow-hidden">
+                <ProductTabs :videoUrl="videoUrl" @playVideo="playVideo" />
+              </CardContent>
+            </Card>
+          </div>
+
+          <!-- Bottom Tab Bar -->
+          <div class="flex-shrink-0 bg-white border-t border-gray-200 px-4 py-2">
+            <div class="flex justify-around items-center">
+              <Button
+                variant="ghost"
+                size="sm"
+                class="flex flex-col items-center space-y-1 min-w-0"
+                @click="activeTab = 'script'"
+              >
+                <Code2 :size="20" :class="activeTab === 'script' ? 'text-blue-600' : 'text-gray-600'" />
+                <span :class="`text-xs ${activeTab === 'script' ? 'text-blue-600' : 'text-gray-600'}`">Script</span>
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                class="flex flex-col items-center space-y-1 min-w-0"
+                @click="activeTab = 'chat'"
+              >
+                <Bot :size="20" :class="activeTab === 'chat' ? 'text-blue-600' : 'text-gray-600'" />
+                <span :class="`text-xs ${activeTab === 'chat' ? 'text-blue-600' : 'text-gray-600'}`">Chat</span>
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                class="flex flex-col items-center space-y-1 min-w-0"
+                @click="activeTab = 'generate'"
+              >
+                <Settings :size="20" :class="activeTab === 'generate' ? 'text-blue-600' : 'text-gray-600'" />
+                <span :class="`text-xs ${activeTab === 'generate' ? 'text-blue-600' : 'text-gray-600'}`">Generate</span>
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                class="flex flex-col items-center space-y-1 min-w-0"
+                @click="activeTab = 'viewer'"
+              >
+                <Play :size="20" :class="activeTab === 'viewer' ? 'text-blue-600' : 'text-gray-600'" />
+                <span :class="`text-xs ${activeTab === 'viewer' ? 'text-blue-600' : 'text-gray-600'}`">Viewer</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+
 
         <ConcurrentTaskStatus :projectId="projectId" />
       </div>
@@ -737,6 +950,8 @@ import {
   XCircle,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
   Monitor,
   Globe,
   Lightbulb,
@@ -807,6 +1022,8 @@ const hasProjectData = computed(() => true); // Todo
 const isDevMode = ref(false);
 const viewMode = ref<'single' | 'split2' | 'split3' | 'split3mobile'>('single');
 const isAIAssistantOpen = ref(true);
+const isRightColumnOpen = ref(true);
+const activeTab = ref<'script' | 'chat' | 'generate' | 'viewer'>('script');
 
 const validationMessage = ref("");
 
@@ -820,9 +1037,23 @@ onMounted(async () => {
   try {
     project.value = await projectApi.getProjectMetadata(projectId.value);
     store.initMulmoScript(await projectApi.getProjectMulmoScript(projectId.value));
+    
+    // Initialize mobile view with chat tab
+    if (viewMode.value === 'split3mobile') {
+      activeTab.value = 'chat';
+    }
   } catch (error) {
     console.error("Failed to load project:", error);
     router.push("/");
+  }
+});
+
+// Watch viewMode changes
+watch(viewMode, (newMode) => {
+  if (newMode === 'split3mobile') {
+    activeTab.value = 'chat';
+  } else {
+    activeTab.value = 'script';
   }
 });
 
@@ -997,3 +1228,10 @@ watch(
   { deep: true },
 );
 </script>
+
+<style scoped>
+.writing-mode-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+</style>
