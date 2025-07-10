@@ -147,6 +147,7 @@ onUnmounted(() => {
 <style scoped>
 .code-editor-container {
   width: 100%;
+  height: 100%;
   border-radius: 8px;
   overflow: hidden;
   background-color: #1e1e1e;
