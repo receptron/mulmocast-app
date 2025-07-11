@@ -1020,9 +1020,9 @@ const project = ref<ProjectMetadata | null>(null);
 const hasProjectData = computed(() => true); // Todo
 
 const isDevMode = ref(false);
-const viewMode = ref<'single' | 'split2' | 'split3' | 'split3mobile'>('single');
+const viewMode = ref<'single' | 'split2' | 'split3' | 'split3mobile'>('split3');
 const isAIAssistantOpen = ref(true);
-const isRightColumnOpen = ref(true);
+const isRightColumnOpen = ref(false);
 const activeTab = ref<'script' | 'chat' | 'generate' | 'viewer'>('script');
 
 const validationMessage = ref("");
