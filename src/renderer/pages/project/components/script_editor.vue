@@ -19,7 +19,7 @@
 
     <TabsContent value="text" class="mt-2">
       <div
-        class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-400px)] overflow-y-auto font-mono text-sm space-y-6"
+        class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto font-mono text-sm space-y-6"
       >
         <p class="text-sm text-gray-500 mb-2">Text Mode - Speaker and dialogue editing only</p>
         <div class="space-y-6 mx-auto">
@@ -53,45 +53,49 @@
     <TabsContent value="yaml" class="mt-4">
       <div
         :class="[
-          'border rounded-lg p-4 bg-gray-50 h-[calc(100vh-400px)] flex flex-col mb-[2px]',
+          'border rounded-lg p-4 bg-gray-50 h-[calc(100vh-340px)] flex flex-col mb-[2px]',
           { 'outline-red-400 outline-2 outline': !isValidScriptData },
         ]"
       >
         <p class="text-sm text-gray-500 mb-2">YAML Mode - Complete MulmoScript editing</p>
-        <CodeEditor
-          v-model="yamlText"
-          language="yaml"
-          :jsonSchema="mulmoJsonSchema"
-          @update:modelValue="onYamlInput"
-          @focus="onFocus"
-          @blur="onBlur"
-          minHeight="100%"
-        />
+        <div class="flex-1 min-h-0" style="height: 0">
+          <CodeEditor
+            v-model="yamlText"
+            language="yaml"
+            :jsonSchema="mulmoJsonSchema"
+            @update:modelValue="onYamlInput"
+            @focus="onFocus"
+            @blur="onBlur"
+            minHeight="100%"
+          />
+        </div>
       </div>
     </TabsContent>
 
     <TabsContent value="json" class="mt-4">
       <div
         :class="[
-          'border rounded-lg p-4 bg-gray-50 h-[calc(100vh-400px)] flex flex-col mb-[2px]',
+          'border rounded-lg p-4 bg-gray-50 h-[calc(100vh-340px)] flex flex-col mb-[2px]',
           { 'outline-red-400 outline-2 outline': !isValidScriptData },
         ]"
       >
         <p class="text-sm text-gray-500 mb-2">JSON Mode - Complete MulmoScript editing</p>
-        <CodeEditor
-          v-model="jsonText"
-          language="json"
-          :jsonSchema="mulmoJsonSchema"
-          @update:modelValue="onJsonInput"
-          @focus="onFocus"
-          @blur="onBlur"
-          minHeight="100%"
-        />
+        <div class="flex-1 min-h-0" style="height: 0">
+          <CodeEditor
+            v-model="jsonText"
+            language="json"
+            :jsonSchema="mulmoJsonSchema"
+            @update:modelValue="onJsonInput"
+            @focus="onFocus"
+            @blur="onBlur"
+            minHeight="100%"
+          />
+        </div>
       </div>
     </TabsContent>
 
     <TabsContent value="media" class="mt-4">
-      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-400px)] overflow-y-auto">
+      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto">
         <p class="text-sm text-gray-500 mb-2">Media Mode - Beat-by-beat media editing and preview</p>
 
         <div class="space-y-4">
@@ -114,7 +118,7 @@
       </div>
     </TabsContent>
     <TabsContent value="style" class="mt-4">
-      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-400px)] overflow-y-auto">
+      <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto">
         <p class="text-sm text-gray-500 mb-2">Style - Presentation style editing</p>
         <PresentationStyleEditor
           :presentationStyle="mulmoValue"

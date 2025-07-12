@@ -49,7 +49,7 @@
         </div>
 
         <!-- 3 Split Layout -->
-        <div class="grid grid-cols-1 lg:grid-cols-[30%_40%_1fr] gap-4 h-[calc(100vh-250px)]">
+        <div class="grid grid-cols-1 lg:grid-cols-[30%_40%_1fr] gap-4 h-auto lg:h-[calc(100vh-180px)]">
           <!-- Left Column - AI Chat -->
           <div class="h-full overflow-y-auto pr-2">
             <Card
