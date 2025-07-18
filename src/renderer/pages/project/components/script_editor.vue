@@ -23,30 +23,42 @@
       >
         <p class="text-sm text-gray-500 mb-2">Text Mode - Speaker and dialogue editing only</p>
         <div class="space-y-6 mx-auto">
-          <Card v-for="(beat, index) in safeBeats ?? []" :key="index" class="p-4 space-y-1 gap-2">
-            <div class="font-bold text-gray-700">Beat {{ index + 1 }}</div>
-            <div>
-              <Label>Speaker</Label>
-              <Input
-                :model-value="beat?.speaker"
-                @update:model-value="(value) => update(index, 'speaker', String(value))"
-                placeholder="e.g. Alice"
-                class="h-8"
-              />
+          <div class="px-2 py-1">
+            <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
+          </div>
+
+          <div v-for="(beat, index) in safeBeats ?? []" :key="index">
+            <Card class="p-4 space-y-1 gap-2">
+              <div class="font-bold text-gray-700 flex justify-between items-center">
+                <span>Beat {{ index + 1 }}</span>
+                <Badge variant="outline">{{ getBadge(beat) }}</Badge>
+              </div>
+              <div>
+                <Label>Speaker</Label>
+                <Input
+                  :model-value="beat?.speaker"
+                  @update:model-value="(value) => update(index, 'speaker', String(value))"
+                  placeholder="e.g. Alice"
+                  class="h-8"
+                />
+              </div>
+              <div>
+                <Label>Text</Label>
+                <Input
+                  :model-value="beat.text"
+                  @update:model-value="(value) => update(index, 'text', String(value))"
+                  placeholder="e.g. What is AI?"
+                  class="h-8"
+                />
+              </div>
+              <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
+              <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
+              <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
+            </Card>
+            <div class="px-4 pt-4">
+              <BeatAdd @addBeat="(beat) => addBeat(beat, index)" />
             </div>
-            <div>
-              <Label>Text</Label>
-              <Input
-                :model-value="beat.text"
-                @update:model-value="(value) => update(index, 'text', String(value))"
-                placeholder="e.g. What is AI?"
-                class="h-8"
-              />
-            </div>
-            <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
-            <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
-            <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
-          </Card>
+          </div>
         </div>
       </div>
     </TabsContent>
@@ -159,6 +171,7 @@ import { ref, computed, watch } from "vue";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
@@ -177,6 +190,8 @@ import { MulmoError } from "../../../../types";
 import { removeEmptyValues } from "@/lib/utils";
 import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../../shared/constants";
+
+import { getBadge } from "@/lib/beat_util.js";
 
 interface Props {
   mulmoValue: MulmoScript;

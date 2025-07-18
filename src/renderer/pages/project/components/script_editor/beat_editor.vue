@@ -132,6 +132,7 @@
               :model-value="beat.moviePrompt"
               @update:model-value="(value) => update('moviePrompt', String(value))"
               type="text"
+              placeholder="Blank won't work, space will."
             />
           </template>
         </div>
@@ -140,7 +141,14 @@
           <template v-if="!isGenerating">
             <template v-if="shouldBeGeneratedWithPrompt">
               <Button variant="outline" size="sm" @click="generateImageOnlyImage()" class="mt-4">Generate image</Button>
-              <Button variant="outline" size="sm" @click="generateImageOnlyMovie()" class="mt-4">Generate movie</Button>
+              <Button
+                variant="outline"
+                size="sm"
+                @click="generateImageOnlyMovie()"
+                class="mt-4"
+                :disabled="!enableMovieGenerate"
+                >Generate movie</Button
+              >
               <Button variant="outline" size="sm" @click="generateImage()" class="mt-4">Generate all</Button>
             </template>
             <Button variant="outline" size="sm" @click="generateImage()" class="mt-4" v-else>Generate image</Button>
@@ -226,6 +234,8 @@ import { useMulmoEventStore } from "../../../../store";
 import { useRoute } from "vue-router";
 import MediaModal from "@/components/media_modal.vue";
 
+import { getBadge } from "@/lib/beat_util.js";
+
 interface Props {
   beat: MulmoBeat;
   index: number;
@@ -262,6 +272,10 @@ const shouldShowGenerateButton = computed(() => {
   );
 });
 
+const enableMovieGenerate = computed(() => {
+  return !!props.beat.moviePrompt;
+});
+
 const isImageGenerating = computed(() => {
   return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["image"]?.[props.index];
 });
@@ -295,27 +309,6 @@ const getPromptLabel = (beat: MulmoBeat) => {
       default:
         return "Prompt";
     }
-  }
-  if (beat.htmlPrompt) {
-    return "Html Prompt";
-  }
-  return "Image Prompt";
-};
-
-const getBadge = (beat: MulmoBeat) => {
-  if (beat?.image) {
-    if (["image", "movie"].includes(beat.image.type)) {
-      /*
-      if (beat.image?.source?.kind === 'url') {
-        return "Remote File";
-      }
-      */
-      if (beat.image?.source?.kind === "path") {
-        return "Local File";
-      }
-    }
-
-    return beat?.image?.type;
   }
   if (beat.htmlPrompt) {
     return "Html Prompt";
