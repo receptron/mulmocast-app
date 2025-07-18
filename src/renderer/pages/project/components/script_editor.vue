@@ -22,7 +22,7 @@
         class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto font-mono text-sm space-y-6"
       >
         <p class="text-sm text-gray-500 mb-2">Text Mode - Speaker and dialogue editing only</p>
-        <div class="space-y-6 mx-auto">
+        <div class="space-y-2 mx-auto">
           <Card class="px-4 py-0 border-0 bg-transparent shadow-none">
             <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
           </Card>
@@ -125,7 +125,7 @@
       <div class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto">
         <p class="text-sm text-gray-500 mb-2">Media Mode - Beat-by-beat media editing and preview</p>
 
-        <div class="space-y-4">
+        <div class="space-y-2">
           <Card class="px-4 py-0 border-0 bg-transparent shadow-none">
             <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
           </Card>
