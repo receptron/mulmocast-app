@@ -6,6 +6,7 @@
     "moduleResolution": "bundler",
     "paths": {
       "@/*": ["src/renderer/*"],
+      "@/types": ["src/types/index"],
       "@/types/*": ["src/types/*"]
     }
   },

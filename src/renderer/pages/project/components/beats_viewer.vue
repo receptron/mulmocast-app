@@ -355,7 +355,7 @@ interface Beat {
 
 interface Props {
   beatsData: Beat[];
-  audioFiles: (ArrayBuffer | null)[];
+  audioFiles: (string | null)[];
   viewMode: "list" | "timeline";
   currentBeatIndex: number;
   timelinePosition: number;
