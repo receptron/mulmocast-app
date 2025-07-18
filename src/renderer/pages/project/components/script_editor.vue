@@ -19,46 +19,61 @@
 
     <TabsContent :value="SCRIPT_EDITOR_TABS.TEXT" class="mt-2">
       <div
-        class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto font-mono text-sm space-y-6"
+        class="border rounded-lg p-4 bg-gray-50 min-h-[400px] max-h-[calc(100vh-340px)] overflow-y-auto text-sm space-y-6"
       >
         <p class="text-sm text-gray-500 mb-2">Text Mode - Speaker and dialogue editing only</p>
         <div class="space-y-6 mx-auto">
-          <div class="px-2 py-1">
+          <Card class="px-4 py-0 border-0 bg-transparent shadow-none">
             <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
-          </div>
+          </Card>
 
-          <div v-for="(beat, index) in safeBeats ?? []" :key="index">
-            <Card class="p-4 space-y-1 gap-2">
-              <div class="font-bold text-gray-700 flex justify-between items-center">
-                <span>Beat {{ index + 1 }}</span>
-                <Badge variant="outline">{{ getBadge(beat) }}</Badge>
-              </div>
-              <div>
-                <Label>Speaker</Label>
-                <Input
-                  :model-value="beat?.speaker"
-                  @update:model-value="(value) => update(index, 'speaker', String(value))"
-                  placeholder="e.g. Alice"
-                  class="h-8"
+          <template v-for="(beat, index) in safeBeats ?? []" :key="index">
+            <div class="relative">
+              <div class="absolute -top-5 right-0 z-10 flex items-center gap-1 px-2 py-1 rounded border border-gray-300 bg-white shadow-sm">
+                <ArrowUp
+                  v-if="index !== 0"
+                  @click="positionUp(index)"
+                  class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
                 />
-              </div>
-              <div>
-                <Label>Text</Label>
-                <Input
-                  :model-value="beat.text"
-                  @update:model-value="(value) => update(index, 'text', String(value))"
-                  placeholder="e.g. What is AI?"
-                  class="h-8"
+                <ArrowDown
+                  v-if="index !== (mulmoValue?.beats ?? []).length - 1"
+                  @click="positionUp(index + 1)"
+                  class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
                 />
+                <Trash @click="deleteBeat(index)" class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition" />
               </div>
-              <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
-              <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
-              <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
-            </Card>
-            <div class="px-4 pt-4">
-              <BeatAdd @addBeat="(beat) => addBeat(beat, index)" />
+              <Card class="p-4 space-y-1 gap-2">
+                <div class="font-bold text-gray-700 flex justify-between items-center">
+                  <span>Beat {{ index + 1 }}</span>
+                  <Badge variant="outline">{{ getBadge(beat) }}</Badge>
+                </div>
+                <div>
+                  <Label>Speaker</Label>
+                  <Input
+                    :model-value="beat?.speaker"
+                    @update:model-value="(value) => update(index, 'speaker', String(value))"
+                    placeholder="e.g. Alice"
+                    class="h-8"
+                  />
+                </div>
+                <div>
+                  <Label>Text</Label>
+                  <Input
+                    :model-value="beat.text"
+                    @update:model-value="(value) => update(index, 'text', String(value))"
+                    placeholder="e.g. What is AI?"
+                    class="h-8"
+                  />
+                </div>
+                <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
+                <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
+                <audio :src="audioFiles[index]" v-if="!!audioFiles[index]" controls />
+              </Card>
             </div>
-          </div>
+            <Card class="px-4 py-0 border-0 bg-transparent shadow-none">
+              <BeatAdd @addBeat="(beat) => addBeat(beat, index)" />
+            </Card>
+          </template>
         </div>
       </div>
     </TabsContent>
