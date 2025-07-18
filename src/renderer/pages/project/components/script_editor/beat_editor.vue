@@ -207,24 +207,6 @@
         {{ error }}
       </div>
     </div>
-    <div class="flex justify-between mt-2 py-1 rounded border border-gray-300">
-      <div class="px-2 py-1">
-        <BeatAdd @addBeat="addBeat" />
-      </div>
-      <div class="flex items-center gap-1 px-2 py-1 pr-3">
-        <ArrowUp
-          v-if="index !== 0"
-          @click="positionUp"
-          class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
-        />
-        <ArrowDown
-          v-if="!isEnd"
-          @click="positionDown"
-          class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
-        />
-        <Trash @click="trash" class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition" />
-      </div>
-    </div>
 
     <MediaModal v-model:open="modalOpen" :type="modalType" :src="modalSrc" />
   </div>
@@ -242,7 +224,6 @@ import type { MulmoBeat } from "mulmocast/browser";
 
 import { useMulmoEventStore } from "../../../../store";
 import { useRoute } from "vue-router";
-import BeatAdd from "./beat_add.vue";
 import MediaModal from "@/components/media_modal.vue";
 
 interface Props {
@@ -255,7 +236,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update", "generateImage", "positionUp", "deleteBeat", "addBeat"]);
+const emit = defineEmits(["update", "generateImage", "positionUp", "deleteBeat"]);
 
 const route = useRoute();
 const mulmoEventStore = useMulmoEventStore();
@@ -418,9 +399,6 @@ const trash = () => {
   emit("deleteBeat", props.index);
 };
 
-const addBeat = (beat: MulmoBeat) => {
-  emit("addBeat", beat, props.index);
-};
 
 const getMediaSrc = (file: ArrayBuffer | string | null): string => {
   if (!file) return "";

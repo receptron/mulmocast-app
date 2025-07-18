@@ -99,25 +99,45 @@
         <p class="text-sm text-gray-500 mb-2">Media Mode - Beat-by-beat media editing and preview</p>
 
         <div class="space-y-4">
-          <Card class="px-4">
+          <Card class="px-4 py-0 border-0 bg-transparent shadow-none">
             <BeatAdd @addBeat="(beat) => addBeat(beat, -1)" />
           </Card>
 
-          <Card v-for="(beat, index) in safeBeats" :key="beat?.id ?? index" class="p-4">
-            <BeatEditor
-              :beat="beat"
-              :index="index"
-              :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
-              :imageFile="imageFiles[index]"
-              :movieFile="movieFiles[index]"
-              :mulmoError="mulmoError?.['beats']?.[index] ?? []"
-              @update="update"
-              @generateImage="generateImage"
-              @deleteBeat="deleteBeat"
-              @positionUp="positionUp"
-              @addBeat="addBeat"
-            />
-          </Card>
+          <template v-for="(beat, index) in safeBeats" :key="beat?.id ?? index">
+            <div class="relative">
+              <div class="absolute -top-5 right-0 z-10 flex items-center gap-1 px-2 py-1 rounded border border-gray-300 bg-white shadow-sm">
+                <ArrowUp
+                  v-if="index !== 0"
+                  @click="positionUp(index)"
+                  class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
+                />
+                <ArrowDown
+                  v-if="index !== (mulmoValue?.beats ?? []).length - 1"
+                  @click="positionUp(index + 1)"
+                  class="w-5 h-5 text-gray-500 hover:text-blue-500 cursor-pointer transition"
+                />
+                <Trash @click="deleteBeat(index)" class="w-5 h-5 text-gray-500 hover:text-red-500 cursor-pointer transition" />
+              </div>
+              <Card class="p-4">
+                <BeatEditor
+                  :beat="beat"
+                  :index="index"
+                  :isEnd="(mulmoValue?.beats ?? []).length === index + 1"
+                  :imageFile="imageFiles[index]"
+                  :movieFile="movieFiles[index]"
+                  :mulmoError="mulmoError?.['beats']?.[index] ?? []"
+                  @update="update"
+                  @generateImage="generateImage"
+                  @deleteBeat="deleteBeat"
+                  @positionUp="positionUp"
+                  @addBeat="addBeat"
+                />
+              </Card>
+            </div>
+            <Card class="px-4 py-0 border-0 bg-transparent shadow-none">
+              <BeatAdd @addBeat="(beat) => addBeat(beat, index)" />
+            </Card>
+          </template>
         </div>
       </div>
     </TabsContent>
@@ -141,6 +161,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
 import BeatEditor from "./script_editor/beat_editor.vue";
 import BeatAdd from "./script_editor/beat_add.vue";
 import PresentationStyleEditor from "./script_editor/presentation_style_editor.vue";
