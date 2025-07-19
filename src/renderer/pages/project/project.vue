@@ -590,6 +590,12 @@ watch(
     if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "video" && !mulmoEvent.inSession) {
       playVideo();
     }
+
+    // generate image
+    if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "image" && !mulmoEvent.inSession) {
+      await downloadImageFiles();
+    }
+
     // beats
     if (
       mulmoEvent &&
