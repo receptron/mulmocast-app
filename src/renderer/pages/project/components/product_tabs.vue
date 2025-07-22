@@ -1,105 +1,105 @@
 <template>
   <Tabs default-value="movie" class="w-full">
     <TabsList class="grid w-full grid-cols-5">
-      <TabsTrigger value="movie">Movie</TabsTrigger>
-      <TabsTrigger value="pdf">PDF</TabsTrigger>
-      <TabsTrigger value="html">HTML</TabsTrigger>
-      <TabsTrigger value="podcast">Podcast</TabsTrigger>
-      <TabsTrigger value="slide">Slide</TabsTrigger>
+      <TabsTrigger value="movie">{{ t('project.productTabs.tabs.movie') }}</TabsTrigger>
+      <TabsTrigger value="pdf">{{ t('project.productTabs.tabs.pdf') }}</TabsTrigger>
+      <TabsTrigger value="html">{{ t('project.productTabs.tabs.html') }}</TabsTrigger>
+      <TabsTrigger value="podcast">{{ t('project.productTabs.tabs.podcast') }}</TabsTrigger>
+      <TabsTrigger value="slide">{{ t('project.productTabs.tabs.slide') }}</TabsTrigger>
     </TabsList>
 
     <TabsContent value="movie" class="mt-4">
       <div class="border rounded-lg p-8 text-center bg-gray-50">
         <video :size="64" class="mx-auto text-gray-400 mb-4" controls :src="videoUrl" ref="videoRef" />
-        <p class="text-lg font-medium mb-2">Movie Preview</p>
-        <p class="text-sm text-gray-600 mb-4">Video content playback and preview</p>
+        <p class="text-lg font-medium mb-2">{{ t('project.productTabs.movie.title') }}</p>
+        <p class="text-sm text-gray-600 mb-4">{{ t('project.productTabs.movie.description') }}</p>
         <div class="flex justify-center space-x-4">
           <Button @click="playVideo">
             <Play :size="16" class="mr-2" />
-            Play
+            {{ t('project.productTabs.movie.play') }}
           </Button>
           <Button variant="outline" @click="downloadMp4">
             <Video :size="16" class="mr-2" />
-            Download MP4
+            {{ t('project.productTabs.movie.download') }}
           </Button>
         </div>
-        <div class="mt-4 text-sm text-gray-500">Duration: 12:34 | Resolution: 1920x1080 | Size: 145 MB</div>
+        <div class="mt-4 text-sm text-gray-500">{{ t('project.productTabs.movie.details') }}</div>
       </div>
     </TabsContent>
 
     <TabsContent value="pdf" class="mt-4">
       <div class="border rounded-lg p-8 text-center bg-gray-50">
         <FileText :size="64" class="mx-auto text-gray-400 mb-4" />
-        <p class="text-lg font-medium mb-2">PDF Preview</p>
-        <p class="text-sm text-gray-600 mb-4">PDF document display and download</p>
+        <p class="text-lg font-medium mb-2">{{ t('project.productTabs.pdf.title') }}</p>
+        <p class="text-sm text-gray-600 mb-4">{{ t('project.productTabs.pdf.description') }}</p>
         <div class="flex justify-center space-x-4">
           <Button>
             <FileText :size="16" class="mr-2" />
-            View PDF
+            {{ t('project.productTabs.pdf.view') }}
           </Button>
           <Button variant="outline">
             <FileText :size="16" class="mr-2" />
-            Download PDF
+            {{ t('project.productTabs.pdf.download') }}
           </Button>
         </div>
-        <div class="mt-4 text-sm text-gray-500">8 pages | A4 format | Size: 2.1 MB</div>
+        <div class="mt-4 text-sm text-gray-500">{{ t('project.productTabs.pdf.details') }}</div>
       </div>
     </TabsContent>
 
     <TabsContent value="html" class="mt-4">
       <div class="border rounded-lg p-8 text-center bg-gray-50">
         <Globe :size="64" class="mx-auto text-gray-400 mb-4" />
-        <p class="text-lg font-medium mb-2">HTML Preview</p>
-        <p class="text-sm text-gray-600 mb-4">Interactive web format display</p>
+        <p class="text-lg font-medium mb-2">{{ t('project.productTabs.html.title') }}</p>
+        <p class="text-sm text-gray-600 mb-4">{{ t('project.productTabs.html.description') }}</p>
         <div class="flex justify-center space-x-4">
           <Button>
             <Eye :size="16" class="mr-2" />
-            View HTML
+            {{ t('project.productTabs.html.view') }}
           </Button>
           <Button variant="outline">
             <Download :size="16" class="mr-2" />
-            Download HTML
+            {{ t('project.productTabs.html.download') }}
           </Button>
         </div>
-        <div class="mt-4 text-sm text-gray-500">Interactive content | Responsive design</div>
+        <div class="mt-4 text-sm text-gray-500">{{ t('project.productTabs.html.details') }}</div>
       </div>
     </TabsContent>
 
     <TabsContent value="podcast" class="mt-4">
       <div class="border rounded-lg p-8 text-center bg-gray-50">
         <Volume2 :size="64" class="mx-auto text-gray-400 mb-4" />
-        <p class="text-lg font-medium mb-2">Podcast Preview</p>
-        <p class="text-sm text-gray-600 mb-4">Audio content playback and preview</p>
+        <p class="text-lg font-medium mb-2">{{ t('project.productTabs.podcast.title') }}</p>
+        <p class="text-sm text-gray-600 mb-4">{{ t('project.productTabs.podcast.description') }}</p>
         <div class="flex justify-center space-x-4">
           <Button>
             <Play :size="16" class="mr-2" />
-            Play
+            {{ t('project.productTabs.podcast.play') }}
           </Button>
           <Button variant="outline" @click="downloadMp3">
             <Volume2 :size="16" class="mr-2" />
-            Download MP3
+            {{ t('project.productTabs.podcast.download') }}
           </Button>
         </div>
-        <div class="mt-4 text-sm text-gray-500">Duration: 12:34 | Size: 8.2 MB</div>
+        <div class="mt-4 text-sm text-gray-500">{{ t('project.productTabs.podcast.details') }}</div>
       </div>
     </TabsContent>
 
     <TabsContent value="slide" class="mt-4">
       <div class="border rounded-lg p-8 text-center bg-gray-50">
         <FileImage :size="64" class="mx-auto text-gray-400 mb-4" />
-        <p class="text-lg font-medium mb-2">Slide Preview</p>
-        <p class="text-sm text-gray-600 mb-4">Slide format display and navigation</p>
+        <p class="text-lg font-medium mb-2">{{ t('project.productTabs.slide.title') }}</p>
+        <p class="text-sm text-gray-600 mb-4">{{ t('project.productTabs.slide.description') }}</p>
         <div class="flex justify-center space-x-4">
           <Button>
             <Play :size="16" class="mr-2" />
-            Start Slideshow
+            {{ t('project.productTabs.slide.start') }}
           </Button>
           <Button variant="outline">
             <FileImage :size="16" class="mr-2" />
-            Export Images
+            {{ t('project.productTabs.slide.export') }}
           </Button>
         </div>
-        <div class="mt-4 text-sm text-gray-500">8 slides | 1920x1080 resolution</div>
+        <div class="mt-4 text-sm text-gray-500">{{ t('project.productTabs.slide.details') }}</div>
       </div>
     </TabsContent>
   </Tabs>
@@ -111,9 +111,11 @@ import { Video, FileText, Globe, Volume2, FileImage, Play, Eye, Download } from 
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
 
 const route = useRoute();
 const projectId = computed(() => route.params.id as string);
+const { t } = useI18n();
 
 const downloadMp4 = async () => {
   return downloadFile("movie", "video/mp4", projectId.value + "_video.mp4");
