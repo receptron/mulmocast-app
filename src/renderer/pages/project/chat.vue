@@ -24,7 +24,7 @@
             v-model="userInput"
             :disabled="isRunning"
             placeholder="ex) Thank you very much! Please proceed with the creation."
-            class="flex-1 border-none outline-none px-3 py-2 text-sm bg-transparent min-w-0 field-sizing-content min-h-0 border-2 border-gray-200 rounded-lg bg-white focus-within:border-blue-500 focus-within:border-2"
+            class="flex-1 border-none outline-none px-3 py-2 text-sm bg-transparent min-w-0 field-sizing-content min-h-0 max-h-48 border-2 border-gray-200 rounded-lg bg-white focus-within:border-blue-500 focus-within:border-2"
             @keydown="handleKeydown"
           />
           <Button size="sm" @click="run()" :disabled="isCreatingScript || isRunning">
