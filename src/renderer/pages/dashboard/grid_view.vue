@@ -50,9 +50,17 @@
               </span>
             </div>
           </div>
-          <div class="flex justify-end mt-2">
+          <div class="flex justify-end mt-2 space-x-1">
             <Button
-              @click.stop="deleteProject(project)"
+              @click="viewProject($event, project)"
+              variant="ghost"
+              size="icon"
+              class="h-8 w-8 text-gray-400 hover:text-blue-600"
+            >
+              <Eye class="w-4 h-4" />
+            </Button>
+            <Button
+              @click="deleteProject($event, project)"
               variant="ghost"
               size="icon"
               class="h-8 w-8 text-gray-400 hover:text-red-600"
@@ -67,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { Calendar, FileText, Trash2, Loader2 } from "lucide-vue-next";
+import { Calendar, FileText, Trash2, Loader2, Eye } from "lucide-vue-next";
 import type { Project } from "@/lib/project_api";
 import { formatDate, mediaUri } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -77,6 +85,7 @@ import { INITIAL_TITLE } from "../../../shared/constants";
 
 const emit = defineEmits<{
   delete: [project: Project];
+  view: [project: Project];
 }>();
 
 defineProps<{
@@ -87,7 +96,15 @@ defineProps<{
 
 const mulmoEventStore = useMulmoEventStore();
 
-const deleteProject = (project: Project) => {
+const deleteProject = (event: Event, project: Project) => {
+  event.preventDefault();
+  event.stopPropagation();
   emit("delete", project);
+};
+
+const viewProject = (event: Event, project: Project) => {
+  event.preventDefault();
+  event.stopPropagation();
+  emit("view", project);
 };
 </script>

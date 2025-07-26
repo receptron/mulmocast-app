@@ -186,6 +186,9 @@ const lang = {
       },
     },
   },
+  modal: {
+    clickOutsideToClose: "Click outside to close",
+  },
   languages,
 };
 

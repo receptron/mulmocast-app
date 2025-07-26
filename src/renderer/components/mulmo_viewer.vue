@@ -106,16 +106,24 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, nextTick } from "vue";
+import { computed, ref, watch } from "vue";
 import { Video, FileText, Globe, Volume2, FileImage, Play, Eye, Download } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
+import type { Project } from "@/lib/project_api";
+import { bufferToUrl } from "@/lib/utils";
+import { useMulmoEventStore } from "@/store";
 
-const route = useRoute();
-const projectId = computed(() => route.params.id as string);
 const { t } = useI18n();
+
+interface Props {
+  project: Project;
+}
+
+const props = defineProps<Props>();
+const projectId = computed(() => props.project?.metadata?.id || "");
+const videoUrl = ref("");
 
 const downloadMp4 = async () => {
   return downloadFile("movie", "video/mp4", projectId.value + "_video.mp4");
@@ -124,21 +132,9 @@ const downloadMp3 = async () => {
   return downloadFile("audio", "audio/mp3", projectId.value + "_audio.mp3");
 };
 
-interface Props {
-  videoUrl: string;
-}
-
-defineProps<Props>();
-const emit = defineEmits(["playVideo"]);
-
 const videoRef = ref(null);
 const playVideo = () => {
-  emit("playVideo", async () => {
-    console.log(videoRef.value);
-    await nextTick();
-
-    videoRef.value?.play();
-  });
+  videoRef.value?.play();
 };
 
 const downloadFile = async (fileType: string, mimeType: string, fileName: string) => {
@@ -153,4 +149,29 @@ const downloadFile = async (fileType: string, mimeType: string, fileName: string
 
   URL.revokeObjectURL(url);
 };
+
+const updateResources = async () => {
+  const buffer = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
+  videoUrl.value = bufferToUrl(buffer, "video/mp4");
+};
+
+watch(
+  () => props.project,
+  async (newProject, oldProject) => {
+    if (newProject && newProject.metadata?.id && newProject.metadata.id !== oldProject?.metadata?.id) {
+      await updateResources();
+    }
+  },
+  { immediate: true },
+);
+
+const mulmoEventStore = useMulmoEventStore();
+watch(
+  () => mulmoEventStore.mulmoEvent[projectId.value],
+  async (mulmoEvent) => {
+    if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "video" && !mulmoEvent.inSession) {
+      await updateResources();
+    }
+  },
+);
 </script>

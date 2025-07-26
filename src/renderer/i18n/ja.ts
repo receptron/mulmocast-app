@@ -187,6 +187,9 @@ const lang = {
       },
     },
   },
+  modal: {
+    clickOutsideToClose: "外側をクリックするとモーダルが閉じます",
+  },
   languages,
 };
 

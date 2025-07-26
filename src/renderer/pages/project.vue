@@ -69,12 +69,12 @@
               </CardHeader>
               <CardContent
                 :class="`flex-1 flex flex-col overflow-hidden ${selectedTheme === 'compact' ? 'pt-0' : ''}`"
-                v-if="project"
+                v-if="projectMetadata"
               >
                 <component
                   :is="selectedTheme === 'beginner' ? Chat : PromptGuide"
                   :selectedTheme="selectedTheme"
-                  :messages="project?.chatMessages"
+                  :messages="projectMetadata?.chatMessages"
                   @update:updateChatMessages="handleUpdateChatMessages"
                   @update:updateMulmoScript="handleUpdateScript"
                   class="h-full flex flex-col"
@@ -162,7 +162,7 @@
                       :imageFiles="imageFiles"
                       :movieFiles="movieFiles"
                       :audioFiles="audioFiles"
-                      :scriptEditorActiveTab="project?.scriptEditorActiveTab"
+                      :scriptEditorActiveTab="projectMetadata?.scriptEditorActiveTab"
                       @update:mulmoValue="mulmoScriptHistoryStore.updateMulmoScript"
                       :isValidScriptData="isValidScriptData"
                       @update:isValidScriptData="(val) => (isValidScriptData = val)"
@@ -246,7 +246,7 @@
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ProductTabs :videoUrl="videoUrl" @playVideo="playVideo" />
+                <MulmoViewer v-if="project" :project="project" />
               </CardContent>
             </Card>
 
@@ -328,7 +328,7 @@ import PromptGuide from "./project/prompt_guide.vue";
 import ScriptEditor from "./project/script_editor.vue";
 import BeatsViewer from "./project/beats_viewer.vue";
 import Generate from "./project/generate.vue";
-import ProductTabs from "./project/product_tabs.vue";
+import MulmoViewer from "../components/mulmo_viewer.vue";
 import ProjectHeader from "./project/project_header.vue";
 
 import { getConcurrentTaskStatusMessageComponent } from "./project/concurrent_task_status_message";
@@ -369,7 +369,11 @@ const mulmoEventStore = useMulmoEventStore();
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
 const projectId = computed(() => route.params.id as string);
-const project = ref<ProjectMetadata | null>(null);
+const projectMetadata = ref<ProjectMetadata | null>(null);
+const project = computed(() => ({
+  metadata: projectMetadata.value,
+  script: mulmoScriptHistoryStore.currentMulmoScript,
+}));
 
 const hasProjectData = computed(() => true); // Todo
 
@@ -387,7 +391,7 @@ const isPreviewAreaVisible = ref(false);
 // Load project data on mount
 onMounted(async () => {
   try {
-    project.value = await projectApi.getProjectMetadata(projectId.value);
+    projectMetadata.value = await projectApi.getProjectMetadata(projectId.value);
     const data = await projectApi.getProjectMulmoScript(projectId.value);
     data.beats.map(setRandomBeatId);
     mulmoScriptHistoryStore.initMulmoScript(data);
@@ -407,28 +411,28 @@ const handleUpdateScriptFromHeader = (script: MulmoScript) => {
   mulmoScriptHistoryStore.updateMulmoScript(script);
 };
 
-const saveProjectMetadata = useDebounceFn(async (project: ProjectMetadata) => {
+const saveProjectMetadata = useDebounceFn(async (projectMetadata: ProjectMetadata) => {
   await projectApi.saveProjectMetadata(projectId.value, {
-    ...project,
+    ...projectMetadata,
     updatedAt: dayjs().toISOString(),
   });
 }, 1000);
 
 const handleUpdateChatMessages = (messages: ChatMessage[]) => {
-  project.value.chatMessages = messages;
-  saveProjectMetadata(project.value);
+  projectMetadata.value.chatMessages = messages;
+  saveProjectMetadata(projectMetadata.value);
 };
 
 const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
-  project.value.scriptEditorActiveTab = tab;
-  saveProjectMetadata(project.value);
+  projectMetadata.value.scriptEditorActiveTab = tab;
+  saveProjectMetadata(projectMetadata.value);
 };
 
 const saveMulmo = async () => {
   console.log("saved", mulmoScriptHistoryStore.currentMulmoScript);
   await projectApi.saveProjectScript(projectId.value, mulmoScriptHistoryStore.currentMulmoScript);
-  project.value.updatedAt = dayjs().toISOString();
-  await projectApi.saveProjectMetadata(projectId.value, project.value);
+  projectMetadata.value.updatedAt = dayjs().toISOString();
+  await projectApi.saveProjectMetadata(projectId.value, projectMetadata.value);
 };
 const saveMulmoScript = useDebounceFn(saveMulmo, 1000);
 
@@ -541,23 +545,9 @@ const isValidScriptData = ref(true);
 
 const logContainer = ref<HTMLElement | null>(null);
 
-const videoUrl = ref("");
-const playVideo = async (callback?: () => void) => {
-  const buffer = (await window.electronAPI.mulmoHandler("downloadFile", projectId.value, "movie")) as Buffer;
-  videoUrl.value = bufferToUrl(buffer, "video/mp4");
-  if (callback) {
-    callback();
-  }
-};
-
 watch(
   () => mulmoEventStore.mulmoEvent[projectId.value],
   async (mulmoEvent) => {
-    // session
-    if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "video" && !mulmoEvent.inSession) {
-      playVideo();
-    }
-
     // generate image
     if (mulmoEvent && mulmoEvent.kind === "session" && mulmoEvent.sessionType === "image" && !mulmoEvent.inSession) {
       await downloadImageFiles();

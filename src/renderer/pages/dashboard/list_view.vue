@@ -42,7 +42,12 @@
             </div>
           </div>
           <div class="flex items-center space-x-2">
-            <Button variant="ghost" size="icon" class="text-gray-400 hover:text-blue-600">
+            <Button
+              @click="viewProject($event, project)"
+              variant="ghost"
+              size="icon"
+              class="text-gray-400 hover:text-blue-600"
+            >
               <Eye class="w-5 h-5" />
             </Button>
             <Button
@@ -71,6 +76,7 @@ import { INITIAL_TITLE } from "../../../shared/constants";
 
 const emit = defineEmits<{
   delete: [project: Project];
+  view: [project: Project];
 }>();
 
 defineProps<{
@@ -83,5 +89,11 @@ const mulmoEventStore = useMulmoEventStore();
 
 const deleteProject = (project: Project) => {
   emit("delete", project);
+};
+
+const viewProject = (event: Event, project: Project) => {
+  event.preventDefault();
+  event.stopPropagation();
+  emit("view", project);
 };
 </script>
