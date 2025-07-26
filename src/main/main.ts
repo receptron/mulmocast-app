@@ -11,6 +11,11 @@ import { getWindowState, saveWindowState } from "./utils/windw_state";
 
 const isDev = process.env.NODE_ENV === "development";
 
+// 開発環境でのみPlaywright用のデバッグポートを設定
+if (isDev) {
+  app.commandLine.appendSwitch("remote-debugging-port", "9222");
+}
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit();
