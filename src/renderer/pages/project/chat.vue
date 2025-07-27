@@ -190,13 +190,13 @@ const isCreatingScript = ref(false);
 // system prompt and user prompt
 // const specificOutputPrompt = `The output should follow the JSON schema specified below. Please provide your response as valid JSON within \`\`\`json code blocks for clarity..`;
 const copyScript = async () => {
-  const { scriptName, systemPrompt } = promptTemplates[selectedTemplateIndex.value];
+  const { scriptName, systemPrompt, presentationStyle } = promptTemplates[selectedTemplateIndex.value];
   const scriptTemplate = scriptName
     ? scriptTemplates.find((template) => {
         return template.filename === scriptName.split(".")[0];
       })
     : defaultSchema.properties;
-  userInput.value = [systemPrompt, JSON.stringify(scriptTemplate)].join("\n\n");
+  userInput.value = [systemPrompt, JSON.stringify({...scriptTemplate, presentationStyle})].join("\n\n");
 };
 // end of system prompt
 
