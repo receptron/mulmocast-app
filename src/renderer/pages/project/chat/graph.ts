@@ -1,12 +1,11 @@
 import { type GraphData } from "graphai";
 import { mulmoScriptSchema } from "mulmocast/browser";
-// import { zodToJsonSchema } from "zod-to-json-schema";
+import { zodToJsonSchema } from "zod-to-json-schema";
+import { minimalDefaultMulmoPresentationStyleSchema } from "./image_prompts_template";
 
-/*
-const defaultSchema = zodToJsonSchema(mulmoScriptSchema, {
+const defaultSchema = zodToJsonSchema(minimalDefaultMulmoPresentationStyleSchema, {
   strictUnions: true,
 });
-*/
 
 // just chat
 export const graphChat: GraphData = {
@@ -82,26 +81,24 @@ export const graphGenerateMulmoScript: GraphData = {
               // system: ":systemPrompt",
               prompt: ":prompt",
               messages: ":messages",
-              /*
               response_format: {
                 type: "json_schema" as const,
                 json_schema: {
                   name: "mulmoScript",
                   schema: {
                     type: "object",
-                    properties: defaultSchema.properties
-                  }
-                }
-                }
-              */
+                    properties: defaultSchema.properties,
+                  },
+                },
+              },
             },
           },
           validateSchema: {
             agent: "validateSchemaAgent",
             console: { after: true },
             inputs: {
-              // text: ":llm.text",
-              text: ":llm.text.codeBlock()",
+              text: ":llm.text",
+              // text: ":llm.text.codeBlock()",
               schema: mulmoScriptSchema,
             },
             isResult: true,
