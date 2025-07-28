@@ -12,6 +12,37 @@ const CONFIG = {
   PLAY_BUTTON_TIMEOUT: 10000, // 10 seconds to wait for play button
 } as const;
 
+// Function to fetch JSON from GitHub
+async function fetchJSONFromGitHub(browser: Browser, url: string): Promise<string> {
+  console.log(`Fetching JSON from GitHub: ${url}`);
+  
+  // Create a new context for GitHub
+  const githubContext = await browser.newContext();
+  const githubPage = await githubContext.newPage();
+  
+  try {
+    // Navigate to the raw GitHub URL
+    await githubPage.goto(url, { waitUntil: 'networkidle' });
+    
+    // Get the JSON content
+    const jsonContent = await githubPage.evaluate(() => {
+      return document.body.textContent || '';
+    });
+    
+    console.log("✓ Successfully fetched JSON from GitHub");
+    console.log(`JSON preview: ${jsonContent.substring(0, 100)}...`);
+    
+    return jsonContent;
+  } catch (error) {
+    console.error("Failed to fetch JSON from GitHub:", error);
+    throw error;
+  } finally {
+    // Clean up
+    await githubPage.close();
+    await githubContext.close();
+  }
+}
+
 // Test audio JSON from mulmocast-cli
 const TEST_AUDIO_JSON = `{
   "$mulmocast": {
@@ -222,8 +253,20 @@ async function testJSONAudioGeneration(): Promise<void> {
     await page.waitForSelector('.monaco-editor', { timeout: 10000 });
     console.log("✓ Monaco Editor loaded");
 
+    // Fetch JSON from GitHub
+    console.log("\n8. Fetching test JSON from GitHub...");
+    const githubUrl = "https://raw.githubusercontent.com/receptron/mulmocast-cli/refs/heads/main/scripts/test/test_audio.json";
+    let jsonContent: string;
+    
+    try {
+      jsonContent = await fetchJSONFromGitHub(resources.browser!, githubUrl);
+    } catch (error) {
+      console.log("Failed to fetch from GitHub, using fallback local JSON");
+      jsonContent = TEST_AUDIO_JSON;
+    }
+    
     // Clear existing content and input test JSON
-    console.log("\n8. Inputting test audio JSON...");
+    console.log("\n9. Inputting test audio JSON...");
     // Focus on Monaco editor
     await page.click('.monaco-editor');
     
@@ -249,9 +292,28 @@ async function testJSONAudioGeneration(): Promise<void> {
           textarea.dispatchEvent(new Event('input', { bubbles: true }));
         }
       }
-    }, TEST_AUDIO_JSON);
+    }, jsonContent);
     
     console.log("✓ Test JSON inputted directly into editor");
+    
+    // Update the title with timestamp
+    console.log("\nUpdating JSON title with timestamp...");
+    const timestamp = dayjs().format("YYYYMMDD_HHmmss");
+    await page.evaluate((ts) => {
+      const windowWithMonaco = window as any;
+      const editor = windowWithMonaco.monaco?.editor?.getModels()?.[0];
+      if (editor) {
+        const content = editor.getValue();
+        // Replace "title": "Media Test" with timestamp version
+        const updatedContent = content.replace(
+          /"title":\s*"Media Test"/,
+          `"title": "${ts} Media Test"`
+        );
+        editor.setValue(updatedContent);
+        console.log(`Updated title to: ${ts} Media Test`);
+      }
+    }, timestamp);
+    console.log(`✓ Title updated to: ${timestamp} Media Test`);
     
     // Wait for JSON validation and UI update
     console.log("\nWaiting for JSON validation and UI update...");
@@ -259,7 +321,7 @@ async function testJSONAudioGeneration(): Promise<void> {
     console.log("✓ JSON processing time completed");
 
     // Find and click the generate button in output settings section
-    console.log('\n9. Looking for generate button in output settings section...');
+    console.log('\n10. Looking for generate button in output settings section...');
     
     // Use CSS selector to find the generate button more reliably
     // This button is in a grid layout with specific classes
