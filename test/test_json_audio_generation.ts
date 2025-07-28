@@ -281,7 +281,15 @@ async function testJSONAudioGeneration(): Promise<void> {
     // Use page.evaluate to set the editor content directly
     await page.evaluate((json) => {
       // Try to find Monaco editor instance and set its content
-      const windowWithMonaco = window as any;
+      const windowWithMonaco = window as Window & {
+        monaco?: {
+          editor?: {
+            getModels?: () => Array<{
+              setValue: (value: string) => void;
+            }>;
+          };
+        };
+      };
       const editor = windowWithMonaco.monaco?.editor?.getModels()?.[0];
       if (editor) {
         editor.setValue(json);
@@ -301,7 +309,16 @@ async function testJSONAudioGeneration(): Promise<void> {
     console.log("\nUpdating JSON title with timestamp...");
     const timestamp = dayjs().format("YYYYMMDD_HHmmss");
     await page.evaluate((ts) => {
-      const windowWithMonaco = window as any;
+      const windowWithMonaco = window as Window & {
+        monaco?: {
+          editor?: {
+            getModels?: () => Array<{
+              setValue: (value: string) => void;
+              getValue: () => string;
+            }>;
+          };
+        };
+      };
       const editor = windowWithMonaco.monaco?.editor?.getModels()?.[0];
       if (editor) {
         const content = editor.getValue();
