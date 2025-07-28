@@ -261,7 +261,7 @@ async function testJSONAudioGeneration(): Promise<void> {
 
     try {
       jsonContent = await fetchJSONFromGitHub(resources.browser!, githubUrl);
-    } catch (error) {
+    } catch {
       console.log("Failed to fetch from GitHub, using fallback local JSON");
       jsonContent = TEST_AUDIO_JSON;
     }
@@ -354,7 +354,7 @@ async function testJSONAudioGeneration(): Promise<void> {
       });
       completionNotificationFound = true;
       console.log("✓ Completion notification found");
-    } catch (error) {
+    } catch {
       console.log("✗ Completion notification NOT found");
     }
 
@@ -366,7 +366,7 @@ async function testJSONAudioGeneration(): Promise<void> {
       });
       generateButtonReEnabled = true;
       console.log("✓ Generate Contents button is re-enabled");
-    } catch (error) {
+    } catch {
       console.log("✗ Generate Contents button is still disabled or not found");
     }
 
@@ -381,7 +381,7 @@ async function testJSONAudioGeneration(): Promise<void> {
       );
       previewContentFound = true;
       console.log("✓ Preview content found");
-    } catch (error) {
+    } catch {
       console.log("✗ Preview content NOT found");
     }
 
@@ -392,7 +392,7 @@ async function testJSONAudioGeneration(): Promise<void> {
       // Get project ID from current URL
       const projectId = await page.evaluate(() => {
         const hash = window.location.hash;
-        const match = hash.match(/\/project\/([^\/]+)/);
+        const match = hash.match(/\/project\/([^/]+)/);
         return match ? match[1] : null;
       });
 
