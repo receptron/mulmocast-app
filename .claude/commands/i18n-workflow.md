@@ -35,7 +35,7 @@ Complete workflow management for MulmoCast app internationalization project.
 You will manage the i18n workflow for the specified stage ({stage}) and scope ({scope}).
 
 ### Progress Tracking Integration
-All workflow executions will update the progress tracking sheet at `docs/i18n-progress-tracker.md`:
+All workflow executions will update the progress tracking sheet at `docs/i18n/i18n-progress-tracker.md`:
 - **Automatic updates** for phase completion status
 - **Timestamp recording** for each stage execution  
 - **Results documentation** with statistics and findings
@@ -43,7 +43,7 @@ All workflow executions will update the progress tracking sheet at `docs/i18n-pr
 
 ### Progress Update Pattern
 ```markdown
-1. Read current progress sheet: `docs/i18n-progress-tracker.md`
+1. Read current progress sheet: `docs/i18n/i18n-progress-tracker.md`
 2. Update relevant phase status and timestamps
 3. Record execution results and statistics
 4. Document any issues or deviations from plan
@@ -61,8 +61,9 @@ All workflow executions will update the progress tracking sheet at `docs/i18n-pr
    - Missing translations
    - Inconsistent key structures
    - Hardcoded text remaining
-5. **Generate project status report** and save as `docs/i18n-audit-YYYYMMDD.md`
+5. **Generate project status report** and save as `docs/i18n/i18n-audit-YYYYMMDD.md`
 6. **Update progress sheet**: Record audit results, statistics, and mark Phase 1 complete
+7. **HUMAN CHECKPOINT**: Present audit results and wait for user approval before proceeding to planning phase
 
 ### Stage 2: "plan" - Implementation Planning
 1. **Update progress sheet**: Mark Phase 2 as in-progress with timestamp
@@ -71,8 +72,9 @@ All workflow executions will update the progress tracking sheet at `docs/i18n-pr
 4. **Identify dependencies** between components
 5. **Plan translation key structure** 
 6. **Estimate effort and potential issues**
-7. **Generate implementation plan** and save as `docs/i18n-plan-YYYYMMDD.md`
+7. **Generate implementation plan** and save as `docs/i18n/i18n-plan-YYYYMMDD.md`
 8. **Update progress sheet**: Record priority assignments, estimates, and mark Phase 2 complete
+9. **HUMAN CHECKPOINT**: Present detailed implementation plan and wait for user approval before beginning code modifications
 
 ### Stage 3: "execute" - Implementation
 1. **Update progress sheet**: Mark Phase 3 as in-progress with timestamp
@@ -87,8 +89,12 @@ All workflow executions will update the progress tracking sheet at `docs/i18n-pr
 
 ### Stage 4: "complete" - Full Workflow (Default)
 1. **Initialize progress sheet**: Update project overview with start time and target
-2. **Run all stages sequentially** (audit → plan → execute) with human checkpoints
-3. **Final validation**: 
+2. **Execute Stage 1 (audit)**: Complete audit and present results
+3. **HUMAN CHECKPOINT 1**: Wait for user approval to proceed to planning
+4. **Execute Stage 2 (plan)**: Create detailed implementation plan
+5. **HUMAN CHECKPOINT 2**: Wait for user approval to begin code modifications
+6. **Execute Stage 3 (execute)**: Run implementation with progress tracking
+7. **Final validation**: 
    - Update progress sheet with final statistics
    - Mark all phases complete
    - Record total time and efficiency metrics
@@ -115,31 +121,64 @@ All workflow executions will update the progress tracking sheet at `docs/i18n-pr
 
 ### For "complete" stage:
 
-#### Phase 1: Assessment & Planning (Human Checkpoint)
+#### Human Checkpoint 1: After Audit Phase
+After completing the audit, the following summary will be presented:
+
 ```markdown
-# i18n Project Assessment
+# 📊 i18n Audit Results Summary
 
-## Current State  
-- Total components: X
-- Components with i18n: Y (Z%)
-- Missing translations: A
-- Structure issues: B
+## Current Project Status
+- **Total components found**: X
+- **Components with i18n**: Y (Z% coverage)
+- **Components requiring work**: N
+- **Translation structure issues**: M problems found
+- **Estimated total effort**: A-B hours
 
-## Implementation Plan
-### Priority 1: Critical Components (Est: 2-3 hours)
-- dashboard.vue - Main navigation
-- project.vue - Core functionality
-- script_editor.vue - Primary workflow
+## Key Findings
+- [Critical issues discovered]
+- [Translation gaps identified]
+- [Structural problems found]
 
-### Priority 2: UI Components (Est: 1-2 hours)  
-- Button, Input, Dialog components
-- Form validation components
+## Audit Report Generated
+- **File**: `docs/i18n/i18n-audit-YYYYMMDD.md`
+- **Progress tracker**: Updated with current status
 
-### Priority 3: Supporting Components (Est: 1 hour)
-- Utility and helper components
+---
+**CHECKPOINT: Proceed to planning phase?**
+**Review the audit report above and confirm to continue with planning.**
+**Type 'Y' to proceed to Phase 2 (planning), or 'N' to stop here.**
+```
 
-**Progress sheet updated with assessment results**
-**Proceed with implementation? [Y/N]**
+#### Human Checkpoint 2: After Planning Phase
+After completing the planning, the following summary will be presented:
+
+```markdown
+# 📋 i18n Implementation Plan Ready
+
+## Implementation Strategy
+### Priority 1: Critical Components (Est: X hours)
+- [List of high-priority components with rationale]
+
+### Priority 2: Feature Components (Est: Y hours)  
+- [List of medium-priority components]
+
+### Priority 3: Supporting Components (Est: Z hours)
+- [List of low-priority components]
+
+## Changes That Will Be Made
+- **Files to modify**: N Vue components
+- **Translation keys to add**: ~M new keys
+- **Language files to update**: en.ts, ja.ts
+- **Estimated duration**: X-Y hours total
+
+## Implementation Plan Generated
+- **File**: `docs/i18n/i18n-plan-YYYYMMDD.md`
+- **Progress tracker**: Updated with implementation roadmap
+
+---
+**CHECKPOINT: Begin implementation?**
+**Review the detailed plan above. This will start modifying source code.**
+**Type 'Y' to proceed to Phase 3 (implementation), or 'N' to stop here.**
 ```
 
 #### Phase 2: Structure Refactoring (If Needed)
@@ -160,6 +199,19 @@ All workflow executions will update the progress tracking sheet at `docs/i18n-pr
 - Performance impact assessment
 - **Update progress sheet** with final completion statistics and summary
 
+## Human Checkpoint Implementation
+
+### Checkpoint Behavior
+- **Automatic pause**: Workflow stops at checkpoints waiting for user input
+- **Clear summaries**: Each checkpoint presents actionable information
+- **Approval required**: User must explicitly confirm to proceed
+- **Safe exit**: Users can stop at any checkpoint without risk
+
+### Checkpoint Responses
+- **'Y' or 'yes'**: Proceed to next phase
+- **'N' or 'no'**: Stop workflow safely, preserve all progress
+- **Questions**: User can ask for clarification about the plan
+
 ## Safety & Quality Controls
 
 ### Pre-execution Checks
@@ -167,7 +219,7 @@ All workflow executions will update the progress tracking sheet at `docs/i18n-pr
 - [ ] Current branch backed up
 - [ ] No pending language file conflicts
 - [ ] Development server is running for testing
-- [ ] Progress tracking sheet `docs/i18n-progress-tracker.md` is accessible
+- [ ] Progress tracking sheet `docs/i18n/i18n-progress-tracker.md` is accessible
 
 ### Progress Tracking  
 - **Real-time updates** to `docs/i18n-progress-tracker.md`
