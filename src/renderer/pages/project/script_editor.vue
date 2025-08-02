@@ -46,7 +46,6 @@
                   :audioFile="audioFiles[index]"
                   :projectId="projectId"
                   @update="update"
-                  @generateAudio="generateAudio"
                 />
               </Card>
               <div
@@ -252,7 +251,6 @@ const emit = defineEmits([
   "update:mulmoValue",
   "update:isValidScriptData",
   "generateImage",
-  "generateAudio",
   "formatAndPushHistoryMulmoScript",
   "addBeat",
   "deleteBeat",
@@ -381,9 +379,7 @@ const update = (index: number, path: string, value: unknown) => {
 const generateImage = (index: number, target: string) => {
   emit("generateImage", index, target);
 };
-const generateAudio = (index: number) => {
-  emit("generateAudio", index);
-};
+
 const deleteBeat = (index: number) => {
   if (index >= 0 && index < props.mulmoValue.beats.length) {
     const newBeats = arrayRemoveAt(props.mulmoValue.beats, index);

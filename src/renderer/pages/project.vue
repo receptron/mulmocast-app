@@ -167,7 +167,6 @@
                       :isValidScriptData="isValidScriptData"
                       @update:isValidScriptData="(val) => (isValidScriptData = val)"
                       @generateImage="generateImage"
-                      @generateAudio="generateAudio"
                       @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
                       @positionUp="positionUp"
                       @addBeat="addBeat"
@@ -474,14 +473,6 @@ const generateImage = async (index: number, target: string) => {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: "Image generated successfully",
     errorMessage: "Failed to generate image",
-  });
-};
-
-const generateAudio = async (index: number) => {
-  notifyProgress(window.electronAPI.mulmoHandler("mulmoAudioGenerate", projectId.value, index), {
-    loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: "Audio generated successfully",
-    errorMessage: "Failed to generate audio",
   });
 };
 

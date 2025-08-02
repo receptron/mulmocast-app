@@ -21,22 +21,30 @@
       class="h-8"
     />
   </div>
+
+  <div v-for="(lang, key) in languages" :key="key">
+    <!-- WIP {{ lang }} -->
+  </div>
   <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">generate audio</Button>
   <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">generating</span>
   <audio :src="audioFile" v-if="!!audioFile" controls />
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { type MulmoBeat } from "mulmocast/browser";
 
 import { Button, Label, Input, Badge } from "@/components/ui";
 import { getBadge } from "@/lib/beat_util.js";
 
-import { useMulmoEventStore } from "../../../store";
+import { useMulmoEventStore, useMulmoGlobalStore } from "../../../store";
+import { notifyProgress } from "@/lib/notification";
+import { getConcurrentTaskStatusMessageComponent } from "../concurrent_task_status_message";
 
 const { t } = useI18n();
 const mulmoEventStore = useMulmoEventStore();
+const globalStore = useMulmoGlobalStore();
 
 interface Props {
   index: number;
@@ -44,15 +52,31 @@ interface Props {
   audioFile?: string;
   projectId: string;
 }
-defineProps<Props>();
+const props = defineProps<Props>();
 
-const emit = defineEmits(["generateAudio", "update"]);
+const emit = defineEmits(["update"]);
+
+const languages = computed(() => {
+  const data = (globalStore.settings ?? {})?.USE_LANGUAGES ?? {};
+  return Object.keys(data).reduce((tmp, current) => {
+    if (data[current]) {
+      tmp.push(current);
+    }
+    return tmp;
+  }, []);
+});
 
 const update = (index: number, path: string, value: unknown) => {
   emit("update", index, path, value);
 };
 
-const generateAudio = (index: number) => {
-  emit("generateAudio", index);
+const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
+
+const generateAudio = async (index: number) => {
+  notifyProgress(window.electronAPI.mulmoHandler("mulmoAudioGenerate", props.projectId, index), {
+    loadingMessage: ConcurrentTaskStatusMessageComponent,
+    successMessage: "Audio generated successfully",
+    errorMessage: "Failed to generate audio",
+  });
 };
 </script>
