@@ -64,7 +64,7 @@
 
         <!-- Loading State -->
         <div v-if="loading" class="flex items-center justify-center py-16">
-          <div class="text-gray-500">Loading projects...</div>
+          <div class="text-gray-500">{{ t("ui.status.loadingProjects") }}</div>
         </div>
 
         <!-- Empty State -->
