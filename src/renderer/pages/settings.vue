@@ -34,28 +34,63 @@
 
         <!-- API Key Settings Section -->
         <Card>
-          <CardHeader>
-            <CardTitle>{{ t("settings.apiKeys.title") }}</CardTitle>
-            <CardDescription>{{ t("settings.apiKeys.description") }}</CardDescription>
-          </CardHeader>
-          <CardContent class="space-y-4">
-            <div v-for="(config, envKey) in ENV_KEYS" :key="envKey" class="space-y-2">
-              <Label :for="envKey">{{ config.title }}</Label>
-              <div class="flex gap-2">
-                <Input
-                  :id="envKey"
-                  v-model="apiKeys[envKey]"
-                  :type="showKeys[envKey] ? 'text' : 'password'"
-                  :placeholder="config.placeholder"
-                  class="flex-1"
-                />
-                <Button variant="outline" size="icon" @click="showKeys[envKey] = !showKeys[envKey]">
-                  <Eye v-if="!showKeys[envKey]" class="h-4 w-4" />
-                  <EyeOff v-else class="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </CardContent>
+          <Collapsible v-model:open="apiKeysExpanded">
+            <CardHeader>
+              <CollapsibleTrigger class="w-full">
+                <div class="flex items-center justify-between">
+                  <CardTitle class="cursor-pointer">{{ t("settings.apiKeys.title") }}</CardTitle>
+                  <ChevronDown :class="['h-4 w-4 transition-transform', apiKeysExpanded && 'rotate-180']" />
+                </div>
+              </CollapsibleTrigger>
+              <CardDescription class="mt-2">
+                {{ t("settings.apiKeys.description") }}
+                <span class="mt-1 block text-xs text-gray-500 dark:text-gray-400">
+                  {{ t("settings.apiKeys.llmDescription") }}
+                </span>
+              </CardDescription>
+            </CardHeader>
+            <CollapsibleContent>
+              <CardContent class="space-y-4">
+                <div v-for="(config, envKey) in ENV_KEYS" :key="envKey" class="space-y-2 border-b pb-4 last:border-b-0">
+                  <div class="flex items-center justify-between">
+                    <Label :for="envKey" class="text-base font-medium">{{ config.title }}</Label>
+                    <a
+                      v-if="config.url"
+                      :href="config.url"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                    >
+                      {{ t("settings.apiKeys.getApiKey") }}
+                      <ExternalLink class="h-3 w-3" />
+                    </a>
+                  </div>
+                  <div v-if="config.features" class="mb-2 flex flex-wrap gap-2">
+                    <span
+                      v-for="feature in config.features"
+                      :key="feature"
+                      class="rounded-md bg-gray-100 px-2 py-1 text-xs dark:bg-gray-800"
+                    >
+                      {{ t(`settings.apiKeys.features.${feature}`) }}
+                    </span>
+                  </div>
+                  <div class="flex gap-2">
+                    <Input
+                      :id="envKey"
+                      v-model="apiKeys[envKey]"
+                      :type="showKeys[envKey] ? 'text' : 'password'"
+                      :placeholder="config.placeholder"
+                      class="flex-1"
+                    />
+                    <Button variant="outline" size="icon" @click="showKeys[envKey] = !showKeys[envKey]">
+                      <Eye v-if="!showKeys[envKey]" class="h-4 w-4" />
+                      <EyeOff v-else class="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </CollapsibleContent>
+          </Collapsible>
         </Card>
         <!-- language -->
         <Card>
@@ -122,11 +157,12 @@
 import { ref, onMounted, reactive, watch, nextTick, toRaw } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
-import { Eye, EyeOff } from "lucide-vue-next";
+import { Eye, EyeOff, ExternalLink, ChevronDown } from "lucide-vue-next";
 
 import { Button, Input, Label, Checkbox } from "@/components/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import Layout from "@/components/layout.vue";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
@@ -157,6 +193,7 @@ const llms = [
 
 const apiKeys = reactive<Record<string, string>>({});
 const showKeys = reactive<Record<string, boolean>>({});
+const apiKeysExpanded = ref(false);
 
 const globalStore = useMulmoGlobalStore();
 

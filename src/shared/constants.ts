@@ -1,46 +1,81 @@
 import { type MulmoImageParams } from "mulmocast/browser";
 export { pdf_modes, languages } from "mulmocast/browser";
 
+// Define all valid feature keys as a readonly tuple
+export const FEATURE_KEYS = [
+  "llm",
+  "tts",
+  "tts-jp",
+  "imageGeneration",
+  "videoGeneration",
+  "webSearch",
+  "soundEffects",
+  "lipSync",
+] as const;
+
+// Create a union type from the tuple for type safety
+export type FeatureKey = (typeof FEATURE_KEYS)[number];
+
 export const ENV_KEYS = {
   OPENAI_API_KEY: {
     title: "OpenAI API Key",
     placeholder: "sk-...",
+    url: "https://platform.openai.com/api-keys",
+    features: ["llm", "tts", "imageGeneration"] as FeatureKey[],
   },
   NIJIVOICE_API_KEY: {
     title: "NijiVoice API Key",
     placeholder: "nv_...",
+    url: "https://platform.nijivoice.com/api-keys",
+    features: ["tts-jp"] as FeatureKey[],
   },
   TAVILY_API_KEY: {
     title: "Tavily API Key",
     placeholder: "tvly-...",
+    url: "https://app.tavily.com/home",
+    features: ["webSearch"] as FeatureKey[],
   },
   ELEVENLABS_API_KEY: {
     title: "ElevenLabs API Key",
     placeholder: "el_...",
+    url: "https://elevenlabs.io/app/settings/api-keys",
+    features: ["tts"] as FeatureKey[],
   },
   GOOGLE_PROJECT_ID: {
     title: "Google Project ID",
     placeholder: "your-project-id",
+    url: "https://console.cloud.google.com/apis/dashboard",
+    features: ["imageGeneration", "videoGeneration"] as FeatureKey[],
   },
   REPLICATE_API_TOKEN: {
     title: "Replicate API Token",
     placeholder: "r8_...",
+    url: "https://replicate.com/account/api-tokens",
+    features: ["videoGeneration", "soundEffects", "lipSync"] as FeatureKey[],
   },
   GEMINI_API_KEY: {
     title: "Gemini API Key",
     placeholder: "AI...",
+    url: "https://aistudio.google.com/app/apikey",
+    features: ["llm"] as FeatureKey[],
   },
   ANTHROPIC_API_KEY: {
     title: "Anthropic API Key",
     placeholder: "sk-...",
+    url: "https://console.anthropic.com/settings/keys",
+    features: ["llm"] as FeatureKey[],
   },
   GROQ_API_KEY: {
     title: "GROQ API Key",
     placeholder: "gsk-...",
+    url: "https://console.groq.com/keys",
+    features: ["llm"] as FeatureKey[],
   },
   EXA_API_KEY: {
     title: "EXA API Key",
     placeholder: "xxx...",
+    url: "https://dashboard.exa.ai/api-keys",
+    features: ["webSearch"] as FeatureKey[],
   },
 } as const;
 

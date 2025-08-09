@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, shell } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
@@ -81,6 +81,51 @@ const createWindow = (splashWindow?: BrowserWindow) => {
 
   // Save window state when closed
   mainWindow.on("close", () => saveWindowState(mainWindow));
+
+  // Handle external links - open in default browser
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    // Default deny all new window creation for security
+    // Only open trusted protocols (http/https) in external browser
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      // Use void to explicitly ignore the promise and add error handling
+      void shell.openExternal(url).catch((error) => {
+        console.error("Failed to open external URL:", error);
+      });
+    }
+    // Always deny new window creation in Electron
+    return { action: "deny" };
+  });
+
+  // Handle navigation to external URLs
+  mainWindow.webContents.on("will-navigate", (event, url) => {
+    try {
+      const parsedUrl = new URL(url);
+
+      // Define allowed protocols and hosts
+      const allowedProtocols = ["file:"];
+      const allowedHosts = ["localhost", "127.0.0.1", "::1"];
+
+      // Check if navigation should be allowed
+      const isAllowedProtocol = allowedProtocols.includes(parsedUrl.protocol);
+      const isAllowedHost = allowedHosts.includes(parsedUrl.hostname);
+
+      // Only allow navigation for file protocol or whitelisted hosts
+      if (!isAllowedProtocol && !isAllowedHost) {
+        event.preventDefault();
+
+        // Open external URLs (http/https) in default browser
+        if (parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:") {
+          void shell.openExternal(url).catch((error) => {
+            console.error("Failed to open external URL during navigation:", error);
+          });
+        }
+      }
+    } catch (error) {
+      // If URL parsing fails, prevent navigation for safety
+      event.preventDefault();
+      console.error("Failed to parse URL for navigation:", error);
+    }
+  });
 
   ipcMain.on("request-env", async (event) => {
     const settings = await settingsManager.loadSettings();

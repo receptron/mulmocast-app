@@ -220,6 +220,19 @@ const lang = {
     apiKeys: {
       title: "API Key Settings",
       description: "Configure API keys for external services",
+      llmDescription:
+        "* LLM Processing: Used for script generation, translation, research, and other text generation/processing",
+      getApiKey: "Get API Key",
+      features: {
+        tts: "Text-to-Speech",
+        "tts-jp": "Japanese TTS",
+        imageGeneration: "Image Generation",
+        videoGeneration: "Video Generation",
+        llm: "LLM Processing",
+        webSearch: "Web Search",
+        soundEffects: "Sound Effects",
+        lipSync: "Lip Sync",
+      },
     },
     notifications: {
       success: "Settings saved",
