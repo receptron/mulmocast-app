@@ -35,7 +35,8 @@
         class="max-h-[calc(100vh-340px)] min-h-[400px] space-y-6 overflow-y-auto rounded-lg border bg-gray-50 p-4 font-mono text-sm"
       >
         <p class="mb-2 text-sm text-gray-500">
-          {{ t("project.scriptEditor.menu.textMode") }} {{ '-' }} {{ t("project.scriptEditor.menu.textModeDescription") }}
+          {{ t("project.scriptEditor.menu.textMode") }} {{ "-" }}
+          {{ t("project.scriptEditor.menu.textModeDescription") }}
         </p>
         <div class="mx-auto space-y-2">
           <div class="px-2 py-1">
@@ -101,7 +102,8 @@
         ]"
       >
         <p class="mb-2 text-sm text-gray-500">
-          {{ t("project.scriptEditor.menu.yamlMode") }} {{ '-' }} {{ t("project.scriptEditor.menu.yamlModeDescription") }}
+          {{ t("project.scriptEditor.menu.yamlMode") }} {{ "-" }}
+          {{ t("project.scriptEditor.menu.yamlModeDescription") }}
         </p>
         <div class="min-h-0 flex-1" style="height: 0">
           <CodeEditor
@@ -123,7 +125,8 @@
         ]"
       >
         <p class="mb-2 text-sm text-gray-500">
-          {{ t("project.scriptEditor.menu.jsonMode") }} {{ '-' }} {{ t("project.scriptEditor.menu.jsonModeDescription") }}
+          {{ t("project.scriptEditor.menu.jsonMode") }} {{ "-" }}
+          {{ t("project.scriptEditor.menu.jsonModeDescription") }}
         </p>
         <div class="min-h-0 flex-1" style="height: 0">
           <CodeEditor
@@ -140,7 +143,8 @@
     <TabsContent :value="SCRIPT_EDITOR_TABS.MEDIA" class="mt-4">
       <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
         <p class="mb-2 text-sm text-gray-500">
-          {{ t("project.scriptEditor.menu.mediaMode") }} {{ '-' }} {{ t("project.scriptEditor.menu.mediaModeDescription") }}
+          {{ t("project.scriptEditor.menu.mediaMode") }} {{ "-" }}
+          {{ t("project.scriptEditor.menu.mediaModeDescription") }}
         </p>
 
         <div class="mx-auto space-y-2">
@@ -203,7 +207,8 @@
     <TabsContent :value="SCRIPT_EDITOR_TABS.STYLE" class="mt-4">
       <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
         <p class="mb-2 text-sm text-gray-500">
-          {{ t("project.scriptEditor.menu.styleMode") }} {{ '-' }} {{ t("project.scriptEditor.menu.styleModeDescription") }}
+          {{ t("project.scriptEditor.menu.styleMode") }} {{ "-" }}
+          {{ t("project.scriptEditor.menu.styleModeDescription") }}
         </p>
         <PresentationStyleEditor
           :presentationStyle="mulmoValue"
@@ -216,8 +221,8 @@
     <TabsContent :value="SCRIPT_EDITOR_TABS.REFERENCE" class="mt-4">
       <div class="max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border bg-gray-50 p-4">
         <p class="mb-2 text-sm text-gray-500">
-            {{ t("project.scriptEditor.menu.referenceMode") }} {{ '-' }}
-            {{ t("project.scriptEditor.menu.referenceModeDescription") }}
+          {{ t("project.scriptEditor.menu.referenceMode") }} {{ "-" }}
+          {{ t("project.scriptEditor.menu.referenceModeDescription") }}
         </p>
         <Reference
           :projectId="projectId"
