@@ -2,7 +2,7 @@
   <div>
     <div class="mb-2 flex items-center justify-between">
       <div class="flex items-center gap-3 font-medium">
-        <span class="text-base">Beat: {{ index + 1 }}</span>
+        <span class="text-base">{{ t('ui.common.beat') }}{{ ':' }} {{ index + 1 }}</span>
         <Badge v-if="beat.speaker" variant="outline">{{ beat.speaker }}</Badge>
       </div>
       <Badge variant="outline" @click="toggleTypeMode = !toggleTypeMode" class="cursor-pointer" v-if="!toggleTypeMode">
@@ -135,13 +135,13 @@
           </template>
           <!-- Other -->
           <template v-else>
-            <div class="text-sm text-red-500">Unsupported type: {{ beat.image.type }}</div>
+            <div class="text-sm text-red-500">{{ t('beat.unsupportedType') }}{{ ':' }} {{ beat.image.type }}</div>
           </template>
         </div>
         <!-- end of beat.image -->
         <div v-else>
           <template v-if="beat.htmlPrompt">
-            <Label class="mb-1 block">{{ t("beat.htmlPrompt.label") }}: </Label>
+              <Label class="mb-1 block">{{ t("beat.htmlPrompt.label") }}{{ ':' }}</Label>
             <Textarea
               :placeholder="t('beat.htmlPrompt.placeholder')"
               :model-value="beat.htmlPrompt?.prompt"
@@ -151,7 +151,7 @@
             />
           </template>
           <template v-else>
-            <Label class="mb-1 block">{{ t("beat.imagePrompt.label") }}: </Label>
+              <Label class="mb-1 block">{{ t("beat.imagePrompt.label") }}{{ ':' }}</Label>
             <Textarea
               :placeholder="t('beat.imagePrompt.placeholder')"
               :model-value="beat.imagePrompt"
@@ -181,7 +181,7 @@
       <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
         <!-- movie edit -->
         <div>
-          <Label class="mb-1 block">{{ t("beat.moviePrompt.label") }}: </Label>
+          <Label class="mb-1 block">{{ t("beat.moviePrompt.label") }}{{ ':' }}</Label>
           <Textarea
             :placeholder="t('beat.moviePrompt.placeholder')"
             :model-value="beat.moviePrompt"
@@ -210,13 +210,13 @@
       <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
         <!-- movie edit -->
         <div>
-          <Label class="mb-1 block">{{ t("beat.lipSync.label") }}: </Label>
-          <Checkbox
-            variant="ghost"
-            size="icon"
-            :modelValue="beat.enableLipSync"
-            @update:model-value="(value) => update('enableLipSync', value)"
-          />: {{ t(beat.enableLipSync ? "ui.common.enable" : "ui.common.disable") }}
+            <Label class="mb-1 block">{{ t("beat.lipSync.label") }}{{ ':' }}</Label>
+            <Checkbox
+              variant="ghost"
+              size="icon"
+              :modelValue="beat.enableLipSync"
+              @update:model-value="(value) => update('enableLipSync', value)"
+            />{{ ':' }} {{ t(beat.enableLipSync ? "ui.common.enable" : "ui.common.disable") }}
         </div>
       </div>
       <!-- right: lipSync preview -->

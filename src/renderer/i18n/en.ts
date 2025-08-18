@@ -307,6 +307,14 @@ const lang = {
       pdfHandout: "PDF (Handout)",
     },
     scriptEditor: {
+      tabs: {
+        text: "Text",
+        yaml: "YAML",
+        json: "JSON",
+        media: "Media",
+        style: "Style",
+        reference: "Ref",
+      },
       menu: {
         textMode: "Text Mode",
         textModeDescription: "Speaker and dialogue editing only",
@@ -389,6 +397,7 @@ const lang = {
   beat: {
     videoPreview: "Video Preview",
     imagePreview: "Image Preview",
+    unsupportedType: "Unsupported type",
     // Beat speaker settings
     speaker: {
       selectSpeaker: "Select a speaker",

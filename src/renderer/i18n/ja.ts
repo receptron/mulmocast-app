@@ -306,6 +306,14 @@ const lang = {
       pdfHandout: "PDF (資料)",
     },
     scriptEditor: {
+      tabs: {
+        text: "Text",
+        yaml: "YAML",
+        json: "JSON",
+        media: "Media",
+        style: "Style",
+        reference: "参照",
+      },
       menu: {
         textMode: "Text モード",
         textModeDescription: "話者と会話や字幕へ編集ができます",
@@ -388,6 +396,7 @@ const lang = {
   beat: {
     videoPreview: "動画プレビュー",
     imagePreview: "画像プレビュー",
+    unsupportedType: "未対応のタイプ",
     // Beat speaker settings
     speaker: {
       selectSpeaker: "スピーカーを選択",
