@@ -186,6 +186,7 @@ const lang = {
       tooLong: "長すぎます",
       mustBeNumber: "数値である必要があります",
       mustBeUrl: "有効なURLである必要があります",
+      unsupportedType: "{type}は未対応のタイプです",
     },
   },
   llms: {

@@ -1,0 +1,39 @@
+{
+    "i18n-ally.localesPaths": [
+        "src/renderer/i18n"
+    ],
+    "i18n-ally.enabledParsers": [
+        "ts",
+        "js",
+        "vue"
+    ],
+    "i18n-ally.pathMatcher": "{locale}.ts",
+    "i18n-ally.namespace": true,
+    "i18n-ally.keystyle": "nested",
+    "i18n-ally.annotations": false,
+
+    // Hard-coded strings検出の設定
+    "i18n-ally.extract.autoDetect": true,
+    
+    // Vueファイル用のリファクタリングテンプレート
+    "i18n-ally.refactor.templates": [
+        {
+            "source": "js-string",
+            "templates": [
+                "$t('{key}')"
+            ],
+            "include": [
+                "src/renderer/pages/**/*.vue"
+            ]
+        },
+        {
+            "source": "html-text", 
+            "templates": [
+                "{{ $t('{key}') }}"
+            ],
+            "include": [
+                "src/renderer/pages/**/*.vue"
+            ]
+        }
+    ]
+}

@@ -135,7 +135,7 @@
           </template>
           <!-- Other -->
           <template v-else>
-            <div class="text-sm text-red-500">Unsupported type: {{ beat.image.type }}</div>
+            <div class="text-sm text-red-500">{{ t('ui.validation.unsupportedType', { type: beat.image.type }) }}</div>
           </template>
         </div>
         <!-- end of beat.image -->

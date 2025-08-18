@@ -1,0 +1,80 @@
+# ワークフローの名前：GitHubのActionsタブで表示される名前
+name: Build, Notarize, and Release for macOS
+
+# ワークフローが実行されるタイミング（トリガー）
+on:
+  # 'v'で始まるタグ（例: v1.0.0, v1.2.3-beta）またはmainブランチがPushされた時に実行
+  # push:
+  #   branches: [main]
+  #   tags:
+  #     - 'v*'
+  
+  # GitHubのActionsページから手動で実行できるようにする
+  workflow_dispatch:
+
+# 実行される一連のタスク（ジョブ）
+jobs:
+  # ジョブのID（任意の名前）
+  build-and-release:
+    # 実行環境：最新のmacOS
+    runs-on: macos-14
+    
+    strategy:
+      matrix:
+        node-version: [22.x]
+    
+    # 実行される個々のステップ
+    steps:
+      # 1. ソースコードのチェックアウト
+      # ワークフローを実行する仮想環境に、リポジトリのコードをコピーしてくる
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Node.js環境のセットアップ
+      # アプリのビルドに必要なNode.jsとYarnを準備する
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          # Yarnのキャッシュを有効にし、インストールを高速化
+          cache: 'yarn'
+
+      # 3. 依存パッケージのインストール
+      # package.jsonとyarn.lockを元に必要なライブラリをインストール
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      # 4. Apple証明書のインポート
+      # GitHub Secretsから証明書を取得し、キーチェーンにインポートする
+      - name: Import Apple Certificate
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          echo $APPLE_CERTIFICATE | base64 --decode > certificate.p12
+          security create-keychain -p actions temp.keychain
+          security unlock-keychain -p actions temp.keychain
+          security import certificate.p12 -k temp.keychain -P $APPLE_CERTIFICATE_PASSWORD -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k actions temp.keychain
+          security list-keychain -d user -s temp.keychain login.keychain
+
+      # 5. ビルド、署名、公証の実行
+      # forge.config.tsの設定に基づいて全ての処理を行う
+      - name: Build, Sign, and Notarize
+        env:
+          # forge.config.tsが期待する環境変数名
+          AC_APPLE_ID: ${{ secrets.APPLE_ID }}
+          AC_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          AC_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          CODESIGN_IDENTITY: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
+        run: yarn run make
+        
+      # 6. 生成物のアップロード（アーティファクトとして）
+      # ビルドが成功したかどうかを後で確認できるように、生成された全てのファイルを一時的に保存する
+      - name: Upload Artifact for Debugging
+        uses: actions/upload-artifact@v4
+        with:
+          name: macOS-release-files
+          # electron-makeの出力パス。実際のパスに合わせて要確認
+          path: out/make/
+

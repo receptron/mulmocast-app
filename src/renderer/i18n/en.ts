@@ -186,6 +186,7 @@ const lang = {
       tooLong: "Too long",
       mustBeNumber: "Must be a number",
       mustBeUrl: "Must be a valid URL",
+      unsupportedType: "Unsupported type: {type}",
     },
   },
   llms: {
