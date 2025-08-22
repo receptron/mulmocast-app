@@ -73,14 +73,14 @@
             <SelectValue :placeholder="t('parameters.audioParams.bgmSelect')" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__none__">
-              {{ t("parameters.audioParams.noBgm") }}
-            </SelectItem>
             <SelectItem v-for="bgm in bgmAssets.bgms" :key="bgm.name" :value="bgm.url">
               {{ bgm.title }}
             </SelectItem>
             <SelectItem value="__custom__">
               {{ t("parameters.audioParams.customAudio") }}
+            </SelectItem>
+            <SelectItem :value="SILENT_BGM.url">
+              {{ t("parameters.audioParams.noBgm") }}
             </SelectItem>
           </SelectContent>
         </Select>
@@ -130,7 +130,7 @@
       </div>
 
       <!-- Audio Player -->
-      <div v-if="audioUrl" class="mt-3">
+      <div v-if="audioUrl && audioUrl !== SILENT_BGM.url" class="mt-3">
         <audio :src="audioUrl" controls />
       </div>
 
@@ -147,7 +147,7 @@ import { Card, Label, Input, Select, SelectContent, SelectItem, SelectTrigger, S
 import type { MulmoPresentationStyle } from "mulmocast/browser";
 import { bgmAssets } from "mulmocast/data";
 import MulmoError from "./mulmo_error.vue";
-import { AUDIO_PARAMS_DEFAULT_VALUES } from "@/../shared/constants";
+import { AUDIO_PARAMS_DEFAULT_VALUES, SILENT_BGM } from "@/../shared/constants";
 
 type AudioParams = MulmoPresentationStyle["audioParams"];
 
@@ -227,6 +227,10 @@ const currentBgmUrl = computed(() => {
   }
 
   if (props.audioParams?.bgm) {
+    if (props.audioParams.bgm.kind === "url" && props.audioParams.bgm.url === SILENT_BGM.url) {
+      return SILENT_BGM.url;
+    }
+
     if (props.audioParams.bgm.kind === "url") {
       const url = props.audioParams.bgm.url;
       const isPreset = bgmAssets.bgms.some((bgm) => bgm.url === url);
@@ -251,14 +255,14 @@ const handleBgmUpdate = (bgmUrl: string) => {
   const currentParams = props.audioParams || ({} as AudioParams);
 
   if (bgmUrl === "__none__") {
-    const { bgm: __bgm, ...paramsWithoutBgm } = currentParams;
     customAudioFileName.value = "";
     isShowingCustom.value = false;
-    audioUrl.value = "";
+    audioUrl.value = SILENT_BGM.url;
     revokeAudioUrlIfExists();
     emit("update", {
       ...AUDIO_PARAMS_DEFAULT_VALUES,
-      ...paramsWithoutBgm,
+      ...currentParams,
+      bgm: SILENT_BGM,
     });
   } else if (bgmUrl === "__custom__") {
     isShowingCustom.value = true;

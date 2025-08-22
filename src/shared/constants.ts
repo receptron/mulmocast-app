@@ -1,4 +1,5 @@
 import { type MulmoImageParams, provider2LLMAgent } from "mulmocast/browser";
+import { bgmAssets } from "mulmocast/data";
 export { pdf_modes, languages } from "mulmocast/browser";
 
 // Define all valid feature keys as a readonly tuple
@@ -368,6 +369,15 @@ export const AUDIO_PARAMS_DEFAULT_VALUES = {
   outroPadding: 1.0,
   bgmVolume: 0.2,
   audioVolume: 1.0,
+  bgm: {
+    kind: "url",
+    url: bgmAssets.bgms[0].url,
+  },
+} as const;
+
+export const SILENT_BGM = {
+  kind: "url",
+  url: "https://github.com/receptron/mulmocast-media/raw/refs/heads/main/bgms/silent001.mp3",
 } as const;
 
 export const PRESET_CANVAS_SIZE_DEFAULT_VALUE = "1024x1024";
