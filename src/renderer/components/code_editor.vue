@@ -111,7 +111,17 @@ watch(
   (newValue) => {
     if (editorInstance.value && editorInstance.value.getValue() !== newValue) {
       isUpdatingModel = true;
+      
+      // Save cursor position before setValue
+      const position = editorInstance.value.getPosition();
+      
       editorInstance.value.setValue(newValue || "");
+      
+      // Restore cursor position after setValue
+      if (position) {
+        editorInstance.value.setPosition(position);
+      }
+      
       isUpdatingModel = false;
     }
   },
