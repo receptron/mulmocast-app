@@ -30,6 +30,7 @@ const editorInstance = shallowRef<editor.IStandaloneCodeEditor | null>(null);
 const monacoRef = shallowRef<Monaco | null>(null);
 
 let isUpdatingModel = false;
+let isYamlConfigured = false;
 
 const setDiagnosticsOptions = (monaco: Monaco, language: "json" | "yaml") => {
   const schema = {
@@ -46,9 +47,13 @@ const setDiagnosticsOptions = (monaco: Monaco, language: "json" | "yaml") => {
       });
       break;
     case "yaml":
-      configureMonacoYaml(monaco, {
-        schemas: [schema],
-      });
+      // Only configure Monaco YAML once to prevent duplicate schema registrations
+      if (!isYamlConfigured) {
+        configureMonacoYaml(monaco, {
+          schemas: [schema],
+        });
+        isYamlConfigured = true;
+      }
       break;
   }
 };
