@@ -11,7 +11,7 @@ const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
     extraResource: [".vite/build/ffmpeg", "node_modules/mulmocast/assets", "node_modules/mulmocast/scripts"],
-    icon: "./images/macoro.png",
+    icon: "./images/mulmocast_icon.icns",
     osxSign: process.env.CODESIGN_IDENTITY
       ? ({
           identity: process.env.CODESIGN_IDENTITY,

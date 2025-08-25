@@ -4,25 +4,34 @@
   <meta charset="UTF-8">
   <title>Loading...</title>
   <style>
-    body {
+    html, body {
       margin: 0;
       padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    body {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      justify-content: flex-start;
       align-items: center;
-      height: 100vh;
       background-color: #f7f7f7;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
     }
 
     .splash-container {
       text-align: center;
+      margin: 0;
+      padding: 0;
     }
 
     .app-logo {
-      width: 120px;
-      height: 120px;
-      margin-bottom: 30px;
+      width: 400px;
+      height: auto;
+      margin: 0;
+      margin-bottom: 15px;
+      display: block;
     }
 
     .app-name {
@@ -34,8 +43,8 @@
     }
 
     .loading-spinner {
-      width: 40px;
-      height: 40px;
+      width: 16px;
+      height: 16px;
       margin: 0 auto;
       border: 3px solid #e0e0e0;
       border-top-color: #222;
@@ -49,16 +58,20 @@
 
     .loading-text {
       color: #888;
-      font-size: 14px;
-      margin-top: 20px;
+      font-size: 16px;
+      margin: 0;
     }
   </style>
 </head>
 <body>
   <div class="splash-container">
-    <div class="app-name">Mulmocast</div>
-    <div class="loading-spinner"></div>
-    <div class="loading-text">Loading...</div>
+    <img src="./images/mulmocast_credit.png" alt="Mulmocast Logo" class="app-logo">
+    <div style="display: flex; align-items: center; justify-content: center;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading...</div>
+      </div>
+    </div>
   </div>
 </body>
 </html>

@@ -12,9 +12,9 @@ import { getWindowState, saveWindowState } from "./utils/windw_state";
 const isDev = process.env.NODE_ENV === "development";
 const isCI = process.env.CI === "true";
 
-// 開発環境でのみPlaywright用のデバッグポートを設定
+// Development environment configuration
 if (isDev) {
-  app.commandLine.appendSwitch("remote-debugging-port", "9222");
+  app.commandLine.appendSwitch("remote-debugging-port", "9222"); // Enable Playwright debugging
 }
 
 // CI環境でサンドボックスを無効化
@@ -30,7 +30,7 @@ if (started) {
 const createSplashWindow = () => {
   const splashWindow = new BrowserWindow({
     width: 400,
-    height: 300,
+    height: 275,
     frame: false,
     alwaysOnTop: true,
     transparent: true,
@@ -38,7 +38,7 @@ const createSplashWindow = () => {
       nodeIntegration: false,
       contextIsolation: true,
     },
-    icon: path.join(__dirname, "../../images/macoro.png"),
+    icon: path.join(__dirname, "../../images/mulmocast_icon.icns"),
   });
 
   // Load splash.html - in dev mode it's in root, in prod it's in build directory
