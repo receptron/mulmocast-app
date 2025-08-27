@@ -7,7 +7,7 @@ import ffmpegFfprobeStatic from "ffmpeg-ffprobe-static";
 export default defineConfig({
   build: {
     rollupOptions: {
-      external: ["jsdom", "puppeteer", "puppeteer-core"],
+      external: ["jsdom", "puppeteer-core"],
     },
     commonjsOptions: { transformMixedEsModules: true },
   },
