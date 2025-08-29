@@ -46,7 +46,7 @@
           </div>
           <Button @click="increase" variant="outline">{{ t("ui.common.increase") }}</Button>
         </div>
-        {{ mulmoMultiLinguals?.[currentBeatId]?.["multiLingualTexts"]?.[currentLanguage]?.text || currentBeat?.text }}
+        {{ isScriptLang ? currentBeat?.text : (mulmoMultiLinguals?.[currentBeatId]?.["multiLingualTexts"]?.[currentLanguage]?.text ?? t("ui.common.noLang"))}}
       </div>
 
       <div class="text-muted-foreground mt-4 text-sm">
@@ -89,6 +89,10 @@ const autoPlay = ref(true);
 
 const lang = props.project?.script?.lang ?? "en";
 const currentLanguage = ref(globalStore.useLanguages.includes(lang) ? lang : (globalStore.useLanguages[0] ?? "en"));
+
+const isScriptLang = computed(() => {
+  return props.project?.script?.lang === currentLanguage.value;
+});
 
 const { imageFiles, movieFiles, lipSyncFiles, downloadImageFiles } = useImageFiles();
 const { audioFiles, downloadAudioFiles } = useAudioFiles();
