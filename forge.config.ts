@@ -9,7 +9,10 @@ import { FuseV1Options, FuseVersion } from "@electron/fuses";
 
 const config: ForgeConfig = {
   packagerConfig: {
-    asar: true,
+    // Enable ASAR and unpack Puppeteer's Chromium binaries so they can be executed at runtime
+    asar: {
+      unpack: "**/node_modules/puppeteer/.local-chromium/**",
+    },
     extraResource: [".vite/build/ffmpeg", "node_modules/mulmocast/assets", "node_modules/mulmocast/scripts"],
     icon: "./images/mulmocast_icon.icns",
     osxSign: process.env.CODESIGN_IDENTITY

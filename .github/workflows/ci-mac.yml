@@ -44,6 +44,20 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      # Puppeteer Chromium cache restore (speeds up downloads) and install
+      - name: Restore Puppeteer cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.puppeteer-cache
+          key: puppeteer-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            puppeteer-${{ runner.os }}-
+
+      - name: Install Chromium for Puppeteer
+        env:
+          PUPPETEER_CACHE_DIR: ${{ github.workspace }}/.puppeteer-cache
+        run: npx puppeteer browsers install chrome
+
       # 4. Apple証明書のインポート
       # GitHub Secretsから証明書を取得し、キーチェーンにインポートする
       - name: Import Apple Certificate
@@ -67,6 +81,7 @@ jobs:
           AC_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           AC_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           CODESIGN_IDENTITY: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
+          PUPPETEER_CACHE_DIR: ${{ github.workspace }}/.puppeteer-cache
         run: yarn run make:ci
         
       # 6. 生成物のアップロード（アーティファクトとして）
@@ -77,4 +92,3 @@ jobs:
           name: macOS-release-files
           # electron-makeの出力パス。実際のパスに合わせて要確認
           path: out/make/
-

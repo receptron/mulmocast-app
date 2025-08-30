@@ -5,11 +5,12 @@
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
   "scripts": {
-    "start": "NODE_ENV=development electron-forge start",
+    "start": "npx electron-rebuild && NODE_ENV=development electron-forge start",
+    "rebuild:native": "npx electron-rebuild -f",
     "dev": "NODE_ENV=development vite --config vite.renderer.config.ts",
-    "package": "electron-forge package",
-    "make:local": "bash -c 'set -a && source .env && set +a && electron-forge make'",
-    "make:ci": "electron-forge make",
+    "package": "npx puppeteer browsers install chrome && electron-forge package",
+    "make:local": "bash -c 'set -a && source .env && set +a && npx puppeteer browsers install chrome && electron-forge make'",
+    "make:ci": "npx puppeteer browsers install chrome && electron-forge make",
     "format": "prettier --write '{test/*,src/**/*,*}.{js,ts,vue,json}'",
     "format:check": "prettier --check '{src/**/*,*}.{js,ts,vue,json}'",
     "publish": "electron-forge publish",
@@ -73,6 +74,7 @@
     "yaml-eslint-parser": "^1.3.0"
   },
   "dependencies": {
+    "puppeteer": "^24.17.0",
     "@graphai/llm_agents": "^2.0.11",
     "@graphai/stream_agent_filter": "^2.0.2",
     "@graphai/vanilla": "^2.0.12",

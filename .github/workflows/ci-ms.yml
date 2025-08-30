@@ -27,8 +27,25 @@ jobs:
         shell: powershell
         run: yarn install --frozen-lockfile
 
+      # Puppeteer Chromium cache restore (speeds up downloads) and install
+      - name: Restore Puppeteer cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}\\.puppeteer-cache
+          key: puppeteer-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            puppeteer-${{ runner.os }}-
+
+      - name: Install Chromium for Puppeteer
+        shell: powershell
+        env:
+          PUPPETEER_CACHE_DIR: ${{ github.workspace }}\\.puppeteer-cache
+        run: npx puppeteer browsers install chrome
+
       - name: Run package
         shell: powershell
+        env:
+          PUPPETEER_CACHE_DIR: ${{ github.workspace }}\\.puppeteer-cache
         run: yarn run package
         
       - name: Upload generated media
