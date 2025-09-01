@@ -19,6 +19,7 @@ export const getContext = async (projectId: string, targetLang?: string): Promis
 
 export const mulmoCallbackGenerator = (projectId: string, webContents: WebContents) => {
   return (data: unknown) => {
+    console.log(data, "AAAAAAAA");
     if (webContents) {
       webContents.send("progress-update", {
         projectId,
