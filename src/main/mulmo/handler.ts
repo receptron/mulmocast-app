@@ -44,7 +44,7 @@ import { mulmoImageFetchURL, mulmoReferenceImageFetchURL } from "./handler_image
 import { mulmoReferenceImageUpload, mulmoImageUpload } from "./handler_image_upload";
 import { mulmoAudioBgmUpload, mulmoAudioBgmGet } from "./handler_audio_upload";
 import { graphaiPuppeteerAgent } from "./handler_graphai";
-import { mulmoCallbackGenerator, getContext } from "./handler_common";
+import { mulmoCallbackGenerator, getContext, sendProgressUpdateFiltered } from "./handler_common";
 
 const isDev = !app.isPackaged;
 
@@ -72,11 +72,7 @@ export const mulmoReferenceImages = async (projectId: string, webContents: WebCo
     return images;
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
-    webContents.send("progress-update", {
-      projectId,
-      type: "error",
-      data: error,
-    });
+    sendProgressUpdateFiltered(webContents, projectId, "error", error);
     return null;
   }
 };

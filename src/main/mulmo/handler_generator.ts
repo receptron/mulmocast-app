@@ -1,5 +1,5 @@
 import { WebContents } from "electron";
-import { mulmoCallbackGenerator, getContext } from "./handler_common";
+import { mulmoCallbackGenerator, getContext, sendProgressUpdateFiltered } from "./handler_common";
 import type { TransactionLog } from "graphai";
 import {
   images,
@@ -35,11 +35,7 @@ export const mulmoActionRunner = async (
     const graphAICallbacks = [
       (log: TransactionLog) => {
         if (webContents) {
-          webContents.send("progress-update", {
-            projectId,
-            type: "graphai",
-            data: log,
-          });
+          sendProgressUpdateFiltered(webContents, projectId, "graphai", log);
         }
       },
     ];
@@ -82,19 +78,11 @@ export const mulmoActionRunner = async (
     if (error instanceof z.ZodError) {
       if (error.issues) {
         error.issues.map((e) => {
-          webContents.send("progress-update", {
-            projectId,
-            type: "zod_error",
-            data: e,
-          });
+          sendProgressUpdateFiltered(webContents, projectId, "zod_error", e);
         });
       }
     } else {
-      webContents.send("progress-update", {
-        projectId,
-        type: "error",
-        data: error,
-      });
+      sendProgressUpdateFiltered(webContents, projectId, "error", error);
     }
     return {
       result: false,
@@ -139,29 +127,21 @@ export const mulmoGenerateBeatImage = async (
     }
     const graphaiCallbacks = ({ nodeId, state }) => {
       if (nodeId === "preprocessor" && state === "executing") {
-        webContents.send("progress-update", {
-          projectId,
-          type: "mulmo",
-          data: {
-            kind: "beatGenerate",
-            sessionType: "image",
-            inSession: true,
-            index,
-            id,
-          },
+        sendProgressUpdateFiltered(webContents, projectId, "mulmo", {
+          kind: "beatGenerate",
+          sessionType: "image",
+          inSession: true,
+          index,
+          id,
         });
       }
       if (nodeId === "output" && state === "completed") {
-        webContents.send("progress-update", {
-          projectId,
-          type: "mulmo",
-          data: {
-            kind: "beatGenerate",
-            sessionType: "image",
-            inSession: false,
-            index,
-            id,
-          },
+        sendProgressUpdateFiltered(webContents, projectId, "mulmo", {
+          kind: "beatGenerate",
+          sessionType: "image",
+          inSession: false,
+          index,
+          id,
         });
       }
     };
@@ -179,11 +159,7 @@ export const mulmoGenerateBeatImage = async (
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
-    webContents.send("progress-update", {
-      projectId,
-      type: "error",
-      data: error,
-    });
+    sendProgressUpdateFiltered(webContents, projectId, "error", error);
     return {
       result: false,
       error,
@@ -203,11 +179,7 @@ export const mulmoGenerateBeatAudio = async (projectId: string, index: number, w
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
-    webContents.send("progress-update", {
-      projectId,
-      type: "error",
-      data: error,
-    });
+    sendProgressUpdateFiltered(webContents, projectId, "error", error);
     return {
       result: false,
       error,
@@ -240,11 +212,7 @@ export const mulmoReferenceImage = async (
     return returnImage;
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
-    webContents.send("progress-update", {
-      projectId,
-      type: "error",
-      data: error,
-    });
+    sendProgressUpdateFiltered(webContents, projectId, "error", error);
     return null;
   }
 };
@@ -265,11 +233,7 @@ export const mulmoTranslateBeat = async (
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
-    webContents.send("progress-update", {
-      projectId,
-      type: "error",
-      data: error,
-    });
+    sendProgressUpdateFiltered(webContents, projectId, "error", error);
     return {
       result: false,
       error,
@@ -288,11 +252,7 @@ export const mulmoTranslate = async (projectId: string, targetLangs: string[], w
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
-    webContents.send("progress-update", {
-      projectId,
-      type: "error",
-      data: error,
-    });
+    sendProgressUpdateFiltered(webContents, projectId, "error", error);
     return {
       result: false,
       error,
