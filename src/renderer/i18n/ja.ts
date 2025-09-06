@@ -533,6 +533,7 @@ const lang = {
       badge: "Vision",
       label: "Vision",
       placeholder: "スライドに合わせたjsonデータ",
+      stylePlaceholder: "スタイルを選択してください",
     },
   },
 

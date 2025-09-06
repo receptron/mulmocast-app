@@ -204,7 +204,7 @@
             :modelValue="beat.enableLipSync"
             @update:model-value="(value) => update('enableLipSync', value)"
           />
-          <Label class="mb-2 block">{{ t("beat.lipSync.label") }}: </Label>
+          <Label class="mb-2 block">{{ t("beat.lipSync.label") }} </Label>
         </div>
       </div>
       <!-- right: lipSync preview -->

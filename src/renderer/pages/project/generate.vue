@@ -19,7 +19,7 @@
         >
           <div class="mb-0 flex items-center justify-center gap-2">
             <Monitor :size="24" v-if="options.movie" />
-            <Globe :size="24" v-if="options.audio" />
+            <Volume2Icon :size="24" v-if="options.audio" />
             <FileText :size="24" v-if="options.pdfSlide || options.pdfHandout" />
           </div>
           <span>{{ t("project.generate.generateContents") }}</span>
@@ -32,7 +32,7 @@
 import { ref, watch } from "vue";
 import { useMulmoEventStore } from "../../store";
 import { notifyProgress } from "@/lib/notification";
-import { FileText, Monitor, Globe } from "lucide-vue-next";
+import { FileText, Monitor, Volume2Icon } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { getConcurrentTaskStatusMessageComponent } from "./concurrent_task_status_message";
 import { Checkbox } from "@/components/ui/checkbox";

@@ -533,6 +533,7 @@ const lang = {
       badge: "Vision",
       label: "Vision",
       placeholder: "JSON data",
+      stylePlaceholder: "Please select a style",
     },
   },
 

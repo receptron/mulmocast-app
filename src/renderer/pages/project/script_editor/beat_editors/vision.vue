@@ -1,6 +1,7 @@
 <template>
   <Label class="mb-1 block">{{ t("beat.vision.label") }}</Label>
   <VisionSelect
+    class="mb-2"
     :model-value="beat.image?.style"
     @update:model-value="(value) => update('image.style', String(value))"
   />
