@@ -44,9 +44,14 @@
       />
       <div
         v-if="isRunning"
-        class="bg-muted text-muted-foreground block max-w-md rounded-lg p-3 text-xs break-words whitespace-pre-wrap"
+        class="bg-muted text-muted-foreground flex max-w-md items-baseline gap-2 rounded-lg p-3 text-xs break-words whitespace-pre-wrap"
       >
         {{ t("ui.actions.runningThing", { thing: `${currentRunningAgent}/${currentRunningNode}` }) }}
+        <div class="flex items-baseline space-x-1">
+          <div class="bg-muted-foreground h-1 w-1 animate-bounce rounded-full" style="animation-delay: 0s"></div>
+          <div class="bg-muted-foreground h-1 w-1 animate-bounce rounded-full" style="animation-delay: 0.1s"></div>
+          <div class="bg-muted-foreground h-1 w-1 animate-bounce rounded-full" style="animation-delay: 0.2s"></div>
+        </div>
       </div>
     </div>
 
