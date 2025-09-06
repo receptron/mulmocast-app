@@ -40,13 +40,10 @@
                 <CardTitle class="cursor-pointer">{{ t("settings.apiKeys.title") }}</CardTitle>
                 <ChevronDown :class="['h-4 w-4 transition-transform', apiKeysExpanded && 'rotate-180']" />
               </div>
+              <CardDescription class="mt-2 text-left">
+                {{ t("settings.apiKeys.description") }}
+              </CardDescription>
             </CollapsibleTrigger>
-            <CardDescription class="mt-2">
-              {{ t("settings.apiKeys.description") }}
-              <span class="text-muted-foreground mt-1 block text-xs">
-                {{ t("settings.apiKeys.llmDescription") }}
-              </span>
-            </CardDescription>
           </CardHeader>
           <CollapsibleContent>
             <CardContent class="space-y-4">
@@ -123,6 +120,7 @@
         <CardContent>
           <div class="space-y-2">
             <Label for="language">{{ t("settings.llmSettings.llm.label") }}</Label>
+            <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.llm.description") }}</p>
             <Select v-model="selectedLLM">
               <SelectTrigger id="llm">
                 <SelectValue :placeholder="t('settings.llmSettings.llm.placeholder')" />
@@ -136,8 +134,6 @@
             <div v-if="alertLLM" class="text-destructive">
               {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName." + alertLLM) }) }}
             </div>
-
-            <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.llm.description") }}</p>
           </div>
           <div class="mt-4 space-y-2" v-if="selectedLLM === 'ollamaAgent'">
             <Label for="language">{{ t("settings.llmSettings.ollama.label") }}</Label>

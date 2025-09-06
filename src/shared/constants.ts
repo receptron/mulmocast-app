@@ -4,7 +4,8 @@ export { pdf_modes, languages } from "mulmocast/browser";
 
 // Define all valid feature keys as a readonly tuple
 export const FEATURE_KEYS = [
-  "llm",
+  "llmChat",
+  "llmTranslation",
   "tts",
   "tts-jp",
   "imageGeneration",
@@ -22,7 +23,7 @@ export const ENV_KEYS = {
     title: "OpenAI API Key",
     placeholder: "sk-...",
     url: "https://platform.openai.com/api-keys",
-    features: ["llm", "tts", "imageGeneration"] as FeatureKey[],
+    features: ["llmChat", "llmTranslation", "tts", "imageGeneration"] as FeatureKey[],
   },
   NIJIVOICE_API_KEY: {
     title: "NijiVoice API Key",
@@ -60,19 +61,19 @@ export const ENV_KEYS = {
     title: "Gemini API Key",
     placeholder: "AI...",
     url: "https://aistudio.google.com/app/apikey",
-    features: ["llm", "imageGeneration", "videoGeneration"] as FeatureKey[],
+    features: ["llmChat", "imageGeneration", "videoGeneration"] as FeatureKey[],
   },
   ANTHROPIC_API_KEY: {
     title: "Anthropic API Key",
     placeholder: "sk-...",
     url: "https://console.anthropic.com/settings/keys",
-    features: ["llm"] as FeatureKey[],
+    features: ["llmChat"] as FeatureKey[],
   },
   GROQ_API_KEY: {
     title: "GROQ API Key",
     placeholder: "gsk-...",
     url: "https://console.groq.com/keys",
-    features: ["llm"] as FeatureKey[],
+    features: ["llmChat"] as FeatureKey[],
   },
   EXA_API_KEY: {
     title: "EXA API Key",
