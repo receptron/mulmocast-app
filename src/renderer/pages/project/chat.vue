@@ -82,6 +82,9 @@
         <Button @click="() => (isClearChatDialogOpen = true)" variant="outline" size="xs">
           {{ t("project.chat.clearChat") }}
         </Button>
+        <Button v-if="isDevelopment" variant="outline" size="xs" class="ml-4" @click="copyMessageToClipboard">
+          {{ t("project.chat.copyMessage") }}
+        </Button>
       </div>
 
       <!-- Template selection section -->
@@ -190,6 +193,7 @@ const { messages = [] } = defineProps<{
   mulmoScript?: MulmoScript;
 }>();
 
+const isDevelopment = import.meta.env.DEV;
 const llmAgent = globalStore.settings.CHAT_LLM || LLM_DEFAULT_AGENT;
 
 const emit = defineEmits<{
@@ -430,5 +434,10 @@ const undoMessages = () => {
   userInput.value = "";
   emit("update:updateChatMessages", [...messageHistory.value]);
   messageHistory.value = [];
+};
+
+// for debug
+const copyMessageToClipboard = async () => {
+  await window.electronAPI.writeClipboardText(JSON.stringify(messageHistory.value ?? {}));
 };
 </script>

@@ -86,13 +86,14 @@ const { t } = useI18n();
 
 const props = defineProps<{
   mulmoScript?: MulmoScript | null;
-  isDevelopment: boolean;
 }>();
 
 const emit = defineEmits<{
   openProjectFolder: [];
   updateMulmoScript: [script: MulmoScript];
 }>();
+
+const isDevelopment = import.meta.env.DEV;
 
 const isEditingTitle = ref(false);
 const isEditingDescription = ref(false);

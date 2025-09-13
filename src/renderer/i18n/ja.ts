@@ -112,6 +112,7 @@ const lang = {
 
       // Chat actions
       clearChat: "チャットリセット",
+      copyMessage: "Copy message for debug",
       copy: "コピー",
       copyScript: "チャットへコピー",
       createScript: "スクリプト作成",
