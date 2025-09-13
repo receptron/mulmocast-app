@@ -5,7 +5,6 @@
         <!-- Header Section -->
         <ProjectHeader
           :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript"
-          :isDevelopment="isDevelopment"
           @openProjectFolder="openProjectFolder"
           @updateMulmoScript="handleUpdateMulmoScript"
         />
@@ -253,7 +252,7 @@ import Chat from "./project/chat.vue";
 import ScriptEditor from "./project/script_editor.vue";
 import Generate from "./project/generate.vue";
 import MulmoViewer from "../components/product/tabs.vue";
-import ProjectHeader from "./project/project_header.vue";
+import ProjectHeader from "./project/header.vue";
 import DebugLog from "./project/debug_log.vue";
 
 import { getConcurrentTaskStatusMessageComponent } from "./project/concurrent_task_status_message";
@@ -291,8 +290,6 @@ const mulmoMultiLinguals = ref({});
 const updateMultiLingual = async () => {
   mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", projectId.value);
 };
-
-const isDevelopment = import.meta.env.DEV;
 
 const { imageFiles, movieFiles, lipSyncFiles, resetImagesData, downloadImageFiles, downloadImageFile } =
   useImageFiles();

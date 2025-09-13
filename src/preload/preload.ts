@@ -26,4 +26,5 @@ contextBridge.exposeInMainWorld("electronAPI", {
     get: () => ipcRenderer.invoke("settings:get"),
     set: (settings: unknown) => ipcRenderer.invoke("settings:set", settings),
   },
+  writeClipboardText: (text: string) => ipcRenderer.invoke("writeClipboardText", text),
 });

@@ -1,4 +1,4 @@
-import { ipcMain, dialog, shell } from "electron";
+import { ipcMain, dialog, shell, clipboard, type IpcMainInvokeEvent } from "electron";
 import { mulmoHandler } from "./mulmo/handler";
 import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
@@ -16,7 +16,7 @@ export const registerIPCHandler = () => {
     return filePaths[0];
   });
 
-  ipcMain.handle("mulmoHandler", async (event, method, ...args) => {
+  ipcMain.handle("mulmoHandler", async (event: IpcMainInvokeEvent, method, ...args) => {
     const webContents = event.sender;
     return await mulmoHandler(method, webContents, ...args);
   });
@@ -24,30 +24,34 @@ export const registerIPCHandler = () => {
   // Project management handlers
   ipcMain.handle("project:list", () => projectManager.listProjects());
 
-  ipcMain.handle("project:create", (_event, title: string, lang: string) => projectManager.createProject(title, lang));
+  ipcMain.handle("project:create", (_event: IpcMainInvokeEvent, title: string, lang: string) => projectManager.createProject(title, lang));
 
-  ipcMain.handle("project:getProjectMetadata", (_event, id: string) => projectManager.getProjectMetadata(id));
+  ipcMain.handle("project:getProjectMetadata", (_event: IpcMainInvokeEvent, id: string) => projectManager.getProjectMetadata(id));
 
-  ipcMain.handle("project:getProjectMulmoScript", (_event, id: string) => projectManager.getProjectMulmoScript(id));
+  ipcMain.handle("project:getProjectMulmoScript", (_event: IpcMainInvokeEvent, id: string) => projectManager.getProjectMulmoScript(id));
 
-  ipcMain.handle("project:delete", (_event, id: string) => projectManager.deleteProject(id));
+  ipcMain.handle("project:delete", (_event: IpcMainInvokeEvent, id: string) => projectManager.deleteProject(id));
 
-  ipcMain.handle("project:saveProjectMetadata", (_event, id: string, data: unknown) =>
+  ipcMain.handle("project:saveProjectMetadata", (_event: IpcMainInvokeEvent, id: string, data: unknown) =>
     projectManager.saveProjectMetadata(id, data),
   );
 
-  ipcMain.handle("project:saveProjectScript", (_event, id: string, data: unknown) =>
+  ipcMain.handle("project:saveProjectScript", (_event: IpcMainInvokeEvent, id: string, data: unknown) =>
     projectManager.saveProjectScript(id, data),
   );
 
   ipcMain.handle("settings:get", () => settingsManager.loadSettings());
 
-  ipcMain.handle("settings:set", async (_event, settings: settingsManager.Settings) => {
+  ipcMain.handle("settings:set", async (_event: IpcMainInvokeEvent, settings: settingsManager.Settings) => {
     await settingsManager.saveSettings(settings);
   });
 
-  ipcMain.handle("project:openProjectFolder", async (_event, id: string) => {
+  ipcMain.handle("project:openProjectFolder", async (_event: IpcMainInvokeEvent, id: string) => {
     const projectPath = projectManager.getProjectPath(id);
     await shell.openPath(projectPath);
+  });
+
+  ipcMain.handle("writeClipboardText", async (_event: IpcMainInvokeEvent, text: string) => {
+    await clipboard.writeText(text ?? "");
   });
 };
