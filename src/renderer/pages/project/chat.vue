@@ -82,10 +82,9 @@
         <Button @click="() => (isClearChatDialogOpen = true)" variant="outline" size="xs">
           {{ t("project.chat.clearChat") }}
         </Button>
-        <Button v-if="isDevelopment"  variant="outline" size="xs" class="ml-4" @click="copyMessageToClipboard">
+        <Button v-if="isDevelopment" variant="outline" size="xs" class="ml-4" @click="copyMessageToClipboard">
           {{ t("project.chat.copyMessage") }}
         </Button>
-
       </div>
 
       <!-- Template selection section -->
@@ -441,5 +440,4 @@ const undoMessages = () => {
 const copyMessageToClipboard = async () => {
   await window.electronAPI.writeClipboardText(JSON.stringify(messageHistory.value ?? {}));
 };
-
 </script>

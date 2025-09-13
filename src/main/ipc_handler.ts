@@ -24,11 +24,17 @@ export const registerIPCHandler = () => {
   // Project management handlers
   ipcMain.handle("project:list", () => projectManager.listProjects());
 
-  ipcMain.handle("project:create", (_event: IpcMainInvokeEvent, title: string, lang: string) => projectManager.createProject(title, lang));
+  ipcMain.handle("project:create", (_event: IpcMainInvokeEvent, title: string, lang: string) =>
+    projectManager.createProject(title, lang),
+  );
 
-  ipcMain.handle("project:getProjectMetadata", (_event: IpcMainInvokeEvent, id: string) => projectManager.getProjectMetadata(id));
+  ipcMain.handle("project:getProjectMetadata", (_event: IpcMainInvokeEvent, id: string) =>
+    projectManager.getProjectMetadata(id),
+  );
 
-  ipcMain.handle("project:getProjectMulmoScript", (_event: IpcMainInvokeEvent, id: string) => projectManager.getProjectMulmoScript(id));
+  ipcMain.handle("project:getProjectMulmoScript", (_event: IpcMainInvokeEvent, id: string) =>
+    projectManager.getProjectMulmoScript(id),
+  );
 
   ipcMain.handle("project:delete", (_event: IpcMainInvokeEvent, id: string) => projectManager.deleteProject(id));
 
