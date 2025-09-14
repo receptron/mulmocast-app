@@ -72,6 +72,9 @@
       </div>
       <div v-if="images" class="my-2">
         <Label>{{ t("parameters.imageParams.images") }}</Label>
+        <div v-if="Object.keys(images).length === 0" class="text-muted-foreground mt-2 text-sm">
+          {{ t("parameters.imageParams.imagesEmptyHint") }}
+        </div>
         <div v-for="imageKey in Object.keys(images)" :key="imageKey">
           <Checkbox
             :model-value="(beat?.imageNames ?? Object.keys(images ?? {})).includes(imageKey)"
