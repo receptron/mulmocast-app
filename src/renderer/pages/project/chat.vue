@@ -323,7 +323,7 @@ const run = async () => {
         .map(filterMessage())
         .filter((message) => message.role !== "system")
         .filter((message) => {
-          return message.content !== "";
+          return message.content !== "" || message.tool_calls;
         }),
     ];
     console.log(postMessages);
@@ -438,6 +438,6 @@ const undoMessages = () => {
 
 // for debug
 const copyMessageToClipboard = async () => {
-  await window.electronAPI.writeClipboardText(JSON.stringify(messageHistory.value ?? {}));
+  await window.electronAPI.writeClipboardText(JSON.stringify(messageHistory.value ?? [], null, 2));
 };
 </script>
