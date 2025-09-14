@@ -25,10 +25,22 @@
             <Label class="mb-1 block">{{ t("beat.mediaFile.label") }}</Label>
             <div
               v-if="isLocalSourceMediaBeat(beat)"
+              @dragenter.prevent="isDragging = true"
+              @dragleave.prevent="isDragging = false"
               @dragover.prevent
-              @drop.prevent="(e) => handleDrop(e)"
+              @drop.prevent="
+                (e) => {
+                  isDragging = false;
+                  handleDrop(e);
+                }
+              "
               draggable="true"
               class="border-border bg-card text-muted-foreground mt-4 cursor-pointer rounded-md border-2 border-dashed p-6 text-center shadow-sm"
+              :class="
+                isDragging
+                  ? 'border-primary bg-primary/5 text-primary scale-[1.02] shadow-lg'
+                  : 'border-border bg-card text-muted-foreground'
+              "
             >
               {{ t("ui.common.drophere") }}
             </div>
@@ -305,6 +317,8 @@ const modalSrc = ref("");
 const mediaUrl = ref("");
 
 const toggleTypeMode = ref(false);
+
+const isDragging = ref(false);
 
 const beatType = computed(() => {
   return getBeatType(props.beat);
