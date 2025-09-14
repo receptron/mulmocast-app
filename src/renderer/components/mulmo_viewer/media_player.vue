@@ -139,8 +139,13 @@ defineExpose({
 });
 </script>
 <style>
+video {
+  color-scheme: dark;
+  border-radius: 0;
+}
 video::-webkit-media-controls-enclosure {
-  background-color: transparent !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  border-radius: 0 !important;
 }
 
 video::-webkit-media-controls-current-time-display,
@@ -152,7 +157,7 @@ video::-webkit-media-controls-play-button,
 video::-webkit-media-controls-mute-button,
 video::-webkit-media-controls-overlay-play-button,
 video::-webkit-media-controls-fullscreen-button {
-  filter: invert(1) brightness(1.2);
+  filter: brightness(1.1);
 }
 
 video::-webkit-media-controls {
