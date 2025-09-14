@@ -624,6 +624,7 @@ const lang = {
       moderation: "Moderation",
       moderationPlaceholder: "ex) low, auto",
       images: "Images",
+      imagesEmptyHint: "No images found. Please set references in the Ref tab.",
     },
     audioParams: {
       title: "Audio Parameters",
