@@ -335,6 +335,18 @@ const isHtmlGenerating = computed(() => {
 const disabledImageGenearte = computed(() => {
   return beatType.value === "imagePrompt" && (props.beat.text || "") === "" && (props.beat.imagePrompt || "") === "";
 });
+
+const videoSubtypeToExtensions = {
+  mp4: "mp4",
+  quicktime: "mov",
+  webm: "webm",
+  ogg: "ogv",
+  mpeg: "mpeg",
+  mp2t: "ts",
+  mov: "mov",
+  mpg: "mpg",
+};
+
 const handleDrop = (event: DragEvent) => {
   const files = event.dataTransfer.files;
   if (files.length > 0) {
@@ -342,13 +354,14 @@ const handleDrop = (event: DragEvent) => {
     // console.log("File dropped:", file.name);
     const fileExtension = file.name.split(".").pop()?.toLowerCase() ?? "";
     const mimeType = file.type.split("/")[1] ?? "";
+    console.log(file.type, mimeType);
     const fileType = mimeType || fileExtension;
 
     const imageType = (() => {
       if (["jpg", "jpeg", "png"].includes(fileType)) {
         return "image";
       }
-      if (["mov", "mp4", "mpg"].includes(fileType)) {
+      if (["mp4", "quicktime", "webm", "ogg", "mpeg", "mp2t", "mov", "mpg"].includes(fileType)) {
         return "movie";
       }
     })();
@@ -358,7 +371,7 @@ const handleDrop = (event: DragEvent) => {
       return;
     }
     update("image.type", imageType);
-    const extension = fileType === "jpeg" ? "jpg" : fileType;
+    const extension = fileType === "jpeg" ? "jpg" : videoSubtypeToExtensions[fileType];
 
     const reader = new FileReader();
     reader.onload = async () => {
@@ -371,7 +384,7 @@ const handleDrop = (event: DragEvent) => {
         extension,
       );
       const imageData = {
-        type: "image",
+        type: imageType,
         source: {
           kind: "path",
           path: "./" + path,
