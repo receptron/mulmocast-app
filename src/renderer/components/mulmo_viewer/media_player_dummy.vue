@@ -1,33 +1,21 @@
 <template>
   <div>
     <div v-if="videoWithAudioSource">
-      <video
-        :src="videoWithAudioSource"
-        class="mx-auto h-auto max-h-[80vh] w-auto object-contain"
-        :controls="controlsEnabled"
-        ref="videoWithAudioRef"
-      />
+      <video :src="videoWithAudioSource" class="mx-auto h-auto max-h-[80vh] w-auto object-contain" />
     </div>
     <div v-else-if="videoSource" class="relative inline-block">
-      <video
-        class="mx-auto h-auto max-h-[80vh] w-auto object-contain"
-        :src="videoSource"
-        ref="videoRef"
-        :controls="controlsEnabled"
-      />
-      <audio :src="audioSource" ref="audioSyncRef" v-if="audioSource" @ended="handleAudioEnd" />
+      <video class="mx-auto h-auto max-h-[80vh] w-auto object-contain" :src="videoSource" />
+      <audio :src="audioSource" v-if="audioSource" />
     </div>
     <div v-else-if="audioSource">
       <video
         class="mx-auto h-auto max-h-[80vh] w-auto object-contain"
         :src="audioSource"
         :poster="imageSource ?? mulmoImage"
-        :controls="controlsEnabled"
-        ref="audioRef"
       />
     </div>
     <div v-else-if="imageSource" class="relative inline-block">
-      <img :src="imageSource" ref="imageRef" class="mx-auto h-auto max-h-[80vh] w-auto object-contain" />
+      <img :src="imageSource" class="mx-auto h-auto max-h-[80vh] w-auto object-contain" />
     </div>
   </div>
 </template>

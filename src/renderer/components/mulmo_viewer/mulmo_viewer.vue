@@ -6,7 +6,7 @@
       <p class="text-muted-foreground mb-4 text-sm">{{ t("project.productTabs.slide.description") }}</p>
     </div>
     <div v-else>
-      <div class="flex w-full items-center justify-between">
+      <div class="flex w-full items-center justify-between" ref="boxRef" :style="{ height: boxHeight + 'px' }">
         <Button
           @click="decrease"
           variant="ghost"
@@ -85,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onMounted, onBeforeUnmount } from "vue";
 import { useI18n } from "vue-i18n";
 import { FileImage, ChevronLeft, ChevronRight } from "lucide-vue-next";
 import { type MultiLingualTexts, beatId } from "mulmocast/browser";
@@ -121,6 +121,26 @@ const bgmRef = ref();
 const currentPage = ref(0);
 const audioRef = ref();
 const autoPlay = ref(true);
+
+const boxRef = ref(null);
+const boxHeight = ref(0);
+const ratio = 0.5625; // 16:9（height = width * 9/16）
+
+function updateHeight() {
+  if (boxRef.value) {
+    const width = boxRef.value.offsetWidth;
+    boxHeight.value = width * ratio;
+  }
+}
+
+onMounted(() => {
+  updateHeight();
+  window.addEventListener("resize", updateHeight);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", updateHeight);
+});
 
 const isPlaying = ref(false);
 
