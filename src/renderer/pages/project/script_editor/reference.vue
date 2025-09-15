@@ -86,7 +86,7 @@
 
 <script setup lang="ts">
 import { Trash, Sparkles, FileImage, Loader2 } from "lucide-vue-next";
-import { ref, computed } from "vue";
+import { ref, computed, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 
 import type { MulmoImageMedia, MulmoImagePromptMedia, MulmoImageParamsImages } from "mulmocast";
@@ -220,7 +220,7 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
       );
       emit("updateImagePath", imageKey, "./" + path);
       // Workaround: wait for the script change
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await nextTick();
       const res = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
       imageRefs.value[imageKey] = res ? bufferToUrl(res, "image/png") : null;
     };
