@@ -85,6 +85,7 @@ const handleVideoPlay = () => {
       audioSyncRef.value.play();
     }
   }
+  emit("play");
 };
 const handleVideoPause = (e) => {
   // If the video is not at the end, it is determined to be a human operation.
