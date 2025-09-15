@@ -1,7 +1,6 @@
 import {
   getBeatAudioPath,
   MulmoPresentationStyleMethods,
-  MulmoStudioContextMethods,
   MulmoMediaSourceMethods,
   imagePreprocessAgent,
   getReferenceImagePath,
@@ -11,6 +10,7 @@ import {
   beatId,
   listLocalizedAudioPaths,
   defaultBGMPath,
+  resolveAssetPath,
   type MulmoStudioContext,
   type MulmoStudioMultiLingual,
 } from "mulmocast";
@@ -151,7 +151,7 @@ export const mulmoReferenceImagesFiles = async (projectId: string) => {
             if (image.type === "imagePrompt") {
               return getReferenceImagePath(context, key, "png");
             } else if (image.type === "image" && image.source.kind === "path") {
-              return MulmoStudioContextMethods.resolveAssetPath(context, image.source.path);
+              return resolveAssetPath(context, image.source.path);
             }
           })();
           if (path && fs.existsSync(path)) {
@@ -185,7 +185,7 @@ export const mulmoReferenceImagesFile = async (projectId: string, key: string) =
       if (image.type === "imagePrompt") {
         return getReferenceImagePath(context, key, "png");
       } else if (image.type === "image" && image.source.kind === "path") {
-        return MulmoStudioContextMethods.resolveAssetPath(context, image.source.path);
+        return resolveAssetPath(context, image.source.path);
       }
     })();
     if (path && fs.existsSync(path)) {
