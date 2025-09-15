@@ -21,7 +21,7 @@
         @pause="handleVideoPause"
         @ended="handleVideoEnd"
       />
-      <audio :src="audioSource" ref="audioSyncRef" v-if="audioSource" />
+      <audio :src="audioSource" ref="audioSyncRef" v-if="audioSource" @ended="handleAudioEnd" />
       <button
         class="absolute bottom-2 left-1/2 -translate-x-1/2 rounded bg-black/60 px-3 py-1 text-white hover:bg-black/80"
         @click="generateAudio"
@@ -87,18 +87,26 @@ const handleVideoPlay = () => {
   }
 };
 const handleVideoPause = (e) => {
-  if (audioSyncRef.value) {
-    audioSyncRef.value.pause();
+  // If the video is not at the end, it is determined to be a human operation.
+  if (!videoRef.value?.ended && audioSyncRef?.value) {
+    audioSyncRef.value?.pause();
   }
   console.log(e);
   handlePause(e);
 };
 
+//
 const handleVideoEnd = () => {
-  if (audioSyncRef.value) {
-    audioSyncRef.value.pause();
+  const audioPlaying = !audioSyncRef.value?.paused && !audioSyncRef.value?.ended && audioSyncRef.value?.currentTime > 0;
+  if (!audioPlaying) {
+    handleEnded();
   }
-  handleEnded();
+};
+const handleAudioEnd = () => {
+  const audioPlaying = !videoRef.value?.paused && !videoRef.value?.ended && videoRef.value?.currentTime > 0;
+  if (!audioPlaying) {
+    handleEnded();
+  }
 };
 
 const handlePlay = () => {
