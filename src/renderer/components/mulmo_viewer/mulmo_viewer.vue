@@ -36,24 +36,16 @@
           <ChevronRight class="h-4 w-4" />
         </Button>
       </div>
-      <div class="flex w-full items-center justify-between" v-if="false">
-        <Button
-          @click="decrease"
-          variant="ghost"
-          :disabled="currentPage === 0"
-          :class="{ 'opacity-0!': currentPage === 0 }"
-        >
-          <ChevronLeft class="h-4 w-4" />
-        </Button>
-        <Button
-          @click="increase"
-          variant="ghost"
-          :disabled="currentPage === beats.length - 1"
-          :class="{ 'opacity-0!': currentPage === beats.length - 1 }"
-        >
-          <ChevronRight class="h-4 w-4" />
-        </Button>
-      </div>
+
+      <MediaPlayerDummy
+        v-if="nextBeat"
+        :videoWithAudioSource="lipSyncFiles?.[nextBeat?.id]"
+        :videoSource="movieFiles?.[nextBeat?.id]"
+        :imageSource="imageFiles?.[nextBeat?.id]"
+        :audioSource="audioFiles[currentLanguage]?.[nextBeat?.id]"
+        class="hidden"
+      />
+
       <!-- text section -->
       <div class="bg-foreground/5 mt-2 rounded-lg p-2 text-sm">
         {{
@@ -103,6 +95,7 @@ import { bufferToUrl } from "@/lib/utils";
 import { Button, Checkbox } from "@/components/ui";
 
 import MediaPlayer from "./media_player.vue";
+import MediaPlayerDummy from "./media_player_dummy.vue";
 
 import { useImageFiles, useAudioFiles } from "@/pages/composable";
 import { useMulmoEventStore, useMulmoGlobalStore } from "@/store";
@@ -186,6 +179,11 @@ const beats = computed(() => {
 const currentBeat = computed(() => {
   return beats.value[currentPage.value];
 });
+
+const nextBeat = computed(() => {
+  return beats.value[currentPage.value + 1];
+});
+
 const currentBeatId = computed(() => {
   return beatId(currentBeat.value?.id, currentPage.value);
 });
