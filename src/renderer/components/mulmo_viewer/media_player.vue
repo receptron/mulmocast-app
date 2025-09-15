@@ -80,8 +80,8 @@ const mulmoImage = "https://github.com/receptron/mulmocast-cli/blob/main/assets/
 
 const handleVideoPlay = () => {
   if (audioSyncRef.value) {
-    audioSyncRef.value.currentTime = videoRef.value.currentTime;
-    if (audioSyncRef.value.currentTime === videoRef.value.currentTime) {
+    audioSyncRef.value.currentTime = videoRef.value?.currentTime;
+    if (audioSyncRef.value.currentTime === videoRef.value?.currentTime) {
       audioSyncRef.value.play();
     }
   }
@@ -90,6 +90,10 @@ const handleVideoPause = (e) => {
   // If the video is not at the end, it is determined to be a human operation.
   if (!videoRef.value?.ended && audioSyncRef?.value) {
     audioSyncRef.value?.pause();
+  } else {
+    if (audioSyncRef.value && videoRef.value) {
+      audioSyncRef.value.currentTime = videoRef.value?.currentTime;
+    }
   }
   console.log(e);
   handlePause(e);
