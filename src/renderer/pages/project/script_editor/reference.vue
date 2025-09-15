@@ -219,6 +219,8 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
         extension,
       );
       emit("updateImagePath", imageKey, "./" + path);
+      // Workaround: wait for the script change
+      await new Promise((resolve) => setTimeout(resolve, 0));
       const res = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
       imageRefs.value[imageKey] = res ? bufferToUrl(res, "image/png") : null;
     };
