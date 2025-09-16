@@ -34,7 +34,7 @@ const beatAudio = (context: MulmoStudioContext) => {
       return;
     } catch (e) {
       console.log(e);
-      return "";
+      return;
     }
   };
 };

@@ -114,7 +114,7 @@ const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: M
   const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.beats);
 
   const beat = context.studio.script?.beats?.[index];
-  Object.values(data).map((d) => {
+  Object.values(data).foreach((d) => {
     if (!d.cacheKey) {
       d.cacheKey = hashSHA256(beat?.text ?? "");
     }
@@ -182,7 +182,7 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
       case "mulmoReferenceImages":
         return await mulmoReferenceImages(args[0], webContents);
       case "mulmoMultiLinguals":
-        return await mulmoMultiLinguals(args[0], webContents);
+        return mulmoMultiLinguals(args[0], webContents);
       case "mulmoBGM":
         return await mulmoBGM(args[0], webContents);
       case "mulmoUpdateMultiLingual":
