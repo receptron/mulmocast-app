@@ -34,7 +34,7 @@ if (started) {
   app.quit();
 }
 
-const createSplashWindow = () => {
+const createSplashWindow = async () => {
   const splashWindow = new BrowserWindow({
     width: 400,
     height: 275,
@@ -50,9 +50,9 @@ const createSplashWindow = () => {
 
   // Load splash.html - in dev mode it's in root, in prod it's in build directory
   if (isDev) {
-    splashWindow.loadFile(path.join(__dirname, "../../splash.html"));
+    await splashWindow.loadFile(path.join(__dirname, "../../splash.html"));
   } else {
-    splashWindow.loadFile(path.join(__dirname, "splash.html"));
+    await splashWindow.loadFile(path.join(__dirname, "splash.html"));
   }
   splashWindow.center();
   return splashWindow;
@@ -179,7 +179,7 @@ app.on("ready", async () => {
     });
   }
 
-  const splashWindow = createSplashWindow();
+  const splashWindow = await createSplashWindow();
 
   // Install Vue.js DevTools in development mode
   if (isDev) {
