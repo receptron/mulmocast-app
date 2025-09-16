@@ -22,39 +22,14 @@
         <div v-if="beat.image && beat.image.type">
           <!-- image/movie: URL or  path -->
           <template v-if="isMediaBeat(beat) && isLocalSourceMediaBeat(beat)">
-            <Label class="mb-1 block">{{ t("beat.mediaFile.label") }}</Label>
-            <div
-              v-if="isLocalSourceMediaBeat(beat)"
-              @dragenter.prevent="isDragging = true"
-              @dragleave.prevent="isDragging = false"
-              @dragover.prevent
-              @drop.prevent="
-                (e) => {
-                  isDragging = false;
-                  handleDrop(e);
-                }
-              "
-              draggable="true"
-              class="border-border bg-card text-muted-foreground mt-4 cursor-pointer rounded-md border-2 border-dashed p-6 text-center shadow-sm"
-              :class="
-                isDragging
-                  ? 'border-primary bg-primary/5 text-primary scale-[1.02] shadow-lg'
-                  : 'border-border bg-card text-muted-foreground'
-              "
-            >
-              {{ t("ui.common.drophere") }}
-            </div>
-            {{ t("ui.common.or") }}
-            <div class="flex">
-              <Input
-                :placeholder="t('beat.mediaFile.placeholder')"
-                v-model="mediaUrl"
-                :invalid="!validateURL"
-                @blur="justSaveAndPushToHistory"
-              /><Button @click="submitUrlImage" :disabled="!fetchEnable">
-                {{ t("ui.actions.fetch") }}
-              </Button>
-            </div>
+            <Media
+              :beat="beat"
+              :index="index"
+              @update="update"
+              @save="justSaveAndPushToHistory"
+              @updateImageData="updateImageData"
+              @generateImageOnlyImage="generateImageOnlyImage"
+            />
           </template>
 
           <!-- image/movie: URL or  path -->
@@ -262,7 +237,6 @@ import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import type { MulmoBeat, MulmoScript, MulmoImageAsset } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
-import { z } from "zod";
 
 // components
 import MediaModal from "@/components/media_modal.vue";
@@ -279,6 +253,7 @@ import { mediaUri } from "@/lib/utils";
 
 import Markdown from "./beat_editors/markdown.vue";
 import Chart from "./beat_editors/chart.vue";
+import Media from "./beat_editors/media.vue";
 import Mermaid from "./beat_editors/mermaid.vue";
 import Vision from "./beat_editors/vision.vue";
 
@@ -314,11 +289,8 @@ const projectId = computed(() => route.params.id as string);
 const modalOpen = ref(false);
 const modalType = ref<"image" | "video" | "audio" | "other">("image");
 const modalSrc = ref("");
-const mediaUrl = ref("");
 
 const toggleTypeMode = ref(false);
-
-const isDragging = ref(false);
 
 const beatType = computed(() => {
   return getBeatType(props.beat);
@@ -349,106 +321,6 @@ const isHtmlGenerating = computed(() => {
 const disabledImageGenearte = computed(() => {
   return beatType.value === "imagePrompt" && (props.beat.text || "") === "" && (props.beat.imagePrompt || "") === "";
 });
-
-const videoSubtypeToExtensions = {
-  mp4: "mp4",
-  quicktime: "mov",
-  webm: "webm",
-  ogg: "ogv",
-  mpeg: "mpeg",
-  mp2t: "ts",
-  mov: "mov",
-  mpg: "mpg",
-};
-
-const handleDrop = (event: DragEvent) => {
-  const files = event.dataTransfer.files;
-  if (files.length > 0) {
-    const file = files[0];
-    // console.log("File dropped:", file.name);
-    const fileExtension = file.name.split(".").pop()?.toLowerCase() ?? "";
-    const mimeType = file.type.split("/")[1] ?? "";
-    console.log(file.type, mimeType);
-    const fileType = mimeType || fileExtension;
-
-    const imageType = (() => {
-      if (["jpg", "jpeg", "png"].includes(fileType)) {
-        return "image";
-      }
-      if (["mp4", "quicktime", "webm", "ogg", "mpeg", "mp2t", "mov", "mpg"].includes(fileType)) {
-        return "movie";
-      }
-    })();
-    if (!imageType) {
-      console.warn(`Unsupported file type: ${fileType}`);
-      // TODO: Consider showing a toast notification or alert
-      return;
-    }
-    update("image.type", imageType);
-    const extension = fileType === "jpeg" ? "jpg" : videoSubtypeToExtensions[fileType];
-
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const uint8Array = new Uint8Array(reader.result as ArrayBuffer);
-      const path = await window.electronAPI.mulmoHandler(
-        "mulmoImageUpload",
-        projectId.value,
-        props.index,
-        [...uint8Array],
-        extension,
-      );
-      const imageData = {
-        type: imageType,
-        source: {
-          kind: "path",
-          path: "./" + path,
-        },
-      };
-      updateImageData(imageData, () => {
-        generateImageOnlyImage();
-      });
-    };
-    reader.readAsArrayBuffer(file);
-  }
-};
-
-// image fetch
-const imageFetching = ref(false);
-const validateURL = computed(() => {
-  const urlSchema = z.string().url();
-  return mediaUrl.value === "" || urlSchema.safeParse(mediaUrl.value).success;
-});
-const fetchEnable = computed(() => {
-  return mediaUrl.value !== "" && validateURL.value && !imageFetching.value;
-});
-
-const submitUrlImage = async () => {
-  try {
-    imageFetching.value = true;
-    const res = (await window.electronAPI.mulmoHandler(
-      "mulmoImageFetchURL",
-      projectId.value,
-      props.index,
-      mediaUrl.value,
-    )) as { result: boolean; imageType: string; path: string };
-    if (res.result) {
-      const imageData = {
-        type: res.imageType,
-        source: {
-          kind: "path",
-          path: "./" + res.path,
-        },
-      };
-      updateImageData(imageData, () => {
-        generateImageOnlyImage();
-      });
-      mediaUrl.value = "";
-    }
-  } catch (error) {
-    console.log(error);
-  }
-  imageFetching.value = false;
-};
 
 const changeBeat = (beat: MulmoBeat) => {
   const { id, speaker, text } = props.beat;
