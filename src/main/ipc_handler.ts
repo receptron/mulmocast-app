@@ -57,7 +57,7 @@ export const registerIPCHandler = () => {
     await shell.openPath(projectPath);
   });
 
-  ipcMain.handle("writeClipboardText", async (_event: IpcMainInvokeEvent, text: string) => {
-    await clipboard.writeText(text ?? "");
+  ipcMain.handle("writeClipboardText", (_event: IpcMainInvokeEvent, text: string) => {
+    clipboard.writeText(text ?? "");
   });
 };

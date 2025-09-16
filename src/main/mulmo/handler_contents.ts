@@ -34,7 +34,7 @@ const beatAudio = (context: MulmoStudioContext) => {
       return;
     } catch (e) {
       console.log(e);
-      return "";
+      return;
     }
   };
 };
@@ -42,7 +42,7 @@ const beatAudio = (context: MulmoStudioContext) => {
 export const mulmoAudioFiles = async (projectId: string, lang?: string) => {
   try {
     const context = await getContext(projectId, lang);
-    const audios = await listLocalizedAudioPaths(context);
+    const audios = listLocalizedAudioPaths(context);
     return context.studio.script.beats.reduce((tmp, beat, index) => {
       const fileName = audios[index];
       // console.log(fileName);
