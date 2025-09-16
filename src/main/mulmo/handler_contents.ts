@@ -27,7 +27,7 @@ const beatAudio = (context: MulmoStudioContext) => {
       const text = lang && multiLingual ? localizedText(beat, multiLingual, lang) : beat.text;
 
       const fileName = getBeatAudioPath(text, context, beat, lang ?? context.studio.script?.lang ?? "en");
-      if (fs.existsSync(fileName)) {
+      if (fileExstsSync(fileName)) {
         const buffer = fs.readFileSync(fileName);
         return buffer.buffer;
       }
@@ -46,7 +46,7 @@ export const mulmoAudioFiles = async (projectId: string, lang?: string) => {
     return context.studio.script.beats.reduce((tmp, beat, index) => {
       const fileName = audios[index];
       // console.log(fileName);
-      if (fs.existsSync(fileName)) {
+      if (fileExstsSync(fileName)) {
         const buffer = fs.readFileSync(fileName);
         tmp[beatId(beat?.id, index)] = buffer.buffer;
       }
@@ -96,11 +96,19 @@ export const mulmoImageFile = async (projectId: string, index: number) => {
   }
 };
 
+const fileExstsSync = (filePath: string) => {
+  if (fileExstsSync(filePath)) {
+    const stat = fs.statSync(filePath);
+    return stat.isFile();
+  }
+  return false;
+};
+
 const beatImage = (context: MulmoStudioContext, imageAgentInfo) => {
   return async (beat, index) => {
     try {
       const res = await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs: {} });
-      if (res.htmlImageFile && fs.existsSync(res.htmlImageFile)) {
+      if (res.htmlImageFile && fileExstsSync(res.htmlImageFile)) {
         const buffer = fs.readFileSync(res.htmlImageFile);
         res.imageData = buffer.buffer;
       } else if (res.imagePath) {
@@ -111,16 +119,16 @@ const beatImage = (context: MulmoStudioContext, imageAgentInfo) => {
           }
           const buffer = Buffer.from(await response.arrayBuffer());
           res.imageData = buffer.buffer;
-        } else if (fs.existsSync(res.imagePath)) {
+        } else if (fileExstsSync(res.imagePath)) {
           const buffer = fs.readFileSync(res.imagePath);
           res.imageData = buffer.buffer;
         }
       }
-      if (res.movieFile && fs.existsSync(res.movieFile)) {
+      if (res.movieFile && fileExstsSync(res.movieFile)) {
         const buffer = fs.readFileSync(res.movieFile);
         res.movieData = buffer.buffer;
       }
-      if (res.lipSyncFile && fs.existsSync(res.lipSyncFile)) {
+      if (res.lipSyncFile && fileExstsSync(res.lipSyncFile)) {
         const buffer = fs.readFileSync(res.lipSyncFile);
         res.lipSyncData = buffer.buffer;
       }
@@ -154,7 +162,7 @@ export const mulmoReferenceImagesFiles = async (projectId: string) => {
               return resolveAssetPath(context, image.source.path);
             }
           })();
-          if (path && fs.existsSync(path)) {
+          if (path && fileExstsSync(path)) {
             const buffer = fs.readFileSync(path);
             imageRefs[key] = buffer.buffer;
           }
@@ -188,7 +196,7 @@ export const mulmoReferenceImagesFile = async (projectId: string, key: string) =
         return resolveAssetPath(context, image.source.path);
       }
     })();
-    if (path && fs.existsSync(path)) {
+    if (path && fileExstsSync(path)) {
       const buffer = fs.readFileSync(path);
       return buffer.buffer;
     }
