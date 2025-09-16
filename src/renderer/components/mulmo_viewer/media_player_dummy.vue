@@ -26,5 +26,5 @@ interface Props {
   imageSource?: string;
   audioSource?: string;
 }
-const props = defineProps<Props>();
+defineProps<Props>();
 </script>
