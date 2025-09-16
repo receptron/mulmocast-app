@@ -97,7 +97,7 @@ export const mulmoImageFile = async (projectId: string, index: number) => {
 };
 
 const fileExstsSync = (filePath: string) => {
-  if (fileExstsSync(filePath)) {
+  if (fs.existsSync(filePath)) {
     const stat = fs.statSync(filePath);
     return stat.isFile();
   }
