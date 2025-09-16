@@ -34,7 +34,7 @@ const beatAudio = (context: MulmoStudioContext) => {
       return;
     } catch (e) {
       console.log(e);
-      return "";
+      return undefined;
     }
   };
 };
@@ -42,7 +42,7 @@ const beatAudio = (context: MulmoStudioContext) => {
 export const mulmoAudioFiles = async (projectId: string, lang?: string) => {
   try {
     const context = await getContext(projectId, lang);
-    const audios = await listLocalizedAudioPaths(context);
+    const audios = listLocalizedAudioPaths(context);
     return context.studio.script.beats.reduce((tmp, beat, index) => {
       const fileName = audios[index];
       // console.log(fileName);
@@ -143,7 +143,7 @@ export const mulmoReferenceImagesFiles = async (projectId: string) => {
   const imageRefs: Record<string, ArrayBuffer> = {};
   await Promise.all(
     Object.keys(images)
-      .sort()
+      .sort((a, b) => a.localeCompare(b))
       .map(async (key) => {
         const image = images[key];
         try {
@@ -198,7 +198,7 @@ export const mulmoReferenceImagesFile = async (projectId: string, key: string) =
   return null;
 };
 
-export const mulmoMultiLinguals = async (projectId: string): MulmoStudioMultiLingual => {
+export const mulmoMultiLinguals = async (projectId: string): Promise<MulmoStudioMultiLingual> => {
   const context = await getContext(projectId);
   const { outputMultilingualFilePath } = getOutputMultilingualFilePathAndMkdir(context);
   const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.script.beats);

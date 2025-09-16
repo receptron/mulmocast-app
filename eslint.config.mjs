@@ -1,3 +1,6 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import js from "@eslint/js";
 import typescript from "@typescript-eslint/eslint-plugin";
 import typescriptParser from "@typescript-eslint/parser";
@@ -11,6 +14,10 @@ import checkFile from "eslint-plugin-check-file";
 import sonarjs from "eslint-plugin-sonarjs";
 
 import vueI18n from '@intlify/eslint-plugin-vue-i18n'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const tsconfigRootDir = __dirname;
+const mainTsconfig = path.resolve(tsconfigRootDir, "tsconfig.json");
 
 
 // Common base rules configuration
@@ -88,6 +95,11 @@ export default [
     files: ["src/main/**/*.{js,ts}", "src/preload/**/*.{js,ts}", "src/shared/**/*.{js,ts}"],
     languageOptions: {
       ...baseLanguageOptions,
+      parserOptions: {
+        ...baseLanguageOptions.parserOptions,
+        project: [mainTsconfig],
+        tsconfigRootDir,
+      },
       globals: {
         ...globals.node,
         // Electron main process globals
@@ -99,9 +111,15 @@ export default [
       ...basePlugins,
     },
     rules: {
-      ...typescript.configs.recommended.rules,
+      ...typescript.configs["recommended-type-checked"].rules,
       ...baseRules,
       ...sonarjsRules,
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/require-await": "off",
     },
     settings: {
       "import/resolver": {

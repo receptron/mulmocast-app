@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell } from "electron";
+import { app, BrowserWindow, ipcMain, shell, type IpcMainEvent } from "electron";
 import path from "node:path";
 import os from "node:os";
 import started from "electron-squirrel-startup";
@@ -18,6 +18,26 @@ const iconPath =
 
 const isDev = process.env.NODE_ENV === "development";
 const isCI = process.env.CI === "true";
+
+const openExternalUrl = async (targetUrl: string, errorMessage: string) => {
+  try {
+    await shell.openExternal(targetUrl);
+  } catch (error) {
+    console.error(errorMessage, error);
+  }
+};
+
+const loadBrowserWindowFile = (window: BrowserWindow, filePath: string, errorMessage: string) => {
+  void window.loadFile(filePath).catch((error) => {
+    console.error(errorMessage, error);
+  });
+};
+
+const loadBrowserWindowUrl = (window: BrowserWindow, targetUrl: string, errorMessage: string) => {
+  void window.loadURL(targetUrl).catch((error) => {
+    console.error(errorMessage, error);
+  });
+};
 
 // Development environment configuration
 if (isDev) {
@@ -49,11 +69,9 @@ const createSplashWindow = () => {
   });
 
   // Load splash.html - in dev mode it's in root, in prod it's in build directory
-  if (isDev) {
-    splashWindow.loadFile(path.join(__dirname, "../../splash.html"));
-  } else {
-    splashWindow.loadFile(path.join(__dirname, "splash.html"));
-  }
+  const splashFilePath = isDev ? path.join(__dirname, "../../splash.html") : path.join(__dirname, "splash.html");
+
+  loadBrowserWindowFile(splashWindow, splashFilePath, "Failed to load splash screen:");
   splashWindow.center();
   return splashWindow;
 };
@@ -72,9 +90,13 @@ const createWindow = (splashWindow?: BrowserWindow) => {
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+    loadBrowserWindowUrl(mainWindow, MAIN_WINDOW_VITE_DEV_SERVER_URL, "Failed to load renderer from dev server:");
   } else {
-    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
+    loadBrowserWindowFile(
+      mainWindow,
+      path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
+      "Failed to load renderer from file system:",
+    );
   }
 
   if (isDev) {
@@ -102,9 +124,7 @@ const createWindow = (splashWindow?: BrowserWindow) => {
     // Only open trusted protocols (http/https) in external browser
     if (url.startsWith("http://") || url.startsWith("https://")) {
       // Use void to explicitly ignore the promise and add error handling
-      shell.openExternal(url).catch((error) => {
-        console.error("Failed to open external URL:", error);
-      });
+      void openExternalUrl(url, "Failed to open external URL:");
     }
     // Always deny new window creation in Electron
     return { action: "deny" };
@@ -129,9 +149,7 @@ const createWindow = (splashWindow?: BrowserWindow) => {
 
         // Open external URLs (http/https) in default browser
         if (parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:") {
-          shell.openExternal(url).catch((error) => {
-            console.error("Failed to open external URL during navigation:", error);
-          });
+          void openExternalUrl(url, "Failed to open external URL during navigation:");
         }
       }
     } catch (error) {
@@ -141,7 +159,7 @@ const createWindow = (splashWindow?: BrowserWindow) => {
     }
   });
 
-  ipcMain.on("request-env", async (event) => {
+  const sendEnvironmentVariables = async (event: IpcMainEvent) => {
     const settings = await settingsManager.loadSettings();
     const envData: Record<string, string | undefined> = {};
 
@@ -151,13 +169,19 @@ const createWindow = (splashWindow?: BrowserWindow) => {
     }
 
     event.reply("response-env", envData);
+  };
+
+  ipcMain.on("request-env", (event) => {
+    void sendEnvironmentVariables(event).catch((error) => {
+      console.error("Failed to handle request-env IPC message:", error);
+    });
   });
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", async () => {
+const handleAppReady = async () => {
   // In development mode, configure app appearance
   if (isDev) {
     // On macOS, force set the Dock icon for reliable display in dev mode
@@ -198,6 +222,12 @@ app.on("ready", async () => {
   }
 
   createWindow(splashWindow);
+};
+
+app.on("ready", () => {
+  void handleAppReady().catch((error) => {
+    console.error("Failed to initialise the application:", error);
+  });
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

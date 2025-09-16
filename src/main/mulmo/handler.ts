@@ -114,11 +114,11 @@ const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: M
   const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.beats);
 
   const beat = context.studio.script?.beats?.[index];
-  Object.values(data).map((d) => {
-    if (!d.cacheKey) {
-      d.cacheKey = hashSHA256(beat?.text ?? "");
+  for (const text of Object.values(data)) {
+    if (!text.cacheKey) {
+      text.cacheKey = hashSHA256(beat?.text ?? "");
     }
-  });
+  }
   const key = beatId(beat?.id, index);
   multiLingual[key].multiLingualTexts = data;
   if (!multiLingual[key].cacheKey) {

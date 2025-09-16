@@ -69,13 +69,13 @@ export const mulmoActionRunner = async (
     console.log(error);
     if (error instanceof z.ZodError) {
       if (error.issues) {
-        error.issues.map((e) => {
+        for (const issue of error.issues) {
           webContents.send("progress-update", {
             projectId,
             type: "zod_error",
-            data: e,
+            data: issue,
           });
-        });
+        }
       }
     } else {
       webContents.send("progress-update", {
