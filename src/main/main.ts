@@ -72,9 +72,9 @@ const createWindow = (splashWindow?: BrowserWindow) => {
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+    void mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
   } else {
-    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
+    void mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
 
   if (isDev) {
@@ -141,63 +141,67 @@ const createWindow = (splashWindow?: BrowserWindow) => {
     }
   });
 
-  ipcMain.on("request-env", async (event) => {
-    const settings = await settingsManager.loadSettings();
-    const envData: Record<string, string | undefined> = {};
+  ipcMain.on("request-env", (event) => {
+    void (async () => {
+      const settings = await settingsManager.loadSettings();
+      const envData: Record<string, string | undefined> = {};
 
-    for (const envKey of Object.keys(ENV_KEYS)) {
-      const value = settings[envKey as keyof settingsManager.Settings];
-      envData[envKey] = value || process.env[envKey];
-    }
+      for (const envKey of Object.keys(ENV_KEYS)) {
+        const value = settings[envKey as keyof settingsManager.Settings];
+        envData[envKey] = value || process.env[envKey];
+      }
 
-    event.reply("response-env", envData);
+      event.reply("response-env", envData);
+    })();
   });
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", async () => {
-  // In development mode, configure app appearance
-  if (isDev) {
-    // On macOS, force set the Dock icon for reliable display in dev mode
-    if (os.platform() === "darwin") {
-      try {
-        // Use a PNG file for the Dock icon, as it's more reliable in dev mode.
-        const dockIconPath = path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png");
-        app.dock.setIcon(dockIconPath);
-      } catch (error) {
-        console.error("Failed to set dock icon:", error);
+app.on("ready", () => {
+  void (async () => {
+    // In development mode, configure app appearance
+    if (isDev) {
+      // On macOS, force set the Dock icon for reliable display in dev mode
+      if (os.platform() === "darwin") {
+        try {
+          // Use a PNG file for the Dock icon, as it's more reliable in dev mode.
+          const dockIconPath = path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png");
+          app.dock.setIcon(dockIconPath);
+        } catch (error) {
+          console.error("Failed to set dock icon:", error);
+        }
+      }
+
+      // Set About panel options to match build configuration
+      app.setAboutPanelOptions({
+        iconPath: path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png"),
+        applicationName: "MulmoCast",
+        applicationVersion: app.getVersion(),
+      });
+    }
+
+    const splashWindow = await createSplashWindow();
+
+    // Install Vue.js DevTools in development mode
+    if (isDev) {
+      await installExtension(VUEJS_DEVTOOLS);
+    }
+
+    await projectManager.ensureProjectBaseDirectory();
+
+    const settings = await settingsManager.loadSettings();
+
+    for (const envKey of Object.keys(ENV_KEYS)) {
+      const value = settings[envKey as keyof settingsManager.Settings];
+      if (value) {
+        process.env[envKey] = value;
       }
     }
 
-    // Set About panel options to match build configuration
-    app.setAboutPanelOptions({
-      iconPath: path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png"),
-      applicationName: "MulmoCast",
-      applicationVersion: app.getVersion(),
-    });
-  }
-
-  const splashWindow = await createSplashWindow();
-
-  // Install Vue.js DevTools in development mode
-  if (isDev) {
-    await installExtension(VUEJS_DEVTOOLS);
-  }
-
-  await projectManager.ensureProjectBaseDirectory();
-
-  const settings = await settingsManager.loadSettings();
-
-  for (const envKey of Object.keys(ENV_KEYS)) {
-    const value = settings[envKey as keyof settingsManager.Settings];
-    if (value) {
-      process.env[envKey] = value;
-    }
-  }
-
-  createWindow(splashWindow);
+    createWindow(splashWindow);
+  })();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
