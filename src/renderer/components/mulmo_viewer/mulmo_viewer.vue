@@ -134,8 +134,10 @@ function updateHeight() {
 }
 
 onMounted(() => {
-  updateHeight();
   window.addEventListener("resize", updateHeight);
+  setTimeout(() => {
+    updateHeight();
+  }, 100);
 });
 
 onBeforeUnmount(() => {
@@ -196,6 +198,7 @@ const bgmFile = ref("");
 const beats = computed(() => {
   return props.project?.script?.beats ?? [];
 });
+
 const currentBeat = computed(() => {
   return beats.value[currentPage.value];
 });
