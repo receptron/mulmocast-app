@@ -45,3 +45,21 @@ export const bufferToUrl = (buffer: Uint8Array<ArrayBuffer>, mimeType: string) =
   const url = URL.createObjectURL(blob);
   return url;
 };
+
+export const availableNewVersion = async () => {
+  try {
+    // TODO: change release branch
+    const res = await fetch("https://raw.githubusercontent.com/receptron/mulmocast-app/refs/heads/main/package.json");
+
+    const currentVersion = await window.electronAPI.getVersion();
+    const onlineVersion = (await res.json()).version;
+
+    // console.log({ currentVersion, onlineVersion });
+    if (currentVersion !== onlineVersion) {
+      return onlineVersion;
+    }
+    return null;
+  } catch (__e) {
+    return null;
+  }
+};

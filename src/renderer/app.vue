@@ -23,6 +23,8 @@ import type { SessionProgressEvent } from "mulmocast/browser";
 
 import { notifyError } from "@/lib/notification";
 
+import { availableNewVersion } from "./lib/utils";
+
 export default defineComponent({
   components: {
     Toaster,
@@ -52,6 +54,11 @@ export default defineComponent({
         }
       } catch (error) {
         console.error("Failed to load settings:", error);
+      }
+
+      const newVersion = await availableNewVersion();
+      if (newVersion) {
+        console.log(newVersion);
       }
 
       window.electronAPI.onProgress(async (_event, message) => {

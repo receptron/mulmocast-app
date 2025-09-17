@@ -1,4 +1,4 @@
-import { ipcMain, dialog, shell, clipboard, type IpcMainInvokeEvent } from "electron";
+import { app, ipcMain, dialog, shell, clipboard, type IpcMainInvokeEvent } from "electron";
 import { mulmoHandler } from "./mulmo/handler";
 import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
@@ -59,5 +59,8 @@ export const registerIPCHandler = () => {
 
   ipcMain.handle("writeClipboardText", (_event: IpcMainInvokeEvent, text: string) => {
     clipboard.writeText(text ?? "");
+  });
+  ipcMain.handle("getVersion", (_event: IpcMainInvokeEvent) => {
+    return app.getVersion();
   });
 };
