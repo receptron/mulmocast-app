@@ -89,7 +89,13 @@ import { Trash, Sparkles, FileImage, Loader2 } from "lucide-vue-next";
 import { ref, computed, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 
-import { type MulmoScript, type MulmoImageMedia, type MulmoImagePromptMedia, type MulmoImageParamsImages, MulmoPresentationStyleMethods } from "mulmocast/browser";
+import {
+  type MulmoScript,
+  type MulmoImageMedia,
+  type MulmoImagePromptMedia,
+  type MulmoImageParamsImages,
+  MulmoPresentationStyleMethods,
+} from "mulmocast/browser";
 import { z } from "zod";
 
 import MediaModal from "@/components/media_modal.vue";
