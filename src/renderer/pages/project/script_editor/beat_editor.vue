@@ -340,11 +340,10 @@ const changeBeat = (beat: MulmoBeat) => {
 
 const generateImageOnlyImage = () => {
   const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(props.mulmoScript, props.beat);
-  if (!globalStore?.hasApiKey(imageAgentInfo.keyName) || true) {
+  if (!globalStore?.hasApiKey(imageAgentInfo.keyName)) {
     apiErrorNotify(imageAgentInfo.keyName);
     return;
   }
-  return;
   emit("generateImage", props.index, "image");
 };
 const generateImageOnlyMovie = () => {

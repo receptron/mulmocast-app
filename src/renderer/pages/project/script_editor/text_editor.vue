@@ -74,6 +74,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { getBadge } from "@/lib/beat_util.js";
 
 import { useMulmoEventStore, useMulmoGlobalStore } from "@/store";
+import { notifyProgress } from "@/lib/notification";
 import { useApiErrorNotify } from "@/composables/notify";
 import { getConcurrentTaskStatusMessageComponent } from "../concurrent_task_status_message";
 
