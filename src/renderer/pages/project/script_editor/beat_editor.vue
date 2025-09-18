@@ -253,6 +253,7 @@ import BeatStyle from "./beat_style.vue";
 
 // lib
 import { useMulmoEventStore, useMulmoGlobalStore } from "../../../store";
+import { ENV_KEYS } from "../../../../shared/constants";
 import { getBadge, getBeatType, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
 
@@ -336,13 +337,17 @@ const changeBeat = (beat: MulmoBeat) => {
   toggleTypeMode.value = !toggleTypeMode.value;
 };
 
+const apiErrorNotify = (keyName: string) => {
+  notifyError(t("ui.status.error"), t("notify.apiKey.error", {keyName: ENV_KEYS[keyName].title }), {
+    label: t("notify.apiKey.setup"),
+    onClick: () => globalStore.toggleSettingModal(),
+  });
+};
+
 const generateImageOnlyImage = () => {
   const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(props.mulmoScript, props.beat);
   if (!globalStore?.hasApiKey(imageAgentInfo.keyName)) {
-    notifyError("Error", "You need setup " + imageAgentInfo.keyName, {
-      label: "Setup",
-      onClick: () => globalStore.toggleSettingModal(),
-    });
+    apiErrorNotify(imageAgentInfo.keyName);
     return;
   }
   emit("generateImage", props.index, "image");
@@ -350,10 +355,7 @@ const generateImageOnlyImage = () => {
 const generateImageOnlyMovie = () => {
   const imageAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
   if (!globalStore?.hasApiKey(imageAgentInfo.keyName)) {
-    notifyError("Error", "You need setup " + imageAgentInfo.keyName, {
-      label: "Setup",
-      onClick: () => globalStore.toggleSettingModal(),
-    });
+    apiErrorNotify(imageAgentInfo.keyName);
     return;
   }
   emit("generateImage", props.index, "movie");
@@ -362,10 +364,7 @@ const generateImageOnlyMovie = () => {
 const generateLipSyncMovie = async () => {
   const lipSyncAgentInfo = MulmoPresentationStyleMethods.getLipSyncAgentInfo(props.mulmoScript, props.beat);
   if (!globalStore?.hasApiKey(lipSyncAgentInfo.keyName)) {
-    notifyError("Error", "You need setup " + lipSyncAgentInfo.keyName, {
-      label: "Setup",
-      onClick: () => globalStore.toggleSettingModal(),
-    });
+    apiErrorNotify(lipSyncAgentInfo.keyName);
     return;
   }
   await window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", projectId.value, props.index);

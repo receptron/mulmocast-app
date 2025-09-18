@@ -699,6 +699,10 @@ const lang = {
       pdf: "PDF",
       caption: "Caption",
     },
+    apiKey: {
+      error: "{keyName} を設定してください",
+      setup: "設定へ移動",
+    },
   },
   languages: {
     ja: "日本語",
