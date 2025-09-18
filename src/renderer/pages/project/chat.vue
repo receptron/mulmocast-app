@@ -150,6 +150,8 @@ import { validateSchemaAgent } from "mulmocast/browser";
 import type { MulmoScript } from "mulmocast/browser";
 import { promptTemplates, templateDataSet } from "mulmocast/data";
 
+import { useApiErrorNotify } from "@/composables/notify";
+
 // components
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -181,12 +183,16 @@ import {
   LLM_ANTHROPIC_DEFAULT_CONFIG,
   LLM_DEFAULT_AGENT,
   LLM_GROQ_DEFAULT_MODEL,
+  llms,
 } from "../../../shared/constants";
+
 import { notifyError } from "@/lib/notification";
 
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
+
+const { apiErrorNotify } = useApiErrorNotify();
 
 const { messages = [] } = defineProps<{
   messages: ChatMessage[];
@@ -194,7 +200,9 @@ const { messages = [] } = defineProps<{
 }>();
 
 const isDevelopment = import.meta.env.DEV;
-const llmAgent = globalStore.settings.CHAT_LLM || LLM_DEFAULT_AGENT;
+const llmAgent = computed(() => {
+  return globalStore.settings.CHAT_LLM || LLM_DEFAULT_AGENT;
+});
 
 const emit = defineEmits<{
   updateMulmoScript: [value: MulmoScript];
@@ -263,7 +271,7 @@ const getGraphConfig = async () => {
   const geminiApikey = globalStore.settings?.APIKEY?.GEMINI_API_KEY;
   const exaApikey = globalStore.settings?.APIKEY?.EXA_API_KEY;
 
-  console.log(openaiConfig, openaiConfig?.model ?? LLM_OPENAI_DEFAULT_CONFIG.model);
+  // console.log(openaiConfig, openaiConfig?.model ?? LLM_OPENAI_DEFAULT_CONFIG.model);
   return {
     openAIAgent: {
       apiKey: openaiApikey,
@@ -291,8 +299,17 @@ const getGraphConfig = async () => {
   };
 };
 
-const hasExa =
-  !!globalStore.settings?.APIKEY?.EXA_API_KEY && (llmAgent === "openAIAgent" || llmAgent === "anthropicAgent");
+const hasExa = computed(() => {
+  return (
+    !!globalStore.settings?.APIKEY?.EXA_API_KEY &&
+    (llmAgent.value === "openAIAgent" || llmAgent.value === "anthropicAgent")
+  );
+});
+
+const apiKeyName = computed(() => {
+  const llm  = llms.find(_llm => _llm.id === llmAgent.value)
+  return llm.apiKey;
+});
 
 const anthropicSystemPrompt = [
   "<use_parallel_tool_calls>",
@@ -304,12 +321,18 @@ const run = async () => {
   if (isRunning.value) {
     return;
   }
+  if (apiKeyName.value && !globalStore?.hasApiKey(apiKeyName.value)) {
+    apiErrorNotify(apiKeyName.value);
+    return;
+  }
+
+    
   liveToolsData.value = null;
   isRunning.value = true;
 
   try {
     const config = await getGraphConfig();
-    const llmModel = config[llmAgent]?.model || ""; // The model setting in config can be overridden by params.model (even if it is a blank string).
+    const llmModel = config[llmAgent.value]?.model || ""; // The model setting in config can be overridden by params.model (even if it is a blank string).
 
     const tools = [...mulmoScriptValidatorAgent.tools, ...puppeteerAgent.tools, ...mulmoVisionAgent.tools];
     const systemMessage = `Always reply in ${scriptLang.value}, regardless of the language of the user's input or previous conversation.  If the user's message is in a different language, translate it into ${scriptLang.value} before replying.`;
@@ -317,7 +340,8 @@ const run = async () => {
     const postMessages = [
       {
         role: "system",
-        content: llmAgent === "anthropicAgent" ? [systemMessage, anthropicSystemPrompt].join("\n") : systemMessage,
+        content:
+          llmAgent.value === "anthropicAgent" ? [systemMessage, anthropicSystemPrompt].join("\n") : systemMessage,
       },
       ...messages
         .map(filterMessage())
@@ -361,9 +385,9 @@ const run = async () => {
     });
     graphai.injectValue("messages", postMessages);
     graphai.injectValue("prompt", userInput.value);
-    graphai.injectValue("llmAgent", llmAgent);
+    graphai.injectValue("llmAgent", llmAgent.value);
     graphai.injectValue("llmModel", llmModel);
-    if (hasExa) {
+    if (hasExa.value) {
       tools.push(...exaToolsAgent.tools);
       graphai.injectValue("passthrough", {
         exaToolsAgent: {
