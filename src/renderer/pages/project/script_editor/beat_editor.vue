@@ -253,7 +253,6 @@ import BeatStyle from "./beat_style.vue";
 
 // lib
 import { useMulmoEventStore, useMulmoGlobalStore } from "../../../store";
-import { ENV_KEYS } from "../../../../shared/constants";
 import { getBadge, getBeatType, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
 
@@ -262,7 +261,7 @@ import Chart from "./beat_editors/chart.vue";
 import Media from "./beat_editors/media.vue";
 import Mermaid from "./beat_editors/mermaid.vue";
 import Vision from "./beat_editors/vision.vue";
-import { notifyError } from "@/lib/notification";
+import { useApiErrorNotify } from "@/composables/notify";
 
 type FileData = ArrayBuffer | string | null;
 
@@ -298,6 +297,8 @@ const projectId = computed(() => route.params.id as string);
 const modalOpen = ref(false);
 const modalType = ref<"image" | "video" | "audio" | "other">("image");
 const modalSrc = ref("");
+
+const { apiErrorNotify } = useApiErrorNotify();
 
 const toggleTypeMode = ref(false);
 
@@ -337,19 +338,13 @@ const changeBeat = (beat: MulmoBeat) => {
   toggleTypeMode.value = !toggleTypeMode.value;
 };
 
-const apiErrorNotify = (keyName: string) => {
-  notifyError(t("ui.status.error"), t("notify.apiKey.error", { keyName: ENV_KEYS[keyName].title }), {
-    label: t("notify.apiKey.setup"),
-    onClick: () => globalStore.toggleSettingModal(),
-  });
-};
-
 const generateImageOnlyImage = () => {
   const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(props.mulmoScript, props.beat);
-  if (!globalStore?.hasApiKey(imageAgentInfo.keyName)) {
+  if (!globalStore?.hasApiKey(imageAgentInfo.keyName) || true) {
     apiErrorNotify(imageAgentInfo.keyName);
     return;
   }
+  return;
   emit("generateImage", props.index, "image");
 };
 const generateImageOnlyMovie = () => {

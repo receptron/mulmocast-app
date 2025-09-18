@@ -74,12 +74,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { getBadge } from "@/lib/beat_util.js";
 
 import { useMulmoEventStore, useMulmoGlobalStore } from "@/store";
-import { notifyProgress } from "@/lib/notification";
+import { useApiErrorNotify } from "@/composables/notify";
 import { getConcurrentTaskStatusMessageComponent } from "../concurrent_task_status_message";
 
 const { t } = useI18n();
 const mulmoEventStore = useMulmoEventStore();
 const globalStore = useMulmoGlobalStore();
+
+const { apiErrorNotify } = useApiErrorNotify();
 
 interface Props {
   index: number;
@@ -121,7 +123,7 @@ const generateAudio = async (index: number) => {
   );
   const { keyName } = provider2TTSAgent[provider];
   if (!globalStore?.hasApiKey(keyName)) {
-    alert("You need setup " + keyName);
+    apiErrorNotify(keyName);
     return;
   }
 
