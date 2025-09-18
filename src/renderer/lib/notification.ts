@@ -7,9 +7,17 @@ export const notifySuccess = (message: string, description?: string) => {
   });
 };
 
-export const notifyError = (message: string, description?: string) => {
+export const notifyError = (
+  message: string,
+  description?: string,
+  action?: {
+    label: string;
+    onClick: () => void;
+  },
+) => {
   toast.error(message, {
     description,
+    action,
   });
 };
 

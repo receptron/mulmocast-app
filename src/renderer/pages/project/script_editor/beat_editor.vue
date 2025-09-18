@@ -261,6 +261,7 @@ import Chart from "./beat_editors/chart.vue";
 import Media from "./beat_editors/media.vue";
 import Mermaid from "./beat_editors/mermaid.vue";
 import Vision from "./beat_editors/vision.vue";
+import { notifyError } from "@/lib/notification";
 
 type FileData = ArrayBuffer | string | null;
 
@@ -338,7 +339,10 @@ const changeBeat = (beat: MulmoBeat) => {
 const generateImageOnlyImage = () => {
   const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(props.mulmoScript, props.beat);
   if (!globalStore?.hasApiKey(imageAgentInfo.keyName)) {
-    alert("You need setup " + imageAgentInfo.keyName);
+    notifyError("Error", "You need setup " + imageAgentInfo.keyName, {
+      label: "Setup",
+      onClick: () => globalStore.toggleSettingModal(),
+    });
     return;
   }
   emit("generateImage", props.index, "image");
@@ -346,7 +350,10 @@ const generateImageOnlyImage = () => {
 const generateImageOnlyMovie = () => {
   const imageAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
   if (!globalStore?.hasApiKey(imageAgentInfo.keyName)) {
-    alert("You need setup " + imageAgentInfo.keyName);
+    notifyError("Error", "You need setup " + imageAgentInfo.keyName, {
+      label: "Setup",
+      onClick: () => globalStore.toggleSettingModal(),
+    });
     return;
   }
   emit("generateImage", props.index, "movie");
@@ -355,7 +362,10 @@ const generateImageOnlyMovie = () => {
 const generateLipSyncMovie = async () => {
   const lipSyncAgentInfo = MulmoPresentationStyleMethods.getLipSyncAgentInfo(props.mulmoScript, props.beat);
   if (!globalStore?.hasApiKey(lipSyncAgentInfo.keyName)) {
-    alert("You need setup " + lipSyncAgentInfo.keyName);
+    notifyError("Error", "You need setup " + lipSyncAgentInfo.keyName, {
+      label: "Setup",
+      onClick: () => globalStore.toggleSettingModal(),
+    });
     return;
   }
   await window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", projectId.value, props.index);
