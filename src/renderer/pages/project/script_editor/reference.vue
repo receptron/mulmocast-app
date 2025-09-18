@@ -240,7 +240,7 @@ const submitImage = async (imageKey: string, key: number) => {
     return;
   }
   const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(props.mulmoScript);
-  if (!hasApiKey) {
+  if (!hasApiKey(imageAgentInfo.keyName)) {
     apiErrorNotify(imageAgentInfo.keyName);
     return;
   }
