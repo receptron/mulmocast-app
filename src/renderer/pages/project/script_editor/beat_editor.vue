@@ -235,7 +235,12 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
-import type { MulmoBeat, MulmoScript, MulmoImageAsset } from "mulmocast/browser";
+import {
+  type MulmoBeat,
+  type MulmoScript,
+  type MulmoImageAsset,
+  MulmoPresentationStyleMethods,
+} from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 
 // components
@@ -247,7 +252,7 @@ import BeatSelector from "./beat_selector.vue";
 import BeatStyle from "./beat_style.vue";
 
 // lib
-import { useMulmoEventStore } from "../../../store";
+import { useMulmoEventStore, useMulmoGlobalStore } from "../../../store";
 import { getBadge, getBeatType, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
 
@@ -284,6 +289,8 @@ const emit = defineEmits([
 const route = useRoute();
 const { t } = useI18n();
 const mulmoEventStore = useMulmoEventStore();
+const globalStore = useMulmoGlobalStore();
+
 const projectId = computed(() => route.params.id as string);
 
 const modalOpen = ref(false);
@@ -329,13 +336,28 @@ const changeBeat = (beat: MulmoBeat) => {
 };
 
 const generateImageOnlyImage = () => {
+  const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(props.mulmoScript, props.beat);
+  if (!globalStore?.hasApiKey(imageAgentInfo.keyName)) {
+    alert("You need setup " + imageAgentInfo.keyName);
+    return;
+  }
   emit("generateImage", props.index, "image");
 };
 const generateImageOnlyMovie = () => {
+  const imageAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
+  if (!globalStore?.hasApiKey(imageAgentInfo.keyName)) {
+    alert("You need setup " + imageAgentInfo.keyName);
+    return;
+  }
   emit("generateImage", props.index, "movie");
 };
 
 const generateLipSyncMovie = async () => {
+  const lipSyncAgentInfo = MulmoPresentationStyleMethods.getLipSyncAgentInfo(props.mulmoScript, props.beat);
+  if (!globalStore?.hasApiKey(lipSyncAgentInfo.keyName)) {
+    alert("You need setup " + lipSyncAgentInfo.keyName);
+    return;
+  }
   await window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", projectId.value, props.index);
   emit("generateImage", props.index, "lipSync");
 };

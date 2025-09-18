@@ -44,6 +44,10 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
       .filter((v) => v);
   });
 
+  const hasApiKey = (keyName: string) => {
+    return !!settings.value.APIKEY[keyName];
+  };
+
   return {
     settings,
     updateSettings,
@@ -59,5 +63,7 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
     needsOnboarding,
 
     useLanguages,
+
+    hasApiKey,
   };
 });
