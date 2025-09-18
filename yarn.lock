@@ -6120,10 +6120,10 @@ domhandler@^5.0.2, domhandler@^5.0.3:
   dependencies:
     domelementtype "^2.3.0"
 
-dompurify@^3.2.6:
-  version "3.2.6"
-  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.2.6.tgz#ca040a6ad2b88e2a92dc45f38c79f84a714a1cad"
-  integrity sha512-/2GogDQlohXPZe6D6NOgQvXLPSYBqIWMnZ8zzOhn09REE4eyAzb+Hed3jhoM9OkuaJ8P6ZGTTVWQKAi8ieIzfQ==
+dompurify@^3.2.7:
+  version "3.2.7"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.2.7.tgz#721d63913db5111dd6dfda8d3a748cfd7982d44a"
+  integrity sha512-WhL/YuveyGXJaerVlMYGWhvQswa7myDG17P7Vu65EWC05o8vfeNbvNf4d/BOvH99+ZW+LlQsc1GDKMa1vNK6dw==
   optionalDependencies:
     "@types/trusted-types" "^2.0.7"
 
@@ -6280,10 +6280,10 @@ electron-winstaller@^5.3.0:
   optionalDependencies:
     "@electron/windows-sign" "^1.1.2"
 
-electron@38.1.1:
-  version "38.1.1"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-38.1.1.tgz#59a7adb9810a241dc0c5a0add7a27c22b3f396fd"
-  integrity sha512-LTFGxXpbIdU07AwSHLoVYVLbZHDiauT1KgTX1fgCPgPDoQIAGnYft/ABx6PkA+9ulQfBEEqg0mYTWaoReHG8Ag==
+electron@38.1.2:
+  version "38.1.2"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-38.1.2.tgz#3509999a1b635fb92e99a8e5eaf239110a9a7734"
+  integrity sha512-WXUcN3W8h8NTTZViA3KNX0rV2YBU0X0mEUM3ubupXTDY4QtIN7tmiqYVOKSKpR2LckTmBWGuEeY4D6xVoffwKQ==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^22.7.7"
@@ -13208,10 +13208,24 @@ vite-plugin-vue-tracer@^1.0.0:
     pathe "^2.0.3"
     source-map-js "^1.2.1"
 
-"vite@^5.0.0 || ^6.0.0 || ^7.0.0-0", vite@^7.0.6, vite@^7.1.5:
+"vite@^5.0.0 || ^6.0.0 || ^7.0.0-0", vite@^7.0.6:
   version "7.1.5"
   resolved "https://registry.yarnpkg.com/vite/-/vite-7.1.5.tgz#4dbcb48c6313116689be540466fc80faa377be38"
   integrity sha512-4cKBO9wR75r0BeIWWWId9XK9Lj6La5X846Zw9dFfzMRw38IlTk2iCcUt6hsyiDRcPidc55ZParFYDXi0nXOeLQ==
+  dependencies:
+    esbuild "^0.25.0"
+    fdir "^6.5.0"
+    picomatch "^4.0.3"
+    postcss "^8.5.6"
+    rollup "^4.43.0"
+    tinyglobby "^0.2.15"
+  optionalDependencies:
+    fsevents "~2.3.3"
+
+vite@^7.1.6:
+  version "7.1.6"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-7.1.6.tgz#336806d29983135677f498a05efb0fd46c5eef2d"
+  integrity sha512-SRYIB8t/isTwNn8vMB3MR6E+EQZM/WG1aKmmIUCfDXfVvKfc20ZpamngWHKzAmmu9ppsgxsg4b2I7c90JZudIQ==
   dependencies:
     esbuild "^0.25.0"
     fdir "^6.5.0"
