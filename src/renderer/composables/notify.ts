@@ -16,6 +16,6 @@ export const useApiErrorNotify = () => {
   };
 
   return {
-    apiErrorNotify
+    apiErrorNotify,
   };
 };
