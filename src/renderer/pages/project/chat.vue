@@ -192,7 +192,7 @@ const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
-const { apiErrorNotify } = useApiErrorNotify();
+const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 
 const { messages = [] } = defineProps<{
   messages: ChatMessage[];
@@ -321,7 +321,7 @@ const run = async () => {
   if (isRunning.value) {
     return;
   }
-  if (apiKeyName.value && !globalStore?.hasApiKey(apiKeyName.value)) {
+  if (apiKeyName.value && !hasApiKey(apiKeyName.value)) {
     apiErrorNotify(apiKeyName.value);
     return;
   }

@@ -261,7 +261,7 @@ import Chart from "./beat_editors/chart.vue";
 import Media from "./beat_editors/media.vue";
 import Mermaid from "./beat_editors/mermaid.vue";
 import Vision from "./beat_editors/vision.vue";
-import { useApiErrorNotify, hasApiKey } from "@/composables/notify";
+import { useApiErrorNotify } from "@/composables/notify";
 
 type FileData = ArrayBuffer | string | null;
 
@@ -297,7 +297,7 @@ const modalOpen = ref(false);
 const modalType = ref<"image" | "video" | "audio" | "other">("image");
 const modalSrc = ref("");
 
-const { apiErrorNotify } = useApiErrorNotify();
+const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 
 const toggleTypeMode = ref(false);
 
