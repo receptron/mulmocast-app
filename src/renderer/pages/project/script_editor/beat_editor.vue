@@ -338,7 +338,7 @@ const changeBeat = (beat: MulmoBeat) => {
 };
 
 const apiErrorNotify = (keyName: string) => {
-  notifyError(t("ui.status.error"), t("notify.apiKey.error", {keyName: ENV_KEYS[keyName].title }), {
+  notifyError(t("ui.status.error"), t("notify.apiKey.error", { keyName: ENV_KEYS[keyName].title }), {
     label: t("notify.apiKey.setup"),
     onClick: () => globalStore.toggleSettingModal(),
   });
