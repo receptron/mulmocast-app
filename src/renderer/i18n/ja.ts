@@ -112,7 +112,6 @@ const lang = {
 
       // Chat actions
       clearChat: "チャットリセット",
-      copyMessage: "Copy message for debug",
       copy: "コピー",
       copyScript: "チャットへコピー",
       createScript: "スクリプト作成",
@@ -466,6 +465,7 @@ const lang = {
       advancedDescription: "ChatGPT や他の AI ツールを使用して、実証済みのプロンプトでスクリプトコンテンツを生成",
       enterMessage: "メッセージを入力してください:",
       clearChat: "チャットをリセット",
+      copyMessage: "Copy message for debug",
       confirmClear: "チャットをリセットしますか？",
       undoChat: "編集をやめる",
       createButtonDescription:
