@@ -338,6 +338,7 @@ const handleUpdateMulmoScript = (script: MulmoScript) => {
 // internal use
 const saveMulmoScript = async () => {
   console.log("saved", mulmoScriptHistoryStore.currentMulmoScript);
+  // insertSpeakers(mulmoScriptHistoryStore.currentMulmoScript);
   await projectApi.saveProjectScript(projectId.value, mulmoScriptHistoryStore.currentMulmoScript);
   projectMetadata.value.updatedAt = dayjs().toISOString();
   await projectApi.saveProjectMetadata(projectId.value, projectMetadata.value);
@@ -381,10 +382,31 @@ const mulmoError = computed<MulmoError>(() => {
   return null;
 });
 
+const insertSpeakers = (data) => {
+  const existsSpeakers = data.beats.reduce((speakers, beat) => {
+    if (beat.speaker && !speakers.has(beat.speaker)) {
+      speakers.add(beat.speaker);
+    }
+    return speakers;
+  }, new Set());
+  Object.keys(data?.speechParams?.speakers ?? {}).map((speaker) => {
+    existsSpeakers.delete(speaker);
+  });
+  existsSpeakers.forEach((speaker) => {
+    data.speechParams.speakers[speaker] = {
+      displayName: {
+        en: speaker,
+      },
+      voiceId: "shimmer",
+    };
+  });
+};
+
 const formatAndPushHistoryMulmoScript = () => {
   const data = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
   if (data.success) {
     data.data.beats.map(setRandomBeatId);
+    insertSpeakers(data.data);
     mulmoScriptHistoryStore.updateMulmoScriptAndPushToHistory(data.data);
     // push store //
   }
