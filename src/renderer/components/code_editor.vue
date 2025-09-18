@@ -58,12 +58,6 @@ const setDiagnosticsOptions = (monaco: Monaco, language: "json" | "yaml") => {
 onMounted(() => {
   monacoRef.value = monaco;
 
-  // pre initialize JSON diagnostics
-  monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-    validate: true,
-    schemas: [],
-  });
-
   setDiagnosticsOptions(monaco, props.language);
 
   if (editorContainer.value) {
