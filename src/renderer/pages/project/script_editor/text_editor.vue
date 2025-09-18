@@ -136,6 +136,10 @@ const generateAudio = async (index: number) => {
 };
 
 const translateBeat = async (index: number) => {
+  if (!globalStore?.hasApiKey("OPENAI_API_KEY")) {
+    apiErrorNotify("OPENAI_API_KEY");
+    return;
+  }
   notifyProgress(window.electronAPI.mulmoHandler("mulmoTranslateBeat", props.projectId, index, supporLanguages.value), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: t("notify.translate.successMessage"),
