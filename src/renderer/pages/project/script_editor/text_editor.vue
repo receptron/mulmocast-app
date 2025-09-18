@@ -62,8 +62,11 @@ import {
   type MulmoBeat,
   type MultiLingualTexts,
   type MulmoPresentationStyle,
+  type MulmoScript,
   languages,
   splitText,
+  provider2TTSAgent,
+  MulmoStudioContextMethods,
 } from "mulmocast/browser";
 
 import { Button, Label, Input, Badge, Textarea } from "@/components/ui";
@@ -86,6 +89,7 @@ interface Props {
   lang: string;
   mulmoMultiLingual: MultiLingualTexts;
   speakers?: MulmoPresentationStyle["speechParams"]["speakers"];
+  mulmoScript: MulmoScript;
 }
 const props = defineProps<Props>();
 
@@ -110,6 +114,17 @@ const justSaveAndPushToHistory = () => {
 const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
 
 const generateAudio = async (index: number) => {
+  const { provider } = MulmoStudioContextMethods.getAudioParam(
+    { ...props.mulmoScript, presentationStyle: props.mulmoScript },
+    props.beat,
+    props.lang,
+  );
+  const { keyName } = provider2TTSAgent[provider];
+  if (!globalStore?.hasApiKey(keyName)) {
+    alert("You need setup " + keyName);
+    return;
+  }
+
   notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", props.projectId, index), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: t("notify.audio.successMessage"),

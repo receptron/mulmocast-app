@@ -59,6 +59,7 @@
                   :beat="beat"
                   :audioFile="audioFiles[beat.id]"
                   :projectId="projectId"
+                  :mulmoScript="mulmoScript"
                   :lang="mulmoScript.lang"
                   :mulmoMultiLingual="mulmoMultiLinguals?.[beatId(beat?.id, index)]?.multiLingualTexts"
                   :speakers="mulmoScript?.speechParams?.speakers ?? {}"
