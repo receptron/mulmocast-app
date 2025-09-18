@@ -252,7 +252,7 @@ import BeatSelector from "./beat_selector.vue";
 import BeatStyle from "./beat_style.vue";
 
 // lib
-import { useMulmoEventStore, useMulmoGlobalStore } from "../../../store";
+import { useMulmoEventStore } from "../../../store";
 import { getBadge, getBeatType, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
 
@@ -261,7 +261,7 @@ import Chart from "./beat_editors/chart.vue";
 import Media from "./beat_editors/media.vue";
 import Mermaid from "./beat_editors/mermaid.vue";
 import Vision from "./beat_editors/vision.vue";
-import { useApiErrorNotify } from "@/composables/notify";
+import { useApiErrorNotify, hasApiKey } from "@/composables/notify";
 
 type FileData = ArrayBuffer | string | null;
 
@@ -290,7 +290,6 @@ const emit = defineEmits([
 const route = useRoute();
 const { t } = useI18n();
 const mulmoEventStore = useMulmoEventStore();
-const globalStore = useMulmoGlobalStore();
 
 const projectId = computed(() => route.params.id as string);
 
@@ -340,7 +339,7 @@ const changeBeat = (beat: MulmoBeat) => {
 
 const generateImageOnlyImage = () => {
   const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(props.mulmoScript, props.beat);
-  if (!globalStore?.hasApiKey(imageAgentInfo.keyName)) {
+  if (!hasApiKey(imageAgentInfo.keyName)) {
     apiErrorNotify(imageAgentInfo.keyName);
     return;
   }
@@ -348,7 +347,7 @@ const generateImageOnlyImage = () => {
 };
 const generateImageOnlyMovie = () => {
   const imageAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
-  if (!globalStore?.hasApiKey(imageAgentInfo.keyName)) {
+  if (!hasApiKey(imageAgentInfo.keyName)) {
     apiErrorNotify(imageAgentInfo.keyName);
     return;
   }
@@ -357,7 +356,7 @@ const generateImageOnlyMovie = () => {
 
 const generateLipSyncMovie = async () => {
   const lipSyncAgentInfo = MulmoPresentationStyleMethods.getLipSyncAgentInfo(props.mulmoScript, props.beat);
-  if (!globalStore?.hasApiKey(lipSyncAgentInfo.keyName)) {
+  if (!hasApiKey(lipSyncAgentInfo.keyName)) {
     apiErrorNotify(lipSyncAgentInfo.keyName);
     return;
   }
