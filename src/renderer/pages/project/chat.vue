@@ -307,7 +307,7 @@ const hasExa = computed(() => {
 });
 
 const apiKeyName = computed(() => {
-  const llm  = llms.find(_llm => _llm.id === llmAgent.value)
+  const llm = llms.find((_llm) => _llm.id === llmAgent.value);
   return llm.apiKey;
 });
 
@@ -326,7 +326,6 @@ const run = async () => {
     return;
   }
 
-    
   liveToolsData.value = null;
   isRunning.value = true;
 
