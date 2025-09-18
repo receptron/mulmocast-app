@@ -4,9 +4,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch, shallowRef } from "vue";
-import loader, { type Monaco } from "@monaco-editor/loader";
+import * as monaco from "monaco-editor";
 import type { editor } from "monaco-editor";
 import { configureMonacoYaml } from "monaco-yaml";
+
+type Monaco = typeof monaco;
 
 interface Props {
   modelValue: string;
@@ -53,8 +55,7 @@ const setDiagnosticsOptions = (monaco: Monaco, language: "json" | "yaml") => {
   }
 };
 
-onMounted(async () => {
-  const monaco = await loader.init();
+onMounted(() => {
   monacoRef.value = monaco;
 
   setDiagnosticsOptions(monaco, props.language);
