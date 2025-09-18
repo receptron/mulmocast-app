@@ -114,13 +114,17 @@ const justSaveAndPushToHistory = () => {
 const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
 
 const generateAudio = async (index: number) => {
-  const { provider }  = MulmoStudioContextMethods.getAudioParam({...props.mulmoScript, presentationStyle: props.mulmoScript }, props.beat, props.lang);
+  const { provider } = MulmoStudioContextMethods.getAudioParam(
+    { ...props.mulmoScript, presentationStyle: props.mulmoScript },
+    props.beat,
+    props.lang,
+  );
   const { keyName } = provider2TTSAgent[provider];
   if (!globalStore?.hasApiKey(keyName)) {
     alert("You need setup " + keyName);
     return;
   }
-  
+
   notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", props.projectId, index), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: t("notify.audio.successMessage"),
