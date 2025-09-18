@@ -697,6 +697,10 @@ const lang = {
       pdf: "PDF",
       caption: "Caption",
     },
+    apiKey: {
+      error: "You need setup {keyName}.",
+      setup: "Setup",
+    },
   },
   languages: {
     ja: "Japanese",
