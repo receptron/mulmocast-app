@@ -1324,10 +1324,10 @@
   dependencies:
     google-gax "^5.0.0"
 
-"@google/genai@^1.19.0":
-  version "1.19.0"
-  resolved "https://registry.yarnpkg.com/@google/genai/-/genai-1.19.0.tgz#ad7cef95913c54812b05713d5e788c6bea14e6fe"
-  integrity sha512-mIMV3M/KfzzFA//0fziK472wKBJ1TdJLhozIUJKTPLyTDN1NotU+hyoHW/N0cfrcEWUK20YA0GxCeHC4z0SbMA==
+"@google/genai@^1.20.0":
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/@google/genai/-/genai-1.20.0.tgz#b728bdb383fc58fbb1b92eff26e831ff598688c0"
+  integrity sha512-QdShxO9LX35jFogy3iKprQNqgKKveux4H2QjOnyIvyHRuGi6PHiz3fjNf8Y0VPY8o5V2fHqR2XqiSVoz7yZs0w==
   dependencies:
     google-auth-library "^9.14.2"
     ws "^8.18.0"
@@ -3504,10 +3504,10 @@
   dependencies:
     undici-types "~6.21.0"
 
-"@types/node@^24.5.1":
-  version "24.5.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.5.1.tgz#dab6917c47113eb4502d27d06e89a407ec0eff95"
-  integrity sha512-/SQdmUP2xa+1rdx7VwB9yPq8PaKej8TD5cQ+XfKDPWWC+VDJU4rvVVagXqKUzhKjtFoNA8rXDJAkCxQPAe00+Q==
+"@types/node@^24.5.2":
+  version "24.5.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.5.2.tgz#52ceb83f50fe0fcfdfbd2a9fab6db2e9e7ef6446"
+  integrity sha512-FYxk1I7wPv3K2XBaoyH2cTnocQEu8AOZ60hPbsyukMPLv5/5qr7V1i8PLHdl6Zf87I+xZXFvPCXYjiTFq+YSDQ==
   dependencies:
     undici-types "~7.12.0"
 
@@ -9611,23 +9611,23 @@ muggle-string@^0.4.1:
   resolved "https://registry.yarnpkg.com/muggle-string/-/muggle-string-0.4.1.tgz#3b366bd43b32f809dc20659534dd30e7c8a0d328"
   integrity sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==
 
-mulmocast-vision@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/mulmocast-vision/-/mulmocast-vision-1.0.3.tgz#4a14857d3f68e4632bdd255ba18ba03fe6ad1bcf"
-  integrity sha512-oG8w3GU7+ZGdRD1UuBlkOmLYL6Ec03yuCqrQslzPQwCIfokQorNK7ciTzh/mVgMcQFvt31lUmYZpm/OI+SYIrw==
+mulmocast-vision@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/mulmocast-vision/-/mulmocast-vision-1.0.4.tgz#eab9121404c03e5b80f81017ac1c67eb488ad5f5"
+  integrity sha512-8b/aHhCa35yTg6UmreT36CAdJKGxxUtAIJT4l0n5Vq1dG1APTfQsxXJKZRobwBE/1QUsXlJ4MYxrDCzqIvp2gg==
   dependencies:
     "@modelcontextprotocol/sdk" "^1.17.5"
     nunjucks "^3.2.4"
     pdfkit "^0.17.2"
     puppeteer "^24.19.0"
 
-mulmocast@^1.2.34:
-  version "1.2.34"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.34.tgz#cd667ad264365152b9529cc1d0dcdaa02ea0764b"
-  integrity sha512-dkOoEDaswKNAmf7piWIgO6hvGTklyMyngC38VrBmovbdIPgvWFq7gm9kCjrM0XF7GaVzb9+XmNMnhqdO8VFr/A==
+mulmocast@^1.2.35:
+  version "1.2.35"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.35.tgz#2a5df6ef928d1a586ca0b8eabb5cb664e8fb0f6e"
+  integrity sha512-0tzrAwmZ3PwGW12VA74cp/9Mcf4lY4dqYy2F42kPDRE3y/o5vOKJqowjl/Kxc5GQ1hMQ95c9f5gxAVnQ0qsYWg==
   dependencies:
     "@google-cloud/text-to-speech" "^6.3.0"
-    "@google/genai" "^1.19.0"
+    "@google/genai" "^1.20.0"
     "@graphai/anthropic_agent" "^2.0.11"
     "@graphai/browserless_agent" "^2.0.1"
     "@graphai/gemini_agent" "^2.0.1"
@@ -9648,7 +9648,7 @@ mulmocast@^1.2.34:
     graphai "^2.0.15"
     jsdom "^27.0.0"
     marked "^16.3.0"
-    mulmocast-vision "^1.0.3"
+    mulmocast-vision "^1.0.4"
     ora "^8.2.0"
     puppeteer "^24.20.0"
     replicate "^1.1.0"
