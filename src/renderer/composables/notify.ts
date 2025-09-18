@@ -15,7 +15,12 @@ export const useApiErrorNotify = () => {
     });
   };
 
+  const hasApiKey = (keyName: keyof typeof ENV_KEYS) => {
+    return globalStore.hasApiKey(keyName);
+  };
+
   return {
     apiErrorNotify,
+    hasApiKey,
   };
 };

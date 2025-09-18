@@ -235,6 +235,7 @@
         <Reference
           :projectId="projectId"
           :images="props.mulmoScript?.imageParams?.images ?? {}"
+          :mulmoScript="mulmoScript"
           @updateImage="updateImage"
           @updateImagePath="updateImagePath"
           @addReferenceImage="addReferenceImage"
