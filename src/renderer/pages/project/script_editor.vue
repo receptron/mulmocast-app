@@ -247,7 +247,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import { ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
@@ -279,7 +279,7 @@ import TextEditor from "./script_editor/text_editor.vue";
 import { MulmoError } from "../../../types";
 import { removeEmptyValues } from "@/lib/utils";
 import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
-import { ENV_KEYS, SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
+import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
 
 import { setRandomBeatId } from "@/lib/beat_util";
 import { projectApi } from "@/lib/project_api";

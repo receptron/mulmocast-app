@@ -47,7 +47,7 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
   });
 
   const settingPresence = computed(() => {
-    const tmp = {};
+    const tmp: Record<string, boolean> = {};
     Object.keys(ENV_KEYS).forEach((envKey) => {
       tmp[envKey] = !!(settings.value.APIKEY && settings.value.APIKEY[envKey]);
     });
