@@ -283,6 +283,7 @@ import { ENV_KEYS, SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../sha
 
 import { setRandomBeatId } from "@/lib/beat_util";
 import { projectApi } from "@/lib/project_api";
+import { useMulmoGlobalStore } from "@/store";
 
 const { t } = useI18n();
 
@@ -311,6 +312,7 @@ const emit = defineEmits([
 
 const route = useRoute();
 const projectId = computed(() => route.params.id as string);
+const globalStore = useMulmoGlobalStore();
 
 const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
 
@@ -322,12 +324,8 @@ const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
   emit("update:scriptEditorActiveTab", tab);
 };
 
-const settingPresence = ref({});
-onMounted(async () => {
-  const settings = await window.electronAPI.settings.get();
-  Object.keys(ENV_KEYS).forEach((envKey) => {
-    settingPresence.value[envKey] = !!(settings.APIKEY && settings.APIKEY[envKey]);
-  });
+const settingPresence = computed(() => {
+  return globalStore.settingPresence;
 });
 
 const updateMultiLingual = async () => {
