@@ -466,6 +466,7 @@ const lang = {
       enterMessage: "メッセージを入力してください:",
       clearChat: "チャットをリセット",
       copyMessage: "Copy message for debug",
+      enableTools: "Toolsを使う",
       confirmClear: "チャットをリセットしますか？",
       undoChat: "編集をやめる",
       createButtonDescription:

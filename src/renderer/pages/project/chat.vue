@@ -75,7 +75,7 @@
         </div>
       </div>
 
-      <div>
+      <div class="flex flex-wrap">
         <Button @click="undoMessages" variant="outline" size="xs" class="mr-4" v-if="messageHistory.length > 0">
           {{ t("project.chat.undoChat") }}
         </Button>
@@ -85,6 +85,10 @@
         <Button v-if="isDevelopment" variant="outline" size="xs" class="ml-4" @click="copyMessageToClipboard">
           {{ t("project.chat.copyMessage") }}
         </Button>
+        <Label class="ml-2 inline-flex" v-if="isDevelopment">
+          <Checkbox v-model="enableTools" variant="ghost" size="icon" />
+          {{ t("project.chat.enableTools") }}
+        </Label>
       </div>
 
       <!-- Template selection section -->
@@ -153,8 +157,7 @@ import { promptTemplates, templateDataSet } from "mulmocast/data";
 import { useApiErrorNotify } from "@/composables/notify";
 
 // components
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Button, Checkbox, Label } from "@/components/ui";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ConfirmDialog from "@/components/ui/confirm-dialog/ConfirmDialog.vue";
@@ -217,6 +220,7 @@ const streamNodes = ["llm", "toolsResponseLLM", "llmCallWithTools"];
 
 const userInput = ref("");
 const textareaRef = useTemplateRef("textareaRef");
+const enableTools = ref(true);
 
 // for running...
 const liveToolsData = ref<null | Record<string, unknown>>(null);
@@ -394,7 +398,7 @@ const run = async () => {
         },
       });
     }
-    graphai.injectValue("tools", tools);
+    graphai.injectValue("tools", enableTools.value ? tools : []);
 
     const res = await graphai.run();
     console.log(res);
