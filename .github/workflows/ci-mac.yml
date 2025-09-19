@@ -86,6 +86,12 @@ jobs:
           PUPPETEER_CACHE_DIR: ${{ github.workspace }}/.puppeteer-cache
         run: yarn run make:ci
         
+      - name: Publush
+        run: yarn run publish
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          
       # 6. 生成物のアップロード（アーティファクトとして）
       # ビルドが成功したかどうかを後で確認できるように、生成された全てのファイルを一時的に保存する
       - name: Upload Artifact for Debugging
