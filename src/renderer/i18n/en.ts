@@ -467,6 +467,7 @@ const lang = {
       enterMessage: "Enter your message:",
       clearChat: "Clear chat",
       copyMessage: "Copy message for debug",
+      enableTools: "Enable Tools",
       confirmClear: "Are you sure you want to clear the chat?",
       undoChat: "Cancel Editing",
       createButtonDescription: 'To create a script, select a template, "Copy to Message", modify content, and send.',
