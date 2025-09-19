@@ -45,9 +45,9 @@ const config: ForgeConfig = {
   rebuildConfig: {},
   makers: [
     new MakerSquirrel({}),
-    new MakerZIP({ macUpdateManifestBaseUrl: "https://s3.aws.mulmocast.com/releases/test/darwin/arm64"}, ["darwin"]),
+    new MakerZIP({ macUpdateManifestBaseUrl: "https://s3.aws.mulmocast.com/releases/test/darwin/arm64" }, ["darwin"]),
     new MakerRpm({}),
-    new MakerDeb({})
+    new MakerDeb({}),
   ],
   plugins: [
     new VitePlugin({
@@ -87,15 +87,15 @@ const config: ForgeConfig = {
   ],
   publishers: [
     {
-      name: '@electron-forge/publisher-s3',
+      name: "@electron-forge/publisher-s3",
       config: {
-        bucket: 'mulmocast-app-update',
+        bucket: "mulmocast-app-update",
         region: "ap-northeast-1",
         folder: "releases/test",
         omitAcl: true,
-      }
-    }
-  ]
+      },
+    },
+  ],
 };
 
 export default config;

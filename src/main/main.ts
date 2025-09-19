@@ -160,9 +160,9 @@ const createWindow = (splashWindow?: BrowserWindow) => {
 updateElectronApp({
   updateSource: {
     type: UpdateSourceType.StaticStorage,
-    baseUrl: `https://s3.aws.mulmocast.com/releases/test/${process.platform}/${process.arch}`
+    baseUrl: `https://s3.aws.mulmocast.com/releases/test/${process.platform}/${process.arch}`,
   },
-})
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -209,7 +209,6 @@ app.on("ready", () => {
     }
 
     createWindow(splashWindow);
-
   })();
 });
 
