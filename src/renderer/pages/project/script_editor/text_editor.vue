@@ -82,7 +82,7 @@ const { t } = useI18n();
 const mulmoEventStore = useMulmoEventStore();
 const globalStore = useMulmoGlobalStore();
 
-const { apiErrorNotify } = useApiErrorNotify();
+const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 
 interface Props {
   index: number;
@@ -123,7 +123,7 @@ const generateAudio = async (index: number) => {
     props.lang,
   );
   const { keyName } = provider2TTSAgent[provider];
-  if (!globalStore?.hasApiKey(keyName)) {
+  if (!hasApiKey(keyName)) {
     apiErrorNotify(keyName);
     return;
   }
@@ -136,7 +136,7 @@ const generateAudio = async (index: number) => {
 };
 
 const translateBeat = async (index: number) => {
-  if (!globalStore?.hasApiKey("OPENAI_API_KEY")) {
+  if (!hasApiKey("OPENAI_API_KEY")) {
     apiErrorNotify("OPENAI_API_KEY");
     return;
   }

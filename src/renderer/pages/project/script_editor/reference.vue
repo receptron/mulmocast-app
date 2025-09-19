@@ -89,7 +89,13 @@ import { Trash, Sparkles, FileImage, Loader2 } from "lucide-vue-next";
 import { ref, computed, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 
-import type { MulmoImageMedia, MulmoImagePromptMedia, MulmoImageParamsImages } from "mulmocast";
+import {
+  type MulmoScript,
+  type MulmoImageMedia,
+  type MulmoImagePromptMedia,
+  type MulmoImageParamsImages,
+  MulmoPresentationStyleMethods,
+} from "mulmocast/browser";
 import { z } from "zod";
 
 import MediaModal from "@/components/media_modal.vue";
@@ -101,10 +107,12 @@ import ReferenceSelector from "./reference_selector.vue";
 
 import { getConcurrentTaskStatusMessageComponent } from "../concurrent_task_status_message";
 import { notifyProgress } from "@/lib/notification";
+import { useApiErrorNotify } from "@/composables/notify";
 
 interface Props {
   projectId: string;
   images: MulmoImageParamsImages;
+  mulmoScript: MulmoScript;
 }
 
 const { t } = useI18n();
@@ -118,6 +126,7 @@ const emit = defineEmits([
   "saveMulmo",
   "formatAndPushHistoryMulmoScript",
 ]);
+const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 
 const imageRefs = ref<Record<string, string>>({});
 
@@ -234,6 +243,11 @@ const isGeneratings = ref({});
 
 const submitImage = async (imageKey: string, key: number) => {
   if (isGeneratings.value[imageKey]) {
+    return;
+  }
+  const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(props.mulmoScript);
+  if (!hasApiKey(imageAgentInfo.keyName)) {
+    apiErrorNotify(imageAgentInfo.keyName);
     return;
   }
 
