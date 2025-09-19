@@ -1,6 +1,8 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 
+import { ENV_KEYS } from "../../shared/constants";
+
 type SETTINGS = {
   MAIN_LANGUAGE?: string;
   USE_LANGUAGES?: Record<string, boolean>;
@@ -44,6 +46,14 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
       .filter((v) => v);
   });
 
+  const settingPresence = computed(() => {
+    const tmp: Record<string, boolean> = {};
+    Object.keys(ENV_KEYS).forEach((envKey) => {
+      tmp[envKey] = !!(settings.value.APIKEY && settings.value.APIKEY[envKey]);
+    });
+    return tmp;
+  });
+
   const hasApiKey = (keyName: string) => {
     return !!settings.value.APIKEY[keyName];
   };
@@ -51,6 +61,7 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
   return {
     settings,
     updateSettings,
+    settingPresence,
 
     isOpenSettingModal,
     toggleSettingModal,
