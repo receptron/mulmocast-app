@@ -74,9 +74,13 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -s -k actions temp.keychain
           security list-keychain -d user -s temp.keychain login.keychain
 
+      - name: Install
+        run: yarn run install:ci
+             
       # 5. ビルド、署名、公証の実行
       # forge.config.tsの設定に基づいて全ての処理を行う
-      - name: Build, Sign, and Notarize
+      - name: Publush
+        run: yarn run publish
         env:
           # forge.config.tsが期待する環境変数名
           AC_APPLE_ID: ${{ secrets.APPLE_ID }}
@@ -84,11 +88,6 @@ jobs:
           AC_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           CODESIGN_IDENTITY: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
           PUPPETEER_CACHE_DIR: ${{ github.workspace }}/.puppeteer-cache
-        run: yarn run make:ci
-        
-      - name: Publush
-        run: yarn run publish
-        env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           

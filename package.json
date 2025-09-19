@@ -1,7 +1,7 @@
 {
   "name": "mulmocast-app",
   "productName": "MulmoCast",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "MulmoCast",
   "main": ".vite/build/main.js",
   "scripts": {
@@ -11,6 +11,7 @@
     "package": "npx puppeteer browsers install chrome && electron-forge package",
     "make:local": "bash -c 'set -a && source .env && set +a && npx puppeteer browsers install chrome && electron-forge make'",
     "make:ci": "npx puppeteer browsers install chrome && electron-forge make",
+    "install:ci": "npx puppeteer browsers install chrome",
     "format": "prettier --write '{test/*,src/**/*,*}.{js,ts,vue,json}'",
     "format:check": "prettier --check '{src/**/*,*}.{js,ts,vue,json}'",
     "publish": "electron-forge publish",
