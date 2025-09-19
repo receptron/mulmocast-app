@@ -3,6 +3,7 @@ import path from "node:path";
 import os from "node:os";
 import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
+import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 
 import { registerIPCHandler } from "./ipc_handler";
 import * as projectManager from "./project_manager";
@@ -155,6 +156,13 @@ const createWindow = (splashWindow?: BrowserWindow) => {
     })();
   });
 };
+
+updateElectronApp({
+  updateSource: {
+    type: UpdateSourceType.StaticStorage,
+    baseUrl: `https://s3.aws.mulmocast.com/releases/test/${process.platform}/${process.arch}`,
+  },
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
