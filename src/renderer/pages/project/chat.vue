@@ -85,10 +85,8 @@
         <Button v-if="isDevelopment" variant="outline" size="xs" class="ml-4" @click="copyMessageToClipboard">
           {{ t("project.chat.copyMessage") }}
         </Button>
-        <Label  class="inline-flex ml-2" v-if="isDevelopment">
-          <Checkbox v-model="enableTools"
-                    variant="ghost"
-                    size="icon" />
+        <Label class="ml-2 inline-flex" v-if="isDevelopment">
+          <Checkbox v-model="enableTools" variant="ghost" size="icon" />
           {{ t("project.chat.enableTools") }}
         </Label>
       </div>
