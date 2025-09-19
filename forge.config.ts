@@ -43,7 +43,12 @@ const config: ForgeConfig = {
         : undefined,
   },
   rebuildConfig: {},
-  makers: [new MakerSquirrel({}), new MakerZIP({}, ["darwin"]), new MakerRpm({}), new MakerDeb({})],
+  makers: [
+    new MakerSquirrel({}),
+    new MakerZIP({ macUpdateManifestBaseUrl: "https://s3.aws.mulmocast.com/releases/test/darwin/arm64`"}, ["darwin"]),
+    new MakerRpm({}),
+    new MakerDeb({})
+  ],
   plugins: [
     new VitePlugin({
       // `build` can specify multiple entry builds, which can be Main process, Preload scripts, Worker process, etc.
@@ -80,6 +85,17 @@ const config: ForgeConfig = {
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),
   ],
+  publishers: [
+    {
+      name: '@electron-forge/publisher-s3',
+      config: {
+        bucket: 'mulmocast-app-update',
+        region: "ap-northeast-1",
+        folder: "releases/test",
+        omitAcl: true,
+      }
+    }
+  ]
 };
 
 export default config;
