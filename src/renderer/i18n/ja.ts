@@ -379,8 +379,8 @@ const lang = {
     },
     scriptEditor: {
       text: {
-        tabLabel: "Text",
-        mode: "Text モード",
+        tabLabel: "テキスト",
+        mode: "テキストモード",
         modeDescription: "話者と会話や字幕へ編集ができます",
       },
       yaml: {
@@ -394,13 +394,13 @@ const lang = {
         modeDescription: "MulmoScript を直接編集します",
       },
       media: {
-        tabLabel: "Media",
-        mode: "Media モード",
+        tabLabel: "メディア",
+        mode: "メディアモード",
         modeDescription: "Beatごとの画像/動画の編集とプレビュー",
       },
       style: {
-        tabLabel: "Style",
-        mode: "Style",
+        tabLabel: "スタイル",
+        mode: "スタイル",
         modeDescription: "音声/動画/画像/字幕などの設定",
       },
       reference: {
