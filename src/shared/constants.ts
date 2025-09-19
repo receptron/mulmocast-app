@@ -25,32 +25,6 @@ export const ENV_KEYS = {
     url: "https://platform.openai.com/api-keys",
     features: ["llmChat", "llmTranslation", "tts", "imageGeneration"] as FeatureKey[],
   },
-  NIJIVOICE_API_KEY: {
-    title: "NijiVoice API Key",
-    placeholder: "nv_...",
-    url: "https://platform.nijivoice.com/api-keys",
-    features: ["tts-jp"] as FeatureKey[],
-  },
-  TAVILY_API_KEY: {
-    title: "Tavily API Key",
-    placeholder: "tvly-...",
-    url: "https://app.tavily.com/home",
-    features: ["webSearch"] as FeatureKey[],
-  },
-  ELEVENLABS_API_KEY: {
-    title: "ElevenLabs API Key",
-    placeholder: "el_...",
-    url: "https://elevenlabs.io/app/settings/api-keys",
-    features: ["tts"] as FeatureKey[],
-  },
-  /*
-  GOOGLE_PROJECT_ID: {
-    title: "Google Project ID",
-    placeholder: "your-project-id",
-    url: "https://console.cloud.google.com/apis/dashboard",
-    features: ["imageGeneration", "videoGeneration"] as FeatureKey[],
-    },
-*/
   REPLICATE_API_TOKEN: {
     title: "Replicate API Token",
     placeholder: "r8_...",
@@ -63,6 +37,18 @@ export const ENV_KEYS = {
     url: "https://aistudio.google.com/app/apikey",
     features: ["llmChat", "imageGeneration", "videoGeneration"] as FeatureKey[],
   },
+  NIJIVOICE_API_KEY: {
+    title: "NijiVoice API Key",
+    placeholder: "nv_...",
+    url: "https://platform.nijivoice.com/api-keys",
+    features: ["tts-jp"] as FeatureKey[],
+  },
+  ELEVENLABS_API_KEY: {
+    title: "ElevenLabs API Key",
+    placeholder: "el_...",
+    url: "https://elevenlabs.io/app/settings/api-keys",
+    features: ["tts"] as FeatureKey[],
+  },
   ANTHROPIC_API_KEY: {
     title: "Anthropic API Key",
     placeholder: "sk-...",
@@ -74,6 +60,12 @@ export const ENV_KEYS = {
     placeholder: "gsk-...",
     url: "https://console.groq.com/keys",
     features: ["llmChat"] as FeatureKey[],
+  },
+  TAVILY_API_KEY: {
+    title: "Tavily API Key",
+    placeholder: "tvly-...",
+    url: "https://app.tavily.com/home",
+    features: ["webSearch"] as FeatureKey[],
   },
   EXA_API_KEY: {
     title: "EXA API Key",
