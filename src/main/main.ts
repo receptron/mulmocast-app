@@ -4,7 +4,7 @@ import os from "node:os";
 import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
-import log from 'electron-log/main';
+import log from "electron-log/main";
 
 import { registerIPCHandler } from "./ipc_handler";
 import * as projectManager from "./project_manager";
