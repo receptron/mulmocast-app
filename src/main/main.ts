@@ -4,12 +4,15 @@ import os from "node:os";
 import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
+import log from 'electron-log/main';
 
 import { registerIPCHandler } from "./ipc_handler";
 import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
 import { ENV_KEYS } from "../shared/constants";
 import { getWindowState, saveWindowState } from "./utils/windw_state";
+
+log.initialize();
 
 // Cross-platform icon path
 const iconPath =
@@ -162,6 +165,7 @@ updateElectronApp({
     type: UpdateSourceType.StaticStorage,
     baseUrl: `https://s3.aws.mulmocast.com/releases/test/${process.platform}/${process.arch}`,
   },
+  logger: log,
 });
 
 // This method will be called when Electron has finished
