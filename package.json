@@ -90,6 +90,7 @@
     "dayjs": "^1.11.18",
     "deep-equal": "^2.2.3",
     "dompurify": "^3.2.7",
+    "electron-log": "^5.4.3",
     "electron-squirrel-startup": "^1.0.1",
     "exa-js": "^1.9.3",
     "ffmpeg-ffprobe-static": "^6.1.2-rc.1",
