@@ -14,7 +14,21 @@
         </BeatSelector>
       </div>
     </div>
-    <p class="text-muted-foreground mb-2 text-sm">{{ beat.text }}</p>
+    <div class="mb-4">
+      <Textarea
+        :model-value="beat.text"
+        @update:model-value="(value) => update('text', String(value))"
+        @blur="justSaveAndPushToHistory"
+        :placeholder="
+          t('beat.speaker.placeholder', {
+            speaker: beat?.speaker || t('ui.common.speaker'),
+            language: t('languages.' + lang),
+          })
+        "
+        rows="1"
+        class="min-h-8 resize-y"
+      />
+    </div>
 
     <div class="grid grid-cols-2 gap-4">
       <!-- left: Edit area -->
@@ -152,7 +166,7 @@
       </div>
 
       <!-- left: movie edit -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableMovie">
         <!-- movie edit -->
         <div>
           <Label class="mb-1 block">{{ t("beat.moviePrompt.label") }}: </Label>
@@ -167,7 +181,7 @@
         </div>
       </div>
       <!-- right: movie preview -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableMovie">
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
@@ -182,7 +196,7 @@
       </div>
 
       <!-- left: lipSync edit -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableLipSync">
         <!-- movie edit -->
         <div class="mb-2 flex gap-2">
           <Checkbox
@@ -195,7 +209,7 @@
         </div>
       </div>
       <!-- right: lipSync preview -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableLipSync">
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
@@ -269,6 +283,7 @@ interface Props {
   beat: MulmoBeat;
   mulmoScript: MulmoScript;
   index: number;
+  lang: string;
   imageFile: FileData;
   movieFile: FileData;
   lipSyncFiles: FileData;
@@ -346,14 +361,24 @@ const generateImageOnlyImage = () => {
   emit("generateImage", props.index, "image");
 };
 
+const enableMovie = computed(() => {
+  const movieAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
+  return hasApiKey(movieAgentInfo.keyName);
+});
+
 const generateImageOnlyMovie = () => {
   const movieAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
-  if (!hasApiKey(movieAgentInfo.keyName)) {
+  if (!enableMovie.value) {
     apiErrorNotify(movieAgentInfo.keyName);
     return;
   }
   emit("generateImage", props.index, "movie");
 };
+
+const enableLipSync = computed(() => {
+  const lipSyncAgentInfo = MulmoPresentationStyleMethods.getLipSyncAgentInfo(props.mulmoScript, props.beat);
+  return hasApiKey(lipSyncAgentInfo.keyName);
+});
 
 const generateLipSyncMovie = async () => {
   const lipSyncAgentInfo = MulmoPresentationStyleMethods.getLipSyncAgentInfo(props.mulmoScript, props.beat);
