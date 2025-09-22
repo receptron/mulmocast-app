@@ -14,8 +14,8 @@
         </BeatSelector>
       </div>
     </div>
-    <div class="mb-4">
-      <Textarea
+    <div class="mb-4 flex items-center">
+      <Input
         :model-value="beat.text"
         @update:model-value="(value) => update('text', String(value))"
         @blur="justSaveAndPushToHistory"
@@ -25,11 +25,19 @@
             language: t('languages.' + lang),
           })
         "
-        rows="1"
         class="min-h-8 resize-y"
       />
+      <Button variant="outline" size="sm" @click="generateAudio()" class="w-fit" :disabled="beat?.text.length === 0">{{
+        t("ui.actions.generateAudio")
+        }}</Button>
+      <audio :src="audioFile" v-if="!!audioFile"
+             controlslist="nodownload noplaybackrate noremoteplayback"
+             style="width:120px;height:28px;"
+             controls
+           />
     </div>
 
+    
     <div class="grid grid-cols-2 gap-4">
       <!-- left: Edit area -->
       <div class="flex flex-col gap-4">
@@ -254,6 +262,8 @@ import {
   type MulmoScript,
   type MulmoImageAsset,
   MulmoPresentationStyleMethods,
+  MulmoStudioContextMethods,
+  provider2TTSAgent,
 } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 
@@ -269,6 +279,7 @@ import BeatStyle from "./beat_style.vue";
 import { useMulmoEventStore } from "../../../store";
 import { getBadge, getBeatType, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
+import { notifyProgress } from "@/lib/notification";
 
 import Markdown from "./beat_editors/markdown.vue";
 import Chart from "./beat_editors/chart.vue";
@@ -277,6 +288,8 @@ import Mermaid from "./beat_editors/mermaid.vue";
 import Vision from "./beat_editors/vision.vue";
 import { useApiErrorNotify } from "@/composables/notify";
 
+import { getConcurrentTaskStatusMessageComponent } from "../concurrent_task_status_message";
+
 type FileData = ArrayBuffer | string | null;
 
 interface Props {
@@ -284,6 +297,7 @@ interface Props {
   mulmoScript: MulmoScript;
   index: number;
   lang: string;
+  audioFile?: string;
   imageFile: FileData;
   movieFile: FileData;
   lipSyncFiles: FileData;
@@ -389,6 +403,29 @@ const generateLipSyncMovie = async () => {
   await window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", projectId.value, props.index);
   emit("generateImage", props.index, "lipSync");
 };
+
+const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(projectId.value);
+
+const generateAudio = async () => {
+  const { provider } = MulmoStudioContextMethods.getAudioParam(
+    { ...props.mulmoScript, presentationStyle: props.mulmoScript },
+    props.beat,
+    props.lang,
+  );
+  const { keyName } = provider2TTSAgent[provider];
+  if (!hasApiKey(keyName)) {
+    apiErrorNotify(keyName);
+    return;
+  }
+
+  notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", projectId.value, props.index), {
+    loadingMessage: ConcurrentTaskStatusMessageComponent,
+    successMessage: t("notify.audio.successMessage"),
+    errorMessage: t("notify.audio.errorMessage"),
+  });
+};
+
+
 
 const update = (path: string, value: unknown) => {
   emit("update", props.index, path, value);
