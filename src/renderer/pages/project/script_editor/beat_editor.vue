@@ -152,7 +152,7 @@
       </div>
 
       <!-- left: movie edit -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableMovie">
         <!-- movie edit -->
         <div>
           <Label class="mb-1 block">{{ t("beat.moviePrompt.label") }}: </Label>
@@ -167,7 +167,7 @@
         </div>
       </div>
       <!-- right: movie preview -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableMovie">
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
@@ -182,7 +182,7 @@
       </div>
 
       <!-- left: lipSync edit -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableLipSync">
         <!-- movie edit -->
         <div class="mb-2 flex gap-2">
           <Checkbox
@@ -195,7 +195,7 @@
         </div>
       </div>
       <!-- right: lipSync preview -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableLipSync">
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
@@ -346,14 +346,24 @@ const generateImageOnlyImage = () => {
   emit("generateImage", props.index, "image");
 };
 
+const enableMovie = computed(() => {
+  const movieAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
+  return hasApiKey(movieAgentInfo.keyName)
+});
+
 const generateImageOnlyMovie = () => {
   const movieAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
-  if (!hasApiKey(movieAgentInfo.keyName)) {
+  if (!enableMovie.value) {
     apiErrorNotify(movieAgentInfo.keyName);
     return;
   }
   emit("generateImage", props.index, "movie");
 };
+
+const enableLipSync = computed(() => {
+  const lipSyncAgentInfo = MulmoPresentationStyleMethods.getLipSyncAgentInfo(props.mulmoScript, props.beat);
+  return hasApiKey(lipSyncAgentInfo.keyName);
+});
 
 const generateLipSyncMovie = async () => {
   const lipSyncAgentInfo = MulmoPresentationStyleMethods.getLipSyncAgentInfo(props.mulmoScript, props.beat);
