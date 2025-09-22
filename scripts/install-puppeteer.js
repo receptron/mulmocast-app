@@ -15,8 +15,8 @@ if (!fs.existsSync(resolvedCacheDir)) {
 
 console.log(`[puppeteer:install] Using cache directory: ${resolvedCacheDir}`);
 
-const command = process.platform === "win32" ? "npx.cmd" : "npx";
-const result = spawnSync(command, ["puppeteer", "browsers", "install", "chrome"], {
+const puppeteerCli = require.resolve("puppeteer/lib/cjs/puppeteer/node/cli.js");
+const result = spawnSync(process.execPath, [puppeteerCli, "browsers", "install", "chrome"], {
   stdio: "inherit",
   env: {
     ...process.env,
