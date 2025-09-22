@@ -106,7 +106,7 @@
               </SelectTrigger>
               <SelectContent>
                 <SelectItem v-for="(template, k) in promptTemplates" :key="k" :value="k">
-                  {{ template.title }}
+                  {{ t("project.chat.templates." + template.filename) }}
                 </SelectItem>
               </SelectContent>
             </Select>
