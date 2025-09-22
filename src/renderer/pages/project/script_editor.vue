@@ -1,13 +1,13 @@
 <template>
   <Tabs class="w-full" :model-value="currentTab" @update:model-value="handleUpdateScriptEditorActiveTab">
-    <TabsList class="grid w-full grid-cols-6">
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.TEXT" data-testid="script-editor-tab-text">{{
-        t("project.scriptEditor.text.tabLabel")
-      }}</TabsTrigger>
+    <TabsList class="grid w-full grid-cols-5">
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA" data-testid="script-editor-tab-media">{{
         t("project.scriptEditor.media.tabLabel")
       }}</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.YAML" data-testid="script-editor-tab-yaml">{{
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.TEXT" data-testid="script-editor-tab-text">{{
+        t("project.scriptEditor.text.tabLabel")
+      }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.YAML" data-testid="script-editor-tab-yaml" v-if="false">{{
         t("project.scriptEditor.yaml.tabLabel")
       }}</TabsTrigger>
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.JSON" data-testid="script-editor-tab-json">{{
@@ -170,6 +170,7 @@
                   :index="index"
                   :isEnd="(mulmoScript?.beats ?? []).length === index + 1"
                   :lang="mulmoScript.lang"
+                  :audioFile="audioFiles[beat.id]"
                   :imageFile="imageFiles[beat.id]"
                   :movieFile="movieFiles[beat.id]"
                   :lipSyncFiles="lipSyncFiles[beat.id]"
