@@ -113,6 +113,9 @@
             <Button size="sm" @click="copyScript" :disabled="noChatMessages || isRunning" class="mr-2">
               {{ t("project.chat.copyScript") }}
             </Button>
+            <Button size="sm" @click="applyStyle" class="mr-2">
+              {{ t("project.chat.applyStyle") }}
+            </Button>
           </div>
         </div>
       </div>
@@ -433,7 +436,7 @@ const scriptLang = computed(() => {
 });
 
 const scriptLangLocalize = computed(() => {
-  return t("languages." + mulmoScriptHistoryStore.currentMulmoScript.lang ?? "en");
+  return t("languages." + (mulmoScriptHistoryStore.currentMulmoScript.lang ?? "en"));
 });
 
 const copyScript = async () => {
@@ -446,7 +449,9 @@ const copyScript = async () => {
 };
 
 const applyStyle = () => {
-  console.log(promptTemplates[selectedTemplateIndex.value]);
+  const style = promptTemplates[selectedTemplateIndex.value].presentationStyle;
+  const script = { ...mulmoScriptHistoryStore.currentMulmoScript, ...style };
+  emit("updateMulmoScript", script);
 };
 
 const noChatMessages = computed(() => messages.length === 0);
