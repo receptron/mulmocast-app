@@ -4,7 +4,7 @@ import fs from "fs";
 import ffmpegFfprobeStatic from "ffmpeg-ffprobe-static";
 
 // Packages to exclude from bundle and load directly from node_modules
-const external_packages = ["jsdom", "puppeteer", "puppeteer-core"];
+const external_packages = ["jsdom", "mulmocast-vision", "puppeteer", "puppeteer-core"];
 
 const isDev = process.env.NODE_ENV === "development";
 
