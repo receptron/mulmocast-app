@@ -472,6 +472,7 @@ const lang = {
       createButtonDescription:
         "スクリプトを作成するには、テンプレートを選んで「入力欄にコピー」し、内容を修正して送信してください。",
       copyScript: "入力欄にコピー",
+      applyStyle: "スタイル適用",
       creating: "作成中...",
       createScript: "スクリプト作成",
       exampleMessage: "例）ありがとうございます！作成を進めてください。",
