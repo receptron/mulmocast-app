@@ -516,7 +516,7 @@ const lang = {
       label: "画像または動画ファイル",
       remoteLabel: "リモートメディア",
       urlField: "URL",
-      placeholder: "画像URLを入力するかファイルをアップロード",
+      placeholder: "画像URLを入力",
     },
     textSlide: {
       badge: "Text Slide",

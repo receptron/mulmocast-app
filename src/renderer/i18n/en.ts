@@ -516,7 +516,7 @@ const lang = {
       label: "Image or Movie file",
       remoteLabel: "Remote Media",
       urlField: "URL",
-      placeholder: "Enter image URL or upload file",
+      placeholder: "Enter image URL",
     },
     textSlide: {
       badge: "Text Slide",
