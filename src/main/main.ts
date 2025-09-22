@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 import path from "node:path";
 import os from "node:os";
+import fs from "node:fs";
 import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
@@ -22,6 +23,54 @@ const iconPath =
 
 const isDev = process.env.NODE_ENV === "development";
 const isCI = process.env.CI === "true";
+
+// Configure Puppeteer executable path for packaged app
+if (!isDev) {
+  const platform = process.platform;
+  const chromeExecutable = platform === "win32" ? "chrome.exe" :
+                          platform === "darwin" ? "Google Chrome for Testing" : "chrome";
+
+  // Search for Chrome in unpacked directories
+  const unpackedPath = path.join(process.resourcesPath, "app.asar.unpacked");
+  const possiblePaths = [
+    path.join(unpackedPath, ".cache/puppeteer"),
+    path.join(unpackedPath, ".puppeteer-cache")
+  ];
+
+  for (const cachePath of possiblePaths) {
+    if (fs.existsSync(cachePath)) {
+      try {
+        // Find Chrome executable recursively
+        const findChromeRecursive = (dir: string): string | null => {
+          if (!fs.existsSync(dir)) return null;
+
+          const items = fs.readdirSync(dir);
+          for (const item of items) {
+            const itemPath = path.join(dir, item);
+            const stats = fs.statSync(itemPath);
+
+            if (stats.isFile() && item === chromeExecutable) {
+              return itemPath;
+            } else if (stats.isDirectory()) {
+              const result = findChromeRecursive(itemPath);
+              if (result) return result;
+            }
+          }
+          return null;
+        };
+
+        const chromePath = findChromeRecursive(cachePath);
+        if (chromePath) {
+          process.env.PUPPETEER_EXECUTABLE_PATH = chromePath;
+          console.log(`Set PUPPETEER_EXECUTABLE_PATH to: ${chromePath}`);
+          break;
+        }
+      } catch (error) {
+        console.warn(`Failed to search for Chrome in ${cachePath}:`, error);
+      }
+    }
+  }
+}
 
 // Development environment configuration
 if (isDev) {
