@@ -29,15 +29,16 @@
       />
       <Button variant="outline" size="sm" @click="generateAudio()" class="w-fit" :disabled="beat?.text.length === 0">{{
         t("ui.actions.generateAudio")
-        }}</Button>
-      <audio :src="audioFile" v-if="!!audioFile"
-             controlslist="nodownload noplaybackrate noremoteplayback"
-             style="width:120px;height:28px;"
-             controls
-           />
+      }}</Button>
+      <audio
+        :src="audioFile"
+        v-if="!!audioFile"
+        controlslist="nodownload noplaybackrate noremoteplayback"
+        style="width: 120px; height: 28px"
+        controls
+      />
     </div>
 
-    
     <div class="grid grid-cols-2 gap-4">
       <!-- left: Edit area -->
       <div class="flex flex-col gap-4">
@@ -424,8 +425,6 @@ const generateAudio = async () => {
     errorMessage: t("notify.audio.errorMessage"),
   });
 };
-
-
 
 const update = (path: string, value: unknown) => {
   emit("update", props.index, path, value);
