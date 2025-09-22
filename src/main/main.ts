@@ -27,15 +27,12 @@ const isCI = process.env.CI === "true";
 // Configure Puppeteer executable path for packaged app
 if (!isDev) {
   const platform = process.platform;
-  const chromeExecutable = platform === "win32" ? "chrome.exe" :
-                          platform === "darwin" ? "Google Chrome for Testing" : "chrome";
+  const chromeExecutable =
+    platform === "win32" ? "chrome.exe" : platform === "darwin" ? "Google Chrome for Testing" : "chrome";
 
   // Search for Chrome in unpacked directories
   const unpackedPath = path.join(process.resourcesPath, "app.asar.unpacked");
-  const possiblePaths = [
-    path.join(unpackedPath, ".cache/puppeteer"),
-    path.join(unpackedPath, ".puppeteer-cache")
-  ];
+  const possiblePaths = [path.join(unpackedPath, ".cache/puppeteer"), path.join(unpackedPath, ".puppeteer-cache")];
 
   for (const cachePath of possiblePaths) {
     if (fs.existsSync(cachePath)) {
