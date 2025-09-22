@@ -1,3 +1,5 @@
+import { type AgentFunctionInfo, type AgentFunction } from "graphai";
+
 type HelpType =
   | "quickstart" // 最短導線（DL→プロジェクト→生成→成果物）
   | "download" // ダウンロード/インストールのみ
