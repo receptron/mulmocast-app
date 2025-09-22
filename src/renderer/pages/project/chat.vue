@@ -436,7 +436,7 @@ const scriptLang = computed(() => {
 });
 
 const scriptLangLocalize = computed(() => {
-  return t("languages." + mulmoScriptHistoryStore.currentMulmoScript.lang ?? "en");
+  return t("languages." + (mulmoScriptHistoryStore.currentMulmoScript.lang ?? "en"));
 });
 
 const copyScript = async () => {
