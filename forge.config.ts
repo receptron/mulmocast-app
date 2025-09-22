@@ -10,10 +10,13 @@ import { FuseV1Options, FuseVersion } from "@electron/fuses";
 import { execSync } from "child_process";
 const gitCommit = execSync("git rev-parse --short HEAD").toString().trim();
 const buildTime = new Date().toISOString().slice(0, 10).replace(/[-:T]/g, "");
+const gitCommitNumeric = Number.parseInt(gitCommit.slice(0, 4), 16);
+const buildRevision = Number.isFinite(gitCommitNumeric) ? gitCommitNumeric : 0;
+const buildVersion = `${buildTime}.${buildRevision}`;
 
 const config: ForgeConfig = {
   packagerConfig: {
-    buildVersion: `${buildTime}.${gitCommit}`,
+    buildVersion,
     // Enable ASAR and unpack Puppeteer's Chromium binaries so they can be executed at runtime
     asar: {
       unpack: "**/{node_modules/puppeteer/.local-chromium,.cache/puppeteer,.puppeteer-cache}/**",
