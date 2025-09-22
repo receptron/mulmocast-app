@@ -147,6 +147,7 @@ import { openAIAgent, geminiAgent, anthropicAgent, groqAgent } from "@graphai/ll
 import exaToolsAgent from "../../agents/exa_agent";
 import puppeteerAgent from "../../agents/puppeteer_agent";
 // import toolsAgent from "../../agents/tools_agent";
+import mulmoCastHelpAgent from "../../agents/help_agent";
 import { toolsAgent } from "@graphai/tools_agent";
 
 // mulmo
@@ -251,6 +252,7 @@ const graphAIAgents = {
   validateSchemaAgent,
   exaToolsAgent,
   puppeteerAgent,
+  mulmoCastHelpAgent,
   toolsAgent,
   mulmoScriptValidatorAgent,
   mulmoVisionAgent,
@@ -337,7 +339,12 @@ const run = async () => {
     const config = await getGraphConfig();
     const llmModel = config[llmAgent.value]?.model || ""; // The model setting in config can be overridden by params.model (even if it is a blank string).
 
-    const tools = [...mulmoScriptValidatorAgent.tools, ...puppeteerAgent.tools, ...mulmoVisionAgent.tools];
+    const tools = [
+      ...mulmoScriptValidatorAgent.tools,
+      ...puppeteerAgent.tools,
+      ...mulmoVisionAgent.tools,
+      ...mulmoCastHelpAgent.tools,
+    ];
     const systemMessage = `Always reply in ${scriptLang.value}, regardless of the language of the user's input or previous conversation.  If the user's message is in a different language, translate it into ${scriptLang.value} before replying.`;
 
     const postMessages = [
