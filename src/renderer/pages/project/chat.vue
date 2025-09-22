@@ -432,11 +432,21 @@ const scriptLang = computed(() => {
   return enLang.languages[mulmoScriptHistoryStore.currentMulmoScript.lang ?? "en"];
 });
 
+const scriptLangLocalize = computed(() => {
+  return t("languages." + mulmoScriptHistoryStore.currentMulmoScript.lang ?? "en");
+});
+
 const copyScript = async () => {
-  const head = `Generate a ${scriptLang.value} presentation script for this topic or story and pass it to tool 'pushScript.'`;
+  // const head = `Generate a ${scriptLang.value} presentation script for this topic or story and pass it to tool 'pushScript.'`;
+  const head = t("project.chat.prompt.generatePrompt", { scriptLang: scriptLangLocalize.value });
   // Generate a Japanese script for a presentation of the given topic and pass it to tool 'pushScript.'
   const template = templateDataSet[promptTemplates[selectedTemplateIndex.value].filename];
+
   userInput.value = head + " " + template;
+};
+
+const applyStyle = () => {
+  console.log(promptTemplates[selectedTemplateIndex.value]);
 };
 
 const noChatMessages = computed(() => messages.length === 0);
