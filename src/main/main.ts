@@ -58,6 +58,9 @@ if (!isDev) {
 
         const chromePath = findChromeRecursive(cachePath);
         if (chromePath) {
+          if (!process.env.PUPPETEER_CACHE_DIR) {
+            process.env.PUPPETEER_CACHE_DIR = cachePath;
+          }
           process.env.PUPPETEER_EXECUTABLE_PATH = chromePath;
           console.log(`Set PUPPETEER_EXECUTABLE_PATH to: ${chromePath}`);
           break;

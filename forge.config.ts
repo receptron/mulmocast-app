@@ -16,7 +16,7 @@ const config: ForgeConfig = {
     buildVersion: `${buildTime}.${gitCommit}`,
     // Enable ASAR and unpack Puppeteer's Chromium binaries so they can be executed at runtime
     asar: {
-      unpack: "**/{.cache/puppeteer,.puppeteer-cache}/**",
+      unpack: "**/{node_modules/puppeteer/.local-chromium,.cache/puppeteer,.puppeteer-cache}/**",
     },
     extraResource: [
       ".vite/build/ffmpeg",
