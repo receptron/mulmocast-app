@@ -499,6 +499,10 @@ const lang = {
         trailer: "Movie Trailer template",
         vision: "Business Analysis",
       },
+      prompt: {
+        generatePrompt:
+          "Generate a {scriptLang} presentation script for this topic or story and pass it to tool 'pushScript.'",
+      },
     },
   },
   beat: {

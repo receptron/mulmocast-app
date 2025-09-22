@@ -499,6 +499,10 @@ const lang = {
         trailer: "映画予告編テンプレート",
         vision: "ビジネス分析",
       },
+      prompt: {
+        generatePrompt:
+          "このトピックまたはストーリーの {scriptLang} プレゼンテーションスクリプトを生成し、ツール 'pushScript' に渡してください。",
+      },
     },
   },
   beat: {
