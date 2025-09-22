@@ -14,7 +14,21 @@
         </BeatSelector>
       </div>
     </div>
-    <p class="text-muted-foreground mb-2 text-sm">{{ beat.text }}</p>
+    <div class="mb-4">
+      <Textarea
+        :model-value="beat.text"
+        @update:model-value="(value) => update('text', String(value))"
+        @blur="justSaveAndPushToHistory"
+        :placeholder="
+          t('beat.speaker.placeholder', {
+            speaker: beat?.speaker || t('ui.common.speaker'),
+            language: t('languages.' + lang),
+          })
+        "
+        rows="1"
+        class="min-h-8 resize-y"
+      />
+    </div>
 
     <div class="grid grid-cols-2 gap-4">
       <!-- left: Edit area -->
@@ -269,6 +283,7 @@ interface Props {
   beat: MulmoBeat;
   mulmoScript: MulmoScript;
   index: number;
+  lang: string;
   imageFile: FileData;
   movieFile: FileData;
   lipSyncFiles: FileData;
@@ -348,7 +363,7 @@ const generateImageOnlyImage = () => {
 
 const enableMovie = computed(() => {
   const movieAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
-  return hasApiKey(movieAgentInfo.keyName)
+  return hasApiKey(movieAgentInfo.keyName);
 });
 
 const generateImageOnlyMovie = () => {

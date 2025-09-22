@@ -4,14 +4,14 @@
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.TEXT" data-testid="script-editor-tab-text">{{
         t("project.scriptEditor.text.tabLabel")
       }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA" data-testid="script-editor-tab-media">{{
+        t("project.scriptEditor.media.tabLabel")
+      }}</TabsTrigger>
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.YAML" data-testid="script-editor-tab-yaml">{{
         t("project.scriptEditor.yaml.tabLabel")
       }}</TabsTrigger>
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.JSON" data-testid="script-editor-tab-json">{{
         t("project.scriptEditor.json.tabLabel")
-      }}</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA" data-testid="script-editor-tab-media">{{
-        t("project.scriptEditor.media.tabLabel")
       }}</TabsTrigger>
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.STYLE" data-testid="script-editor-tab-style">{{
         t("project.scriptEditor.style.tabLabel")
@@ -169,6 +169,7 @@
                   :mulmoScript="mulmoScript"
                   :index="index"
                   :isEnd="(mulmoScript?.beats ?? []).length === index + 1"
+                  :lang="mulmoScript.lang"
                   :imageFile="imageFiles[beat.id]"
                   :movieFile="movieFiles[beat.id]"
                   :lipSyncFiles="lipSyncFiles[beat.id]"
