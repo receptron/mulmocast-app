@@ -358,6 +358,7 @@ const mulmoCastHelpAgentInfo: AgentFunctionInfo = {
     },
   ],
   description: "MulmoCast Help Agent (LLM 後段加工向け JSON 出力)",
+  repository: "",
   category: ["net"],
   author: "Receptron team",
   license: "MIT",
