@@ -345,9 +345,10 @@ const generateImageOnlyImage = () => {
   }
   emit("generateImage", props.index, "image");
 };
+
 const generateImageOnlyMovie = () => {
-  const imageAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
-  if (!hasApiKey(imageAgentInfo.keyName)) {
+  const movieAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
+  if (!hasApiKey(movieAgentInfo.keyName)) {
     apiErrorNotify(imageAgentInfo.keyName);
     return;
   }
