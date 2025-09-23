@@ -19,8 +19,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
-import { useMulmoEventStore } from "../../store";
 import { notifyProgress } from "@/lib/notification";
 import { Monitor } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
@@ -37,6 +35,7 @@ const props = defineProps<Props>();
 
 const { t } = useI18n();
 
+const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
 const generateContents = () => {
   notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", props.projectId, ["movie"]), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
@@ -44,5 +43,4 @@ const generateContents = () => {
     errorMessage: t("notify.content.errorMessage"),
   });
 };
-const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
 </script>
