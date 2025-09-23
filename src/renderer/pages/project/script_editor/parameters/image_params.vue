@@ -3,6 +3,19 @@
     <h4 class="mb-3 font-medium" v-if="showTitle">{{ t("parameters.imageParams.title") }}</h4>
 
     <div class="space-y-3">
+      <div v-if="images" class="my-2">
+        <Label>{{ t("parameters.imageParams.images") }}</Label>
+        <div v-if="Object.keys(images).length === 0" class="text-muted-foreground mt-2 text-sm">
+          {{ t("parameters.imageParams.imagesEmptyHint") }}
+        </div>
+        <div v-for="imageKey in Object.keys(images)" :key="imageKey">
+          <Checkbox
+            :model-value="(beat?.imageNames ?? Object.keys(images ?? {})).includes(imageKey)"
+            @update:modelValue="(val) => updateImageNames(imageKey, val)"
+            class="m-2"
+          />{{ imageKey }}
+        </div>
+      </div>
       <div>
         <Label>{{ t("ui.common.provider") }}</Label>
         <Select :model-value="imageProvider" @update:model-value="handleProviderChange">
@@ -69,19 +82,6 @@
           @update:model-value="(value) => handleUpdate('moderation', String(value))"
           :placeholder="t('parameters.imageParams.moderationPlaceholder')"
         />
-      </div>
-      <div v-if="images" class="my-2">
-        <Label>{{ t("parameters.imageParams.images") }}</Label>
-        <div v-if="Object.keys(images).length === 0" class="text-muted-foreground mt-2 text-sm">
-          {{ t("parameters.imageParams.imagesEmptyHint") }}
-        </div>
-        <div v-for="imageKey in Object.keys(images)" :key="imageKey">
-          <Checkbox
-            :model-value="(beat?.imageNames ?? Object.keys(images ?? {})).includes(imageKey)"
-            @update:modelValue="(val) => updateImageNames(imageKey, val)"
-            class="m-2"
-          />{{ imageKey }}
-        </div>
       </div>
       <MulmoError :mulmoError="mulmoError" />
     </div>

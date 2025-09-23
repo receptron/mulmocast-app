@@ -10,7 +10,7 @@
             <Label class="mb-1 block">{{ t("beat.imagePrompt.label") }} : </Label>
 
             <Textarea
-              :placeholder="t('beat.imagePrompt.placeholder')"
+              :placeholder="t('beat.imageReference.imagePromptPlaceholder')"
               :model-value="images[imageKey].prompt"
               @update:model-value="(value) => update('imagePrompt', imageKey, String(value))"
               class="mb-2 h-20 overflow-y-auto"

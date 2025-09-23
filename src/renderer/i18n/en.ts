@@ -418,6 +418,7 @@ const lang = {
         tabLabel: "Ref",
         mode: "Reference",
         modeDescription: "Reference image for character consistency",
+        description: "If you use a character, please set it in the image settings for each BEAT.",
       },
       validationStatus: "Validation Status",
     },
@@ -596,6 +597,7 @@ const lang = {
       badge: "Image Reference",
       keyField: "Image Reference Key",
       placeholder: "Image Reference Key (a-z0-9)",
+      imagePromptPlaceholder: "Enter prompt to generate charactor image.",
     },
     image: {
       badge: "Image",
@@ -663,7 +665,7 @@ const lang = {
       stylePlaceholder: "ex) vivid, natural",
       moderation: "Moderation",
       moderationPlaceholder: "ex) low, auto",
-      images: "Reference Image",
+      images: "Charactor Image",
       imagesEmptyHint: "No images found. Please set references in the Ref tab.",
     },
     audioParams: {

@@ -234,6 +234,9 @@
           {{ t("project.scriptEditor.reference.mode") }} -
           {{ t("project.scriptEditor.reference.modeDescription") }}
         </p>
+        <p>
+          {{ t("project.scriptEditor.reference.description") }}
+        </p>
         <Reference
           :projectId="projectId"
           :images="props.mulmoScript?.imageParams?.images ?? {}"
