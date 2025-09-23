@@ -217,7 +217,7 @@
         <p class="text-muted-foreground mb-2 text-sm">
           {{ t("project.scriptEditor.style.mode") }} - {{ t("project.scriptEditor.style.modeDescription") }}
         </p>
-        <PresentationStyleEditor
+        <PresentationStyle
           :projectId="projectId"
           :presentationStyle="mulmoScript"
           @update:presentationStyle="updatePresentationStyle"
@@ -277,7 +277,7 @@ import CodeEditor from "@/components/code_editor.vue";
 
 import BeatEditor from "./script_editor/beat_editor.vue";
 import BeatSelector from "./script_editor/beat_selector.vue";
-import PresentationStyleEditor from "./script_editor/presentation_style_editor.vue";
+import PresentationStyle from "./script_editor/presentation_style.vue";
 import Reference from "./script_editor/reference.vue";
 import TextEditor from "./script_editor/text_editor.vue";
 
