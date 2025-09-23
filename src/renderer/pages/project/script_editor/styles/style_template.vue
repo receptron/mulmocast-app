@@ -35,7 +35,7 @@ import { useI18n } from "vue-i18n";
 import { Card, Label, Button } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { MulmoScript } from "mulmocast/browser";
-import { promptTemplates, templateDataSet } from "mulmocast/data";
+import { promptTemplates } from "mulmocast/data";
 
 const { t } = useI18n();
 

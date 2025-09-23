@@ -19,7 +19,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
 import { notifyProgress } from "@/lib/notification";
 import { Monitor } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
