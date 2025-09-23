@@ -396,3 +396,14 @@ export const PRESET_CANVAS_SIZE = {
   "1536x1024": { width: 1536, height: 1024 },
   "1024x1536": { width: 1024, height: 1536 },
 } as const;
+
+export const userLevels = [
+  {
+    id: "beginner",
+    mode: 1,
+  },
+  {
+    id: "pro",
+    mode: 100,
+  },
+];

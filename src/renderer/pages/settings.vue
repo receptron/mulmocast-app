@@ -96,6 +96,26 @@
         @update:selected-l-l-m="updateSelectedLLM"
         @update:llm-configs="updateLlmConfigs"
       />
+
+      <!-- language -->
+      <Card>
+        <CardContent class="space-y-4">
+          <div class="space-y-2">
+            <Label for="language">{{ t("settings.appSettings.mode.label") }}</Label>
+            <Select v-model="selectedUserLevel">
+              <SelectTrigger>
+                <SelectValue :placeholder="t('settings.appSettings.mode.placeholder')" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem v-for="user_level in userLevels" :key="user_level.id" :value="user_level.id">
+                  {{ t("settings.appSettings.userLevel." + user_level.id) }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            <p class="text-muted-foreground text-sm">{{ t("settings.appSettings.mode.description") }}</p>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   </div>
 </template>
@@ -124,8 +144,10 @@ import {
   LLM_ANTHROPIC_DEFAULT_CONFIG,
   LLM_GROQ_DEFAULT_CONFIG,
   LLM_GEMINI_DEFAULT_CONFIG,
+  userLevels,
 } from "../../shared/constants";
 import { useMulmoGlobalStore } from "../store";
+import { type UserLevel } from "../../types/index";
 
 const { locale, t } = useI18n();
 
@@ -140,6 +162,8 @@ const useLanguage = reactive<Record<string, boolean>>({});
 
 const selectedLanguage = ref(locale.value);
 const isInitialLoad = ref(true);
+
+const selectedUserLevel = ref("beginner");
 
 const selectedLLM = ref("openAIAgent");
 
@@ -236,8 +260,10 @@ const saveSettings = async () => {
       MAIN_LANGUAGE: mainLanguage.value,
       CHAT_LLM: selectedLLM.value,
       llmConfigs: toRaw(llmConfigs.value),
+      USER_LEVEL: selectedUserLevel.value ?? "beginner",
     };
     await window.electronAPI.settings.set(data);
+    console.log(data);
     globalStore.updateSettings(data);
     notifySuccess(t("settings.notifications.success"));
   } catch (error) {
@@ -286,6 +312,12 @@ watch(
   },
   { deep: true },
 );
+
+watch(selectedUserLevel, () => {
+  if (!isInitialLoad.value) {
+    saveSettings();
+  }
+});
 
 // Watch for changes in language selection - save immediately and update i18n locale
 watch(selectedLanguage, (newLang) => {
