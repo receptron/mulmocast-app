@@ -176,7 +176,7 @@
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <MulmoViewer
+                <ProductTabs
                   v-if="project"
                   :project="project"
                   :mulmoViewerActiveTab="projectMetadata?.mulmoViewerActiveTab"
@@ -251,7 +251,7 @@ import Layout from "@/components/layout.vue";
 import Chat from "./project/chat.vue";
 import ScriptEditor from "./project/script_editor.vue";
 import Generate from "./project/generate.vue";
-import MulmoViewer from "../components/product/tabs.vue";
+import ProductTabs from "../components/product/tabs.vue";
 import ProjectHeader from "./project/header.vue";
 import DebugLog from "./project/debug_log.vue";
 
