@@ -223,6 +223,7 @@
           @update:presentationStyle="updatePresentationStyle"
           :mulmoError="mulmoError"
           :settingPresence="settingPresence"
+          :mulmoScript="mulmoScript"
         />
       </div>
     </TabsContent>
@@ -278,7 +279,7 @@ import CodeEditor from "@/components/code_editor.vue";
 import BeatEditor from "./script_editor/beat_editor.vue";
 import BeatSelector from "./script_editor/beat_selector.vue";
 import PresentationStyle from "./script_editor/presentation_style.vue";
-import Reference from "./script_editor/reference.vue";
+import Reference from "./script_editor/charactor.vue";
 import TextEditor from "./script_editor/text_editor.vue";
 
 import { MulmoError } from "../../../types";

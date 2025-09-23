@@ -685,6 +685,12 @@ const lang = {
       clickToSelect: "or click to select",
     },
   },
+  presentationStyle: {
+    styleTemplate: {
+      title: "Style template",
+      description: "Overwrite the style. Be careful as the existing style settings will be lost.",
+    },
+  },
 
   viewer: {
     mediaPreview: {

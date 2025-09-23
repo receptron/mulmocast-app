@@ -686,7 +686,12 @@ const lang = {
       clickToSelect: "またはクリックして選択",
     },
   },
-
+  presentationStyle: {
+    styleTemplate: {
+      title: "テンプレート",
+      description: "スタイルを上書きします。既存のスタイル設定が消えるので注意してください",
+    },
+  },
   viewer: {
     mediaPreview: {
       modal: {
