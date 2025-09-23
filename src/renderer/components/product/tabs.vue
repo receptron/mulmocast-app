@@ -7,9 +7,15 @@
       <TabsTrigger :value="MULMO_VIEWER_TABS.SLIDE">{{ t("project.productTabs.tabs.slide") }}</TabsTrigger>
     </TabsList>
 
-    <MovieTab :project-id="projectId" />
-    <PdfTab :project-id="projectId" />
-    <PodcastTab :project-id="projectId" />
+    <TabsContent value="movie" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
+      <MovieTab :project-id="projectId" />
+    </TabsContent>
+    <TabsContent value="pdf" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
+      <PdfTab :project-id="projectId" />
+    </TabsContent>
+    <TabsContent value="podcast" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
+      <PodcastTab :project-id="projectId" />
+    </TabsContent>
     <TabsContent value="slide" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
       <MulmoViewer
         :project-id="projectId"
@@ -25,10 +31,8 @@
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { type MultiLingualTexts } from "mulmocast/browser";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import type { Project } from "@/lib/project_api";
-
-import { TabsContent } from "@/components/ui/tabs";
 
 import MovieTab from "./tabs/movie_tab.vue";
 import PdfTab from "./tabs/pdf_tab.vue";
