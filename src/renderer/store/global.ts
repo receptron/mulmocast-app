@@ -63,11 +63,17 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
     return !!settings.value.APIKEY[keyName];
   };
 
+  const userIsPro = computed(() => {
+    return userMode.value.id === "pro";
+  });
+
   return {
     settings,
     updateSettings,
     settingPresence,
+
     userMode,
+    userIsPro,
 
     isOpenSettingModal,
     toggleSettingModal,

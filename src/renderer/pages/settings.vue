@@ -240,6 +240,9 @@ onMounted(async () => {
     if (settings?.llmConfigs?.groq) {
       llmConfigs.value.groq = settings.llmConfigs.groq;
     }
+    if (settings?.USER_LEVEL) {
+      selectedUserLevel.value = settings.USER_LEVEL;
+    }
     // Wait for the next tick to avoid triggering save during initial load
     await nextTick();
     isInitialLoad.value = false;

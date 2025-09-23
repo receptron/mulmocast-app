@@ -145,7 +145,7 @@
             :class="{ 'lg:block': isRightColumnOpen, 'lg:hidden': !isRightColumnOpen }"
           >
             <!-- Output Section -->
-            <Card>
+            <Card v-if="globalStore.userIsPro">
               <CardHeader>
                 <div class="flex items-center justify-between">
                   <CardTitle class="flex items-center space-x-2">
@@ -163,7 +163,7 @@
             </Card>
 
             <!-- Product Section -->
-            <Card class="relative">
+            <Card class="relative" v-if="globalStore.userIsPro">
               <div class="absolute right-4 z-50 mt-[-16px] flex items-center rounded-lg bg-black/50 text-white">
                 <button class="p-3 transition-colors hover:text-red-400" @click="openModal">
                   <Expand class="h-5 w-5" />
@@ -184,6 +184,23 @@
                   @update:mulmoViewerActiveTab="handleUpdateMulmoViewerActiveTab"
                   @updateMultiLingual="updateMultiLingual"
                 />
+              </CardContent>
+            </Card>
+
+            <Card v-if="!globalStore.userIsPro">
+              <CardHeader>
+                <div class="flex items-center justify-between">
+                  <CardTitle class="flex items-center space-x-2">
+                    <Settings :size="20" />
+                    <span>{{ t("project.generate.outputSettingsGeneration") }}</span>
+                  </CardTitle>
+                  <Button variant="ghost" size="sm" @click="isRightColumnOpen = false" class="hidden lg:inline-flex">
+                    <PanelRightClose :size="16" />
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent class="p-4">
+                <VideoViewer :projectId="projectId" />
               </CardContent>
             </Card>
 
@@ -251,6 +268,7 @@ import Layout from "@/components/layout.vue";
 import Chat from "./project/chat.vue";
 import ScriptEditor from "./project/script_editor.vue";
 import Generate from "./project/generate.vue";
+import VideoViewer from "./project/video_viewer.vue";
 import ProductTabs from "../components/product/tabs.vue";
 import ProjectHeader from "./project/header.vue";
 import DebugLog from "./project/debug_log.vue";
