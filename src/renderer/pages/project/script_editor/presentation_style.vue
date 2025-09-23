@@ -1,5 +1,6 @@
 <template>
   <div class="space-y-6">
+    <StyleTemplate @updateMulmoScript="updatePresentationStyle" :mulmoScript="mulmoScript" />
     <CanvasSizeParams
       :canvas-size="presentationStyle?.canvasSize"
       @update="(value) => updateParam(`canvasSize`, value)"
@@ -43,14 +44,15 @@
 </template>
 
 <script setup lang="ts">
-import type { MulmoPresentationStyle } from "mulmocast/browser";
-import CanvasSizeParams from "./parameters/canvas_size_params.vue";
-import ImageParams from "./parameters/image_params.vue";
-import SpeechParams from "./parameters/speech_params.vue";
-import AudioParams from "./parameters/audio_params.vue";
-import MovieParams from "./parameters/movie_params.vue";
-import TextSlideParams from "./parameters/text_slide_params.vue";
-import CaptionParams from "./parameters/caption_params.vue";
+import type { MulmoPresentationStyle, MulmoScript } from "mulmocast/browser";
+import StyleTemplate from "./styles/style_template.vue";
+import CanvasSizeParams from "./styles/canvas_size_params.vue";
+import ImageParams from "./styles/image_params.vue";
+import SpeechParams from "./styles/speech_params.vue";
+import AudioParams from "./styles/audio_params.vue";
+import MovieParams from "./styles/movie_params.vue";
+import TextSlideParams from "./styles/text_slide_params.vue";
+import CaptionParams from "./styles/caption_params.vue";
 
 import { MulmoError } from "../../../../../types";
 
@@ -59,6 +61,7 @@ interface Props {
   presentationStyle?: Partial<MulmoPresentationStyle>;
   mulmoError: MulmoError | null;
   settingPresence: Record<string, boolean>;
+  mulmoScript: MulmoScript;
 }
 
 const props = defineProps<Props>();
@@ -86,5 +89,9 @@ const updateParam = (path: string, value: unknown) => {
   const updatedValue = set({ ...(props.presentationStyle || {}) } as Record<string, unknown>, keys, value);
   console.log(`Updating parameter: ${path} =`, value);
   emit("update:presentationStyle", updatedValue);
+};
+
+const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
+  emit("update:presentationStyle", style);
 };
 </script>

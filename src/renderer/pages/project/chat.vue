@@ -85,7 +85,7 @@
         <Button v-if="isDevelopment" variant="outline" size="xs" class="ml-4" @click="copyMessageToClipboard">
           {{ t("project.chat.copyMessage") }}
         </Button>
-        <Label class="ml-2 inline-flex mt-2" v-if="isDevelopment">
+        <Label class="mt-2 ml-2 inline-flex" v-if="isDevelopment">
           <Checkbox v-model="enableTools" variant="ghost" size="icon" />
           {{ t("project.chat.enableTools") }}
         </Label>
@@ -111,7 +111,7 @@
               </SelectContent>
             </Select>
           </div>
-          <div class="flex mt-4">
+          <div class="mt-4 flex">
             <Button size="sm" @click="copyScript" :disabled="noChatMessages || isRunning" class="mr-2">
               {{ t("project.chat.copyScript") }}
             </Button>

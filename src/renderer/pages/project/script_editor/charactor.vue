@@ -1,5 +1,5 @@
 <template>
-  <ReferenceSelector class="mt-4" @addReferenceImage="addReferenceImage" :referenceKeys="Object.keys(images) ?? []" />
+  <CharactorSelector class="mt-4" @addReferenceImage="addReferenceImage" :referenceKeys="Object.keys(images) ?? []" />
 
   <div v-for="(imageKey, key) in Object.keys(images).sort()" :key="`${imageKey}_${key}`" class="relative">
     <Card class="mt-8 gap-2 space-y-1 p-4">
@@ -103,7 +103,7 @@ import { Card } from "@/components/ui/card";
 import { Button, Label, Textarea, Input } from "@/components/ui";
 import { bufferToUrl } from "@/lib/utils";
 
-import ReferenceSelector from "./reference_selector.vue";
+import CharactorSelector from "./charactor_selector.vue";
 
 import { getConcurrentTaskStatusMessageComponent } from "../concurrent_task_status_message";
 import { notifyProgress } from "@/lib/notification";
