@@ -418,6 +418,7 @@ const lang = {
         tabLabel: "Ref",
         mode: "Reference",
         modeDescription: "Reference image for character consistency",
+        description: "If you use a character, please set it in the image settings for each BEAT.",
       },
       validationStatus: "Validation Status",
     },

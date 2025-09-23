@@ -417,6 +417,7 @@ const lang = {
         tabLabel: "キャラ生成",
         mode: "キャラ生成",
         modeDescription: "Beatで登場するキャラクターの生成/管理",
+        description: "キャラを使う場合は、各BEATの画像設定で設定してください。",
       },
       validationStatus: "検証ステータス",
     },
