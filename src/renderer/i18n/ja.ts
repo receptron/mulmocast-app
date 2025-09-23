@@ -485,7 +485,7 @@ const lang = {
       applyStyle: "スタイル適用",
       creating: "作成中...",
       createScript: "スクリプト作成",
-      exampleMessage: "例）ありがとうございます！作成を進めてください。",
+      exampleMessage: "例）ちらし寿司の作り方のスライドを作りたい。",
       templates: {
         akira_comic: "アキラ風",
         ani: "アニによるプレゼンテーション",
