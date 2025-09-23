@@ -32,7 +32,12 @@ if (!isDev) {
 
   // Search for Chrome in unpacked directories
   const unpackedPath = path.join(process.resourcesPath, "app.asar.unpacked");
-  const possiblePaths = [path.join(unpackedPath, ".cache/puppeteer"), path.join(unpackedPath, ".puppeteer-cache")];
+  const possiblePaths = [
+    path.join(unpackedPath, ".cache/puppeteer"),
+    path.join(unpackedPath, ".puppeteer-cache"),
+    path.join(process.resourcesPath, ".cache/puppeteer"),
+    path.join(process.resourcesPath, ".puppeteer-cache"),
+  ];
 
   for (const cachePath of possiblePaths) {
     if (fs.existsSync(cachePath)) {
