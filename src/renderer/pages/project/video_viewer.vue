@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-6">
     <!-- Output Buttons -->
-      <MovieTab :project-id="projectId" />
+    <MovieTab :project-id="projectId" />
     <div class="space-y-4">
       <div class="flex justify-center">
         <Button
