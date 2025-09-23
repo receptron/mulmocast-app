@@ -147,7 +147,6 @@ import {
   userLevels,
 } from "../../shared/constants";
 import { useMulmoGlobalStore } from "../store";
-import { type UserLevel } from "../../types/index";
 
 const { locale, t } = useI18n();
 
