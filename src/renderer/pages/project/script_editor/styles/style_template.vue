@@ -36,6 +36,7 @@ import { Card, Label, Button } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { MulmoScript } from "mulmocast/browser";
 import { promptTemplates } from "mulmocast/data";
+import { notifySuccess } from "@/lib/notification";
 
 const { t } = useI18n();
 
@@ -53,5 +54,7 @@ const applyStyle = () => {
   const style = promptTemplates[selectedTemplateIndex.value].presentationStyle;
   const script = { ...props.mulmoScript, ...style };
   emit("updateMulmoScript", script);
+  notifySuccess(t("settings.notifications.createSuccess"));
+
 };
 </script>
