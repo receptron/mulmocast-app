@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-6">
     <!-- Output Buttons -->
-    <MovieTab :project-id="projectId" />
+      <MovieTab :project-id="projectId" />
     <div class="space-y-4">
       <div class="flex justify-center">
         <Button
@@ -19,8 +19,10 @@
   </div>
 </template>
 <script setup lang="ts">
+import { ref, watch } from "vue";
+import { useMulmoEventStore } from "../../store";
 import { notifyProgress } from "@/lib/notification";
-import { Monitor } from "lucide-vue-next";
+import { FileText, Monitor, Volume2Icon } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { getConcurrentTaskStatusMessageComponent } from "./concurrent_task_status_message";
 
@@ -35,7 +37,15 @@ const props = defineProps<Props>();
 
 const { t } = useI18n();
 
-const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
+type OptionKey = "movie" | "audio" | "pdfSlide" | "pdfHandout";
+
+const options = ref<Record<OptionKey, boolean>>({
+  movie: true,
+  audio: true,
+  pdfSlide: false,
+  pdfHandout: false,
+});
+
 const generateContents = () => {
   notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", props.projectId, ["movie"]), {
     loadingMessage: ConcurrentTaskStatusMessageComponent,
@@ -43,4 +53,7 @@ const generateContents = () => {
     errorMessage: t("notify.content.errorMessage"),
   });
 };
+const mulmoEventStore = useMulmoEventStore();
+
+const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
 </script>
