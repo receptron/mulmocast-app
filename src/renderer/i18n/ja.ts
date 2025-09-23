@@ -414,9 +414,9 @@ const lang = {
         modeDescription: "音声/動画/画像/字幕などの設定",
       },
       reference: {
-        tabLabel: "参照",
-        mode: "参照",
-        modeDescription: "キャラクターの一貫性のための参照イメージ",
+        tabLabel: "キャラ生成",
+        mode: "キャラ生成",
+        modeDescription: "Beatで登場するキャラクターの生成/管理",
       },
       validationStatus: "検証ステータス",
     },
@@ -664,7 +664,7 @@ const lang = {
       stylePlaceholder: "例) 鮮やか、自然",
       moderation: "モデレーション",
       moderationPlaceholder: "例) 低、自動",
-      images: "参考画像",
+      images: "キャラ画像",
       imagesEmptyHint: "画像が見つかりません。参照タブで参考画像を設定してください。",
     },
     audioParams: {
