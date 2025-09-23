@@ -43,3 +43,5 @@ export type MulmoError = {
   captionParams: string[];
   audioParams: string[];
 };
+
+export type UserLevel = "beginner" | "semiPro" | "pro";

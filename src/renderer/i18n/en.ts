@@ -258,6 +258,16 @@ const lang = {
         placeholder: "Select a language",
         description: "Select your preferred display language for the application",
       },
+      mode: {
+        label: "Mode settings",
+        placeholder: "Select a mode",
+        description: "Please select a mode",
+      },
+      userLevel: {
+        beginner: "Beginner",
+        semiPro: "Intermediate",
+        pro: "Advanced",
+      },
     },
     apiKeys: {
       title: "API Key Settings",

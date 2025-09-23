@@ -258,6 +258,16 @@ const lang = {
         placeholder: "言語を選択",
         description: "アプリケーションの表示言語を選択してください",
       },
+      mode: {
+        label: "モード設定",
+        placeholder: "モードを選択",
+        description: "モードを選択してください",
+      },
+      userLevel: {
+        beginner: "入門",
+        semiPro: "中級",
+        pro: "上級",
+      },
     },
     apiKeys: {
       title: "APIキー設定",
