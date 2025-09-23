@@ -7,9 +7,15 @@
       <TabsTrigger :value="MULMO_VIEWER_TABS.SLIDE">{{ t("project.productTabs.tabs.slide") }}</TabsTrigger>
     </TabsList>
 
-    <MovieTab :project-id="projectId" />
-    <PdfTab :project-id="projectId" />
-    <PodcastTab :project-id="projectId" />
+    <TabsContent value="movie" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
+      <MovieTab :project-id="projectId" />
+    </TabsContent>
+    <TabsContent value="pdf" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
+      <PdfTab :project-id="projectId" />
+    </TabsContent>
+    <TabsContent value="podcast" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
+      <PodcastTab :project-id="projectId" />
+    </TabsContent>
     <TabsContent value="slide" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
       <MulmoViewer
         :project-id="projectId"

@@ -1,40 +1,38 @@
 <template>
-  <TabsContent value="pdf" class="mt-4 max-h-[calc(90vh-7rem)] overflow-y-auto">
-    <div class="border-border bg-muted/50 rounded-lg border p-8 text-center">
-      <div class="mx-auto" v-if="pdfData.value && pages > 0">
-        <VuePDF :pdf="pdfData.value" :page="pdfCurrentPage" :scale="0.8" :fit-parent="true" />
-      </div>
-      <template v-else>
-        <FileText :size="64" class="text-muted-foreground mx-auto mb-4" />
-        <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.pdf.title") }}</p>
-        <p class="text-muted-foreground mb-4 text-sm">{{ t("project.productTabs.pdf.description") }}</p>
-      </template>
-      <div v-if="pages === 0">{{ t("project.productTabs.pdf.empty") }}</div>
-      <div v-if="pages > 0" class="flex flex-col items-center justify-center gap-2">
-        <div class="flex items-center justify-center gap-4">
-          <div>
-            <Button :disabled="pdfCurrentPage < 2" @click="pdfCurrentPage = pdfCurrentPage - 1">< </Button>
-            {{ pdfCurrentPage }}/{{ pages }}
-            <Button @click="pdfCurrentPage = pdfCurrentPage + 1" :disabled="pdfCurrentPage >= pages">></Button>
-          </div>
-          <div class="flex flex-wrap items-center justify-center gap-2">
-            <Button variant="outline" @click="downloadPdf">
-              <FileText :size="16" class="mr-2" />
-              {{ t("project.productTabs.pdf.download") }}
-            </Button>
-          </div>
+  <div class="border-border bg-muted/50 rounded-lg border p-8 text-center">
+    <div class="mx-auto" v-if="pdfData.value && pages > 0">
+      <VuePDF :pdf="pdfData.value" :page="pdfCurrentPage" :scale="0.8" :fit-parent="true" />
+    </div>
+    <template v-else>
+      <FileText :size="64" class="text-muted-foreground mx-auto mb-4" />
+      <p class="mb-2 text-lg font-medium">{{ t("project.productTabs.pdf.title") }}</p>
+      <p class="text-muted-foreground mb-4 text-sm">{{ t("project.productTabs.pdf.description") }}</p>
+    </template>
+    <div v-if="pages === 0">{{ t("project.productTabs.pdf.empty") }}</div>
+    <div v-if="pages > 0" class="flex flex-col items-center justify-center gap-2">
+      <div class="flex items-center justify-center gap-4">
+        <div>
+          <Button :disabled="pdfCurrentPage < 2" @click="pdfCurrentPage = pdfCurrentPage - 1">< </Button>
+          {{ pdfCurrentPage }}/{{ pages }}
+          <Button @click="pdfCurrentPage = pdfCurrentPage + 1" :disabled="pdfCurrentPage >= pages">></Button>
+        </div>
+        <div class="flex flex-wrap items-center justify-center gap-2">
+          <Button variant="outline" @click="downloadPdf">
+            <FileText :size="16" class="mr-2" />
+            {{ t("project.productTabs.pdf.download") }}
+          </Button>
         </div>
       </div>
-      <div class="text-muted-foreground mt-2 text-xs" v-if="pdfData.value">
-        {{
-          t("project.productTabs.pdf.details", {
-            pages: pages || "-",
-            size: pdfMetadata.fileSize || "-",
-          })
-        }}
-      </div>
     </div>
-  </TabsContent>
+    <div class="text-muted-foreground mt-2 text-xs" v-if="pdfData.value">
+      {{
+        t("project.productTabs.pdf.details", {
+          pages: pages || "-",
+          size: pdfMetadata.fileSize || "-",
+        })
+      }}
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
