@@ -41,7 +41,6 @@ import { useI18n } from "vue-i18n";
 import { FileText } from "lucide-vue-next";
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
 import { Button } from "@/components/ui/button";
-import { TabsContent } from "@/components/ui/tabs";
 import { formatFileSize } from "@/lib/format";
 import { useMulmoEventStore } from "@/store";
 

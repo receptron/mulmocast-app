@@ -28,7 +28,6 @@ import { ref, watch, computed, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { Volume2 } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
-import { TabsContent } from "@/components/ui/tabs";
 import { formatFileSize, formatDuration } from "@/lib/format";
 import { useMulmoEventStore } from "@/store";
 
