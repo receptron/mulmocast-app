@@ -26,6 +26,8 @@ const config: ForgeConfig = {
       "node_modules/mulmocast/assets",
       "node_modules/mulmocast/scripts",
       "node_modules/mulmocast-vision/html",
+      ".cache/puppeteer",
+      ".puppeteer-cache",
     ],
     icon: "./images/mulmocast_icon.icns",
     osxSign: process.env.CODESIGN_IDENTITY

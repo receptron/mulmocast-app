@@ -9,8 +9,16 @@ const defaultCacheDir = isCI ? ".puppeteer-cache" : ".cache/puppeteer";
 const cacheDir = process.env.PUPPETEER_CACHE_DIR || defaultCacheDir;
 const resolvedCacheDir = path.resolve(cacheDir);
 
-if (!fs.existsSync(resolvedCacheDir)) {
-  fs.mkdirSync(resolvedCacheDir, { recursive: true });
+const requiredDirs = [
+  path.resolve(".cache/puppeteer"),
+  path.resolve(".puppeteer-cache"),
+  resolvedCacheDir,
+];
+
+for (const dir of requiredDirs) {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
 }
 
 console.log(`[puppeteer:install] Using cache directory: ${resolvedCacheDir}`);
