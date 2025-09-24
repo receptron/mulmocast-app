@@ -9,7 +9,12 @@
         {{ t("beat." + getBadge(beat) + ".badge") }}</Badge
       >
       <div v-if="toggleTypeMode">
-        <BeatSelector @emitBeat="(beat) => changeBeat(beat)" buttonKey="change" :currentBeatType="beatType">
+        <BeatSelector
+          @emitBeat="(beat) => changeBeat(beat)"
+          buttonKey="change"
+          :currentBeatType="beatType"
+          :isPro="isPro"
+        >
           <Button size="sm" @click="toggleTypeMode = !toggleTypeMode"> {{ t("ui.actions.cancel") }} </Button>
         </BeatSelector>
       </div>
@@ -27,7 +32,7 @@
         "
         class="min-h-8 resize-y"
       />
-      <Button variant="outline" size="sm" @click="generateAudio()" class="w-fit" :disabled="beat?.text.length === 0">{{
+      <Button variant="outline" size="sm" @click="generateAudio()" class="w-fit" :disabled="beat?.text?.length === 0">{{
         t("ui.actions.generateAudio")
       }}</Button>
       <audio
@@ -303,6 +308,7 @@ interface Props {
   movieFile: FileData;
   lipSyncFiles: FileData;
   isEnd: boolean;
+  isPro: boolean;
   mulmoError: string[];
   settingPresence: Record<string, boolean>;
 }
