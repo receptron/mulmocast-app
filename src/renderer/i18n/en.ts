@@ -583,7 +583,7 @@ const lang = {
     },
     imagePrompt: {
       badge: "Image Prompt",
-      label: "Image Prompt",
+      label: "Image Generation Prompt",
       promptField: "Prompt",
       placeholder: "Enter prompt to generate image. If empty, text is used.",
     },
@@ -598,6 +598,9 @@ const lang = {
       keyField: "Image Reference Key",
       placeholder: "Image Reference Key (a-z0-9)",
       imagePromptPlaceholder: "Enter prompt to generate charactor image.",
+    },
+    mediaImageFile: {
+      label: "Upload Image",
     },
     image: {
       badge: "Image",

@@ -600,6 +600,9 @@ const lang = {
       placeholder: "キー(英数字のみ)",
       imagePromptPlaceholder: "キャラ画像を生成するためのプロンプトを入力してください。",
     },
+    mediaImageFile: {
+      label: "画像をアップロード",
+    },
     image: {
       badge: "Image",
     },
