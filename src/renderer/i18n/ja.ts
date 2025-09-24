@@ -639,7 +639,7 @@ const lang = {
       displayName: "表示名",
       voiceId: "音声ID",
       speed: "読み上げの速さ",
-      instruction: "指示",
+      instruction: "読み上げスタイル",
       noSpeakersDefined: "登場人物が定義されていません",
       initializeSpeechParameters: "音声パラメータを初期化",
     },

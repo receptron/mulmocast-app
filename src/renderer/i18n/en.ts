@@ -638,7 +638,7 @@ const lang = {
       displayName: "Display Name",
       voiceId: "Voice ID",
       speed: "Reading Speed",
-      instruction: "Instruction",
+      instruction: "Reading Style",
       noSpeakersDefined: "No speakers defined",
       initializeSpeechParameters: "Initialize Speech Parameters",
     },
