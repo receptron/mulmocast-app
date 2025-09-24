@@ -11,6 +11,7 @@
         <CardContent>
           <div class="space-y-2">
             <Label for="language">{{ t("settings.appSettings.language.label") }}</Label>
+            <p class="text-muted-foreground text-sm">{{ t("settings.appSettings.language.description") }}</p>
             <Select v-model="selectedLanguage">
               <SelectTrigger id="language" data-testid="language-select">
                 <SelectValue :placeholder="t('settings.appSettings.language.placeholder')" />
@@ -26,7 +27,6 @@
                 </SelectItem>
               </SelectContent>
             </Select>
-            <p class="text-muted-foreground text-sm">{{ t("settings.appSettings.language.description") }}</p>
           </div>
         </CardContent>
       </Card>
