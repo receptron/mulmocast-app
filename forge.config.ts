@@ -27,8 +27,9 @@ const config: ForgeConfig = {
       "node_modules/mulmocast/assets",
       "node_modules/mulmocast/scripts",
       "node_modules/mulmocast-vision/html",
-      path.resolve(__dirname, ".cache/puppeteer"),
-      path.resolve(__dirname, ".puppeteer-cache"),
+      "node_modules/puppeteer/.local-chromium",
+      ".cache/puppeteer",
+      ".puppeteer-cache",
     ],
     icon: "./images/mulmocast_icon.icns",
     osxSign: process.env.CODESIGN_IDENTITY
