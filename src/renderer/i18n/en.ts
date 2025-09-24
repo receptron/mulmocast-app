@@ -261,7 +261,7 @@ const lang = {
       mode: {
         label: "Mode settings",
         placeholder: "Select a mode",
-        description: "Choose your experience level. Beginner mode shows simplified options, while advanced mode displays all detailed settings",
+        description: "Beginner mode shows simplified options, while advanced mode displays all detailed settings",
       },
       userLevel: {
         beginner: "Beginner",

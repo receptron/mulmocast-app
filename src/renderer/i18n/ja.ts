@@ -261,7 +261,7 @@ const lang = {
       mode: {
         label: "モード設定",
         placeholder: "モードを選択",
-        description: "使いやすさのレベルを選択してください。初心者向けはシンプルに、上級者向けは詳細な設定まで表示されます",
+        description: "入門者向けはシンプルに、上級者向けは詳細な設定まで表示されます",
       },
       userLevel: {
         beginner: "入門",
