@@ -418,7 +418,7 @@ const lang = {
         mode: "キャラクター設定",
         modeDescription: "登場するキャラクターの管理をします",
         description:
-          "各キャラクターの画像を「画像生成プロンプト」から作るか「画像をアップロード」してから、各BEATの「画像設定」で指定してください。",
+          "各キャラクターの画像を「画像生成プロンプト」から作るか「画像をアップロード」してから、各BEATの「画像設定」で「{key}」指定してください。",
       },
       validationStatus: "検証ステータス",
     },
@@ -597,7 +597,7 @@ const lang = {
     imageReference: {
       badge: "Image Reference",
       keyField: "キャラのキー",
-      placeholder: "キー(英数字のみ)",
+      placeholder: "キャラのキー(英数字のみ)",
       imagePromptPlaceholder: "キャラ画像を生成するためのプロンプトを入力してください。",
     },
     mediaImageFile: {
