@@ -13,16 +13,18 @@ const gitCommit = execSync("git rev-parse --short HEAD").toString().trim();
 const now = new Date();
 const buildDate = now.toISOString().slice(0, 10).replace(/-/g, "");
 
+const puppeteerUnpackPatterns = [
+  "**/node_modules/puppeteer/.local-chromium/**",
+  "**/.cache/puppeteer/**",
+  "**/.puppeteer-cache/**",
+];
+
 const config: ForgeConfig = {
   packagerConfig: {
     buildVersion: buildDate,
     // Enable ASAR and unpack Puppeteer's Chromium binaries so they can be executed at runtime
     asar: {
-      unpack: [
-        "**/node_modules/puppeteer/.local-chromium/**",
-        `${path.resolve(__dirname, ".cache/puppeteer")}/**`,
-        `${path.resolve(__dirname, ".puppeteer-cache")}/**`,
-      ],
+      unpack: puppeteerUnpackPatterns,
     },
     extraResource: [
       ".vite/build/ffmpeg",
