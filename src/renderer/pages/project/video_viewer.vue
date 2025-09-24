@@ -12,7 +12,7 @@
           <div class="mb-0 flex items-center justify-center gap-2">
             <Monitor :size="24" />
           </div>
-          <span>{{ t("project.generate.generateContents") }}</span>
+          <span>{{ t("project.generate.generateVideo") }}</span>
         </Button>
       </div>
     </div>
