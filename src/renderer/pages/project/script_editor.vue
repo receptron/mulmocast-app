@@ -169,6 +169,7 @@
                   :mulmoScript="mulmoScript"
                   :index="index"
                   :isEnd="(mulmoScript?.beats ?? []).length === index + 1"
+                  :isPro="globalStore.isPro"
                   :lang="mulmoScript.lang"
                   :audioFile="audioFiles[beat.id]"
                   :imageFile="imageFiles[beat.id]"
