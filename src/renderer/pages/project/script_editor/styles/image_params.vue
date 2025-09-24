@@ -16,6 +16,9 @@
           />{{ imageKey }}
         </div>
       </div>
+      <div v-else>
+        {{ t("parameters.imageParams.imagesEmptyHint") }}
+      </div>
       <div>
         <Label>{{ t("ui.common.provider") }}</Label>
         <Select :model-value="imageProvider" @update:model-value="handleProviderChange">

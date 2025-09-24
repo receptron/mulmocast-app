@@ -96,7 +96,7 @@ const lang = {
       generateImage: "画像生成",
       generateMovie: "動画生成",
       changeBeatTypeFirst: "まずビートタイプを変更してください",
-      generateReference: "参照イメージ生成",
+      generateReference: "キャラ生成",
       generateAudio: "音声生成",
       translateBeat: "翻訳",
 
@@ -417,7 +417,8 @@ const lang = {
         tabLabel: "キャラ生成",
         mode: "キャラ生成",
         modeDescription: "Beatで登場するキャラクターの生成/管理",
-        description: "キャラを使う場合は、各BEATの画像設定で設定してください。",
+        description:
+          "キャラを使う場合は、こちらで各キャラの画像を作成/アプロードしたうえで、各BEATの「画像設定」で設定してください。",
       },
       validationStatus: "検証ステータス",
     },
@@ -595,7 +596,7 @@ const lang = {
     },
     imageReference: {
       badge: "Image Reference",
-      keyField: "画像参照キー",
+      keyField: "キャラのキー",
       placeholder: "キー(英数字のみ)",
       imagePromptPlaceholder: "キャラ画像を生成するためのプロンプトを入力してください。",
     },
@@ -666,7 +667,8 @@ const lang = {
       moderation: "モデレーション",
       moderationPlaceholder: "例) 低、自動",
       images: "キャラ画像",
-      imagesEmptyHint: "画像が見つかりません。参照タブで参考画像を設定してください。",
+      imagesEmptyHint:
+        "キャラ画像は設定されていません。映像のなからキャラクターを使う場合は、「キャラ生成」タブでキャラ画像を設定してください。",
     },
     audioParams: {
       title: "オーディオ設定",
@@ -728,7 +730,7 @@ const lang = {
     },
     // BeatSessionType
     beat: {
-      imageReference: "参照画像",
+      imageReference: "キャラ画像",
       audio: "音声",
       image: "画像",
       multiLingual: "多言語テキスト",
