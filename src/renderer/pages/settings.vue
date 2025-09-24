@@ -97,11 +97,12 @@
         @update:llm-configs="updateLlmConfigs"
       />
 
-      <!-- language -->
+      <!-- mode -->
       <Card>
         <CardContent class="space-y-4">
           <div class="space-y-2">
             <Label for="language">{{ t("settings.appSettings.mode.label") }}</Label>
+            <p class="text-muted-foreground text-sm">{{ t("settings.appSettings.mode.description") }}</p>
             <Select v-model="selectedUserLevel">
               <SelectTrigger>
                 <SelectValue :placeholder="t('settings.appSettings.mode.placeholder')" />
@@ -112,7 +113,6 @@
                 </SelectItem>
               </SelectContent>
             </Select>
-            <p class="text-muted-foreground text-sm">{{ t("settings.appSettings.mode.description") }}</p>
           </div>
         </CardContent>
       </Card>
