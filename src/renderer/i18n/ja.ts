@@ -405,8 +405,8 @@ const lang = {
       },
       media: {
         tabLabel: "BEAT",
-        mode: "メディアモード",
-        modeDescription: "Beatごとの画像/動画の編集とプレビュー",
+        mode: "台本編集",
+        modeDescription: "Beatごとの音声/画像/動画の編集とプレビュー",
       },
       style: {
         tabLabel: "スタイル設定",
@@ -414,11 +414,11 @@ const lang = {
         modeDescription: "音声/動画/画像/字幕などのスタイルを設定します",
       },
       reference: {
-        tabLabel: "キャラ生成",
-        mode: "キャラクター生成",
-        modeDescription: "Beatで登場するキャラクターの生成・管理をします",
+        tabLabel: "キャラ設定",
+        mode: "キャラクター設定",
+        modeDescription: "登場するキャラクターの管理をします",
         description:
-          "キャラクターを使う場合は、こちらで各キャラの画像を作成/アプロードしたうえで、各BEATの「画像設定」で設定してください。",
+          "各キャラクターの画像を画像生成プロンプトから作るか画像をアップロードしてから、各BEATの「画像設定」で設定してください。",
       },
       validationStatus: "検証ステータス",
     },
