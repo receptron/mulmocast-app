@@ -8,6 +8,7 @@ import { FusesPlugin } from "@electron-forge/plugin-fuses";
 import { FuseV1Options, FuseVersion } from "@electron/fuses";
 
 import { execSync } from "child_process";
+import path from "path";
 const gitCommit = execSync("git rev-parse --short HEAD").toString().trim();
 const now = new Date();
 const buildDate = now.toISOString().slice(0, 10).replace(/-/g, "");
@@ -17,15 +18,19 @@ const config: ForgeConfig = {
     buildVersion: buildDate,
     // Enable ASAR and unpack Puppeteer's Chromium binaries so they can be executed at runtime
     asar: {
-      unpack: "**/{node_modules/puppeteer/.local-chromium,.cache/puppeteer,.puppeteer-cache}/**",
+      unpack: [
+        "**/node_modules/puppeteer/.local-chromium/**",
+        `${path.resolve(__dirname, ".cache/puppeteer")}/**`,
+        `${path.resolve(__dirname, ".puppeteer-cache")}/**`,
+      ],
     },
     extraResource: [
       ".vite/build/ffmpeg",
       "node_modules/mulmocast/assets",
       "node_modules/mulmocast/scripts",
       "node_modules/mulmocast-vision/html",
-      ".cache/puppeteer",
-      ".puppeteer-cache",
+      path.resolve(__dirname, ".cache/puppeteer"),
+      path.resolve(__dirname, ".puppeteer-cache"),
     ],
     icon: "./images/mulmocast_icon.icns",
     osxSign: process.env.CODESIGN_IDENTITY
