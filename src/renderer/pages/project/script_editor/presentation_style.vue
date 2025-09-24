@@ -25,6 +25,7 @@
       :settingPresence="settingPresence"
     />
     <TextSlideParams
+      v-if="globalStore.userIsPro"
       :text-slide-params="presentationStyle?.textSlideParams"
       @update="(value) => updateParam('textSlideParams.cssStyles', value)"
       :mulmoError="mulmoError?.textSlideParams ?? []"
@@ -36,6 +37,7 @@
       :mulmoError="mulmoError?.audioParams ?? []"
     />
     <CaptionParams
+      v-if="globalStore.userIsPro"
       :caption-params="presentationStyle?.captionParams"
       @update="(value) => updateParam('captionParams', value)"
       :mulmoError="mulmoError?.captionParams ?? []"
@@ -56,6 +58,8 @@ import CaptionParams from "./styles/caption_params.vue";
 
 import { MulmoError } from "../../../../../types";
 
+import { useMulmoGlobalStore } from "@/store";
+
 interface Props {
   projectId: string;
   presentationStyle?: Partial<MulmoPresentationStyle>;
@@ -68,6 +72,7 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
   "update:presentationStyle": [style: Partial<MulmoPresentationStyle>];
 }>();
+const globalStore = useMulmoGlobalStore();
 
 const updateParam = (path: string, value: unknown) => {
   const keys = path.split(".");

@@ -1,13 +1,11 @@
 <template>
   <Card class="p-4">
-    <h4 class="mb-3 font-medium" v-if="showTitle">{{ t("parameters.imageParams.title") }}</h4>
-
     <div class="space-y-3">
-      <div v-if="images" class="my-2">
-        <Label>{{ t("parameters.imageParams.images") }}</Label>
-        <div v-if="Object.keys(images).length === 0" class="text-muted-foreground mt-2 text-sm">
-          {{ t("parameters.imageParams.imagesEmptyHint") }}
-        </div>
+      <h4 class="mb-3 font-medium">{{ t("parameters.imageParams.images") }}</h4>
+      <div v-if="Object.keys(images ?? {}).length === 0" class="text-muted-foreground mt-2 text-sm">
+        {{ t("parameters.imageParams.imagesEmptyHint") }}
+      </div>
+      <div v-else>
         <div v-for="imageKey in Object.keys(images)" :key="imageKey">
           <Checkbox
             :model-value="(beat?.imageNames ?? Object.keys(images ?? {})).includes(imageKey)"
@@ -16,9 +14,13 @@
           />{{ imageKey }}
         </div>
       </div>
-      <div v-else>
-        {{ t("parameters.imageParams.imagesEmptyHint") }}
-      </div>
+    </div>
+  </Card>
+
+  <Card class="mt-4 p-4">
+    <h4 class="font-medium">{{ t("parameters.imageParams.title") }}</h4>
+
+    <div class="space-y-3">
       <div>
         <Label>{{ t("ui.common.provider") }}</Label>
         <Select :model-value="imageProvider" @update:model-value="handleProviderChange">
