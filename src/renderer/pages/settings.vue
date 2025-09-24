@@ -72,7 +72,7 @@
             {{ t("settings.languages.mainTitle") }}
           </div>
           <RadioGroup v-model="mainLanguage" class="grid grid-cols-4 gap-2 text-sm">
-            <div v-for="language in languages" :key="language" class="flex items-center space-x-2">
+            <div v-for="language in isPro ? languages : simpleLang" :key="language" class="flex items-center space-x-2">
               <RadioGroupItem :value="language" :id="language" />
               <Label :for="language">{{ t("languages." + language) }}</Label>
             </div>
@@ -80,7 +80,7 @@
           <div class="text-foreground text-base font-semibold">
             {{ t("settings.languages.translatedTitle") }}
           </div>
-          <div v-for="(language, key) in languages" :key="key">
+          <div v-for="(language, key) in isPro ? languages : simpleLang" :key="key">
             &ensp;
             <Checkbox v-model="useLanguage[language]" />
             {{ t("languages." + language) }}
@@ -121,7 +121,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive, watch, nextTick, toRaw } from "vue";
+import { ref, onMounted, reactive, watch, nextTick, toRaw, computed } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import { ChevronDown } from "lucide-vue-next";
@@ -318,7 +318,21 @@ watch(
 watch(selectedUserLevel, () => {
   if (!isInitialLoad.value) {
     saveSettings();
+    // console.log(mainLanguage.value, useLanguage, supportLanguages.value);
+    if (!supportLanguages.value.includes(mainLanguage.value)) {
+      mainLanguage.value = "en";
+    }
   }
+});
+
+const isPro = computed(() => {
+  return selectedUserLevel.value === "pro";
+});
+
+const simpleLang = I18N_SUPPORTED_LANGUAGES.map((a) => a.id);
+
+const supportLanguages = computed(() => {
+  return isPro.value ? languages : simpleLang;
 });
 
 // Watch for changes in language selection - save immediately and update i18n locale
