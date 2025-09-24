@@ -42,7 +42,7 @@ const lang = {
       type: "種類",
       format: "フォーマット",
       language: "言語",
-      provider: "プロバイダ",
+      provider: "AIの種類",
       model: "モデル",
       speed: "速度",
       volume: "音量",
@@ -50,7 +50,7 @@ const lang = {
       beat: "ビート",
       slide: "スライド",
       chart: "チャート",
-      speaker: "スピーカー",
+      speaker: "登場人物",
       chat: "チャット",
       panel: "パネル",
       parameters: "パラメータ",
@@ -522,9 +522,9 @@ const lang = {
     imagePreview: "画像プレビュー",
     // Beat speaker settings
     speaker: {
-      selectSpeaker: "スピーカーを選択",
+      selectSpeaker: "登場人物を選択",
       text: "テキスト",
-      placeholder: "{language}入力: {speaker}の音声生成内容",
+      placeholder: "{language}で{speaker}の話す内容を書いてください",
     },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
@@ -533,6 +533,9 @@ const lang = {
       remoteLabel: "リモートメディア",
       urlField: "URL",
       placeholder: "画像URLを入力",
+    },
+    mediaImageFile: {
+      label: "画像ファイル",
     },
     textSlide: {
       badge: "Text Slide",
@@ -597,7 +600,7 @@ const lang = {
     imageReference: {
       badge: "Image Reference",
       keyField: "キャラのキー",
-      placeholder: "キー(英数字のみ)",
+      placeholder: "まずはキーを登録(英数字のみ)",
       imagePromptPlaceholder: "キャラ画像を生成するためのプロンプトを入力してください。",
     },
     image: {
@@ -620,7 +623,7 @@ const lang = {
   // Parameters structure (extracted from project.scriptEditor.*)
   parameters: {
     movieParams: {
-      title: "動画設定",
+      title: "動画生成設定",
       transitionType: "トランジションの種類",
       transitionDuration: "トランジションの長さ（秒）",
       providerNone: "なし",
@@ -632,13 +635,14 @@ const lang = {
       title: "登場人物の声設定",
       defaultSpeaker: "標準の登場人物",
       speakers: "登場人物の声一覧",
-      language: "言語",
+      language: "発話言語",
       displayName: "表示名",
-      voiceId: "音声ID",
-      speed: "速度",
+      voiceId: "声の種類",
+      speed: "喋る速度(通常1倍)",
       instruction: "指示",
       noSpeakersDefined: "登場人物が定義されていません",
       initializeSpeechParameters: "音声パラメータを初期化",
+      placeholder: "まずはキーを登録(英数字のみ)",
     },
     canvasSizeParams: {
       title: "キャンバスサイズ",
@@ -661,7 +665,7 @@ const lang = {
       cssDescription: "CSSスタイルを単一文字列または複数行で入力してください",
     },
     imageParams: {
-      title: "画像設定",
+      title: "画像生成設定",
       modelAuto: "自動",
       stylePlaceholder: "例) 鮮やか、自然",
       moderation: "モデレーション",
