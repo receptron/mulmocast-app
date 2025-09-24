@@ -32,7 +32,7 @@
         "
         class="min-h-8 resize-y"
       />
-      <Button variant="outline" size="sm" @click="generateAudio()" class="w-fit" :disabled="beat?.text.length === 0">{{
+      <Button variant="outline" size="sm" @click="generateAudio()" class="w-fit" :disabled="beat?.text?.length === 0">{{
         t("ui.actions.generateAudio")
       }}</Button>
       <audio

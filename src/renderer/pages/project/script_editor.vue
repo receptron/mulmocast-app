@@ -39,7 +39,7 @@
         </p>
         <div class="mx-auto space-y-2">
           <div class="px-2 py-1">
-            <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" />
+            <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" :isPro="globalStore.userIsPro" />
           </div>
 
           <TransitionGroup
@@ -88,7 +88,7 @@
                 />
               </div>
               <div class="px-4 pt-2">
-                <BeatSelector @emitBeat="(beat) => addBeat(beat, index)" buttonKey="insert" />
+                <BeatSelector @emitBeat="(beat) => addBeat(beat, index)" buttonKey="insert" :isPro="globalStore.userIsPro"  />
               </div>
             </div>
           </TransitionGroup>
@@ -149,7 +149,7 @@
 
         <div class="mx-auto space-y-2">
           <div class="px-2 py-1">
-            <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" />
+            <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" :isPro="globalStore.userIsPro" />
           </div>
 
           <TransitionGroup
@@ -169,7 +169,7 @@
                   :mulmoScript="mulmoScript"
                   :index="index"
                   :isEnd="(mulmoScript?.beats ?? []).length === index + 1"
-                  :isPro="globalStore.isPro"
+                  :isPro="globalStore.userIsPro"
                   :lang="mulmoScript.lang"
                   :audioFile="audioFiles[beat.id]"
                   :imageFile="imageFiles[beat.id]"
@@ -204,7 +204,11 @@
                 />
               </div>
               <div class="px-4 pt-2">
-                <BeatSelector @emitBeat="(beat) => addBeat(beat, index)" buttonKey="insert" />
+                <BeatSelector
+                  @emitBeat="(beat) => addBeat(beat, index)"
+                  buttonKey="insert"
+                  :isPro="globalStore.userIsPro"
+                />
               </div>
             </div>
           </TransitionGroup>

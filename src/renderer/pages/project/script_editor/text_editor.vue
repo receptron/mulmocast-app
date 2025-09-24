@@ -32,9 +32,14 @@
       class="min-h-8 resize-y"
     />
   </div>
-  <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit" :disabled="beat?.text.length === 0">{{
-    t("ui.actions.generateAudio")
-  }}</Button>
+  <Button
+    variant="outline"
+    size="sm"
+    @click="generateAudio(index)"
+    class="w-fit"
+    :disabled="beat?.text?.length === 0"
+    >{{ t("ui.actions.generateAudio") }}</Button
+  >
   <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">{{
     t("ui.status.generating")
   }}</span>
@@ -46,7 +51,7 @@
       size="sm"
       @click="translateBeat(index)"
       class="w-fit"
-      :disabled="beat?.text.length === 0"
+      :disabled="beat?.text?.length === 0"
       >{{ t("ui.actions.translateBeat") }}</Button
     >
   </div>
