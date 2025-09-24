@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 import path from "node:path";
 import os from "node:os";
+import fs from "node:fs";
 import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
@@ -23,9 +24,70 @@ const iconPath =
 const isDev = process.env.NODE_ENV === "development";
 const isCI = process.env.CI === "true";
 
+const configurePackagedPuppeteer = () => {
+  const platform = process.platform;
+  const executableNames =
+    platform === "win32"
+      ? ["chrome.exe"]
+      : platform === "darwin"
+        ? ["Google Chrome for Testing", "Chromium"]
+        : ["chrome", "chromium"];
+
+  const searchExecutables = (dir: string): string | null => {
+    try {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      for (const entry of entries) {
+        const entryPath = path.join(dir, entry.name);
+        if (entry.isFile() && executableNames.includes(entry.name)) {
+          return entryPath;
+        }
+      }
+      for (const entry of entries) {
+        if (!entry.isDirectory()) continue;
+        const result = searchExecutables(path.join(dir, entry.name));
+        if (result) return result;
+      }
+    } catch (error) {
+      log.warn(`Failed to inspect Puppeteer cache directory: ${dir}`, error);
+    }
+    return null;
+  };
+
+  const rootCandidates = [path.join(process.resourcesPath, "app.asar.unpacked"), process.resourcesPath];
+
+  const cacheCandidates = new Set<string>();
+  for (const root of rootCandidates) {
+    cacheCandidates.add(path.join(root, ".cache", "puppeteer"));
+    cacheCandidates.add(path.join(root, ".puppeteer-cache"));
+  }
+  if (process.env.PUPPETEER_CACHE_DIR) {
+    cacheCandidates.add(process.env.PUPPETEER_CACHE_DIR);
+  }
+
+  for (const cacheDir of cacheCandidates) {
+    if (!cacheDir) continue;
+    if (!fs.existsSync(cacheDir)) {
+      log.debug?.(`Puppeteer cache not found: ${cacheDir}`);
+      continue;
+    }
+
+    const executable = searchExecutables(cacheDir);
+    if (executable) {
+      process.env.PUPPETEER_CACHE_DIR = cacheDir;
+      process.env.PUPPETEER_EXECUTABLE_PATH = executable;
+      log.info(`Puppeteer executable resolved at ${executable}`);
+      return;
+    }
+  }
+
+  log.warn("Puppeteer executable could not be resolved from bundled caches");
+};
+
 // Development environment configuration
 if (isDev) {
   app.commandLine.appendSwitch("remote-debugging-port", "9222"); // Enable Playwright debugging
+} else {
+  configurePackagedPuppeteer();
 }
 
 // CI環境でサンドボックスを無効化
