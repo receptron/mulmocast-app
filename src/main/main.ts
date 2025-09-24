@@ -62,7 +62,9 @@ const configurePackagedPuppeteer = () => {
     cacheCandidates.add(path.join(root, "puppeteer"));
     cacheCandidates.add(path.join(root, "node_modules", "puppeteer", ".local-chromium"));
   }
-  cacheCandidates.add(path.join(process.resourcesPath, "app.asar.unpacked", "node_modules", "puppeteer", ".local-chromium"));
+  cacheCandidates.add(
+    path.join(process.resourcesPath, "app.asar.unpacked", "node_modules", "puppeteer", ".local-chromium"),
+  );
   if (process.env.PUPPETEER_CACHE_DIR) {
     cacheCandidates.add(process.env.PUPPETEER_CACHE_DIR);
   }
