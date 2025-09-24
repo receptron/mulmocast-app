@@ -42,3 +42,43 @@ if (result.status !== 0) {
 }
 
 console.log("[puppeteer:install] Chrome download complete");
+
+const cacheChromeDir = path.join(resolvedCacheDir, "chrome");
+if (!fs.existsSync(cacheChromeDir)) {
+  console.warn(`[puppeteer:install] No chrome cache directory found at ${cacheChromeDir}`);
+  process.exit(0);
+}
+
+const variants = fs
+  .readdirSync(cacheChromeDir)
+  .filter((entry) => fs.statSync(path.join(cacheChromeDir, entry)).isDirectory());
+
+if (variants.length === 0) {
+  console.warn(`[puppeteer:install] Chrome cache directory ${cacheChromeDir} is empty`);
+  process.exit(0);
+}
+
+const destRoot = path.resolve("node_modules/puppeteer/.local-chromium");
+const resourceRoot = path.resolve("puppeteer");
+ensureDir(destRoot);
+ensureDir(resourceRoot);
+
+for (const variant of variants) {
+  const srcDir = path.join(cacheChromeDir, variant);
+  const destDir = path.join(destRoot, variant);
+  const resourceDir = path.join(resourceRoot, variant);
+
+  console.log(`[puppeteer:install] Copying Chromium build ${variant} to ${destDir}`);
+  if (fs.existsSync(destDir)) {
+    fs.rmSync(destDir, { recursive: true, force: true });
+  }
+  fs.cpSync(srcDir, destDir, { recursive: true });
+
+  console.log(`[puppeteer:install] Mirroring Chromium build ${variant} to ${resourceDir}`);
+  if (fs.existsSync(resourceDir)) {
+    fs.rmSync(resourceDir, { recursive: true, force: true });
+  }
+  fs.cpSync(srcDir, resourceDir, { recursive: true });
+}
+
+console.log(`[puppeteer:install] Local puppeteer bundle populated at ${destRoot}`);
