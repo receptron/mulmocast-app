@@ -1,6 +1,6 @@
 <template>
   <Tabs class="w-full" :model-value="currentTab" @update:model-value="handleUpdateScriptEditorActiveTab">
-    <TabsList class="grid w-full grid-cols-5">
+    <TabsList class="grid w-full grid-cols-5" v-if="globalStore.userIsPro">
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA" data-testid="script-editor-tab-media">{{
         t("project.scriptEditor.media.tabLabel")
       }}</TabsTrigger>
@@ -18,6 +18,18 @@
       }}</TabsTrigger>
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.JSON" data-testid="script-editor-tab-json">{{
         t("project.scriptEditor.json.tabLabel")
+      }}</TabsTrigger>
+    </TabsList>
+
+    <TabsList class="grid w-full grid-cols-3" v-if="!globalStore.userIsPro">
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA" data-testid="script-editor-tab-media">{{
+        t("project.scriptEditor.media.tabLabel")
+      }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.REFERENCE" data-testid="script-editor-tab-reference">{{
+        t("project.scriptEditor.reference.tabLabel")
+      }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.STYLE" data-testid="script-editor-tab-style">{{
+        t("project.scriptEditor.style.tabLabel")
       }}</TabsTrigger>
     </TabsList>
 
