@@ -1,11 +1,6 @@
 <template>
   <div class="space-y-6">
     <StyleTemplate @updateMulmoScript="updatePresentationStyle" :mulmoScript="mulmoScript" />
-    <CanvasSizeParams
-      :canvas-size="presentationStyle?.canvasSize"
-      @update="(value) => updateParam(`canvasSize`, value)"
-      :mulmoError="mulmoError?.canvasSize ?? []"
-    />
     <SpeechParams
       :speech-params="presentationStyle?.speechParams"
       @update="(value) => updateParam('speechParams', value)"
@@ -41,6 +36,11 @@
       :caption-params="presentationStyle?.captionParams"
       @update="(value) => updateParam('captionParams', value)"
       :mulmoError="mulmoError?.captionParams ?? []"
+    />
+    <CanvasSizeParams
+      :canvas-size="presentationStyle?.canvasSize"
+      @update="(value) => updateParam(`canvasSize`, value)"
+      :mulmoError="mulmoError?.canvasSize ?? []"
     />
   </div>
 </template>

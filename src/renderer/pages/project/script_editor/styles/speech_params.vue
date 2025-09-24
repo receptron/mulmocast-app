@@ -144,7 +144,12 @@
         </div>
       </div>
       <div class="template-dropdown-container flex items-center gap-4">
-        <Input v-model="speechKey" :invalid="!validateKey && speechKey !== ''" class="w-64" />
+        <Input
+          v-model="speechKey"
+          :invalid="!validateKey && speechKey !== ''"
+          class="w-64"
+          :placeholder="t('parameters.speechParams.placeholder')"
+        />
 
         <Button variant="outline" size="sm" @click="handleAddSpeaker" :disabled="!validateKey">{{
           t("ui.actions.addThing", { thing: t("ui.common.speaker") })
