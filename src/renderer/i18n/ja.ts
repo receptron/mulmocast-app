@@ -640,6 +640,7 @@ const lang = {
       voiceId: "音声ID",
       speed: "読み上げの速さ",
       instruction: "読み上げスタイル",
+      instructionPlaceholder: "例）ゆっくりと優しく読んで",
       placeholder: "登場人物の名前 (英数字のみ)",
       noSpeakersDefined: "登場人物が定義されていません",
       initializeSpeechParameters: "音声パラメータを初期化",

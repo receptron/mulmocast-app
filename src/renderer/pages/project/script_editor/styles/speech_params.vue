@@ -106,6 +106,7 @@
               :model-value="speaker.instruction || ''"
               @update:model-value="(value) => handleSpeechOptionsChange(name, 'instruction', value)"
               class="h-8"
+              :placeholder="t('parameters.speechParams.instructionPlaceholder')"
             />
           </div>
           <div v-if="speaker.displayName">

@@ -639,6 +639,7 @@ const lang = {
       voiceId: "Voice ID",
       speed: "Reading Speed",
       instruction: "Reading Style",
+      instructionPlaceholder: "e.g., Read slowly and gently",
       placeholder: "Speaker name (a-z0-9)",
       noSpeakersDefined: "No speakers defined",
       initializeSpeechParameters: "Initialize Speech Parameters",
