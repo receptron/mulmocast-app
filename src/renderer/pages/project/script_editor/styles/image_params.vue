@@ -1,7 +1,7 @@
 <template>
   <Card class="p-4">
     <div class="space-y-3">
-      <h4 class="mb-3 font-medium">{{ t("parameters.imageParams.images") }}</h4>
+      <h4 class="font-medium">{{ t("parameters.imageParams.images") }}</h4>
       <div v-if="Object.keys(images ?? {}).length === 0" class="text-muted-foreground mt-2 text-sm">
         {{ t("parameters.imageParams.imagesEmptyHint") }}
       </div>
