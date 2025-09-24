@@ -235,10 +235,10 @@
           {{ t("project.scriptEditor.reference.mode") }} -
           {{ t("project.scriptEditor.reference.modeDescription") }}
         </p>
-        <p class="text-sm text-muted-foreground">
+        <p class="text-muted-foreground text-sm">
           {{ t("project.scriptEditor.reference.description", { key: t("beat.imageReference.keyField") }) }}
         </p>
-       <Reference
+        <Reference
           :projectId="projectId"
           :images="props.mulmoScript?.imageParams?.images ?? {}"
           :mulmoScript="mulmoScript"

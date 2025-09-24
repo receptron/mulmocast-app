@@ -110,7 +110,6 @@
         @update:selected-l-l-m="updateSelectedLLM"
         @update:llm-configs="updateLlmConfigs"
       />
-
     </div>
   </div>
 </template>

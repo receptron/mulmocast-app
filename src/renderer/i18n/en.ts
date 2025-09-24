@@ -419,7 +419,8 @@ const lang = {
         tabLabel: "Character",
         mode: "Character Settings",
         modeDescription: "Manage characters that appear in the presentation",
-        description: "Create character images using \"Image Generation Prompt\" or \"Upload Image\", then specify them in the \"Image Settings\" for each BEAT using \"{key}\".",
+        description:
+          'Create character images using "Image Generation Prompt" or "Upload Image", then specify them in the "Image Settings" for each BEAT using "{key}".',
       },
       validationStatus: "Validation Status",
     },
