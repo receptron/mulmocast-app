@@ -638,7 +638,7 @@ const lang = {
       language: "言語",
       displayName: "表示名",
       voiceId: "音声ID",
-      speed: "速度",
+      speed: "読み上げのスピード",
       instruction: "指示",
       noSpeakersDefined: "登場人物が定義されていません",
       initializeSpeechParameters: "音声パラメータを初期化",
