@@ -38,6 +38,7 @@ const lang = {
       height: "高さ",
       duration: "再生時間",
       quality: "品質",
+      renderingQuality: "画質",
       style: "スタイル",
       type: "種類",
       format: "フォーマット",

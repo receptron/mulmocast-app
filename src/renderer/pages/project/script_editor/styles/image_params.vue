@@ -57,7 +57,7 @@
         </Select>
       </div>
       <div>
-        <Label>{{ t("ui.common.quality") }}</Label>
+        <Label>{{ t("ui.common.renderingQuality") }}</Label>
         <Select
           :model-value="imageParams?.quality || IMAGE_PARAMS_DEFAULT_VALUES.quality"
           @update:model-value="(value) => handleUpdate('quality', String(value))"

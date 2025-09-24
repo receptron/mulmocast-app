@@ -38,6 +38,7 @@ const lang = {
       height: "Height",
       duration: "Duration",
       quality: "Quality",
+      renderingQuality: "Rendering Quality",
       style: "Style",
       type: "Type",
       format: "Format",
