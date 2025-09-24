@@ -638,6 +638,7 @@ const lang = {
       displayName: "Display Name",
       voiceId: "Voice ID",
       speed: "Reading Speed",
+      speedPlaceholder: "e.g., 1.2 (range: 0.4-3.0, default: 1.0)",
       instruction: "Reading Style",
       instructionPlaceholder: "e.g., Read slowly and gently",
       placeholder: "Speaker name (a-z0-9)",

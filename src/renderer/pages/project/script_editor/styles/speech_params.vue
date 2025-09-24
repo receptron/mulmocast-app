@@ -98,6 +98,7 @@
               @update:model-value="(value) => handleSpeechOptionsChange(name, 'speed', value)"
               class="h-8"
               type="number"
+              :placeholder="t('parameters.speechParams.speedPlaceholder')"
             />
           </div>
           <div v-if="speaker.provider === 'openai'">

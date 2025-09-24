@@ -639,6 +639,7 @@ const lang = {
       displayName: "表示名",
       voiceId: "音声ID",
       speed: "読み上げの速さ",
+      speedPlaceholder: "例）1.2（0.4〜3.0、標準は1.0）",
       instruction: "読み上げスタイル",
       instructionPlaceholder: "例）ゆっくりと優しく読んで",
       placeholder: "登場人物の名前 (英数字のみ)",
