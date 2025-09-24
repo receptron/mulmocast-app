@@ -55,6 +55,5 @@ const applyStyle = () => {
   const script = { ...props.mulmoScript, ...style };
   emit("updateMulmoScript", script);
   notifySuccess(t("settings.notifications.createSuccess"));
-
 };
 </script>
