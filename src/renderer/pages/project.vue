@@ -192,7 +192,7 @@
                 <div class="flex items-center justify-between">
                   <CardTitle class="flex items-center space-x-2">
                     <Settings :size="20" />
-                    <span>{{ t("project.generate.outputSettingsGeneration") }}</span>
+                    <span>{{ t("project.generate.generationAndPlay") }}</span>
                   </CardTitle>
                   <Button variant="ghost" size="sm" @click="isRightColumnOpen = false" class="hidden lg:inline-flex">
                     <PanelRightClose :size="16" />
