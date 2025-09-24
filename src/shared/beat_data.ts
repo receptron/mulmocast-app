@@ -19,7 +19,7 @@ export const initMulmoScript = (title: string, lang: string = "en") => ({
 });
 
 // key is i18n key
-export const beatTemplate: { key: string; beat: MulmoBeat }[] = [
+export const beatTemplates: { key: string; beat: MulmoBeat }[] = [
   {
     key: "imagePrompt",
     beat: {
@@ -129,3 +129,8 @@ export const beatTemplate: { key: string; beat: MulmoBeat }[] = [
     },
   },
 ];
+
+// for beginner
+export const simpleTemplates = beatTemplates.filter((temp) => {
+  return ["imagePrompt", "mediaFile", "markdown"].includes(temp.key);
+});
