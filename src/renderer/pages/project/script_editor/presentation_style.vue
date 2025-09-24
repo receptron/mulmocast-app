@@ -1,6 +1,8 @@
 <template>
   <div class="space-y-6">
-    <StyleTemplate @updateMulmoScript="updatePresentationStyle" :mulmoScript="mulmoScript" />
+    <StyleTemplate @updateMulmoScript="updatePresentationStyle" :mulmoScript="mulmoScript"
+                   :isPro="globalStore.userIsPro"
+                   />
     <SpeechParams
       :speech-params="presentationStyle?.speechParams"
       @update="(value) => updateParam('speechParams', value)"
