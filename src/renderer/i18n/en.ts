@@ -523,6 +523,7 @@ const lang = {
     imagePreview: "Image Preview",
     // Beat speaker settings
     speaker: {
+      label: "Select Voice",
       selectSpeaker: "Select a speaker",
       text: "Text",
       placeholder: "{language} input: {speaker}'s voice content",

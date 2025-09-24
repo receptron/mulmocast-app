@@ -523,7 +523,8 @@ const lang = {
     imagePreview: "画像プレビュー",
     // Beat speaker settings
     speaker: {
-      selectSpeaker: "スピーカーを選択",
+      label: "登場人物の声",
+      selectSpeaker: "登場人物を選択",
       text: "テキスト",
       placeholder: "{language}入力: {speaker}の音声生成内容",
     },

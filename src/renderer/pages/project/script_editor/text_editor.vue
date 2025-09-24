@@ -4,7 +4,7 @@
     <Badge variant="outline">{{ t("beat." + getBadge(beat) + ".badge") }}</Badge>
   </div>
   <div>
-    <Label>{{ t("ui.common.speaker") }}</Label>
+    <Label>{{ t("beat.speaker.label") }}</Label>
     <Select :model-value="beat?.speaker" @update:model-value="(value) => update(index, 'speaker', String(value))">
       <SelectTrigger class="h-8">
         <SelectValue :placeholder="t('beat.speaker.selectSpeaker')" />
