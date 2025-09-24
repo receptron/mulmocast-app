@@ -88,7 +88,11 @@
                 />
               </div>
               <div class="px-4 pt-2">
-                <BeatSelector @emitBeat="(beat) => addBeat(beat, index)" buttonKey="insert" :isPro="globalStore.userIsPro"  />
+                <BeatSelector
+                  @emitBeat="(beat) => addBeat(beat, index)"
+                  buttonKey="insert"
+                  :isPro="globalStore.userIsPro"
+                />
               </div>
             </div>
           </TransitionGroup>
