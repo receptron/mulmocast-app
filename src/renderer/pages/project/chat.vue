@@ -182,7 +182,7 @@ import ToolsMessage from "./chat/tools_message.vue";
 import { graphChatWithSearch } from "./chat/graph";
 import mulmoScriptValidatorAgent from "../../agents/mulmo_script_validator";
 import mulmoVisionAgent from "../../agents/mulmo_vision_agent";
-
+import mulmoScriptAgent from "../../agents/mulmo_script";
 // presentation manuscript
 
 import enLang from "../../i18n/en";
@@ -261,6 +261,7 @@ const graphAIAgents = {
   toolsAgent,
   mulmoScriptValidatorAgent,
   mulmoVisionAgent,
+  mulmoScriptAgent,
 };
 const filterMessage = (setTime = false) => {
   return (message) => {
@@ -328,6 +329,17 @@ const anthropicSystemPrompt = [
   "</use_parallel_tool_calls>",
 ].join("\n");
 
+const currentBeats = () => {
+  const beats = mulmoScriptHistoryStore.currentMulmoScript?.beats ?? [];
+  const speakers = Object.keys(mulmoScriptHistoryStore.currentMulmoScript?.speechParams?.speakers ?? {}) ?? [];
+  const speakerMessage = speakers.length > 0 ? "\n\nSpeaker(s) is " + JSON.stringify(speakers ?? []) : "";
+
+  if (beats.length > 0) {
+    return "current beats is " + JSON.stringify(beats) + speakerMessage;
+  }
+  return speakerMessage;
+};
+
 const run = async () => {
   if (isRunning.value) {
     return;
@@ -349,6 +361,7 @@ const run = async () => {
       ...puppeteerAgent.tools,
       ...mulmoVisionAgent.tools,
       ...mulmoCastHelpAgent.tools,
+      ...mulmoScriptAgent.tools,
     ];
     const systemMessage = `Always reply in ${scriptLang.value}, regardless of the language of the user's input or previous conversation.  If the user's message is in a different language, translate it into ${scriptLang.value} before replying.`;
 
@@ -356,7 +369,9 @@ const run = async () => {
       {
         role: "system",
         content:
-          llmAgent.value === "anthropicAgent" ? [systemMessage, anthropicSystemPrompt].join("\n") : systemMessage,
+          llmAgent.value === "anthropicAgent"
+            ? [systemMessage, currentBeats(), anthropicSystemPrompt].join("\n")
+            : [systemMessage, currentBeats()].join("\n"),
       },
       ...messages
         .map(filterMessage())
@@ -396,6 +411,42 @@ const run = async () => {
         emit("updateMulmoScript", script);
 
         console.log(data.result.data);
+      }
+      if (agentId === "mulmoScriptAgent" && state === "completed") {
+        const { arg, func } = data.namedInputs;
+        const script = { ...mulmoScriptHistoryStore.currentMulmoScript };
+        if (func === "updateBeatOnMulmoScript") {
+          const { beat, index } = arg;
+          const newBeat = { ...(mulmoScriptHistoryStore.currentMulmoScript.beats[index] ?? {}), ...beat };
+          script.beats[index] = newBeat;
+          emit("updateMulmoScript", script);
+        } else if (func === "addBeatToMulmoScript") {
+          const { beat } = arg;
+          const newBeat = typeof beat === "string" ? JSON.parse(beat) : beat;
+          script.beats.push(newBeat);
+          emit("updateMulmoScript", script);
+        } else if (func === "insertAtBeatToMulmoScript") {
+          const { beat, index } = arg;
+          const newBeat = typeof beat === "string" ? JSON.parse(beat) : beat;
+          script.beats.splice(index, 0, newBeat);
+          emit("updateMulmoScript", script);
+        } else if (func === "deleteBeatOnMulmoScript") {
+          const { index } = arg;
+          if (script.beats[index]) {
+            script.beats.splice(index, 1);
+            emit("updateMulmoScript", script);
+          }
+        } else if (func === "setImagePromptOnBeat") {
+          const { index, imagePrompt } = arg;
+          if (script.beats[index]) {
+            script.beats[index]["imagePrompt"] = imagePrompt;
+            emit("updateMulmoScript", script);
+          }
+        }
+        // addBeatToMulmoScript -> beat
+        // insertAtBeatToMulmoScript -> beat, index
+        // deleteBeatOnMulmoScript -> index
+        // setImagePromptOnBeat -> index, imagePrompt
       }
     });
     graphai.injectValue("messages", postMessages);

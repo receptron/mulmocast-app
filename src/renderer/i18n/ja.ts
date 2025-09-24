@@ -480,8 +480,7 @@ const lang = {
       enableTools: "補助ツールを使う",
       confirmClear: "会話をすべて消しますか？",
       undoChat: "直前の状態に戻す",
-      createButtonDescription:
-        "テンプレートを選び「入力欄にコピー」→内容を調整→送信で台本を作れます。",
+      createButtonDescription: "テンプレートを選び「入力欄にコピー」→内容を調整→送信で台本を作れます。",
       copyScript: "入力欄にコピー",
       applyStyle: "スタイルを適用",
       creating: "作成中...",
