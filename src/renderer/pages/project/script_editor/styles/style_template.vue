@@ -13,7 +13,7 @@
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem v-for="(template, k) in promptTemplates" :key="k" :value="k">
+              <SelectItem v-for="(template, k) in isPro ? promptTemplates : simpleTemplate" :key="k" :value="k">
                 {{ t("project.chat.templates." + template.filename) }}
               </SelectItem>
             </SelectContent>
@@ -42,16 +42,24 @@ const { t } = useI18n();
 
 const props = defineProps<{
   mulmoScript: MulmoScript;
+  isPro: boolean;
 }>();
 
 const selectedTemplateIndex = ref(0);
+
+const simpleTemplate = promptTemplates.filter((temp) => {
+  console.log(temp.filename);
+  return ["ani", "ghibli_comic", "image_prompt"].includes(temp.filename);
+});
+
+// console.log(simpleTemplate);
 
 const emit = defineEmits<{
   updateMulmoScript: [value: MulmoScript];
 }>();
 
 const applyStyle = () => {
-  const style = promptTemplates[selectedTemplateIndex.value].presentationStyle;
+  const style = (props.isPro ? promptTemplates : simpleTemplate)[selectedTemplateIndex.value].presentationStyle;
   const script = { ...props.mulmoScript, ...style };
   emit("updateMulmoScript", script);
   notifySuccess(t("settings.notifications.createSuccess"));
