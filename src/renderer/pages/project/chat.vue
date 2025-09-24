@@ -417,8 +417,13 @@ const run = async () => {
         const script = { ...mulmoScriptHistoryStore.currentMulmoScript };
         if (func === "updateBeatOnMulmoScript") {
           const { beat, index } = arg;
+          // const { text, speaker, imagePrompt };
           const newBeat = { ...(mulmoScriptHistoryStore.currentMulmoScript.beats[index] ?? {}), ...beat };
           script.beats[index] = newBeat;
+          emit("updateMulmoScript", script);
+        } else if (func === "replaceBeatOnMulmoScript") {
+          const { beat, index } = arg;
+          script.beats[index] = beat;
           emit("updateMulmoScript", script);
         } else if (func === "addBeatToMulmoScript") {
           const { beat } = arg;

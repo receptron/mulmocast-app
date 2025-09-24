@@ -69,7 +69,30 @@ export const mulmoScriptAgentInfo: AgentFunctionInfo = {
               properties: {
                 text: { type: "string", description: "talk script for each beat" },
                 speaker: { type: "string", description: "speaker" },
-                imagePrompt: { type: "string", description: "prompt to generate image" },
+                imagePrompt: { type: "string", description: "prompt to generate image. It is exclusive to the image object element in this object." },
+              },
+              required: [],
+            },
+          },
+          required: ["beat", "index"],
+        },
+      },
+    },
+    {
+      type: "function",
+      function: {
+        name: "mulmoScriptAgent--replaceBeatOnMulmoScript",
+        description: "update beat on mulmo script.",
+        parameters: {
+          type: "object",
+          properties: {
+            index: { type: "number", description: "index of beats array" },
+            beat: {
+              type: "object",
+              properties: {
+                text: { type: "string", description: "talk script for each beat" },
+                speaker: { type: "string", description: "speaker" },
+                imagePrompt: { type: "string", description: "prompt to generate image. It is exclusive to the image object element in this object." },
               },
               required: [],
             },
