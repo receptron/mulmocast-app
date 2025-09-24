@@ -1,9 +1,6 @@
 import { type AgentFunctionInfo, type AgentFunction } from "graphai";
-import { mulmoScriptSchema } from "mulmocast/browser";
 
-const mulmoScriptAgent: AgentFunction = async ({ namedInputs }) => {
-  const { arg } = namedInputs;
-  const { mulmoScript } = arg;
+const mulmoScriptAgent: AgentFunction = async () => {
   return {
     content: "Successfully created",
   };
