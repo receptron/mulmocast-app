@@ -261,7 +261,7 @@ const lang = {
       mode: {
         label: "モード設定",
         placeholder: "モードを選択",
-        description: "モードを選択してください",
+        description: "使いやすさのレベルを選択してください。初心者向けはシンプルに、上級者向けは詳細な設定まで表示されます",
       },
       userLevel: {
         beginner: "入門",
@@ -390,7 +390,7 @@ const lang = {
     scriptEditor: {
       text: {
         tabLabel: "翻訳",
-        mode: "テキストモード",
+        mode: "翻訳モード",
         modeDescription: "話者と会話や字幕へ編集ができます",
       },
       yaml: {
@@ -409,16 +409,16 @@ const lang = {
         modeDescription: "Beatごとの画像/動画の編集とプレビュー",
       },
       style: {
-        tabLabel: "スタイル",
+        tabLabel: "スタイル設定",
         mode: "スタイル",
-        modeDescription: "音声/動画/画像/字幕などの設定",
+        modeDescription: "音声/動画/画像/字幕などのスタイルを設定します",
       },
       reference: {
         tabLabel: "キャラ生成",
-        mode: "キャラ生成",
-        modeDescription: "Beatで登場するキャラクターの生成/管理",
+        mode: "キャラクター生成",
+        modeDescription: "Beatで登場するキャラクターの生成・管理をします",
         description:
-          "キャラを使う場合は、こちらで各キャラの画像を作成/アプロードしたうえで、各BEATの「画像設定」で設定してください。",
+          "キャラクターを使う場合は、こちらで各キャラの画像を作成/アプロードしたうえで、各BEATの「画像設定」で設定してください。",
       },
       validationStatus: "検証ステータス",
     },
