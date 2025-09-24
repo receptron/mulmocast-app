@@ -7,7 +7,7 @@
           {{ t("presentationStyle.styleTemplate.description") }}
         </Label>
         <!-- Template selection section -->
-        <div class="template-section">
+        <div class="template-section flex items-center gap-2">
           <Select v-model="selectedTemplateIndex">
             <SelectTrigger class="w-auto">
               <SelectValue />
@@ -18,9 +18,7 @@
               </SelectItem>
             </SelectContent>
           </Select>
-        </div>
-        <div class="mt-2">
-          <Button size="sm" @click="applyStyle" class="mr-2">
+          <Button size="sm" @click="applyStyle">
             {{ t("project.chat.applyStyle") }}
           </Button>
         </div>
