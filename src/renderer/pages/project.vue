@@ -282,7 +282,12 @@ import { setRandomBeatId } from "@/lib/beat_util.js";
 
 import { useMulmoEventStore, useMulmoScriptHistoryStore, useMulmoGlobalStore } from "@/store";
 
-import { isLeftColumnOpen, isRightColumnOpen, gridLayoutClass } from "./project/composable/style";
+import {
+  isLeftColumnOpen,
+  isRightColumnOpen,
+  useGridLayoutClass,
+  setupUserLevelWatch,
+} from "./project/composable/style";
 import { ChatMessage, MulmoError } from "@/types";
 import { type ScriptEditorTab, type MulmoViewerTab } from "../../shared/constants";
 
@@ -297,6 +302,10 @@ const { t } = useI18n();
 const mulmoEventStore = useMulmoEventStore();
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 const globalStore = useMulmoGlobalStore();
+
+// Setup grid layout and user level watching
+const gridLayoutClass = useGridLayoutClass();
+setupUserLevelWatch();
 
 const projectId = computed(() => route.params.id as string);
 const projectMetadata = ref<ProjectMetadata | null>(null);
@@ -352,7 +361,7 @@ const handleUpdateMulmoScriptAndPushToHistory = (script: MulmoScript) => {
 // Just update mulmoScript Data
 const handleUpdateMulmoScript = (script: MulmoScript) => {
   mulmoScriptHistoryStore.updateMulmoScript(script);
-  saveMulmoScriptDebounced(script);
+  saveMulmoScriptDebounced();
 };
 // internal use
 const saveMulmoScript = async () => {
