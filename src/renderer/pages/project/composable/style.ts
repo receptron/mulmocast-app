@@ -5,21 +5,24 @@ import { useMulmoGlobalStore } from "@/store";
 export const isLeftColumnOpen = ref(true); // Default: open
 export const isRightColumnOpen = ref(true); // Default: open
 
-// Watch for user level changes and reset left column state for beginners
-const globalStore = useMulmoGlobalStore();
-watch(
-  () => globalStore.userIsSemiProOrAbove,
-  (newValue) => {
-    // When switching to beginner mode, ensure left column is "open" for proper layout
-    if (!newValue) {
-      isLeftColumnOpen.value = true;
-    }
-  },
-);
-
-// Computed grid layout class based on column states
-export const gridLayoutClass = computed(() => {
+// Function to setup watch - call this from component
+export const setupUserLevelWatch = () => {
   const globalStore = useMulmoGlobalStore();
+  watch(
+    () => globalStore.userIsSemiProOrAbove,
+    (newValue) => {
+      // When switching to beginner mode, ensure left column is "open" for proper layout
+      if (!newValue) {
+        isLeftColumnOpen.value = true;
+      }
+    },
+  );
+};
+
+// Function to get grid layout class - call this from component
+export const useGridLayoutClass = () => {
+  const globalStore = useMulmoGlobalStore();
+  return computed(() => {
 
   // 2-column layout for beginners (no AI chat column)
   if (!globalStore.userIsSemiProOrAbove) {
@@ -39,5 +42,6 @@ export const gridLayoutClass = computed(() => {
   } else if (isRightColumnOpen.value) {
     return "lg:grid-cols-[48px_1fr_30%]";
   }
-  return "lg:grid-cols-[48px_1fr_48px]";
-});
+    return "lg:grid-cols-[48px_1fr_48px]";
+  });
+};
