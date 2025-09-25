@@ -1,9 +1,21 @@
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useMulmoGlobalStore } from "@/store";
 
 // Column open/close states
 export const isLeftColumnOpen = ref(true); // Default: open
 export const isRightColumnOpen = ref(true); // Default: open
+
+// Watch for user level changes and reset left column state for beginners
+const globalStore = useMulmoGlobalStore();
+watch(
+  () => globalStore.userIsSemiProOrAbove,
+  (newValue) => {
+    // When switching to beginner mode, ensure left column is "open" for proper layout
+    if (!newValue) {
+      isLeftColumnOpen.value = true;
+    }
+  }
+);
 
 // Computed grid layout class based on column states
 export const gridLayoutClass = computed(() => {
@@ -11,6 +23,8 @@ export const gridLayoutClass = computed(() => {
 
   // 2-column layout for beginners (no AI chat column)
   if (!globalStore.userIsSemiProOrAbove) {
+    // In beginner mode, force left column to be considered "open" since it doesn't exist
+    // Only right column state matters
     if (isRightColumnOpen.value) {
       return "lg:grid-cols-[1fr_30%]";
     }
