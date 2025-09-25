@@ -65,6 +65,15 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+
+      - name: Start app with CDP
+        run: |
+          xvfb-run -a --server-args="-screen 0 1024x768x24" \
+          npm run start:cdp &
+
+      - name: Wait for CDP :9222
+        run: wait-port 9222
+      
       - run: xvfb-run -a --server-args="-screen 0 1024x768x24" npx ts-node test/automated_serial_generation_e2e_test.ts
         env:
           CI: true
