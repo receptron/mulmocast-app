@@ -14,7 +14,7 @@ watch(
     if (!newValue) {
       isLeftColumnOpen.value = true;
     }
-  }
+  },
 );
 
 // Computed grid layout class based on column states
