@@ -162,7 +162,7 @@ const loadProjectThumbnails = async () => {
 };
 
 const hasProjects = computed(() => {
-  return projects.value.length >0;
+  return projects.value.length > 0;
 });
 
 const sortedProjects = computed(() => {
@@ -186,7 +186,7 @@ const handleCreateProject = async () => {
 
   try {
     creating.value = true;
-    const project = await projectApi.create(title, settings.MAIN_LANGUAGE ?? "en", hasProjects.value || true);
+    const project = await projectApi.create(title, settings.MAIN_LANGUAGE ?? "en", hasProjects.value);
     // Navigate to the new project
     router.push(`/project/${project.metadata.id}`);
   } catch (error) {

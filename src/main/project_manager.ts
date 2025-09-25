@@ -124,7 +124,9 @@ export const createProject = async (title: string, lang: string, isFirstProject:
       mulmoViewerActiveTab: MULMO_VIEWER_TABS.MOVIE,
     };
 
-    const newScript = mulmoScriptSchema.strip().safeParse((isFirstProject ? firstInitMulmoScript : initMulmoScript)(title, lang));
+    const newScript = mulmoScriptSchema
+      .strip()
+      .safeParse((isFirstProject ? firstInitMulmoScript : initMulmoScript)(title, lang));
     const mulmoScript = newScript.data;
 
     await saveProjectMetadata(id, initialData);
