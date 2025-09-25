@@ -67,6 +67,10 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
     return userMode.value.id === "pro";
   });
 
+  const userIsSemiProOrAbove = computed(() => {
+    return userMode.value.id === "pro" || userMode.value.id === "semiPro";
+  });
+
   return {
     settings,
     updateSettings,
@@ -74,6 +78,7 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
 
     userMode,
     userIsPro,
+    userIsSemiProOrAbove,
 
     isOpenSettingModal,
     toggleSettingModal,

@@ -14,6 +14,7 @@
           <div
             class="h-full overflow-y-auto pr-2"
             :class="{ 'lg:block': isLeftColumnOpen, 'lg:hidden': !isLeftColumnOpen }"
+            v-if="globalStore.userIsSemiProOrAbove"
           >
             <Card class="flex h-full flex-col">
               <CardHeader class="flex-shrink-0">

@@ -403,6 +403,10 @@ export const userLevels = [
     mode: 1,
   },
   {
+    id: "semiPro",
+    mode: 50,
+  },
+  {
     id: "pro",
     mode: 100,
   },
