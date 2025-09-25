@@ -314,6 +314,7 @@ const handleSave = async () => {
       ...apiKeys.value,
       APIKEY: toRaw({ ...apiKeys.value }),
       APP_LANGUAGE: locale.value,
+      MAIN_LANGUAGE: locale.value,
       CHAT_LLM: DEFAULT_LLM_AGENT,
       llmConfigs: toRaw(llmConfigs.value),
     };
