@@ -31,19 +31,24 @@
             language: t('languages.' + lang),
           })
         "
-        class="min-h-8 resize-y mb-2"
+        class="mb-2 min-h-8 resize-y"
         :class="isBeginner && !beat.text ? 'border-2 border-red-600' : ''"
         rows="2"
       />
       <div class="flex items-center gap-2">
-        <Button variant="outline" size="sm" @click="generateAudio()" class="w-fit" :disabled="beat?.text?.length === 0">{{
-          t("ui.actions.generateAudio")
-        }}</Button>
+        <Button
+          variant="outline"
+          size="sm"
+          @click="generateAudio()"
+          class="w-fit"
+          :disabled="beat?.text?.length === 0"
+          >{{ t("ui.actions.generateAudio") }}</Button
+        >
         <audio
           :src="audioFile"
           v-if="!!audioFile"
           controlslist="nodownload noplaybackrate noremoteplayback"
-          class="flex-1 h-7"
+          class="h-7 flex-1"
           controls
         />
       </div>
