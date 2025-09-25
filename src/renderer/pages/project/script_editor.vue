@@ -305,7 +305,6 @@ import Reference from "./script_editor/charactor.vue";
 import TextEditor from "./script_editor/text_editor.vue";
 
 import { MulmoError } from "../../../types";
-import { removeEmptyValues } from "@/lib/utils";
 import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
 
@@ -499,9 +498,7 @@ const addBeat = (beat: MulmoBeat, index: number) => {
 };
 
 const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
-  emit("updateMulmoScript", {
-    ...removeEmptyValues(style),
-  });
+  emit("updateMulmoScript", { ...style });
 };
 
 const updateImage = (imageKey: string, prompt: string) => {
