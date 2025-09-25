@@ -645,39 +645,52 @@ async function runGenerationE2ETest(): Promise<void> {
 
   try {
     console.log("=== MulmoCast Generation E2E Test ===");
-    console.log("1. Starting Electron app with yarn start...");
 
-    // Start Electron app with electron-forge directly to avoid PATH and shell security warnings
-    // Resolve cross-platform executable (Windows needs .cmd extension)
-    const electronForgeBinary = process.platform === "win32" ? "electron-forge.cmd" : "electron-forge";
-    const electronForgeBinPath = path.join(process.cwd(), "node_modules", ".bin", electronForgeBinary);
+    const shouldSpawnElectron =
+      process.env.SKIP_ELECTRON_SPAWN !== "1" && process.env.SKIP_ELECTRON_SPAWN !== "true";
 
-    resources.electronProcess = spawn(
-      process.execPath, // Node.js executable path
-      [electronForgeBinPath, "start"], // Arguments: [script path, "start"]
-      {
+    if (shouldSpawnElectron) {
+      console.log("1. Starting Electron app with electron-forge (remote debugging enabled)...");
+
+      // Start Electron app with electron-forge directly to avoid PATH and shell security warnings
+      // Resolve cross-platform executable (Windows needs .cmd extension)
+      const electronForgeBinary = process.platform === "win32" ? "electron-forge.cmd" : "electron-forge";
+      const electronForgeBinPath = path.join(process.cwd(), "node_modules", ".bin", electronForgeBinary);
+      const electronForgeArgs = [
+        electronForgeBinPath,
+        "start",
+        "--",
+        "--remote-debugging-port=9222",
+        "--remote-debugging-address=0.0.0.0",
+        "--no-sandbox",
+      ];
+
+      resources.electronProcess = spawn(process.execPath, electronForgeArgs, {
         shell: false, // Avoid security warnings
         detached: process.platform !== "win32", // Don't use detached on Windows
         env: {
           ...process.env,
           NODE_ENV: "development",
+          ELECTRON_DISABLE_SANDBOX: "1",
         },
-      },
-    );
+      });
 
-    // Display app startup logs
-    resources.electronProcess.stdout?.on("data", (data: Buffer) => {
-      console.log(`[Electron]: ${data.toString().trim()}`);
-    });
+      // Display app startup logs
+      resources.electronProcess.stdout?.on("data", (data: Buffer) => {
+        console.log(`[Electron]: ${data.toString().trim()}`);
+      });
 
-    resources.electronProcess.stderr?.on("data", () => {
-      // Temporarily disabled to reduce noise during debugging
-      // console.error(`[Electron Error]: ${data.toString().trim()}`);
-    });
+      resources.electronProcess.stderr?.on("data", () => {
+        // Temporarily disabled to reduce noise during debugging
+        // console.error(`[Electron Error]: ${data.toString().trim()}`);
+      });
+    } else {
+      console.log("1. Skipping Electron spawn (assuming external process with CDP is already running)...");
+    }
 
     // Poll for CDP connection availability
     console.log("\n2. Waiting for CDP to be available...");
-    const cdpUrl = "http://localhost:9222/";
+    const cdpUrl = process.env.CDP_URL ?? "http://127.0.0.1:9222/";
     let attempts = 0;
 
     while (attempts < CONFIG.CDP_MAX_ATTEMPTS) {

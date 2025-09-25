@@ -24,7 +24,7 @@ async function testChangeLanguage(targetLanguage: "en" | "ja"): Promise<void> {
     console.log("1. Waiting for CDP to be available...");
 
     // Poll for CDP connection availability
-    const cdpUrl = process.env.CDP_URL || "http://localhost:9222/";
+    const cdpUrl = process.env.CDP_URL || "http://127.0.0.1:9222/";
     let attempts = 0;
 
     while (attempts < CONFIG.CDP_MAX_ATTEMPTS) {

@@ -6,6 +6,7 @@
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "NODE_ENV=development electron-forge start",
+    "start:cdp": "NODE_ENV=development electron-forge start -- --remote-debugging-port=9222 --remote-debugging-address=0.0.0.0 --no-sandbox",
     "rebuild:native": "npx electron-rebuild -f",
     "dev": "NODE_ENV=development vite --config vite.renderer.config.ts",
     "package": "npx puppeteer browsers install chrome && electron-forge package",

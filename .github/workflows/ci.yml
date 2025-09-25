@@ -56,7 +56,7 @@ jobs:
       image: mcr.microsoft.com/playwright:v1.55.0-jammy
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
@@ -65,12 +65,37 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - run: xvfb-run -a --server-args="-screen 0 1024x768x24" npx ts-node test/automated_serial_generation_e2e_test.ts
+      - name: Start app with CDP
+        run: |
+          xvfb-run -a --server-args="-screen 0 1024x768x24" \
+          npm run start:cdp &
+
+      - name: Wait for CDP :9222
+        env:
+          URL: http://127.0.0.1:9222/json/version
+        run: |
+          for i in $(seq 1 40); do
+            if curl -fsS "$URL" >/dev/null 2>&1; then
+              echo "CDP is up at $URL"; exit 0
+            fi
+            sleep 0.5
+          done
+          echo "CDP did not come up at $URL" >&2
+          curl -v "$URL" || true
+          exit 1
+
+      - name: Run tests (connectOverCDP to 127.0.0.1)
         env:
           CI: true
           NODE_ENV: test
           ELECTRON_DISABLE_SANDBOX: 1
-      
+          NODE_OPTIONS: --dns-result-order=ipv4first
+          SKIP_ELECTRON_SPAWN: "1"
+          CDP_URL: http://127.0.0.1:9222/
+        run: |
+          xvfb-run -a --server-args="-screen 0 1024x768x24" \
+          npx ts-node test/automated_serial_generation_e2e_test.ts
+
       - name: Upload test screenshots
         uses: actions/upload-artifact@v4
         if: always()
