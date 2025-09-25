@@ -17,7 +17,9 @@
       :class="
         isDragging
           ? 'border-primary bg-primary/5 text-primary shadow-lg'
-          : 'border-border bg-card text-muted-foreground'
+          : isBeginner && !beat.image.source.path
+            ? 'border-2 border-red-600'
+            : 'border-border bg-card text-muted-foreground'
       "
     >
       {{ t("ui.common.drophere") }}
@@ -53,6 +55,7 @@ const projectId = computed(() => route.params.id as string);
 interface Props {
   beat: MulmoBeat;
   index: number;
+  isBeginner: boolean;
 }
 const props = defineProps<Props>();
 const emit = defineEmits(["update", "save", "updateImageData", "generateImageOnlyImage"]);
