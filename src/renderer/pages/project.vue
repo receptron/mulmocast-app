@@ -282,7 +282,12 @@ import { setRandomBeatId } from "@/lib/beat_util.js";
 
 import { useMulmoEventStore, useMulmoScriptHistoryStore, useMulmoGlobalStore } from "@/store";
 
-import { isLeftColumnOpen, isRightColumnOpen, useGridLayoutClass, setupUserLevelWatch } from "./project/composable/style";
+import {
+  isLeftColumnOpen,
+  isRightColumnOpen,
+  useGridLayoutClass,
+  setupUserLevelWatch,
+} from "./project/composable/style";
 import { ChatMessage, MulmoError } from "@/types";
 import { type ScriptEditorTab, type MulmoViewerTab } from "../../shared/constants";
 
