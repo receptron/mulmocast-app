@@ -20,6 +20,7 @@
       </div>
     </div>
     <div class="mb-4 flex items-center">
+      <!-- beat.text -->
       <Input
         :model-value="beat.text"
         @update:model-value="(value) => update('text', String(value))"
@@ -31,6 +32,7 @@
           })
         "
         class="min-h-8 resize-y"
+        :class="isBeginner && !beat.text ? 'border-2 border-red-600' : ''"
       />
       <Button variant="outline" size="sm" @click="generateAudio()" class="w-fit" :disabled="beat?.text?.length === 0">{{
         t("ui.actions.generateAudio")
@@ -53,6 +55,7 @@
             <Media
               :beat="beat"
               :index="index"
+              :isBeginner="isBeginner"
               @update="update"
               @save="justSaveAndPushToHistory"
               @updateImageData="updateImageData"
@@ -91,7 +94,7 @@
 
           <!-- markdown -->
           <template v-else-if="beat.image.type === 'markdown'">
-            <Markdown :beat="beat" @update="update" @save="justSaveAndPushToHistory" />
+            <Markdown :beat="beat" @update="update" @save="justSaveAndPushToHistory" :isBeginner="isBeginner" />
           </template>
 
           <!-- chart -->
@@ -141,6 +144,7 @@
         <!-- end of beat.image -->
         <div v-else>
           <template v-if="beat.htmlPrompt">
+            <!-- html prompt beat -->
             <Label class="mb-1 block">{{ t("beat.htmlPrompt.label") }}: </Label>
             <Textarea
               :placeholder="t('beat.htmlPrompt.placeholder')"
@@ -152,6 +156,7 @@
             />
           </template>
           <template v-else>
+            <!-- image prompt beat -->
             <Label class="mb-1 block">{{ t("beat.imagePrompt.label") }}: </Label>
             <Textarea
               :placeholder="t('beat.imagePrompt.placeholder')"
@@ -159,6 +164,7 @@
               @update:model-value="(value) => update('imagePrompt', String(value))"
               @blur="justSaveAndPushToHistory"
               class="my-2 h-20 overflow-y-auto"
+              :class="isBeginner && !beat.imagePrompt ? 'border-2 border-red-600' : ''"
             />
           </template>
         </div>
@@ -309,6 +315,7 @@ interface Props {
   lipSyncFiles: FileData;
   isEnd: boolean;
   isPro: boolean;
+  isBeginner: boolean;
   mulmoError: string[];
   settingPresence: Record<string, boolean>;
 }
