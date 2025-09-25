@@ -70,20 +70,38 @@ jobs:
       - name: Start app with CDP
         run: |
           xvfb-run -a --server-args="-screen 0 1024x768x24" \
-          npm run start:cdp &
+          npm run start:cdp > electron.log 2>&1 &
+          echo $! > electron.pid
 
       - name: Wait for CDP :9222
         env:
           URL: http://127.0.0.1:9222/json/version
         run: |
-          for i in $(seq 1 40); do
+          attempts=0
+          max_attempts=120
+          sleep 2
+
+          while [ "$attempts" -lt "$max_attempts" ]; do
             if curl -fsS "$URL" >/dev/null 2>&1; then
-              echo "CDP is up at $URL"; exit 0
+              echo "CDP is up at $URL (after $((attempts + 1)) attempts)"
+              exit 0
             fi
-            sleep 0.5
+
+            if [ -f electron.pid ]; then
+              pid=$(cat electron.pid)
+              if ! kill -0 "$pid" 2>/dev/null; then
+                echo "Electron process (PID $pid) exited before CDP became available." >&2
+                tail -n 200 electron.log || true
+                exit 1
+              fi
+            fi
+
+            attempts=$((attempts + 1))
+            sleep 1
           done
-          echo "CDP did not come up at $URL" >&2
-          curl -v "$URL" || true
+
+          echo "CDP did not come up at $URL after $max_attempts attempts" >&2
+          tail -n 200 electron.log || true
           exit 1
 
       - name: Run tests (connectOverCDP to 127.0.0.1)
@@ -97,6 +115,16 @@ jobs:
         run: |
           xvfb-run -a --server-args="-screen 0 1024x768x24" \
           npx ts-node test/automated_serial_generation_e2e_test.ts
+
+      - name: Stop Electron app
+        if: always()
+        run: |
+          if [ -f electron.pid ]; then
+            pid=$(cat electron.pid)
+            if kill -0 "$pid" 2>/dev/null; then
+              kill "$pid" || true
+            fi
+          fi
 
       - name: Upload test screenshots
         uses: actions/upload-artifact@v4
