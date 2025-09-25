@@ -539,6 +539,9 @@ const lang = {
       urlField: "URL",
       placeholder: "Enter image URL",
     },
+    mediaImageFile: {
+      label: "Image file",
+    },
     textSlide: {
       badge: "Text Slide",
       label: "Slide: Text",
@@ -603,9 +606,6 @@ const lang = {
       keyField: "Image Reference Key",
       placeholder: "Image Reference Key (a-z0-9)",
       imagePromptPlaceholder: "Enter prompt to generate charactor image.",
-    },
-    mediaImageFile: {
-      label: "Upload Image",
     },
     image: {
       badge: "Image",

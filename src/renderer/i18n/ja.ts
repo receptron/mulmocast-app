@@ -607,9 +607,6 @@ const lang = {
       placeholder: "まずはキャラのキーを登録(英数字のみ)",
       imagePromptPlaceholder: "キャラ画像を生成するためのプロンプトを入力してください。",
     },
-    mediaImageFile: {
-      label: "画像をアップロード",
-    },
     image: {
       badge: "Image",
     },
@@ -645,14 +642,13 @@ const lang = {
       language: "発話言語",
       displayName: "表示名",
       voiceId: "声の種類",
-      speed: "読み上げの速さ(通常1倍)",
+      speed: "読み上げの速さ",
       speedPlaceholder: "例）1.2（0.4〜3.0、標準は1.0）",
       instruction: "読み上げスタイル",
       instructionPlaceholder: "例）ゆっくりと優しく読んで",
       placeholder: "登場人物の名前 (英数字のみ)",
       noSpeakersDefined: "登場人物が定義されていません",
       initializeSpeechParameters: "音声パラメータを初期化",
-      placeholder: "まずはキーを登録(英数字のみ)",
     },
     canvasSizeParams: {
       title: "キャンバスサイズ",
