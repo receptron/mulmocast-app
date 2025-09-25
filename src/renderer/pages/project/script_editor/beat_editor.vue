@@ -19,9 +19,9 @@
         </BeatSelector>
       </div>
     </div>
-    <div class="mb-4 flex items-center">
+    <div class="mb-4">
       <!-- beat.text -->
-      <Input
+      <Textarea
         :model-value="beat.text"
         @update:model-value="(value) => update('text', String(value))"
         @blur="justSaveAndPushToHistory"
@@ -31,19 +31,22 @@
             language: t('languages.' + lang),
           })
         "
-        class="min-h-8 resize-y"
+        class="min-h-8 resize-y mb-2"
         :class="isBeginner && !beat.text ? 'border-2 border-red-600' : ''"
+        rows="2"
       />
-      <Button variant="outline" size="sm" @click="generateAudio()" class="w-fit" :disabled="beat?.text?.length === 0">{{
-        t("ui.actions.generateAudio")
-      }}</Button>
-      <audio
-        :src="audioFile"
-        v-if="!!audioFile"
-        controlslist="nodownload noplaybackrate noremoteplayback"
-        style="width: 120px; height: 28px"
-        controls
-      />
+      <div class="flex items-center gap-2">
+        <Button variant="outline" size="sm" @click="generateAudio()" class="w-fit" :disabled="beat?.text?.length === 0">{{
+          t("ui.actions.generateAudio")
+        }}</Button>
+        <audio
+          :src="audioFile"
+          v-if="!!audioFile"
+          controlslist="nodownload noplaybackrate noremoteplayback"
+          class="flex-1 h-7"
+          controls
+        />
+      </div>
     </div>
 
     <div class="grid grid-cols-2 gap-4">
