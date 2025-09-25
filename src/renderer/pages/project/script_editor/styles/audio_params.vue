@@ -1,6 +1,6 @@
 <template>
   <Card class="p-4">
-    <h4 class="mb-3 font-medium">{{ t("parameters.audioParams.title") }}</h4>
+    <h4 class="font-medium">{{ t("parameters.audioParams.title") }}</h4>
     <div class="space-y-3">
       <div class="grid grid-cols-2 gap-4" v-if="globalStore.userIsPro">
         <div>

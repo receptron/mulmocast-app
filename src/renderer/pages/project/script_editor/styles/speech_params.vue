@@ -1,6 +1,6 @@
 <template>
   <Card class="p-4">
-    <h4 class="mb-3 font-medium">{{ t("parameters.speechParams.title") }}</h4>
+    <h4 class="font-medium">{{ t("parameters.speechParams.title") }}</h4>
     <div v-if="speechParams" class="space-y-4">
       <div v-if="speechParams.speakers && Object.keys(speechParams.speakers).length" class="mb-2">
         <Label class="mb-2">{{ t("parameters.speechParams.defaultSpeaker") }}</Label>
@@ -98,6 +98,7 @@
               @update:model-value="(value) => handleSpeechOptionsChange(name, 'speed', value)"
               class="h-8"
               type="number"
+              :placeholder="t('parameters.speechParams.speedPlaceholder')"
             />
           </div>
           <div v-if="speaker.provider === 'openai'">
@@ -106,6 +107,7 @@
               :model-value="speaker.instruction || ''"
               @update:model-value="(value) => handleSpeechOptionsChange(name, 'instruction', value)"
               class="h-8"
+              :placeholder="t('parameters.speechParams.instructionPlaceholder')"
             />
           </div>
           <div v-if="speaker.displayName">

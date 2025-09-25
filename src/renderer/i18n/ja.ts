@@ -38,6 +38,7 @@ const lang = {
       height: "高さ",
       duration: "再生時間",
       quality: "品質",
+      renderingQuality: "画質",
       style: "スタイル",
       type: "種類",
       format: "フォーマット",
@@ -261,7 +262,7 @@ const lang = {
       mode: {
         label: "モード設定",
         placeholder: "モードを選択",
-        description: "モードを選択してください",
+        description: "入門者向けはシンプルに、上級者向けは詳細な設定まで表示されます",
       },
       userLevel: {
         beginner: "入門",
@@ -392,7 +393,7 @@ const lang = {
     scriptEditor: {
       text: {
         tabLabel: "翻訳",
-        mode: "テキストモード",
+        mode: "翻訳モード",
         modeDescription: "話者と会話や字幕へ編集ができます",
       },
       yaml: {
@@ -407,20 +408,20 @@ const lang = {
       },
       media: {
         tabLabel: "BEAT",
-        mode: "メディアモード",
-        modeDescription: "Beatごとの画像/動画の編集とプレビュー",
+        mode: "台本編集",
+        modeDescription: "Beatごとの音声/画像/動画の編集とプレビュー",
       },
       style: {
-        tabLabel: "スタイル",
+        tabLabel: "スタイル設定",
         mode: "スタイル",
-        modeDescription: "音声/動画/画像/字幕などの設定",
+        modeDescription: "音声/動画/画像/字幕などのスタイルを設定します",
       },
       reference: {
-        tabLabel: "キャラ生成",
-        mode: "キャラ生成",
-        modeDescription: "Beatで登場するキャラクターの生成/管理",
+        tabLabel: "キャラ設定",
+        mode: "キャラクター設定",
+        modeDescription: "登場するキャラクターの管理をします",
         description:
-          "キャラを使う場合は、こちらで各キャラの画像を作成/アプロードしたうえで、各BEATの「画像設定」で設定してください。",
+          "各キャラクターの画像を「画像生成プロンプト」から作るか「画像をアップロード」してから、各BEATの「画像設定」で「{key}」指定してください。",
       },
       validationStatus: "検証ステータス",
     },
@@ -524,6 +525,7 @@ const lang = {
     imagePreview: "画像プレビュー",
     // Beat speaker settings
     speaker: {
+      label: "登場人物の声",
       selectSpeaker: "登場人物を選択",
       text: "テキスト",
       placeholder: "{language}で{speaker}の話す内容を書いてください",
@@ -602,7 +604,7 @@ const lang = {
     imageReference: {
       badge: "Image Reference",
       keyField: "キャラのキー",
-      placeholder: "まずはキーを登録(英数字のみ)",
+      placeholder: "まずはキャラのキーを登録(英数字のみ)",
       imagePromptPlaceholder: "キャラ画像を生成するためのプロンプトを入力してください。",
     },
     image: {
@@ -640,11 +642,13 @@ const lang = {
       language: "発話言語",
       displayName: "表示名",
       voiceId: "声の種類",
-      speed: "喋る速度(通常1倍)",
-      instruction: "指示",
+      speed: "読み上げの速さ",
+      speedPlaceholder: "例）1.2（0.4〜3.0、標準は1.0）",
+      instruction: "読み上げスタイル",
+      instructionPlaceholder: "例）ゆっくりと優しく読んで",
+      placeholder: "登場人物の名前 (英数字のみ)",
       noSpeakersDefined: "登場人物が定義されていません",
       initializeSpeechParameters: "音声パラメータを初期化",
-      placeholder: "まずはキーを登録(英数字のみ)",
     },
     canvasSizeParams: {
       title: "キャンバスサイズ",
@@ -696,7 +700,7 @@ const lang = {
   presentationStyle: {
     styleTemplate: {
       title: "スタイル テンプレート",
-      description: "スタイルを上書きします。既存のスタイル設定が消えるので注意してください",
+      description: "スタイルを上書きします。既存のスタイル設定が消えるので注意してください。",
     },
   },
   viewer: {

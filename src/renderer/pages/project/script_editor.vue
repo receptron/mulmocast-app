@@ -256,8 +256,8 @@
           {{ t("project.scriptEditor.reference.mode") }} -
           {{ t("project.scriptEditor.reference.modeDescription") }}
         </p>
-        <p>
-          {{ t("project.scriptEditor.reference.description") }}
+        <p class="text-muted-foreground text-sm">
+          {{ t("project.scriptEditor.reference.description", { key: t("beat.imageReference.keyField") }) }}
         </p>
         <Reference
           :projectId="projectId"

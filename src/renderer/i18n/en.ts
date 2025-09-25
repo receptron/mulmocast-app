@@ -38,6 +38,7 @@ const lang = {
       height: "Height",
       duration: "Duration",
       quality: "Quality",
+      renderingQuality: "Rendering Quality",
       style: "Style",
       type: "Type",
       format: "Format",
@@ -261,7 +262,7 @@ const lang = {
       mode: {
         label: "Mode settings",
         placeholder: "Select a mode",
-        description: "Please select a mode",
+        description: "Beginner mode shows simplified options, while advanced mode displays all detailed settings",
       },
       userLevel: {
         beginner: "Beginner",
@@ -407,7 +408,7 @@ const lang = {
         modeDescription: "Complete MulmoScript editing",
       },
       media: {
-        tabLabel: "Media",
+        tabLabel: "BEAT",
         mode: "Media Mode",
         modeDescription: "Beat-by-beat media editing and preview",
       },
@@ -417,10 +418,11 @@ const lang = {
         modeDescription: "Presentation style editing",
       },
       reference: {
-        tabLabel: "Ref",
-        mode: "Reference",
-        modeDescription: "Reference image for character consistency",
-        description: "If you use a character, please set it in the image settings for each BEAT.",
+        tabLabel: "Character",
+        mode: "Character Settings",
+        modeDescription: "Manage characters that appear in the presentation",
+        description:
+          'Create character images using "Image Generation Prompt" or "Upload Image", then specify them in the "Image Settings" for each BEAT using "{key}".',
       },
       validationStatus: "Validation Status",
     },
@@ -524,6 +526,7 @@ const lang = {
     imagePreview: "Image Preview",
     // Beat speaker settings
     speaker: {
+      label: "Select Voice",
       selectSpeaker: "Select a speaker",
       text: "Text",
       placeholder: "{language} input: {speaker}'s voice content",
@@ -535,6 +538,9 @@ const lang = {
       remoteLabel: "Remote Media",
       urlField: "URL",
       placeholder: "Enter image URL",
+    },
+    mediaImageFile: {
+      label: "Image file",
     },
     textSlide: {
       badge: "Text Slide",
@@ -585,7 +591,7 @@ const lang = {
     },
     imagePrompt: {
       badge: "Image Prompt",
-      label: "Image Prompt",
+      label: "Image Generation Prompt",
       promptField: "Prompt",
       placeholder: "Enter prompt to generate image. If empty, text is used.",
     },
@@ -636,8 +642,11 @@ const lang = {
       language: "Language",
       displayName: "Display Name",
       voiceId: "Voice ID",
-      speed: "Speed",
-      instruction: "Instruction",
+      speed: "Reading Speed",
+      speedPlaceholder: "e.g., 1.2 (range: 0.4-3.0, default: 1.0)",
+      instruction: "Reading Style",
+      instructionPlaceholder: "e.g., Read slowly and gently",
+      placeholder: "Speaker name (a-z0-9)",
       noSpeakersDefined: "No speakers defined",
       initializeSpeechParameters: "Initialize Speech Parameters",
     },

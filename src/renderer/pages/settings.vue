@@ -8,9 +8,10 @@
           <CardTitle>{{ t("settings.appSettings.title") }}</CardTitle>
           <CardDescription>{{ t("settings.appSettings.description") }}</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent class="space-y-6">
           <div class="space-y-2">
             <Label for="language">{{ t("settings.appSettings.language.label") }}</Label>
+            <p class="text-muted-foreground text-sm">{{ t("settings.appSettings.language.description") }}</p>
             <Select v-model="selectedLanguage">
               <SelectTrigger id="language" data-testid="language-select">
                 <SelectValue :placeholder="t('settings.appSettings.language.placeholder')" />
@@ -26,7 +27,20 @@
                 </SelectItem>
               </SelectContent>
             </Select>
-            <p class="text-muted-foreground text-sm">{{ t("settings.appSettings.language.description") }}</p>
+          </div>
+          <div class="space-y-2">
+            <Label for="mode">{{ t("settings.appSettings.mode.label") }}</Label>
+            <p class="text-muted-foreground text-sm">{{ t("settings.appSettings.mode.description") }}</p>
+            <Select v-model="selectedUserLevel">
+              <SelectTrigger id="mode">
+                <SelectValue :placeholder="t('settings.appSettings.mode.placeholder')" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem v-for="user_level in userLevels" :key="user_level.id" :value="user_level.id">
+                  {{ t("settings.appSettings.userLevel." + user_level.id) }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>
@@ -96,26 +110,6 @@
         @update:selected-l-l-m="updateSelectedLLM"
         @update:llm-configs="updateLlmConfigs"
       />
-
-      <!-- language -->
-      <Card>
-        <CardContent class="space-y-4">
-          <div class="space-y-2">
-            <Label for="language">{{ t("settings.appSettings.mode.label") }}</Label>
-            <Select v-model="selectedUserLevel">
-              <SelectTrigger>
-                <SelectValue :placeholder="t('settings.appSettings.mode.placeholder')" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="user_level in userLevels" :key="user_level.id" :value="user_level.id">
-                  {{ t("settings.appSettings.userLevel." + user_level.id) }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-            <p class="text-muted-foreground text-sm">{{ t("settings.appSettings.mode.description") }}</p>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   </div>
 </template>
