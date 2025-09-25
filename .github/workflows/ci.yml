@@ -65,6 +65,8 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+      - name: Mark repository as safe for git
+        run: git config --global --add safe.directory "$PWD"
       - name: Start app with CDP
         run: |
           xvfb-run -a --server-args="-screen 0 1024x768x24" \
