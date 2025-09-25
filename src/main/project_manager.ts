@@ -6,7 +6,7 @@ import { MulmoScriptMethods, mulmoScriptSchema, type MulmoScript } from "mulmoca
 
 import { Project, ProjectMetadata } from "../types";
 import { SCRIPT_EDITOR_TABS, MULMO_VIEWER_TABS } from "../shared/constants";
-import { initMulmoScript } from "../shared/beat_data";
+import { initMulmoScript, firstInitMulmoScript } from "../shared/beat_data";
 
 const PROJECTS_DIR = "projects";
 const META_DATA_FILE_NAME = "meta.json";
@@ -106,7 +106,7 @@ export const listProjects = async (): Promise<Project[]> => {
 };
 
 // Create a new project
-export const createProject = async (title: string, lang: string): Promise<Project> => {
+export const createProject = async (title: string, lang: string, isFirstProject: boolean): Promise<Project> => {
   const id = generateId();
   try {
     await fs.mkdir(getProjectPath(id), { recursive: true });
@@ -120,11 +120,13 @@ export const createProject = async (title: string, lang: string): Promise<Projec
       hasErrors: false,
       chatMessages: [],
       useCache: false,
-      scriptEditorActiveTab: SCRIPT_EDITOR_TABS.TEXT,
+      scriptEditorActiveTab: SCRIPT_EDITOR_TABS.MEDIA,
       mulmoViewerActiveTab: MULMO_VIEWER_TABS.MOVIE,
     };
 
-    const newScript = mulmoScriptSchema.strip().safeParse(initMulmoScript(title, lang));
+    const newScript = mulmoScriptSchema
+      .strip()
+      .safeParse((isFirstProject ? firstInitMulmoScript : initMulmoScript)(title, lang));
     const mulmoScript = newScript.data;
 
     await saveProjectMetadata(id, initialData);
