@@ -46,6 +46,11 @@
           </SelectContent>
         </Select>
       </div>
+    </div>
+  </Card>
+  <Card class="p-4">
+    <h4 class="font-medium">{{ t("parameters.movieParams.title") }}</h4>
+    <div class="space-y-3">
       <div>
         <Label>{{ t("parameters.movieParams.transitionType") }}</Label>
         <Select
