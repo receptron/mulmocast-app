@@ -375,7 +375,7 @@ const lang = {
       openProjectFolder: "Open Project Folder",
     },
     menu: {
-      script: "Script",
+      script: "Create Video Story",
       product: "Product",
       debugLog: "Debug Logs",
     },
@@ -383,7 +383,7 @@ const lang = {
       openPanel: "Open Output & Product panel",
       outputProduct: "Output Settings & Generation / Production",
       outputSettingsGeneration: "Output Settings & Generation",
-      generationAndPlay: "Generate and Play",
+      generationAndPlay: "Create Video / Watch Video",
       generateContents: "Generate Contents",
       generateVideo: "Generate Video",
       movie: "Movie",

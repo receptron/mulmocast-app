@@ -374,7 +374,7 @@ const lang = {
       openProjectFolder: "プロジェクトのフォルダを開く",
     },
     menu: {
-      script: "編集",
+      script: "動画のストーリーを作る",
       product: "成果物",
       debugLog: "デバッグログ",
     },
@@ -382,7 +382,7 @@ const lang = {
       openPanel: "出力設定 & 生成 / 成果物パネルを開く",
       outputProduct: "出力設定 & 生成 / 成果物",
       outputSettingsGeneration: "出力設定 & 生成",
-      generationAndPlay: "生成と再生",
+      generationAndPlay: "動画を作る / 動画を見る",
       generateContents: "コンテンツ生成",
       generateVideo: "動画生成",
       movie: "動画",
