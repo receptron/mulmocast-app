@@ -634,11 +634,11 @@ const lang = {
     transitionParams: {
       title: "切り替え効果",
       description: "場面が変わるときの演出を設定します。フェードは画面がふわっと切り替わり、スライドアウトは画面が横に流れて切り替わります。",
-      transitionType: "切り替えの種類",
-      transitionDuration: "切り替えの長さ（秒）",
-      transitionNone: "なし",
-      transitionFade: "フェード",
-      transitionSlideoutLeft: "左にスライドアウト",
+      type: "切り替えの種類",
+      duration: "切り替えの長さ（秒）",
+      typeNone: "なし",
+      typeFade: "フェード",
+      typeSlideoutLeft: "左にスライドアウト",
     },
     speechParams: {
       title: "登場人物の声設定",

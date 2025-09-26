@@ -634,11 +634,11 @@ const lang = {
     transitionParams: {
       title: "Transition Effect",
       description: "Set how scenes change. Fade makes the screen gently switch, while Slide moves the screen sideways to change scenes.",
-      transitionType: "Transition type",
-      transitionDuration: "Transition duration (sec)",
-      transitionNone: "None",
-      transitionFade: "Fade",
-      transitionSlideoutLeft: "Slide left",
+      type: "Transition type",
+      duration: "Transition duration (sec)",
+      typeNone: "None",
+      typeFade: "Fade",
+      typeSlideoutLeft: "Slide left",
     },
     speechParams: {
       title: "Speech Parameters",

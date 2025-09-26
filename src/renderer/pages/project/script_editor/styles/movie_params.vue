@@ -55,23 +55,23 @@
         <Label class="text-muted-foreground mb-2 text-sm">
           {{ t("parameters.transitionParams.description") }}
         </Label>
-        <Label>{{ t("parameters.transitionParams.transitionType") }}</Label>
+        <Label>{{ t("parameters.transitionParams.type") }}</Label>
         <Select
           :model-value="movieParams?.transition?.type || DEFAULT_VALUES.transition.type"
           @update:model-value="handleTransitionTypeChange"
         >
           <SelectTrigger>
-            <SelectValue :placeholder="t('parameters.transitionParams.transitionNone')" />
+            <SelectValue :placeholder="t('parameters.transitionParams.typeNone')" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__undefined__">{{ t("parameters.transitionParams.transitionNone") }}</SelectItem>
-            <SelectItem value="fade">{{ t("parameters.transitionParams.transitionFade") }}</SelectItem>
-            <SelectItem value="slideout_left">{{ t("parameters.transitionParams.transitionSlideoutLeft") }}</SelectItem>
+            <SelectItem value="__undefined__">{{ t("parameters.transitionParams.typeNone") }}</SelectItem>
+            <SelectItem value="fade">{{ t("parameters.transitionParams.typeFade") }}</SelectItem>
+            <SelectItem value="slideout_left">{{ t("parameters.transitionParams.typeSlideoutLeft") }}</SelectItem>
           </SelectContent>
         </Select>
       </div>
       <div>
-        <Label>{{ t("parameters.transitionParams.transitionDuration") }}</Label>
+        <Label>{{ t("parameters.transitionParams.duration") }}</Label>
         <Input
           :model-value="movieParams?.transition?.duration ?? DEFAULT_VALUES.transition.duration"
           @update:model-value="handleTransitionDurationChange"
