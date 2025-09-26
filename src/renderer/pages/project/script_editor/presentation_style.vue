@@ -60,7 +60,6 @@ import MovieParams from "./styles/movie_params.vue";
 import TextSlideParams from "./styles/text_slide_params.vue";
 import CaptionParams from "./styles/caption_params.vue";
 
-import { removeEmptyValues } from "@/lib/utils";
 import { MulmoError } from "../../../../../types";
 
 import { useMulmoGlobalStore } from "@/store";
@@ -97,13 +96,8 @@ const updateParam = (path: string, value: unknown) => {
   };
 
   const updatedValue = set({ ...(props.presentationStyle || {}) } as Record<string, unknown>, keys, value);
-  const data = {
-    ...(props.presentationStyle || {}),
-    [keys[0]]: removeEmptyValues(updatedValue[keys[0]]),
-  };
-
-  console.log(`Updating parameter: ${path} =`, data);
-  emit("update:presentationStyle", data);
+  console.log(`Updating parameter: ${path} =`, value);
+  emit("update:presentationStyle", updatedValue);
 };
 
 const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
