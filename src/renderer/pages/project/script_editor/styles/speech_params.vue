@@ -239,10 +239,17 @@ const updateSpeaker = (name: string, updates: Partial<Speaker>): void => {
 };
 
 const handleProviderChange = async (name: string, provider: string) => {
-  updateSpeaker(name, { provider });
-  await nextTick();
+  const { [name]: currentSpeaker, ...currentSpeakers } = { ...speakers.value };
   const voiceId = DEFAULT_VOICE_IDS[provider];
-  updateSpeaker(name, { voiceId });
+  const updatedSpeakers = {
+    ...currentSpeakers,
+    [name]: {
+      provider,
+      voiceId,
+      displayName: currentSpeaker.displayName,
+    },
+  };
+  updateSpeakers(updatedSpeakers);
 };
 
 const handleLanguageChange = (name: string, language: string) => {
