@@ -170,7 +170,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick } from "vue";
+import { ref, computed } from "vue";
 import { Card, Button, Label, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
@@ -239,10 +239,17 @@ const updateSpeaker = (name: string, updates: Partial<Speaker>): void => {
 };
 
 const handleProviderChange = async (name: string, provider: string) => {
-  updateSpeaker(name, { provider });
-  await nextTick();
+  const { [name]: currentSpeaker, ...currentSpeakers } = { ...speakers.value };
   const voiceId = DEFAULT_VOICE_IDS[provider];
-  updateSpeaker(name, { voiceId });
+  const updatedSpeakers = {
+    ...currentSpeakers,
+    [name]: {
+      provider,
+      voiceId,
+      displayName: currentSpeaker.displayName,
+    },
+  };
+  updateSpeakers(updatedSpeakers);
 };
 
 const handleLanguageChange = (name: string, language: string) => {
