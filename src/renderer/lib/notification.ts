@@ -29,19 +29,22 @@ export const notifyProgress = <T>(
     errorMessage,
   }: { loadingMessage: string | Component; successMessage: string; errorMessage: string },
 ) => {
-  toast.promise((async () => {
-    const result = await promise;
-    if (result?.result === false) {
-      console.log("error");
-      if (result.error) {
-        throw result.error;
+  toast.promise(
+    (async () => {
+      const result = await promise;
+      if (result?.result === false) {
+        console.log("error");
+        if (result.error) {
+          throw result.error;
+        }
+        throw Error("Unknown error");
       }
-      throw Error("Unknown error");
-    }
-  })(), {
-    loading: loadingMessage,
-    success: successMessage,
-    error: errorMessage,
-  });
+    })(),
+    {
+      loading: loadingMessage,
+      success: successMessage,
+      error: errorMessage,
+    },
+  );
   return promise;
 };
