@@ -409,7 +409,7 @@ const lang = {
       },
       media: {
         tabLabel: "BEAT",
-        mode: "Media Mode",
+        mode: "Edit Story",
         modeDescription: "Beat-by-beat media editing and preview",
       },
       style: {
@@ -475,9 +475,9 @@ const lang = {
     },
     chat: {
       openPanel: "Open AI Assistant Chat panel",
-      title: "AI Assistant Chat",
+      title: "Story Creation with AI Chat",
       aiPoweredGuide: "AI-Powered MulmoScript Generation Guide",
-      beginnerDescription: "Let's Create Scripts Through Conversation with AI Assistants",
+      beginnerDescription: "Create stories through consultation with AI.",
       advancedDescription: "Use ChatGPT or other AI tools to generate your Script content with these proven prompts",
       enterMessage: "Enter your message:",
       clearChat: "Clear chat",
