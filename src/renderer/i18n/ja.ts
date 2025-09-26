@@ -374,7 +374,7 @@ const lang = {
       openProjectFolder: "プロジェクトのフォルダを開く",
     },
     menu: {
-      script: "編集",
+      script: "動画のストーリーを作る",
       product: "成果物",
       debugLog: "デバッグログ",
     },
@@ -382,7 +382,7 @@ const lang = {
       openPanel: "出力設定 & 生成 / 成果物パネルを開く",
       outputProduct: "出力設定 & 生成 / 成果物",
       outputSettingsGeneration: "出力設定 & 生成",
-      generationAndPlay: "生成と再生",
+      generationAndPlay: "動画を作る / 動画を見る",
       generateContents: "コンテンツ生成",
       generateVideo: "動画生成",
       movie: "動画",
@@ -408,7 +408,7 @@ const lang = {
       },
       media: {
         tabLabel: "BEAT",
-        mode: "台本編集",
+        mode: "ストーリー編集",
         modeDescription: "Beatごとの音声/画像/動画の編集とプレビュー",
       },
       style: {
@@ -474,9 +474,9 @@ const lang = {
     },
     chat: {
       openPanel: "AIチャットを開く",
-      title: "AIチャットで台本づくり",
+      title: "AIチャットでストーリー作り",
       aiPoweredGuide: "AIで作るMulmoScriptガイド",
-      beginnerDescription: "AIに相談しながらMulmoScriptを作成できます。",
+      beginnerDescription: "AIに相談しながらストーリーを作成できます。",
       advancedDescription: "用意されたプロンプトでAIが台本案を仕上げます。",
       enterMessage: "AIへのメッセージ",
       clearChat: "会話をリセット",
