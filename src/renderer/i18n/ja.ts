@@ -408,7 +408,7 @@ const lang = {
       },
       media: {
         tabLabel: "BEAT",
-        mode: "台本編集",
+        mode: "ストーリー編集",
         modeDescription: "Beatごとの音声/画像/動画の編集とプレビュー",
       },
       style: {
@@ -474,9 +474,9 @@ const lang = {
     },
     chat: {
       openPanel: "AIチャットを開く",
-      title: "AIチャットで台本づくり",
+      title: "AIチャットでストーリー作り",
       aiPoweredGuide: "AIで作るMulmoScriptガイド",
-      beginnerDescription: "AIに相談しながらMulmoScriptを作成できます。",
+      beginnerDescription: "AIに相談しながらストーリーを作成できます。",
       advancedDescription: "用意されたプロンプトでAIが台本案を仕上げます。",
       enterMessage: "AIへのメッセージ",
       clearChat: "会話をリセット",

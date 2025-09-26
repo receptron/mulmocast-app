@@ -375,7 +375,7 @@ const lang = {
       openProjectFolder: "Open Project Folder",
     },
     menu: {
-      script: "Create Video Story",
+      script: "Script",
       product: "Product",
       debugLog: "Debug Logs",
     },
@@ -383,7 +383,7 @@ const lang = {
       openPanel: "Open Output & Product panel",
       outputProduct: "Output Settings & Generation / Production",
       outputSettingsGeneration: "Output Settings & Generation",
-      generationAndPlay: "Create Video / Watch Video",
+      generationAndPlay: "Generate and Play",
       generateContents: "Generate Contents",
       generateVideo: "Generate Video",
       movie: "Movie",
@@ -409,7 +409,7 @@ const lang = {
       },
       media: {
         tabLabel: "BEAT",
-        mode: "Edit Story",
+        mode: "Media Mode",
         modeDescription: "Beat-by-beat media editing and preview",
       },
       style: {
@@ -475,9 +475,9 @@ const lang = {
     },
     chat: {
       openPanel: "Open AI Assistant Chat panel",
-      title: "Story Creation with AI Chat",
+      title: "AI Assistant Chat",
       aiPoweredGuide: "AI-Powered MulmoScript Generation Guide",
-      beginnerDescription: "Create stories through consultation with AI.",
+      beginnerDescription: "Let's Create Scripts Through Conversation with AI Assistants",
       advancedDescription: "Use ChatGPT or other AI tools to generate your Script content with these proven prompts",
       enterMessage: "Enter your message:",
       clearChat: "Clear chat",
