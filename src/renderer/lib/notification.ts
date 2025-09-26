@@ -22,7 +22,7 @@ export const notifyError = (
 };
 
 export const notifyProgress = <T>(
-  promise: Promise<T>,
+  promise: Promise<T & { result?: boolean; error?: unknown }>,
   {
     loadingMessage,
     successMessage,
