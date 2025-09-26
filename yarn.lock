@@ -2431,10 +2431,10 @@
     zod "^3.23.8"
     zod-to-json-schema "^3.24.1"
 
-"@modelcontextprotocol/sdk@^1.18.0":
-  version "1.18.0"
-  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.18.0.tgz#53489f88b739d2df489ed552c025868f401a095e"
-  integrity sha512-JvKyB6YwS3quM+88JPR0axeRgvdDu3Pv6mdZUy+w4qVkCzGgumb9bXG/TmtDRQv+671yaofVfXSQmFLlWU5qPQ==
+"@modelcontextprotocol/sdk@^1.18.2":
+  version "1.18.2"
+  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.18.2.tgz#dd2f14d61f8f10c1388f3157d07c9ec8fb7be109"
+  integrity sha512-beedclIvFcCnPrYgHsylqiYJVJ/CI47Vyc4tY8no1/Li/O8U4BTlJfy6ZwxkYwx+Mx10nrgwSVrA7VBbhh4slg==
   dependencies:
     ajv "^6.12.6"
     content-type "^1.0.5"
@@ -10144,10 +10144,10 @@ mulmocast-vision@^1.0.4:
     pdfkit "^0.17.2"
     puppeteer "^24.19.0"
 
-mulmocast@^1.2.36:
-  version "1.2.36"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.36.tgz#3dd05c06b74f645f7318b8654c9a2d5718608294"
-  integrity sha512-7Bk/QaWy7FO4xutqzC7HK9esvEquYmtvyI6vyXh0MaOoxl+GPQYVIKOKHSjox49+3hwKTJZXfgBlA0GvvFVjsA==
+mulmocast@^1.2.37:
+  version "1.2.37"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.37.tgz#e2d9ab716bb9d0688d707c62a72929c4deb60562"
+  integrity sha512-UQUm0hm5g9MHSQF4lxIf/asapZBKrzKvNkZGiOr4fGgHGKSrbPBepH2DikWownVUafijSCeWLyCZt5SVPriUbg==
   dependencies:
     "@google-cloud/text-to-speech" "^6.3.0"
     "@google/genai" "^1.20.0"
@@ -10162,7 +10162,7 @@ mulmocast@^1.2.36:
     "@graphai/vanilla_node_agents" "^2.0.4"
     "@inquirer/input" "^4.2.4"
     "@inquirer/select" "^4.3.4"
-    "@modelcontextprotocol/sdk" "^1.18.0"
+    "@modelcontextprotocol/sdk" "^1.18.2"
     "@mozilla/readability" "^0.6.0"
     "@tavily/core" "^0.5.11"
     clipboardy "^4.0.0"
@@ -11833,10 +11833,10 @@ regexp.prototype.flags@^1.5.1, regexp.prototype.flags@^1.5.4:
     gopd "^1.2.0"
     set-function-name "^2.0.2"
 
-reka-ui@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/reka-ui/-/reka-ui-2.5.0.tgz#3797f3cc5296ebb3352a8fa79f0eb506a9d27570"
-  integrity sha512-81aMAmJeVCy2k0E6x7n1kypDY6aM1ldLis5+zcdV1/JtoAlSDck5OBsyLRJU9CfgbrQp1ImnRnBSmC4fZ2fkZQ==
+reka-ui@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/reka-ui/-/reka-ui-2.5.1.tgz#4623b9ad0281d1747b76dffdb620496a92f7ac1d"
+  integrity sha512-QJGB3q21wQ1Kw28HhhNDpjfFe8qpePX1gK4FTBRd68XTh9aEnhR5bTJnlV0jxi8FBPh0xivZBeNFUc3jiGx7mQ==
   dependencies:
     "@floating-ui/dom" "^1.6.13"
     "@floating-ui/vue" "^1.1.6"
