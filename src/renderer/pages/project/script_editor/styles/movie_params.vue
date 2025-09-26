@@ -49,26 +49,29 @@
     </div>
   </Card>
   <Card class="p-4">
-    <h4 class="font-medium">{{ t("parameters.movieParams.title") }}</h4>
+    <h4 class="font-medium">{{ t("parameters.transitionParams.title") }}</h4>
     <div class="space-y-3">
       <div>
-        <Label>{{ t("parameters.movieParams.transitionType") }}</Label>
+        <Label class="text-muted-foreground mb-2 text-sm">
+          {{ t("parameters.transitionParams.description") }}
+        </Label>
+        <Label>{{ t("parameters.transitionParams.transitionType") }}</Label>
         <Select
           :model-value="movieParams?.transition?.type || DEFAULT_VALUES.transition.type"
           @update:model-value="handleTransitionTypeChange"
         >
           <SelectTrigger>
-            <SelectValue :placeholder="t('parameters.movieParams.providerNone')" />
+            <SelectValue :placeholder="t('parameters.transitionParams.transitionNone')" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__undefined__">{{ t("parameters.movieParams.providerNone") }}</SelectItem>
-            <SelectItem value="fade">{{ t("parameters.movieParams.transitionFade") }}</SelectItem>
-            <SelectItem value="slideout_left">{{ t("parameters.movieParams.transitionSlideoutLeft") }}</SelectItem>
+            <SelectItem value="__undefined__">{{ t("parameters.transitionParams.transitionNone") }}</SelectItem>
+            <SelectItem value="fade">{{ t("parameters.transitionParams.transitionFade") }}</SelectItem>
+            <SelectItem value="slideout_left">{{ t("parameters.transitionParams.transitionSlideoutLeft") }}</SelectItem>
           </SelectContent>
         </Select>
       </div>
       <div>
-        <Label>{{ t("parameters.movieParams.transitionDuration") }}</Label>
+        <Label>{{ t("parameters.transitionParams.transitionDuration") }}</Label>
         <Input
           :model-value="movieParams?.transition?.duration ?? DEFAULT_VALUES.transition.duration"
           @update:model-value="handleTransitionDurationChange"

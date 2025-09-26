@@ -628,10 +628,15 @@ const lang = {
   parameters: {
     movieParams: {
       title: "動画生成設定",
-      transitionType: "トランジションの種類",
-      transitionDuration: "トランジションの長さ（秒）",
       providerNone: "なし",
       modelAuto: "自動",
+    },
+    transitionParams: {
+      title: "切り替え効果",
+      description: "場面が変わるときの演出を設定します。フェードは画面がふわっと切り替わり、スライドアウトは画面が横に流れて切り替わります。",
+      transitionType: "切り替えの種類",
+      transitionDuration: "切り替えの長さ（秒）",
+      transitionNone: "なし",
       transitionFade: "フェード",
       transitionSlideoutLeft: "左にスライドアウト",
     },

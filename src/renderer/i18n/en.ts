@@ -628,12 +628,17 @@ const lang = {
   parameters: {
     movieParams: {
       title: "Movie Parameters",
-      transitionType: "Transition Type",
-      transitionDuration: "Transition Duration (seconds)",
       providerNone: "None",
       modelAuto: "Auto",
+    },
+    transitionParams: {
+      title: "Transition Effect",
+      description: "Set how scenes change. Fade makes the screen gently switch, while Slide moves the screen sideways to change scenes.",
+      transitionType: "Transition type",
+      transitionDuration: "Transition duration (sec)",
+      transitionNone: "None",
       transitionFade: "Fade",
-      transitionSlideoutLeft: "Slide Out Left",
+      transitionSlideoutLeft: "Slide left",
     },
     speechParams: {
       title: "Speech Parameters",
