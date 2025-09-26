@@ -56,7 +56,6 @@
         <Select
           :model-value="movieParams?.transition?.type || DEFAULT_VALUES.transition.type"
           @update:model-value="handleTransitionTypeChange"
-          :disabled="!movieParams?.provider"
         >
           <SelectTrigger>
             <SelectValue :placeholder="t('parameters.movieParams.providerNone')" />
@@ -77,7 +76,6 @@
           min="0"
           max="2"
           step="0.1"
-          :disabled="!movieParams?.transition?.type || !movieParams?.provider"
         />
       </div>
       <MulmoError :mulmoError="mulmoError" />
