@@ -39,6 +39,7 @@ export const notifyProgress = <T>(
         }
         throw Error("Unknown error");
       }
+      return result;
     })(),
     {
       loading: loadingMessage,
