@@ -10,7 +10,7 @@ import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
 import { ENV_KEYS } from "../shared/constants";
 import { getWindowState, saveWindowState } from "./utils/windw_state";
-import { registerUpdater } from "./utils/updater";
+import { registerUpdater } from "./updater";
 
 log.initialize();
 
