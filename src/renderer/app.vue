@@ -37,7 +37,7 @@ export default defineComponent({
   setup() {
     const { t } = useI18n();
 
-    const convCauseToErrorMessage = (cause: any) => {
+    const convCauseToErrorMessage = (cause: { action: string; type: string; beat_index: number }) => {
       if (cause.action === "images" && cause.type === "FileNotExist") {
         return t("notify.error.image.fileNotExist", { beat_index: cause.beat_index + 1 });
       }
@@ -94,13 +94,4 @@ export default defineComponent({
     };
   },
 });
-
-//
-
-const error1 = {
-  action: "images",
-  agentName: "audioChecker",
-  beat_index: 0,
-  type: "FileNotExist",
-};
 </script>
