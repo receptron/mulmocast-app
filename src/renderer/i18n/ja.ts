@@ -359,7 +359,8 @@ const lang = {
     empty: {
       welcome: "ようこそ、MulmoCast へ！",
       introduction1: "まずは「{createNew}」ボタンを押してみましょう。",
-      introduction2: "サンプル入りのプロジェクトが自動で用意されます。あとは「{generateVideo}」ボタンを押すだけで体験できます。",
+      introduction2:
+        "サンプル入りのプロジェクトが自動で用意されます。あとは「{generateVideo}」ボタンを押すだけで体験できます。",
       introduction3: "「ゼロから始めたい！」人もご安心ください。",
       introduction4: "最初の3つはサンプル入りですが、4つ目からは空のプロジェクトが作れるようになります。",
       introduction5: "中級以上の方は、設定画面からモードを変更してご利用いただけます。",
