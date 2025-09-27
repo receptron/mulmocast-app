@@ -489,7 +489,7 @@ const changeBeat = (beat: MulmoBeat, index: number) => {
 };
 
 const addBeat = (beat: MulmoBeat, index: number) => {
-  beat.speaker = MulmoPresentationStyleMethods.getDefaultSpeaker(props.mulmoScript);
+  beat.speaker = props.mulmoScript?.speechParams?.speakers ? MulmoPresentationStyleMethods.getDefaultSpeaker(props.mulmoScript) : "Presenter";
   const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, setRandomBeatId(beat));
   emit("updateMulmoScriptAndPushToHistory", {
     ...props.mulmoScript,
