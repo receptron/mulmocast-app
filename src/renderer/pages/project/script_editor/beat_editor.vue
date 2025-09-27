@@ -416,7 +416,7 @@ const changeBeat = (beat: MulmoBeat) => {
 
 const changeSpeaker = (speaker: string) => {
   update("speaker", speaker);
-  toggleSpeakerMode.value = !toggleSpeakerMode.value;
+  toggleSpeakerMode.value = false;
 };
 
 const generateImageOnlyImage = () => {
