@@ -24,6 +24,7 @@ import type { MulmoProgressLog } from "@/types";
 import type { SessionProgressEvent } from "mulmocast/browser";
 
 import { notifyError } from "@/lib/notification";
+import { useI18n } from "vue-i18n";
 
 export default defineComponent({
   components: {
@@ -34,6 +35,15 @@ export default defineComponent({
     ApiKeyModal,
   },
   setup() {
+    const { t } = useI18n();
+
+    const convCauseToErrorMessage = (cause: any) => {
+      if (cause.action === "images" && cause.type === "FileNotExist") {
+        return t("notify.error.image.fileNotExist", { beat_index: cause.beat_index + 1 });
+      }
+      return t("notify.error.unknownError");
+    };
+
     const mulmoEventStore = useMulmoEventStore();
     const graphAIDebugStore = useGraphAIDebugLogStore();
     const zodErrorStore = useZodErrorStore();
@@ -66,8 +76,9 @@ export default defineComponent({
         }
         if (message.type === "error") {
           const errorData = message.data as { message?: string };
-          console.log(errorData);
-          if (errorData?.message) {
+          if (message.cause) {
+            notifyError("", convCauseToErrorMessage(message.cause));
+          } else if (errorData?.message) {
             notifyError("Error", errorData.message);
           }
         }
@@ -83,4 +94,13 @@ export default defineComponent({
     };
   },
 });
+
+//
+
+const error1 = {
+  action: "images",
+  agentName: "audioChecker",
+  beat_index: 0,
+  type: "FileNotExist",
+};
 </script>

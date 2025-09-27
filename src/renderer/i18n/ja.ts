@@ -767,6 +767,12 @@ const lang = {
       error: "{keyName} を設定してください",
       setup: "設定へ移動",
     },
+    error: {
+      unknownError: "不明なエラーです",
+      image: {
+        fileNotExist: "ビート{beat_index}の画像が存在しない、もしくは正しくないようです",
+      },
+    },
   },
   languages: {
     ja: "日本語",
