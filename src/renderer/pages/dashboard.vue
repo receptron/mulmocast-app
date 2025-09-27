@@ -63,7 +63,16 @@
 
         <!-- Empty State -->
         <div v-else-if="projects.length === 0" class="py-16 text-center">
-          <p class="text-muted-foreground mb-4">{{ t("dashboard.empty") }}</p>
+          <div class="space-y-4">
+            <h2 class="text-foreground text-2xl font-bold">{{ t("dashboard.empty.welcome") }}</h2>
+            <div class="text-muted-foreground space-y-2 max-w-2xl mx-auto text-left">
+              <p>{{ t("dashboard.empty.introduction1") }}</p>
+              <p>{{ t("dashboard.empty.introduction2") }}</p>
+              <br>
+              <p>{{ t("dashboard.empty.introduction3") }}</p>
+              <p>{{ t("dashboard.empty.introduction4") }}</p>
+            </div>
+          </div>
         </div>
 
         <!-- Project Items -->
