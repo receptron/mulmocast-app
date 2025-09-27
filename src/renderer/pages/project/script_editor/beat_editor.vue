@@ -314,7 +314,7 @@ import SpeakerSelector from "./speaker_selector.vue";
 import { useMulmoEventStore } from "../../../store";
 import { getBadge, getBeatType, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
-import { notifyProgress } from "@/lib/notification";
+import { notifyProgress, notifyError } from "@/lib/notification";
 
 import Markdown from "./beat_editors/markdown.vue";
 import Chart from "./beat_editors/chart.vue";
@@ -465,22 +465,27 @@ const generateLipSyncMovie = async () => {
 const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(projectId.value);
 
 const generateAudio = async () => {
-  const { provider } = MulmoStudioContextMethods.getAudioParam(
-    { ...props.mulmoScript, presentationStyle: props.mulmoScript },
-    props.beat,
-    props.lang,
-  );
-  const { keyName } = provider2TTSAgent[provider];
-  if (!hasApiKey(keyName)) {
-    apiErrorNotify(keyName);
-    return;
-  }
+  try {
+    const { provider } = MulmoStudioContextMethods.getAudioParam(
+      { ...props.mulmoScript, presentationStyle: props.mulmoScript },
+      props.beat,
+      props.lang,
+    );
+    const { keyName } = provider2TTSAgent[provider];
+    if (!hasApiKey(keyName)) {
+      apiErrorNotify(keyName);
+      return;
+    }
 
-  notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", projectId.value, props.index), {
-    loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: t("notify.audio.successMessage"),
-    errorMessage: t("notify.audio.errorMessage"),
-  });
+    notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", projectId.value, props.index), {
+      loadingMessage: ConcurrentTaskStatusMessageComponent,
+      successMessage: t("notify.audio.successMessage"),
+      errorMessage: t("notify.audio.errorMessage"),
+    });
+  } catch (error) {
+    notifyError(t("ui.common.error"), t("notify.error.audio.generateAudioSpeechParam"));
+    console.log(error);
+  }
 };
 
 const update = (path: string, value: unknown) => {

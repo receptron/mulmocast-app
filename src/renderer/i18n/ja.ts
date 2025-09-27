@@ -780,6 +780,9 @@ const lang = {
       image: {
         fileNotExist: "ビート{beat_index}の画像が存在しない、もしくは正しくないようです",
       },
+      audio: {
+        generateAudioSpeechParam: "speechParamsがセットされていません",
+      },
     },
   },
   languages: {

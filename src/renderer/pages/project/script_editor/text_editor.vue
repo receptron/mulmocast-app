@@ -84,7 +84,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { getBadge } from "@/lib/beat_util.js";
 
 import { useMulmoEventStore, useMulmoGlobalStore } from "@/store";
-import { notifyProgress } from "@/lib/notification";
+import { notifyProgress, notifyError } from "@/lib/notification";
 import { useApiErrorNotify } from "@/composables/notify";
 import { getConcurrentTaskStatusMessageComponent } from "../concurrent_task_status_message";
 
@@ -127,22 +127,27 @@ const justSaveAndPushToHistory = () => {
 const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
 
 const generateAudio = async (index: number) => {
-  const { provider } = MulmoStudioContextMethods.getAudioParam(
-    { ...props.mulmoScript, presentationStyle: props.mulmoScript },
-    props.beat,
-    props.lang,
-  );
-  const { keyName } = provider2TTSAgent[provider];
-  if (!hasApiKey(keyName)) {
-    apiErrorNotify(keyName);
-    return;
-  }
+  try {
+    const { provider } = MulmoStudioContextMethods.getAudioParam(
+      { ...props.mulmoScript, presentationStyle: props.mulmoScript },
+      props.beat,
+      props.lang,
+    );
+    const { keyName } = provider2TTSAgent[provider];
+    if (!hasApiKey(keyName)) {
+      apiErrorNotify(keyName);
+      return;
+    }
 
-  notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", props.projectId, index), {
-    loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: t("notify.audio.successMessage"),
-    errorMessage: t("notify.audio.errorMessage"),
-  });
+    notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", props.projectId, index), {
+      loadingMessage: ConcurrentTaskStatusMessageComponent,
+      successMessage: t("notify.audio.successMessage"),
+      errorMessage: t("notify.audio.errorMessage"),
+    });
+  } catch (error) {
+    notifyError(t("ui.common.error"), t("notify.error.audio.generateAudioSpeechParam"));
+    console.log(error);
+  }
 };
 
 const translateBeat = async (index: number) => {
