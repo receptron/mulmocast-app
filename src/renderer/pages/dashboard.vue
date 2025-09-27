@@ -71,6 +71,8 @@
               <br>
               <p>{{ t("dashboard.empty.introduction3") }}</p>
               <p>{{ t("dashboard.empty.introduction4") }}</p>
+              <br>
+              <p>{{ t("dashboard.empty.introduction5") }}</p>
             </div>
           </div>
         </div>
