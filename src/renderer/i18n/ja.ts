@@ -781,6 +781,12 @@ const lang = {
         fileNotExist: "ビート{beat_index}の画像が存在しない、もしくは正しくないようです",
       },
     },
+    updater: {
+      downloaded: "アップデートの準備ができました",
+      downloadedDesc: "再起動するとアップデートが適用されます。",
+      restartNow: "今すぐ再起動",
+      later: "あとで",
+    },
   },
   languages: {
     ja: "日本語",

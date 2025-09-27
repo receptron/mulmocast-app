@@ -775,6 +775,12 @@ const lang = {
       error: "You need setup {keyName}.",
       setup: "Setup",
     },
+    updater: {
+      downloaded: "Update ready to install",
+      downloadedDesc: "Restart now to apply the update.",
+      restartNow: "Restart now",
+      later: "Later",
+    },
   },
   languages: {
     ja: "Japanese",

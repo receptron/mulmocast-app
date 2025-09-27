@@ -24,6 +24,16 @@ export interface ElectronAPI {
     get: () => Promise<Settings>;
     set: (settings: Settings) => Promise<void>;
   };
+  updater: {
+    onEvent: (
+      callback: (
+        event: IpcRendererEvent,
+        payload: { type: string; releaseNotes?: string; releaseName?: string; message?: string },
+      ) => void,
+    ) => void;
+    check: () => Promise<void>;
+    restart: () => Promise<void>;
+  };
 }
 
 declare global {

@@ -28,4 +28,16 @@ contextBridge.exposeInMainWorld("electronAPI", {
     set: (settings: unknown) => ipcRenderer.invoke("settings:set", settings),
   },
   writeClipboardText: (text: string) => ipcRenderer.invoke("writeClipboardText", text),
+  updater: {
+    onEvent: (
+      callback: (
+        event: unknown,
+        payload: { type?: string; releaseNotes?: string; releaseName?: string; message?: string },
+      ) => void,
+    ) => {
+      ipcRenderer.on("updater:event", callback);
+    },
+    check: () => ipcRenderer.invoke("updater:check"),
+    restart: () => ipcRenderer.invoke("updater:restart"),
+  },
 });
