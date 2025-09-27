@@ -398,8 +398,12 @@ const generateImageOnlyImage = () => {
 };
 
 const enableMovie = computed(() => {
-  const movieAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
-  return hasApiKey(movieAgentInfo.keyName);
+  try {
+    const movieAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
+    return hasApiKey(movieAgentInfo.keyName);
+  } catch (__error) {
+    return false;
+  }
 });
 
 const generateImageOnlyMovie = () => {
