@@ -405,9 +405,7 @@ const changeBeat = (beat: MulmoBeat) => {
 };
 
 const changeSpeaker = (speaker: string) => {
-  if (speaker) {
-    update("speaker", speaker);
-  }
+  update("speaker", speaker);
   toggleSpeakerMode.value = !toggleSpeakerMode.value;
 };
 
