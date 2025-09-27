@@ -359,8 +359,8 @@ const lang = {
     },
     empty: {
       welcome: "Welcome to MulmoCast!",
-      introduction1: "First, click the New Project button.",
-      introduction2: "A project with sample content will be created automatically. Then simply press Generate to try it out right away.",
+      introduction1: "First, click the {createNew} button.",
+      introduction2: "A project with sample content will be created automatically. Then simply press {generateVideo} button to try it out right away.",
       introduction3: "Prefer to start from scratch? Don't worry.",
       introduction4: "The first three projects include samples, but from the fourth project onward, you'll get a blank project to build on your own.",
       introduction5: "For intermediate and advanced users, you can switch modes from the settings screen.",
