@@ -330,7 +330,9 @@ onMounted(async () => {
     updateMultiLingual();
     projectMetadata.value = await projectApi.getProjectMetadata(projectId.value);
     const data = await projectApi.getProjectMulmoScript(projectId.value);
-    data.beats.map(setRandomBeatId);
+    if (data.beats) {
+      data.beats.map(setRandomBeatId);
+    }
     mulmoScriptHistoryStore.initMulmoScript(data);
     // mulmoScriptHistoryStore.lang
     downloadAudioFiles(projectId.value, data.lang ?? "en");
