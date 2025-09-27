@@ -434,13 +434,27 @@ const insertSpeakers = (data) => {
 
 const formatAndPushHistoryMulmoScript = () => {
   const data = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
+  console.log(data);
   if (data.success) {
     data.data.beats.map(setRandomBeatId);
     insertSpeakers(data.data);
     mulmoScriptHistoryStore.updateMulmoScriptAndPushToHistory(data.data);
     // push store //
+  }  else {
+    const current = mulmoScriptHistoryStore.currentMulmoScript;
+    if (!current["$mulmocast"] || !current["beats"]) {
+      if (!current["$mulmocast"]) {
+        current["$mulmocast"] = {
+          credit: "closing",
+          version: "1.1"
+        }
+      }
+      if (!current["beats"]) {
+        current["beats"] = [];
+      }
+      mulmoScriptHistoryStore.updateMulmoScript(current)
+    }
   }
-  console.log(data);
 };
 
 const openProjectFolder = async () => {
