@@ -22,17 +22,30 @@ export const notifyError = (
 };
 
 export const notifyProgress = <T>(
-  promise: Promise<T>,
+  promise: Promise<T & { result?: boolean; error?: unknown }>,
   {
     loadingMessage,
     successMessage,
     errorMessage,
   }: { loadingMessage: string | Component; successMessage: string; errorMessage: string },
 ) => {
-  toast.promise(promise, {
-    loading: loadingMessage,
-    success: successMessage,
-    error: errorMessage,
-  });
+  toast.promise(
+    (async () => {
+      const result = await promise;
+      if (result?.result === false) {
+        console.log("error");
+        if (result.error) {
+          throw result.error;
+        }
+        throw Error("Unknown error");
+      }
+      return result;
+    })(),
+    {
+      loading: loadingMessage,
+      success: successMessage,
+      error: errorMessage,
+    },
+  );
   return promise;
 };
