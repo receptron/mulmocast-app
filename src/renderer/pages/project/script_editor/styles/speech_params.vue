@@ -104,7 +104,7 @@
           <div v-if="speaker.provider === 'openai' || !speaker.provider">
             <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
             <Input
-              :model-value="speaker.instruction || ''"
+              :model-value="speaker.speechOptions.instruction || ''"
               @update:model-value="(value) => handleSpeechOptionsChange(name, 'instruction', value)"
               class="h-8"
               :placeholder="t('parameters.speechParams.instructionPlaceholder')"
