@@ -401,7 +401,8 @@ const enableMovie = computed(() => {
   try {
     const movieAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
     return hasApiKey(movieAgentInfo.keyName);
-  } catch (__error) {
+  } catch (error) {
+    console.error(error);
     return false;
   }
 });
