@@ -6,17 +6,25 @@
     <ViewerModal />
     <OnboardingModal :is-open="globalStore.isOpenOnboardingModal" @complete="globalStore.toggleOnboardingModal" />
     <ApiKeyModal />
+    <UpdateModal />
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { useMulmoEventStore, useGraphAIDebugLogStore, useZodErrorStore, useMulmoGlobalStore } from "@/store";
+import {
+  useMulmoEventStore,
+  useGraphAIDebugLogStore,
+  useZodErrorStore,
+  useMulmoGlobalStore,
+  useModalStore,
+} from "@/store";
 import { Toaster } from "@/components/ui/sonner";
 import SettingModal from "@/components/setting_modal.vue";
 import ViewerModal from "@/components/mulmo_viewer_modal.vue";
 import OnboardingModal from "@/components/onboarding_modal.vue";
 import ApiKeyModal from "@/components/api_key_modal.vue";
+import UpdateModal from "@/components/update_modal.vue";
 import { useTheme } from "@/composables/use_theme";
 
 import "vue-sonner/style.css";
@@ -39,6 +47,7 @@ const mulmoEventStore = useMulmoEventStore();
 const graphAIDebugStore = useGraphAIDebugLogStore();
 const zodErrorStore = useZodErrorStore();
 const globalStore = useMulmoGlobalStore();
+const modalStore = useModalStore();
 
 const isDevelopment = import.meta.env.DEV;
 // Initialize theme
@@ -78,5 +87,12 @@ onMounted(async () => {
       zodErrorStore.zodErrorLogCallback(message);
     }
   });
+
+  window.electronAPI.updater.onEvent(
+    (_event, payload: { type?: string; releaseName?: string; releaseNotes?: string }) => {
+      if (payload?.type !== "downloaded") return;
+      modalStore.showUpdateModal({ releaseName: payload.releaseName, releaseNotes: payload.releaseNotes });
+    },
+  );
 });
 </script>
