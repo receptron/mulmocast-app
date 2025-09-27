@@ -440,19 +440,19 @@ const formatAndPushHistoryMulmoScript = () => {
     insertSpeakers(data.data);
     mulmoScriptHistoryStore.updateMulmoScriptAndPushToHistory(data.data);
     // push store //
-  }  else {
+  } else {
     const current = mulmoScriptHistoryStore.currentMulmoScript;
     if (!current["$mulmocast"] || !current["beats"]) {
       if (!current["$mulmocast"]) {
         current["$mulmocast"] = {
           credit: "closing",
-          version: "1.1"
-        }
+          version: "1.1",
+        };
       }
       if (!current["beats"]) {
         current["beats"] = [];
       }
-      mulmoScriptHistoryStore.updateMulmoScript(current)
+      mulmoScriptHistoryStore.updateMulmoScript(current);
     }
   }
 };
