@@ -782,14 +782,10 @@ const lang = {
       },
     },
     updater: {
-      checking: "アップデートを確認中...",
-      available: "新しいアップデートがあります。ダウンロード中...",
-      notAvailable: "最新バージョンを利用中です。",
       downloaded: "アップデートの準備ができました",
       downloadedDesc: "再起動するとアップデートが適用されます。",
       restartNow: "今すぐ再起動",
       later: "あとで",
-      error: "アップデート中にエラーが発生しました",
     },
   },
   languages: {
