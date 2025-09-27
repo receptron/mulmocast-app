@@ -3,9 +3,23 @@
     <div class="mb-2 flex items-center justify-between">
       <div class="flex items-center gap-3 font-medium">
         <span class="text-base">{{ t("ui.common.beat") }} {{ index + 1 }}</span>
-        <Badge v-if="beat.speaker" variant="outline">{{ beat.speaker }}</Badge>
+        <Badge
+          v-if="beat.speaker && !toggleSpeakerMode"
+          variant="outline"
+          @click="showSpeakerSelector"
+          class="cursor-pointer"
+          >{{ beat.speaker }}</Badge
+        >
+        <div v-if="toggleSpeakerMode">
+          <SpeakerSelector
+            @emitSpeaker="(speaker) => changeSpeaker(speaker)"
+            :currentSpeaker="beat.speaker"
+            :speakers="mulmoScript.speechParams?.speakers"
+            @cancel="toggleSpeakerMode = false"
+          />
+        </div>
       </div>
-      <Badge variant="outline" @click="toggleTypeMode = !toggleTypeMode" class="cursor-pointer" v-if="!toggleTypeMode">
+      <Badge variant="outline" @click="showTypeSelector" class="cursor-pointer" v-if="!toggleTypeMode">
         {{ t("beat." + getBadge(beat) + ".badge") }}</Badge
       >
       <div v-if="toggleTypeMode">
@@ -294,6 +308,7 @@ import BeatPreviewImage from "./beat_preview_image.vue";
 import BeatPreviewMovie from "./beat_preview_movie.vue";
 import BeatSelector from "./beat_selector.vue";
 import BeatStyle from "./beat_style.vue";
+import SpeakerSelector from "./speaker_selector.vue";
 
 // lib
 import { useMulmoEventStore } from "../../../store";
@@ -351,6 +366,17 @@ const modalSrc = ref("");
 const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 
 const toggleTypeMode = ref(false);
+const toggleSpeakerMode = ref(false);
+
+const showSpeakerSelector = () => {
+  toggleSpeakerMode.value = true;
+  toggleTypeMode.value = false;
+};
+
+const showTypeSelector = () => {
+  toggleTypeMode.value = true;
+  toggleSpeakerMode.value = false;
+};
 
 const beatType = computed(() => {
   return getBeatType(props.beat);
@@ -386,6 +412,11 @@ const changeBeat = (beat: MulmoBeat) => {
   const { id, speaker, text } = props.beat;
   emit("changeBeat", { ...beat, id, speaker, text }, props.index);
   toggleTypeMode.value = !toggleTypeMode.value;
+};
+
+const changeSpeaker = (speaker: string) => {
+  update("speaker", speaker);
+  toggleSpeakerMode.value = false;
 };
 
 const generateImageOnlyImage = () => {
