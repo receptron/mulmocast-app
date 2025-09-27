@@ -356,7 +356,15 @@ const lang = {
       titleAsc: "タイトル（昇順）",
       titleDesc: "タイトル（降順）",
     },
-    empty: "まだプロジェクトはありません。最初のプロジェクトを作成して始めましょう！",
+    empty: {
+      welcome: "ようこそ、MulmoCast へ！",
+      introduction1: "まずは「{createNew}」ボタンを押してみましょう。",
+      introduction2:
+        "サンプル入りのプロジェクトが自動で用意されます。あとは「{generateVideo}」ボタンを押すだけで体験できます。",
+      introduction3: "「ゼロから始めたい！」人もご安心ください。",
+      introduction4: "最初の3つはサンプル入りですが、4つ目からは空のプロジェクトが作れるようになります。",
+      introduction5: "中級以上の方は、設定画面からモードを変更してご利用いただけます。",
+    },
     confirmDelete: "「{title}」を削除しますか？",
     errors: {
       createProjectFailed: "プロジェクトの作成に失敗しました。再試行してください。",
