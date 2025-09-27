@@ -256,7 +256,8 @@ import {
   Expand,
 } from "lucide-vue-next";
 import dayjs from "dayjs";
-import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
+import { mulmoScriptSchema, mulmoBeatSchema, type MulmoScript } from "mulmocast/browser";
+import { z } from "zod";
 
 import { Button } from "@/components/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -404,8 +405,12 @@ const handleUpdateMulmoViewerActiveTab = (tab: MulmoViewerTab) => {
   saveProjectMetadata({ updateTimestamp: false });
 };
 
+const mulmoScriptSchemaNoBeats = mulmoScriptSchema.extend({
+  beats: z.array(mulmoBeatSchema).min(0),
+});
+
 const mulmoError = computed<MulmoError>(() => {
-  const zodError = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
+  const zodError = mulmoScriptSchemaNoBeats.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
   if (!zodError.success) {
     return zodError2MulmoError(zodError.error);
   }
@@ -433,7 +438,7 @@ const insertSpeakers = (data) => {
 };
 
 const formatAndPushHistoryMulmoScript = () => {
-  const data = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
+  const data = mulmoScriptSchemaNoBeats.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
   console.log(data);
   if (data.success) {
     data.data.beats.map(setRandomBeatId);
@@ -442,7 +447,7 @@ const formatAndPushHistoryMulmoScript = () => {
     // push store //
   } else {
     const current = mulmoScriptHistoryStore.currentMulmoScript;
-    if (!current["$mulmocast"] || !current["beats"]) {
+    if (!current["$mulmocast"] || !current["beats"] || !current["lang"]) {
       if (!current["$mulmocast"]) {
         current["$mulmocast"] = {
           credit: "closing",
@@ -451,6 +456,9 @@ const formatAndPushHistoryMulmoScript = () => {
       }
       if (!current["beats"]) {
         current["beats"] = [];
+      }
+      if (!current["lang"]) {
+        current["lang"] = "en";
       }
       mulmoScriptHistoryStore.updateMulmoScript(current);
     }
