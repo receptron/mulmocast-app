@@ -93,7 +93,7 @@ import { Card, Label, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
 import SettingsAlert from "../settings_alert.vue";
-import { provider2MovieAgent, type MulmoPresentationStyle } from "mulmocast/browser";
+import { defaultProviders, provider2MovieAgent, type MulmoPresentationStyle } from "mulmocast/browser";
 
 type MovieParams = MulmoPresentationStyle["movieParams"];
 
@@ -122,7 +122,7 @@ const emit = defineEmits<{
 }>();
 
 const DEFAULT_VALUES: MovieParams = {
-  provider: provider2MovieAgent.replicate.agentName,
+  provider: defaultProviders.text2movie,
   model: "",
   transition: {
     type: undefined,
