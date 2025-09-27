@@ -6,7 +6,7 @@
         <Badge
           v-if="beat.speaker && !toggleSpeakerMode"
           variant="outline"
-          @click="toggleSpeakerMode = !toggleSpeakerMode"
+          @click="showSpeakerSelector"
           class="cursor-pointer"
           >{{ beat.speaker }}</Badge
         >
@@ -19,7 +19,7 @@
           />
         </div>
       </div>
-      <Badge variant="outline" @click="toggleTypeMode = !toggleTypeMode" class="cursor-pointer" v-if="!toggleTypeMode">
+      <Badge variant="outline" @click="showTypeSelector" class="cursor-pointer" v-if="!toggleTypeMode">
         {{ t("beat." + getBadge(beat) + ".badge") }}</Badge
       >
       <div v-if="toggleTypeMode">
@@ -367,6 +367,16 @@ const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 
 const toggleTypeMode = ref(false);
 const toggleSpeakerMode = ref(false);
+
+const showSpeakerSelector = () => {
+  toggleSpeakerMode.value = true;
+  toggleTypeMode.value = false;
+};
+
+const showTypeSelector = () => {
+  toggleTypeMode.value = true;
+  toggleSpeakerMode.value = false;
+};
 
 const beatType = computed(() => {
   return getBeatType(props.beat);
