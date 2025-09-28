@@ -526,6 +526,11 @@ const lang = {
         generatePrompt:
           "このテーマまたはストーリーの {scriptLang} 向け台本を作り、ツール『pushScript』に渡してください。",
       },
+      conversationModes: {
+        presentation: "プレゼンテーション/スライド（1人）",
+        dialogue: "２人の会話/対談",
+        story: "複数人の物語、ストーリー",
+      },
     },
   },
   beat: {
