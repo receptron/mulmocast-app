@@ -33,6 +33,14 @@ export const mulmoScriptAgentInfo: AgentFunctionInfo = {
                   type: "string",
                   description: "prompt to generate image. It is exclusive to the movie object element in this object.",
                 },
+                images: {
+                  type: "array",
+                  description: "Array of speaker names whose images should be displayed",
+                  items: {
+                    type: "string",
+                    pattern: "^[a-z]+$",
+                  },
+                },
               },
               required: ["text"],
             },
@@ -187,6 +195,10 @@ export const mulmoScriptAgentInfo: AgentFunctionInfo = {
               type: "string",
               description: "speaker name [a-z]+",
               pattern: "^[a-z]+$",
+            },
+            imagePrompt: {
+              type: "string",
+              description: "prompt to generate speaker's image.",
             },
           },
           required: ["name"],
