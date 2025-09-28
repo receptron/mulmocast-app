@@ -470,11 +470,11 @@ const run = async () => {
             script.speechParams.speakers = {};
           }
           script.speechParams.speakers[name] = {
-            "displayName": {
-              "en": name,
+            displayName: {
+              en: name,
             },
-            "voiceId": "shimmer",
-            "provider": "openai"
+            voiceId: "shimmer",
+            provider: "openai",
           };
           emit("updateMulmoScript", script);
         }

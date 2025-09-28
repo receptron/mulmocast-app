@@ -147,7 +147,7 @@ export const mulmoScriptAgentInfo: AgentFunctionInfo = {
             name: {
               type: "string",
               description: "speaker name [a-z]+",
-              pattern: "^[a-z]+$"
+              pattern: "^[a-z]+$",
             },
           },
           required: ["name"],
