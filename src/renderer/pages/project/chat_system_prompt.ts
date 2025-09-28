@@ -23,29 +23,29 @@ export const useSystemPrompt = () => {
       dialogue:
         "You are generating a script in the style of a two-person dialogue. The script should alternate between two characters, making it clear who is speaking each time. The tone should resemble a natural conversation.",
       story:
-        "You are generating a script in the style of a story or multi-person conversation. The script should involve three or more characters, each with distinct voices. Clearly indicate the speaker for each line, and write it in a narrative or dialogue style suitable for storytelling.",
+        "You are generating a script in the style of a story or multi-person conversation. The script should involve three or more characters, each with a distinct voice. Clearly indicate the speaker for each line, and write in a narrative or dialogue style suitable for storytelling.",
     };
     return conversationSystemPrompts[conversationMode.value];
   });
 
   const systemMessage = (scriptLang: string) => {
-    return `Always reply in ${scriptLang}, regardless of the language of the user's input or previous conversation.  If the user's message is in a different language, translate it into ${scriptLang} before replying.`;
+    return `Always reply in ${scriptLang}, regardless of the language of the user's input or prior messages. If the user's message is in another language, translate it into ${scriptLang} before replying.`;
   };
 
   const currentBeats = (currentMulmoScript: MulmoScript) => {
     const beats = currentMulmoScript?.beats ?? [];
-    const speakers = Object.keys(currentMulmoScript?.speechParams?.speakers ?? {}) ?? [];
+    const speakers = Object.keys(currentMulmoScript?.speechParams?.speakers ?? {});
     const speakerMessage =
-      (speakers.length > 0 ? "Speaker(s) is " + JSON.stringify(speakers ?? []) + ". " : "") +
-      "If any speakers are missing, please add them.  ";
+      (speakers.length > 0 ? `Speakers: ${JSON.stringify(speakers)}. ` : "") +
+      "If any required speakers are missing, add them.";
 
     return [
       speakerMessage,
-      (beats.length > 0 ? "current beats is " + JSON.stringify(beats) : "") +
-        "Update, add, or delete them according to the instructions.",
-      "Ask the user for any necessary information, and once the information is complete, generate the script.",
-      "Proceed as much as possible within a single conversation. Multiple tools may be invoked if necessary. ",
-      "If the task cannot be completed in one pass, indicate to the user that there is a continuation.",
+      (beats.length > 0 ? `Current beats: ${JSON.stringify(beats)}. ` : "") +
+        "Update, add, or delete beats as needed, following the instructions.",
+      "Collect any missing information from the user. Once the information is complete, generate the script.",
+      "Proceed as much as possible within a single conversation. You may invoke multiple tools if necessary.",
+      "If the task cannot be completed in one pass, tell the user that there will be a continuation.",
     ].join("\n");
   };
 
@@ -54,7 +54,7 @@ export const useSystemPrompt = () => {
     if (isAnthropic) {
       systemPrompts.push(anthropicSystemPrompt);
     }
-    return systemPrompts.join("\n");
+    return systemPrompts.join("\n\n");
   };
 
   return {
