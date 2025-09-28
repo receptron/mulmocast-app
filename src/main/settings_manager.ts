@@ -47,7 +47,7 @@ export const loadSettings = async (): Promise<Settings> => {
   }
 };
 
-export const loadAppLanguageSync = (): string => {
+export const loadAppLanguage = (): string => {
   const settingsPath = getSettingsPath();
   try {
     if (!fs.existsSync(settingsPath)) {
