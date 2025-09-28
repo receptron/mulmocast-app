@@ -36,7 +36,7 @@
                 >{{ t("ui.actions.update") }}</Button
               >
             </div>
-            <h5 class="text-sm font-medium" @click="changeKey(name)" v-else>{{ name }}</h5>
+            <h5 class="cursor-pointer text-sm font-medium" @click="changeKey(name)" v-else>{{ name }}</h5>
           </div>
           <Button
             v-if="Object.keys(speechParams.speakers).length > 1"
@@ -300,13 +300,17 @@ const handleDeleteSpeaker = (name: string) => {
 
 // add or update key
 const validateKeyFunc = (key: string) => {
-  return key !== "" && /^[a-zA-Z0-9]+$/.test(key) && !Object.keys(speakers.value).includes(key);
+  return key !== "" && /^[a-zA-Z0-9]+$/.test(key);
 };
 
 const isUpdate = ref(false);
 const updateSpeakerId = ref("");
+// for update
 const validUpdateKey = computed(() => {
-  return validateKeyFunc(updateSpeakerId.value);
+  return (
+    validateKeyFunc(updateSpeakerId.value) &&
+    (!Object.keys(speakers.value).includes(updateSpeakerId.value) || updateSpeakerId.value === updateKey.value)
+  );
 });
 
 const updateKey = ref("");
@@ -336,8 +340,9 @@ const handleUpdateSpeakerId = () => {
 
 const speechKey = ref("");
 
+// for add
 const validateKey = computed(() => {
-  return validateKeyFunc(speechKey.value);
+  return validateKeyFunc(speechKey.value) && !Object.keys(speakers.value).includes(speechKey.value);
 });
 
 const handleAddSpeaker = () => {
