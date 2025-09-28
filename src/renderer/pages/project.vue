@@ -121,7 +121,7 @@
                     :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript ?? {}"
                     :imageFiles="imageFiles"
                     :movieFiles="movieFiles"
-                    :audioFiles="audioFiles[mulmoScriptHistoryStore.lang ?? 'en'] ?? {}"
+                    :audioFiles="audioFiles[mulmoScriptHistoryStore.lang ?? globalStore.settings.APP_LANGUAGE] ?? {}"
                     :lipSyncFiles="lipSyncFiles"
                     :scriptEditorActiveTab="projectMetadata?.scriptEditorActiveTab"
                     :isValidScriptData="isValidScriptData"
@@ -336,7 +336,7 @@ onMounted(async () => {
     }
     mulmoScriptHistoryStore.initMulmoScript(data);
     // mulmoScriptHistoryStore.lang
-    downloadAudioFiles(projectId.value, data.lang ?? "en");
+    downloadAudioFiles(projectId.value, data.lang ?? globalStore.settings.APP_LANGUAGE);
     downloadImageFiles(projectId.value);
   } catch (error) {
     console.error("Failed to load project:", error);
@@ -458,7 +458,7 @@ const formatAndPushHistoryMulmoScript = () => {
         current["beats"] = [];
       }
       if (!current["lang"]) {
-        current["lang"] = "en";
+        current["lang"] = globalStore.settings.APP_LANGUAGE;
       }
       mulmoScriptHistoryStore.updateMulmoScript(current);
     }
