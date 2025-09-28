@@ -962,6 +962,12 @@ const lang = {
       sayuri: "Sayuri",
     },
   },
+  updater: {
+    title: "Application Update",
+    detail: "A new version has been downloaded. Restart the application to apply the updates.",
+    restartButtonText: "Restart",
+    laterButtonText: "Later",
+  },
 };
 
 export default lang;
