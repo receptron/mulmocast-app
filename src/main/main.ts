@@ -178,7 +178,7 @@ updateElectronApp({
 const shouldShowUpdateDialog = isDev && process.argv.includes("--show-update-dialog");
 
 if (shouldShowUpdateDialog) {
-  app.whenReady().then(() => {
+  void app.whenReady().then(() => {
     const lang = settingsManager.loadAppLanguage();
     const notifyProps = config.messages[lang as keyof typeof config.messages].updater;
     const showDialog = makeUserNotifier(notifyProps);
