@@ -22,6 +22,7 @@ import { LANGUAGES } from "../../../shared/constants";
 
 import type { MulmoScript } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
+import { useMulmoGlobalStore } from "@/store";
 
 const props = defineProps<{
   mulmoScript: MulmoScript;
@@ -31,7 +32,9 @@ const emit = defineEmits<{
   updateMulmoScript: [script: MulmoScript];
 }>();
 
-const currentLanguage = ref(props.mulmoScript?.lang || "en");
+const globalStore = useMulmoGlobalStore();
+
+const currentLanguage = ref(props.mulmoScript?.lang || globalStore.settings.APP_LANGUAGE);
 
 const { t } = useI18n();
 

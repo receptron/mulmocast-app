@@ -490,11 +490,11 @@ const run = async () => {
 const isCreatingScript = ref(false);
 
 const scriptLang = computed(() => {
-  return enLang.languages[mulmoScriptHistoryStore.currentMulmoScript.lang ?? "en"];
+  return enLang.languages[mulmoScriptHistoryStore.currentMulmoScript.lang ?? globalStore.settings.APP_LANGUAGE];
 });
 
 const scriptLangLocalize = computed(() => {
-  return t("languages." + (mulmoScriptHistoryStore.currentMulmoScript.lang ?? "en"));
+  return t("languages." + (mulmoScriptHistoryStore.currentMulmoScript.lang ?? globalStore.settings.APP_LANGUAGE));
 });
 
 const copyScript = async () => {
