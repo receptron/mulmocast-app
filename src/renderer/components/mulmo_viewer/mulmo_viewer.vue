@@ -168,10 +168,10 @@ watch(
   () => props.project?.script?.lang,
   (v: (typeof LANGUAGE_IDS)[number]) => {
     if (v && currentLanguage.value === "") {
-      currentLanguage.value = LANGUAGE_IDS.includes(v) ? v : "en";
+      currentLanguage.value = LANGUAGE_IDS.includes(v) ? v : globalStore.settings.APP_LANGUAGE;
     }
     if (v && textLanguage.value === "") {
-      textLanguage.value = LANGUAGE_IDS.includes(v) ? v : "en";
+      textLanguage.value = LANGUAGE_IDS.includes(v) ? v : globalStore.settings.APP_LANGUAGE;
     }
   },
   {

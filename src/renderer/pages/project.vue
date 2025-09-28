@@ -334,7 +334,7 @@ onMounted(async () => {
     if (data.beats) {
       data.beats.map(setRandomBeatId);
     }
-    mulmoScriptHistoryStore.initMulmoScript(data);
+    mulmoScriptHistoryStore.initMulmoScript(data, globalStore.settings.APP_LANGUAGE);
     // mulmoScriptHistoryStore.lang
     downloadAudioFiles(projectId.value, data.lang ?? globalStore.settings.APP_LANGUAGE);
     downloadImageFiles(projectId.value);

@@ -13,7 +13,10 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
     currentMulmoScript.value = data;
   };
 
-  const initMulmoScript = (data: MulmoScript) => {
+  const initMulmoScript = (data: MulmoScript, lang: string) => {
+    if (!data.lang) {
+      data.lang = lang;
+    }
     currentMulmoScript.value = data;
     index.value = 0;
     pushDataToHistory("init", data);
