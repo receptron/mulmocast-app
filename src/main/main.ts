@@ -175,6 +175,23 @@ updateElectronApp({
   },
 });
 
+const shouldShowUpdateDialog = isDev && process.argv.includes("--show-update-dialog");
+
+if (shouldShowUpdateDialog) {
+  app.whenReady().then(() => {
+    const lang = settingsManager.loadAppLanguage();
+    const notifyProps = config.messages[lang as keyof typeof config.messages].updater;
+    const showDialog = makeUserNotifier(notifyProps);
+    showDialog({
+      event: {} as unknown as import("electron").Event,
+      releaseNotes: "",
+      releaseName: "MulmoCast",
+      releaseDate: new Date(),
+      updateURL: "",
+    });
+  });
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.

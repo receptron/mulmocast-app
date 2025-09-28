@@ -6,6 +6,7 @@
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "NODE_ENV=development electron-forge start",
+    "start:show-update-dialog": "NODE_ENV=development electron-forge start -- --show-update-dialog",
     "rebuild:native": "npx electron-rebuild -f",
     "dev": "NODE_ENV=development vite --config vite.renderer.config.ts",
     "package": "npx puppeteer browsers install chrome && electron-forge package",
