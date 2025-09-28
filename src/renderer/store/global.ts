@@ -5,6 +5,7 @@ import { ENV_KEYS, userLevels } from "../../shared/constants";
 import { type UserLevel } from "../../types/index";
 
 type SETTINGS = {
+  APP_LANGUAGE?: string;
   MAIN_LANGUAGE?: string;
   USE_LANGUAGES?: Record<string, boolean>;
   CHAT_LLM?: string;
@@ -18,8 +19,8 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
   const userMode = ref<{ id?: string; mode?: number }>(userLevels[0]);
 
   const updateSettings = (data: SETTINGS) => {
-    const { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs, APIKEY, USER_LEVEL } = data;
-    const newData = { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs, APIKEY, USER_LEVEL };
+    const { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs, APIKEY, USER_LEVEL, APP_LANGUAGE } = data;
+    const newData = { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs, APIKEY, USER_LEVEL, APP_LANGUAGE };
     settings.value = newData;
     userMode.value = userLevels.find((userLevel) => userLevel.id === settings.value.USER_LEVEL) ?? userLevels[0];
   };
