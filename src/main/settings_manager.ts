@@ -48,17 +48,19 @@ export const loadSettings = async (): Promise<Settings> => {
 };
 
 export const loadAppLanguage = (): string => {
+  const DEFAULT_LANGUAGE = "en";
   const settingsPath = getSettingsPath();
   try {
     if (!fs.existsSync(settingsPath)) {
-      return "en";
+      return DEFAULT_LANGUAGE;
     }
 
     const data = fs.readFileSync(settingsPath, "utf-8");
     const settings = JSON.parse(data);
-    return settings.APP_LANGUAGE || "en";
+    return settings.APP_LANGUAGE || DEFAULT_LANGUAGE;
   } catch (error) {
     console.error("Failed to load app language:", error);
+    return DEFAULT_LANGUAGE;
   }
 };
 
