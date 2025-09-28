@@ -462,7 +462,7 @@ const run = async () => {
             emit("updateMulmoScript", script);
           }
         } else if (func === "addSpeaker") {
-          const { name, imagePrompt } = arg;
+          const { name, imagePrompt, voiceId } = arg;
           if (!script.speechParams) {
             script.speechParams = {};
           }
@@ -473,7 +473,7 @@ const run = async () => {
             displayName: {
               en: name,
             },
-            voiceId: "shimmer",
+            voiceId: voiceId ?? "shimmer",
             provider: "openai",
           };
           // image

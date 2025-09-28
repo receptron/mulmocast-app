@@ -196,6 +196,23 @@ export const mulmoScriptAgentInfo: AgentFunctionInfo = {
               description: "speaker name [a-z]+",
               pattern: "^[a-z]+$",
             },
+            voiceId: {
+              type: "string",
+              description: "OpenAI TTS voice",
+              oneOf: [
+                { const: "shimmer", title: "shimmer", description: "Bright, light, youthful" },
+                { const: "alloy",   title: "alloy",   description: "Calm mid-low, persuasive" },
+                { const: "ash",     title: "ash",     description: "Deep, mature, slightly rough" },
+                { const: "ballad",  title: "ballad",  description: "Gentle, soothing; good for narration" },
+                { const: "coral",   title: "coral",   description: "Soft, friendly" },
+                { const: "echo",    title: "echo",    description: "Clear, neutral, easy to understand" },
+                { const: "fable",   title: "fable",   description: "Expressive; great for storytelling" },
+                { const: "nova",    title: "nova",    description: "Energetic, modern, crisp" },
+                { const: "onyx",    title: "onyx",    description: "Strong, deep, powerful" },
+                { const: "sage",    title: "sage",    description: "Calm, thoughtful, intellectual" }
+              ],
+              default: "echo"
+            },
             imagePrompt: {
               type: "string",
               description: "prompt to generate speaker's image.",
