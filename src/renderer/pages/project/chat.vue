@@ -378,7 +378,7 @@ const run = async () => {
         llmAgent.value === "anthropicAgent",
       ),
     );
-    return;
+
     const postMessages = [
       {
         role: "system",
@@ -395,7 +395,6 @@ const run = async () => {
           return message.content !== "" || message.tool_calls;
         }),
     ];
-    console.log(postMessages);
     const graphai = new GraphAI(graphChatWithSearch, graphAIAgents, {
       agentFilters,
       config,
@@ -462,6 +461,22 @@ const run = async () => {
             script.beats[index]["imagePrompt"] = imagePrompt;
             emit("updateMulmoScript", script);
           }
+        } else if (func === "addSpeaker") {
+          const { name } = arg;
+          if (!script.speechParams) {
+            script.speechParams = {};
+          }
+          if (!script.speechParams.speakers) {
+            script.speechParams.speakers = {};
+          }
+          script.speechParams.speakers[name] = {
+            "displayName": {
+              "en": name,
+            },
+            "voiceId": "shimmer",
+            "provider": "openai"
+          };
+          emit("updateMulmoScript", script);
         }
         // addBeatToMulmoScript -> beat
         // insertAtBeatToMulmoScript -> beat, index

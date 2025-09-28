@@ -136,6 +136,24 @@ export const mulmoScriptAgentInfo: AgentFunctionInfo = {
         },
       },
     },
+    {
+      type: "function",
+      function: {
+        name: "mulmoScriptAgent--addSpeaker",
+        description: "add speaker",
+        parameters: {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+              description: "speaker name [a-z]+",
+              pattern: "^[a-z]+$"
+            },
+          },
+          required: ["name"],
+        },
+      },
+    },
   ],
   description: "generate mulmo script json data from prompt messages",
   category: ["net"],
