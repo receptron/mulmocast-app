@@ -199,6 +199,7 @@ import mulmoScriptAgent from "../../agents/mulmo_script";
 // presentation manuscript
 
 import { useSystemPrompt, conversationModes } from "./chat_system_prompt";
+import { mulmoScriptTools } from "./chat_tools";
 
 import enLang from "../../i18n/en";
 import {
@@ -368,25 +369,16 @@ const run = async () => {
       ...mulmoCastHelpAgent.tools,
       ...mulmoScriptAgent.tools,
     ];
-    const systemMessage = [
-      `Always reply in ${scriptLang.value}, regardless of the language of the user's input or previous conversation.  If the user's message is in a different language, translate it into ${scriptLang.value} before replying.`,
-    ];
-    console.log(
-      getSystemPrompt(
-        scriptLang.value,
-        mulmoScriptHistoryStore.currentMulmoScript,
-        llmAgent.value === "anthropicAgent",
-      ),
-    );
 
+    const systemPrompt = getSystemPrompt(
+      scriptLang.value,
+      mulmoScriptHistoryStore.currentMulmoScript,
+      llmAgent.value === "anthropicAgent",
+    );
     const postMessages = [
       {
         role: "system",
-        content: getSystemPrompt(
-          scriptLang.value,
-          mulmoScriptHistoryStore.currentMulmoScript,
-          llmAgent.value === "anthropicAgent",
-        ),
+        content: systemPrompt,
       },
       ...messages
         .map(filterMessage())
@@ -427,70 +419,12 @@ const run = async () => {
         console.log(data.result.data);
       }
       if (agentId === "mulmoScriptAgent" && state === "completed") {
-        const { arg, func } = data.namedInputs;
         const script = { ...mulmoScriptHistoryStore.currentMulmoScript };
-        if (func === "updateBeatOnMulmoScript") {
-          const { beat, index } = arg;
-          // const { text, speaker, imagePrompt };
-          const newBeat = { ...(mulmoScriptHistoryStore.currentMulmoScript.beats[index] ?? {}), ...beat };
-          script.beats[index] = newBeat;
-          emit("updateMulmoScript", script);
-        } else if (func === "replaceBeatOnMulmoScript") {
-          const { beat, index } = arg;
-          script.beats[index] = beat;
-          emit("updateMulmoScript", script);
-        } else if (func === "addBeatToMulmoScript") {
-          const { beat } = arg;
-          const newBeat = typeof beat === "string" ? JSON.parse(beat) : beat;
-          script.beats.push(newBeat);
-          emit("updateMulmoScript", script);
-        } else if (func === "insertAtBeatToMulmoScript") {
-          const { beat, index } = arg;
-          const newBeat = typeof beat === "string" ? JSON.parse(beat) : beat;
-          script.beats.splice(index, 0, newBeat);
-          emit("updateMulmoScript", script);
-        } else if (func === "deleteBeatOnMulmoScript") {
-          const { index } = arg;
-          if (script.beats[index]) {
-            script.beats.splice(index, 1);
-            emit("updateMulmoScript", script);
-          }
-        } else if (func === "setImagePromptOnBeat") {
-          const { index, imagePrompt } = arg;
-          if (script.beats[index]) {
-            script.beats[index]["imagePrompt"] = imagePrompt;
-            emit("updateMulmoScript", script);
-          }
-        } else if (func === "addSpeaker") {
-          const { name, imagePrompt, voiceId } = arg;
-          if (!script.speechParams) {
-            script.speechParams = {};
-          }
-          if (!script.speechParams.speakers) {
-            script.speechParams.speakers = {};
-          }
-          script.speechParams.speakers[name] = {
-            displayName: {
-              en: name,
-            },
-            voiceId: voiceId ?? "shimmer",
-            provider: "openai",
-          };
-          // image
-          if (imagePrompt) {
-            if (!script.imageParams) {
-              script.imageParams = {};
-            }
-            if (!script.imageParams.images) {
-              script.imageParams.images = {};
-            }
-            script.imageParams.images[name] = {
-              type: "imagePrompt",
-              prompt: imagePrompt,
-            };
-          }
-          emit("updateMulmoScript", script);
+        const newScript = mulmoScriptTools(data.namedInputs, script);
+        if (newScript) {
+          emit("updateMulmoScript", newScript);
         }
+
         // addBeatToMulmoScript -> beat
         // insertAtBeatToMulmoScript -> beat, index
         // deleteBeatOnMulmoScript -> index
