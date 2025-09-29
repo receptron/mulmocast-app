@@ -781,7 +781,7 @@ const lang = {
         fileNotExist: "The image for beat {beat_index} does not exist or is invalid",
       },
       audio: {
-        generateAudioSpeechParam: "{speechParams} are not set",
+        generateAudioSpeechParam: "{speechParams} (speechParams) are not set",
       },
     },
   },
