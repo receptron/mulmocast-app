@@ -1,7 +1,7 @@
 <template>
   <div v-if="Object.keys(images ?? {}).length !== 0" class="mb-4">
     <h4 class="mb-1 block text-sm">{{ t("parameters.imageParams.images") }}</h4>
-    <p class="text-xs text-muted-foreground mb-2">{{ t("parameters.imageParams.imagesDescription") }}</p>
+    <p class="text-muted-foreground mb-2 text-xs">{{ t("parameters.imageParams.imagesDescription") }}</p>
 
     <Card class="mt-2 p-3">
       <div class="space-y-2">
