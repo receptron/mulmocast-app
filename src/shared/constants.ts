@@ -123,16 +123,16 @@ export type AppSettingKey = "APP_LANGUAGE" | "VIEW_MODE" | "SORT_BY" | "SORT_ORD
 
 export const VOICE_LISTS = {
   openai: [
-    { id: "shimmer" },
-    { id: "alloy" },
-    { id: "ash" },
-    { id: "ballad" },
-    { id: "coral" },
-    { id: "echo" },
-    { id: "fable" },
-    { id: "nova" },
-    { id: "onyx" },
-    { id: "sage" },
+    { id: "shimmer", description: "Bright, light, and youthful tone" },
+    { id: "alloy", description: "Calm mid-low register, persuasive tone" },
+    { id: "ash", description: "Deep, mature, slightly rough tone" },
+    { id: "ballad", description: "Gentle, soothing voice suited for narration" },
+    { id: "coral", description: "Soft and friendly voice quality" },
+    { id: "echo", description: "Clear, neutral, and easy to understand" },
+    { id: "fable", description: "Expressive, great for storytelling" },
+    { id: "nova", description: "Energetic, modern, and crisp tone" },
+    { id: "onyx", description: "Strong, deep, and powerful voice" },
+    { id: "sage", description: "Calm, thoughtful, and intellectual tone" },
   ],
   google: [
     { id: "ja-JP-Standard-A" },
@@ -396,3 +396,18 @@ export const PRESET_CANVAS_SIZE = {
   "1536x1024": { width: 1536, height: 1024 },
   "1024x1536": { width: 1024, height: 1536 },
 } as const;
+
+export const userLevels = [
+  {
+    id: "beginner",
+    mode: 1,
+  },
+  {
+    id: "semiPro",
+    mode: 50,
+  },
+  {
+    id: "pro",
+    mode: 100,
+  },
+];

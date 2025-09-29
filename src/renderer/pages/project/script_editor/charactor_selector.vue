@@ -13,7 +13,7 @@
       </SelectTrigger>
       <SelectContent>
         <SelectItem v-for="(template, k) in templates" :key="k" :value="k">
-          {{ t("beat." + template.key + ".badge") }}
+          {{ t("beat." + template.key + ".label") }}
         </SelectItem>
       </SelectContent>
     </Select>
@@ -48,7 +48,7 @@ const templates = [
     },
   },
   {
-    key: "mediaFile",
+    key: "mediaImageFile",
     data: {
       type: "image",
       source: {

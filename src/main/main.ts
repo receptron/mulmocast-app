@@ -3,7 +3,7 @@ import path from "node:path";
 import os from "node:os";
 import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
-import { updateElectronApp, UpdateSourceType } from "update-electron-app";
+import { updateElectronApp, UpdateSourceType, makeUserNotifier } from "update-electron-app";
 import log from "electron-log/main";
 
 import { registerIPCHandler } from "./ipc_handler";
@@ -11,6 +11,7 @@ import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
 import { ENV_KEYS } from "../shared/constants";
 import { getWindowState, saveWindowState } from "./utils/windw_state";
+import config from "../renderer/i18n/index";
 
 log.initialize();
 
@@ -18,7 +19,7 @@ log.initialize();
 const iconPath =
   os.platform() === "darwin"
     ? path.join(__dirname, "../../images/mulmocast_icon.icns")
-    : path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png");
+    : path.join(__dirname, "../../images/mulmocast_icon_win.ico");
 
 const isDev = process.env.NODE_ENV === "development";
 const isCI = process.env.CI === "true";
@@ -166,6 +167,12 @@ updateElectronApp({
     baseUrl: `https://s3.aws.mulmocast.com/releases/test/${process.platform}/${process.arch}`,
   },
   logger: log,
+  // @ts-expect-error update-electron-app types are not correct
+  notifyUser: () => {
+    const lang = settingsManager.loadAppLanguage();
+    const notifyProps = config.messages[lang as keyof typeof config.messages].updater;
+    return makeUserNotifier(notifyProps);
+  },
 });
 
 // This method will be called when Electron has finished

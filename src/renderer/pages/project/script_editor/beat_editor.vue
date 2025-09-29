@@ -3,18 +3,70 @@
     <div class="mb-2 flex items-center justify-between">
       <div class="flex items-center gap-3 font-medium">
         <span class="text-base">{{ t("ui.common.beat") }} {{ index + 1 }}</span>
-        <Badge v-if="beat.speaker" variant="outline">{{ beat.speaker }}</Badge>
+        <Badge
+          v-if="beat.speaker && !toggleSpeakerMode"
+          variant="outline"
+          @click="showSpeakerSelector"
+          class="cursor-pointer"
+          >{{ beat.speaker }}</Badge
+        >
+        <div v-if="toggleSpeakerMode">
+          <SpeakerSelector
+            @emitSpeaker="(speaker) => changeSpeaker(speaker)"
+            :currentSpeaker="beat.speaker"
+            :speakers="mulmoScript.speechParams?.speakers"
+            @cancel="toggleSpeakerMode = false"
+          />
+        </div>
       </div>
-      <Badge variant="outline" @click="toggleTypeMode = !toggleTypeMode" class="cursor-pointer" v-if="!toggleTypeMode">
+      <Badge variant="outline" @click="showTypeSelector" class="cursor-pointer" v-if="!toggleTypeMode">
         {{ t("beat." + getBadge(beat) + ".badge") }}</Badge
       >
       <div v-if="toggleTypeMode">
-        <BeatSelector @emitBeat="(beat) => changeBeat(beat)" buttonKey="change" :currentBeatType="beatType">
+        <BeatSelector
+          @emitBeat="(beat) => changeBeat(beat)"
+          buttonKey="change"
+          :currentBeatType="beatType"
+          :isPro="isPro"
+        >
           <Button size="sm" @click="toggleTypeMode = !toggleTypeMode"> {{ t("ui.actions.cancel") }} </Button>
         </BeatSelector>
       </div>
     </div>
-    <p class="text-muted-foreground mb-2 text-sm">{{ beat.text }}</p>
+    <div class="mb-4">
+      <!-- beat.text -->
+      <Textarea
+        :model-value="beat.text"
+        @update:model-value="(value) => update('text', String(value))"
+        @blur="justSaveAndPushToHistory"
+        :placeholder="
+          t('beat.speaker.placeholder', {
+            speaker: beat?.speaker || t('ui.common.speaker'),
+            language: t('languages.' + lang),
+          })
+        "
+        class="mb-2 min-h-8 resize-y"
+        :class="isBeginner && !beat.text ? 'border-2 border-red-600' : ''"
+        rows="2"
+      />
+      <div class="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          @click="generateAudio()"
+          class="w-fit"
+          :disabled="beat?.text?.length === 0"
+          >{{ t("ui.actions.generateAudio") }}</Button
+        >
+        <audio
+          :src="audioFile"
+          v-if="!!audioFile"
+          controlslist="nodownload noplaybackrate noremoteplayback"
+          class="h-7 flex-1"
+          controls
+        />
+      </div>
+    </div>
 
     <div class="grid grid-cols-2 gap-4">
       <!-- left: Edit area -->
@@ -25,6 +77,7 @@
             <Media
               :beat="beat"
               :index="index"
+              :isBeginner="isBeginner"
               @update="update"
               @save="justSaveAndPushToHistory"
               @updateImageData="updateImageData"
@@ -63,7 +116,7 @@
 
           <!-- markdown -->
           <template v-else-if="beat.image.type === 'markdown'">
-            <Markdown :beat="beat" @update="update" @save="justSaveAndPushToHistory" />
+            <Markdown :beat="beat" @update="update" @save="justSaveAndPushToHistory" :isBeginner="isBeginner" />
           </template>
 
           <!-- chart -->
@@ -113,6 +166,7 @@
         <!-- end of beat.image -->
         <div v-else>
           <template v-if="beat.htmlPrompt">
+            <!-- html prompt beat -->
             <Label class="mb-1 block">{{ t("beat.htmlPrompt.label") }}: </Label>
             <Textarea
               :placeholder="t('beat.htmlPrompt.placeholder')"
@@ -124,6 +178,7 @@
             />
           </template>
           <template v-else>
+            <!-- image prompt beat -->
             <Label class="mb-1 block">{{ t("beat.imagePrompt.label") }}: </Label>
             <Textarea
               :placeholder="t('beat.imagePrompt.placeholder')"
@@ -131,6 +186,7 @@
               @update:model-value="(value) => update('imagePrompt', String(value))"
               @blur="justSaveAndPushToHistory"
               class="my-2 h-20 overflow-y-auto"
+              :class="isBeginner && !beat.imagePrompt ? 'border-2 border-red-600' : ''"
             />
           </template>
         </div>
@@ -152,7 +208,7 @@
       </div>
 
       <!-- left: movie edit -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableMovie">
         <!-- movie edit -->
         <div>
           <Label class="mb-1 block">{{ t("beat.moviePrompt.label") }}: </Label>
@@ -167,7 +223,7 @@
         </div>
       </div>
       <!-- right: movie preview -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableMovie">
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
@@ -182,7 +238,7 @@
       </div>
 
       <!-- left: lipSync edit -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableLipSync">
         <!-- movie edit -->
         <div class="mb-2 flex gap-2">
           <Checkbox
@@ -195,7 +251,7 @@
         </div>
       </div>
       <!-- right: lipSync preview -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt'">
+      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableLipSync">
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
@@ -214,6 +270,7 @@
       @update="update"
       :imageParams="mulmoScript.imageParams"
       :settingPresence="settingPresence"
+      :isPro="isPro"
       @updateImageNames="updateImageNames"
       @justSaveAndPushToHistory="justSaveAndPushToHistory"
       v-if="beatType === 'imagePrompt'"
@@ -240,6 +297,8 @@ import {
   type MulmoScript,
   type MulmoImageAsset,
   MulmoPresentationStyleMethods,
+  MulmoStudioContextMethods,
+  provider2TTSAgent,
 } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 
@@ -250,11 +309,13 @@ import BeatPreviewImage from "./beat_preview_image.vue";
 import BeatPreviewMovie from "./beat_preview_movie.vue";
 import BeatSelector from "./beat_selector.vue";
 import BeatStyle from "./beat_style.vue";
+import SpeakerSelector from "./speaker_selector.vue";
 
 // lib
 import { useMulmoEventStore } from "../../../store";
 import { getBadge, getBeatType, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
+import { notifyProgress, notifyError } from "@/lib/notification";
 
 import Markdown from "./beat_editors/markdown.vue";
 import Chart from "./beat_editors/chart.vue";
@@ -263,16 +324,22 @@ import Mermaid from "./beat_editors/mermaid.vue";
 import Vision from "./beat_editors/vision.vue";
 import { useApiErrorNotify } from "@/composables/notify";
 
+import { getConcurrentTaskStatusMessageComponent } from "../concurrent_task_status_message";
+
 type FileData = ArrayBuffer | string | null;
 
 interface Props {
   beat: MulmoBeat;
   mulmoScript: MulmoScript;
   index: number;
+  lang: string;
+  audioFile?: string;
   imageFile: FileData;
   movieFile: FileData;
   lipSyncFiles: FileData;
   isEnd: boolean;
+  isPro: boolean;
+  isBeginner: boolean;
   mulmoError: string[];
   settingPresence: Record<string, boolean>;
 }
@@ -300,6 +367,17 @@ const modalSrc = ref("");
 const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 
 const toggleTypeMode = ref(false);
+const toggleSpeakerMode = ref(false);
+
+const showSpeakerSelector = () => {
+  toggleSpeakerMode.value = true;
+  toggleTypeMode.value = false;
+};
+
+const showTypeSelector = () => {
+  toggleTypeMode.value = true;
+  toggleSpeakerMode.value = false;
+};
 
 const beatType = computed(() => {
   return getBeatType(props.beat);
@@ -337,6 +415,11 @@ const changeBeat = (beat: MulmoBeat) => {
   toggleTypeMode.value = !toggleTypeMode.value;
 };
 
+const changeSpeaker = (speaker: string) => {
+  update("speaker", speaker);
+  toggleSpeakerMode.value = false;
+};
+
 const generateImageOnlyImage = () => {
   const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(props.mulmoScript, props.beat);
   if (!hasApiKey(imageAgentInfo.keyName)) {
@@ -345,14 +428,30 @@ const generateImageOnlyImage = () => {
   }
   emit("generateImage", props.index, "image");
 };
+
+const enableMovie = computed(() => {
+  try {
+    const movieAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
+    return hasApiKey(movieAgentInfo.keyName);
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+});
+
 const generateImageOnlyMovie = () => {
-  const imageAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
-  if (!hasApiKey(imageAgentInfo.keyName)) {
-    apiErrorNotify(imageAgentInfo.keyName);
+  const movieAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
+  if (!enableMovie.value) {
+    apiErrorNotify(movieAgentInfo.keyName);
     return;
   }
   emit("generateImage", props.index, "movie");
 };
+
+const enableLipSync = computed(() => {
+  const lipSyncAgentInfo = MulmoPresentationStyleMethods.getLipSyncAgentInfo(props.mulmoScript, props.beat);
+  return hasApiKey(lipSyncAgentInfo.keyName);
+});
 
 const generateLipSyncMovie = async () => {
   const lipSyncAgentInfo = MulmoPresentationStyleMethods.getLipSyncAgentInfo(props.mulmoScript, props.beat);
@@ -362,6 +461,35 @@ const generateLipSyncMovie = async () => {
   }
   await window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", projectId.value, props.index);
   emit("generateImage", props.index, "lipSync");
+};
+
+const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(projectId.value);
+
+const generateAudio = async () => {
+  try {
+    const { provider } = MulmoStudioContextMethods.getAudioParam(
+      { ...props.mulmoScript, presentationStyle: props.mulmoScript },
+      props.beat,
+      props.lang,
+    );
+    const { keyName } = provider2TTSAgent[provider];
+    if (!hasApiKey(keyName)) {
+      apiErrorNotify(keyName);
+      return;
+    }
+
+    notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", projectId.value, props.index), {
+      loadingMessage: ConcurrentTaskStatusMessageComponent,
+      successMessage: t("notify.audio.successMessage"),
+      errorMessage: t("notify.audio.errorMessage"),
+    });
+  } catch (error) {
+    notifyError(
+      t("ui.common.error"),
+      t("notify.error.audio.generateAudioSpeechParam", { speechParams: t("parameters.speechParams.title") }),
+    );
+    console.log(error);
+  }
 };
 
 const update = (path: string, value: unknown) => {

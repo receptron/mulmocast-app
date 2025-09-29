@@ -1,22 +1,28 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 
-import { ENV_KEYS } from "../../shared/constants";
+import { ENV_KEYS, userLevels } from "../../shared/constants";
+import { type UserLevel } from "../../types/index";
 
 type SETTINGS = {
+  APP_LANGUAGE?: string;
   MAIN_LANGUAGE?: string;
   USE_LANGUAGES?: Record<string, boolean>;
   CHAT_LLM?: string;
   llmConfigs?: Record<string, Record<string, string>>;
   APIKEY?: Record<string, string>;
+  USER_LEVEL?: UserLevel;
 };
 
 export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
   const settings = ref<SETTINGS>({});
+  const userMode = ref<{ id?: string; mode?: number }>(userLevels[0]);
+
   const updateSettings = (data: SETTINGS) => {
-    const { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs, APIKEY } = data;
-    const newData = { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs, APIKEY };
+    const { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs, APIKEY, USER_LEVEL, APP_LANGUAGE } = data;
+    const newData = { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs, APIKEY, USER_LEVEL, APP_LANGUAGE };
     settings.value = newData;
+    userMode.value = userLevels.find((userLevel) => userLevel.id === settings.value.USER_LEVEL) ?? userLevels[0];
   };
 
   const isOpenSettingModal = ref(false);
@@ -58,10 +64,27 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
     return !!settings.value.APIKEY[keyName];
   };
 
+  const userIsPro = computed(() => {
+    return userMode.value.id === "pro";
+  });
+
+  const userIsSemiProOrAbove = computed(() => {
+    return userMode.value.id === "pro" || userMode.value.id === "semiPro";
+  });
+
+  const userIsBeginner = computed(() => {
+    return userMode.value.id === "beginner";
+  });
+
   return {
     settings,
     updateSettings,
     settingPresence,
+
+    userMode,
+    userIsPro,
+    userIsSemiProOrAbove,
+    userIsBeginner,
 
     isOpenSettingModal,
     toggleSettingModal,

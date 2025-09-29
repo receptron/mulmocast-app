@@ -14,6 +14,7 @@
           <div
             class="h-full overflow-y-auto pr-2"
             :class="{ 'lg:block': isLeftColumnOpen, 'lg:hidden': !isLeftColumnOpen }"
+            v-if="globalStore.userIsSemiProOrAbove"
           >
             <Card class="flex h-full flex-col">
               <CardHeader class="flex-shrink-0">
@@ -120,7 +121,7 @@
                     :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript ?? {}"
                     :imageFiles="imageFiles"
                     :movieFiles="movieFiles"
-                    :audioFiles="audioFiles[mulmoScriptHistoryStore.lang ?? 'en'] ?? {}"
+                    :audioFiles="audioFiles[mulmoScriptHistoryStore.lang ?? globalStore.settings.APP_LANGUAGE] ?? {}"
                     :lipSyncFiles="lipSyncFiles"
                     :scriptEditorActiveTab="projectMetadata?.scriptEditorActiveTab"
                     :isValidScriptData="isValidScriptData"
@@ -145,7 +146,7 @@
             :class="{ 'lg:block': isRightColumnOpen, 'lg:hidden': !isRightColumnOpen }"
           >
             <!-- Output Section -->
-            <Card>
+            <Card v-if="globalStore.userIsPro">
               <CardHeader>
                 <div class="flex items-center justify-between">
                   <CardTitle class="flex items-center space-x-2">
@@ -163,7 +164,7 @@
             </Card>
 
             <!-- Product Section -->
-            <Card class="relative">
+            <Card class="relative" v-if="globalStore.userIsPro">
               <div class="absolute right-4 z-50 mt-[-16px] flex items-center rounded-lg bg-black/50 text-white">
                 <button class="p-3 transition-colors hover:text-red-400" @click="openModal">
                   <Expand class="h-5 w-5" />
@@ -176,7 +177,7 @@
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <MulmoViewer
+                <ProductTabs
                   v-if="project"
                   :project="project"
                   :mulmoViewerActiveTab="projectMetadata?.mulmoViewerActiveTab"
@@ -184,6 +185,23 @@
                   @update:mulmoViewerActiveTab="handleUpdateMulmoViewerActiveTab"
                   @updateMultiLingual="updateMultiLingual"
                 />
+              </CardContent>
+            </Card>
+
+            <Card v-if="!globalStore.userIsPro">
+              <CardHeader>
+                <div class="flex items-center justify-between">
+                  <CardTitle class="flex items-center space-x-2">
+                    <Settings :size="20" />
+                    <span>{{ t("project.generate.generationAndPlay") }}</span>
+                  </CardTitle>
+                  <Button variant="ghost" size="sm" @click="isRightColumnOpen = false" class="hidden lg:inline-flex">
+                    <PanelRightClose :size="16" />
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent class="p-4">
+                <VideoViewer :projectId="projectId" />
               </CardContent>
             </Card>
 
@@ -238,7 +256,8 @@ import {
   Expand,
 } from "lucide-vue-next";
 import dayjs from "dayjs";
-import { mulmoScriptSchema, type MulmoScript } from "mulmocast/browser";
+import { mulmoScriptSchema, mulmoBeatSchema, type MulmoScript } from "mulmocast/browser";
+import { z } from "zod";
 
 import { Button } from "@/components/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -251,7 +270,8 @@ import Layout from "@/components/layout.vue";
 import Chat from "./project/chat.vue";
 import ScriptEditor from "./project/script_editor.vue";
 import Generate from "./project/generate.vue";
-import MulmoViewer from "../components/product/tabs.vue";
+import VideoViewer from "./project/video_viewer.vue";
+import ProductTabs from "../components/product/tabs.vue";
 import ProjectHeader from "./project/header.vue";
 import DebugLog from "./project/debug_log.vue";
 
@@ -263,7 +283,12 @@ import { setRandomBeatId } from "@/lib/beat_util.js";
 
 import { useMulmoEventStore, useMulmoScriptHistoryStore, useMulmoGlobalStore } from "@/store";
 
-import { isLeftColumnOpen, isRightColumnOpen, gridLayoutClass } from "./project/composable/style";
+import {
+  isLeftColumnOpen,
+  isRightColumnOpen,
+  useGridLayoutClass,
+  setupUserLevelWatch,
+} from "./project/composable/style";
 import { ChatMessage, MulmoError } from "@/types";
 import { type ScriptEditorTab, type MulmoViewerTab } from "../../shared/constants";
 
@@ -278,6 +303,10 @@ const { t } = useI18n();
 const mulmoEventStore = useMulmoEventStore();
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 const globalStore = useMulmoGlobalStore();
+
+// Setup grid layout and user level watching
+const gridLayoutClass = useGridLayoutClass();
+setupUserLevelWatch();
 
 const projectId = computed(() => route.params.id as string);
 const projectMetadata = ref<ProjectMetadata | null>(null);
@@ -302,10 +331,12 @@ onMounted(async () => {
     updateMultiLingual();
     projectMetadata.value = await projectApi.getProjectMetadata(projectId.value);
     const data = await projectApi.getProjectMulmoScript(projectId.value);
-    data.beats.map(setRandomBeatId);
-    mulmoScriptHistoryStore.initMulmoScript(data);
+    if (data.beats) {
+      data.beats.map(setRandomBeatId);
+    }
+    mulmoScriptHistoryStore.initMulmoScript(data, globalStore.settings.APP_LANGUAGE);
     // mulmoScriptHistoryStore.lang
-    downloadAudioFiles(projectId.value, data.lang ?? "en");
+    downloadAudioFiles(projectId.value, data.lang ?? globalStore.settings.APP_LANGUAGE);
     downloadImageFiles(projectId.value);
   } catch (error) {
     console.error("Failed to load project:", error);
@@ -333,7 +364,7 @@ const handleUpdateMulmoScriptAndPushToHistory = (script: MulmoScript) => {
 // Just update mulmoScript Data
 const handleUpdateMulmoScript = (script: MulmoScript) => {
   mulmoScriptHistoryStore.updateMulmoScript(script);
-  saveMulmoScriptDebounced(script);
+  saveMulmoScriptDebounced();
 };
 // internal use
 const saveMulmoScript = async () => {
@@ -374,9 +405,14 @@ const handleUpdateMulmoViewerActiveTab = (tab: MulmoViewerTab) => {
   saveProjectMetadata({ updateTimestamp: false });
 };
 
+const mulmoScriptSchemaNoBeats = mulmoScriptSchema.extend({
+  beats: z.array(mulmoBeatSchema).min(0),
+});
+
 const mulmoError = computed<MulmoError>(() => {
-  const zodError = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
+  const zodError = mulmoScriptSchemaNoBeats.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
   if (!zodError.success) {
+    console.log(zodError.error);
     return zodError2MulmoError(zodError.error);
   }
   return null;
@@ -403,14 +439,30 @@ const insertSpeakers = (data) => {
 };
 
 const formatAndPushHistoryMulmoScript = () => {
-  const data = mulmoScriptSchema.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
+  const data = mulmoScriptSchemaNoBeats.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
   if (data.success) {
     data.data.beats.map(setRandomBeatId);
     insertSpeakers(data.data);
     mulmoScriptHistoryStore.updateMulmoScriptAndPushToHistory(data.data);
     // push store //
+  } else {
+    const current = mulmoScriptHistoryStore.currentMulmoScript;
+    if (!current["$mulmocast"] || !current["beats"] || !current["lang"]) {
+      if (!current["$mulmocast"]) {
+        current["$mulmocast"] = {
+          credit: "closing",
+          version: "1.1",
+        };
+      }
+      if (!current["beats"]) {
+        current["beats"] = [];
+      }
+      if (!current["lang"]) {
+        current["lang"] = globalStore.settings.APP_LANGUAGE;
+      }
+      mulmoScriptHistoryStore.updateMulmoScript(current);
+    }
   }
-  console.log(data);
 };
 
 const openProjectFolder = async () => {
@@ -468,12 +520,17 @@ watch(
       downloadImageFile(projectId.value, index, mulmoEvent.id);
     }
     if (mulmoEvent?.kind === "beat") {
-      if (mulmoEvent.sessionType === "audio") {
+      if (mulmoEvent.sessionType === "audio" || mulmoEvent.sessionType === "image") {
         const index = mulmoScriptHistoryStore.currentMulmoScript?.beats?.findIndex((beat) => beat.id === mulmoEvent.id);
         if (index === -1 || index === undefined) {
           return;
         }
-        downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, mulmoEvent.id);
+        if (mulmoEvent.sessionType === "audio") {
+          downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, mulmoEvent.id);
+        }
+        if (mulmoEvent.sessionType === "image") {
+          downloadImageFile(projectId.value, index, mulmoEvent.id);
+        }
       }
       if (mulmoEvent.sessionType === "multiLingual") {
         updateMultiLingual();

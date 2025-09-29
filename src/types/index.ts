@@ -34,12 +34,17 @@ export type MulmoProgressLog<T = unknown> = {
 export type MulmoError = {
   beats: Record<string, string[]>;
   script: Record<string, string[]>;
+  lang: string[];
   canvasSize: string[];
   speechParams: string[];
   imageParams: string[];
   movieParams: string[];
+  soundEffectParams: string[];
+  lipSyncParams: string[];
   htmlImageParams: string[];
   textSlideParams: string[];
   captionParams: string[];
   audioParams: string[];
 };
+
+export type UserLevel = "beginner" | "semiPro" | "pro";

@@ -1,6 +1,20 @@
 <template>
   <div class="flex h-full flex-col space-y-2">
-    <SelectLanguage :mulmoScript="mulmoScript" @updateMulmoScript="(script) => emit('updateMulmoScript', script)" />
+    <div class="flex flex-wrap">
+      <SelectLanguage :mulmoScript="mulmoScript" @updateMulmoScript="(script) => emit('updateMulmoScript', script)" />
+      <div class="template-dropdown-container flex items-center gap-4">
+        <Select v-model="conversationMode">
+          <SelectTrigger class="border-border ml-2 h-6! w-auto text-xs">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem v-for="mode in conversationModes" :key="mode.value" :value="mode.value">
+              {{ t("project.chat.conversationModes." + mode.value) }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
     <!-- Chat history -->
     <div
       ref="chatHistoryRef"
@@ -82,10 +96,15 @@
         <Button @click="() => (isClearChatDialogOpen = true)" variant="outline" size="xs">
           {{ t("project.chat.clearChat") }}
         </Button>
-        <Button v-if="isDevelopment" variant="outline" size="xs" class="ml-4" @click="copyMessageToClipboard">
+        <Button @click="runNext()" variant="outline" size="xs" class="ml-2" v-if="messages.length > 0">
+          {{ t("project.chat.continue") }}</Button
+        >
+      </div>
+      <div v-if="isDevelopment">
+        <Button variant="outline" size="xs" @click="copyMessageToClipboard">
           {{ t("project.chat.copyMessage") }}
         </Button>
-        <Label class="ml-2 inline-flex" v-if="isDevelopment">
+        <Label class="mt-2 ml-2 inline-flex">
           <Checkbox v-model="enableTools" variant="ghost" size="icon" />
           {{ t("project.chat.enableTools") }}
         </Label>
@@ -106,10 +125,12 @@
               </SelectTrigger>
               <SelectContent>
                 <SelectItem v-for="(template, k) in promptTemplates" :key="k" :value="k">
-                  {{ template.title }}
+                  {{ t("project.chat.templates." + template.filename) }}
                 </SelectItem>
               </SelectContent>
             </Select>
+          </div>
+          <div class="mt-4 flex">
             <Button size="sm" @click="copyScript" :disabled="noChatMessages || isRunning" class="mr-2">
               {{ t("project.chat.copyScript") }}
             </Button>
@@ -147,6 +168,7 @@ import { openAIAgent, geminiAgent, anthropicAgent, groqAgent } from "@graphai/ll
 import exaToolsAgent from "../../agents/exa_agent";
 import puppeteerAgent from "../../agents/puppeteer_agent";
 // import toolsAgent from "../../agents/tools_agent";
+import mulmoCastHelpAgent from "../../agents/help_agent";
 import { toolsAgent } from "@graphai/tools_agent";
 
 // mulmo
@@ -176,8 +198,11 @@ import ToolsMessage from "./chat/tools_message.vue";
 import { graphChatWithSearch } from "./chat/graph";
 import mulmoScriptValidatorAgent from "../../agents/mulmo_script_validator";
 import mulmoVisionAgent from "../../agents/mulmo_vision_agent";
-
+import mulmoScriptAgent from "../../agents/mulmo_script";
 // presentation manuscript
+
+import { useSystemPrompt, conversationModes } from "./chat_system_prompt";
+import { mulmoScriptTools } from "./chat_tools";
 
 import enLang from "../../i18n/en";
 import {
@@ -222,6 +247,8 @@ const userInput = ref("");
 const textareaRef = useTemplateRef("textareaRef");
 const enableTools = ref(true);
 
+const { getSystemPrompt, conversationMode } = useSystemPrompt();
+
 // for running...
 const liveToolsData = ref<null | Record<string, unknown>>(null);
 const isRunning = ref(false);
@@ -235,6 +262,7 @@ const agentFilters = [
   },
 ];
 // end of running
+
 const chatHistoryRef = useAutoScroll([streamData, userInput, messages]);
 
 const clearChat = () => {
@@ -251,9 +279,11 @@ const graphAIAgents = {
   validateSchemaAgent,
   exaToolsAgent,
   puppeteerAgent,
+  mulmoCastHelpAgent,
   toolsAgent,
   mulmoScriptValidatorAgent,
   mulmoVisionAgent,
+  mulmoScriptAgent,
 };
 const filterMessage = (setTime = false) => {
   return (message) => {
@@ -315,11 +345,10 @@ const apiKeyName = computed(() => {
   return llm.apiKey;
 });
 
-const anthropicSystemPrompt = [
-  "<use_parallel_tool_calls>",
-  "For maximum efficiency, whenever you perform multiple independent operations, invoke all relevant tools simultaneously rather than sequentially. Prioritize calling tools in parallel whenever possible. For example, when reading 3 files, run 3 tool calls in parallel to read all 3 files into context at the same time. When running multiple read-only commands like `ls` or `list_dir`, always run all of the commands in parallel. Err on the side of maximizing parallel tool calls rather than running too many tools sequentially.",
-  "</use_parallel_tool_calls>",
-].join("\n");
+const runNext = () => {
+  userInput.value = "続けて";
+  run();
+};
 
 const run = async () => {
   if (isRunning.value) {
@@ -337,14 +366,23 @@ const run = async () => {
     const config = await getGraphConfig();
     const llmModel = config[llmAgent.value]?.model || ""; // The model setting in config can be overridden by params.model (even if it is a blank string).
 
-    const tools = [...mulmoScriptValidatorAgent.tools, ...puppeteerAgent.tools, ...mulmoVisionAgent.tools];
-    const systemMessage = `Always reply in ${scriptLang.value}, regardless of the language of the user's input or previous conversation.  If the user's message is in a different language, translate it into ${scriptLang.value} before replying.`;
+    const tools = [
+      ...mulmoScriptValidatorAgent.tools,
+      ...puppeteerAgent.tools,
+      ...mulmoVisionAgent.tools,
+      ...mulmoCastHelpAgent.tools,
+      ...mulmoScriptAgent.tools,
+    ];
 
+    const systemPrompt = getSystemPrompt(
+      scriptLang.value,
+      mulmoScriptHistoryStore.currentMulmoScript,
+      llmAgent.value === "anthropicAgent",
+    );
     const postMessages = [
       {
         role: "system",
-        content:
-          llmAgent.value === "anthropicAgent" ? [systemMessage, anthropicSystemPrompt].join("\n") : systemMessage,
+        content: systemPrompt,
       },
       ...messages
         .map(filterMessage())
@@ -353,7 +391,6 @@ const run = async () => {
           return message.content !== "" || message.tool_calls;
         }),
     ];
-    console.log(postMessages);
     const graphai = new GraphAI(graphChatWithSearch, graphAIAgents, {
       agentFilters,
       config,
@@ -384,6 +421,18 @@ const run = async () => {
         emit("updateMulmoScript", script);
 
         console.log(data.result.data);
+      }
+      if (agentId === "mulmoScriptAgent" && state === "completed") {
+        const script = { ...mulmoScriptHistoryStore.currentMulmoScript };
+        const newScript = mulmoScriptTools(data.namedInputs, script);
+        if (newScript) {
+          emit("updateMulmoScript", newScript);
+        }
+
+        // addBeatToMulmoScript -> beat
+        // insertAtBeatToMulmoScript -> beat, index
+        // deleteBeatOnMulmoScript -> index
+        // setImagePromptOnBeat -> index, imagePrompt
       }
     });
     graphai.injectValue("messages", postMessages);
@@ -422,13 +471,19 @@ const run = async () => {
 const isCreatingScript = ref(false);
 
 const scriptLang = computed(() => {
-  return enLang.languages[mulmoScriptHistoryStore.currentMulmoScript.lang ?? "en"];
+  return enLang.languages[mulmoScriptHistoryStore.currentMulmoScript.lang ?? globalStore.settings.APP_LANGUAGE];
+});
+
+const scriptLangLocalize = computed(() => {
+  return t("languages." + (mulmoScriptHistoryStore.currentMulmoScript.lang ?? globalStore.settings.APP_LANGUAGE));
 });
 
 const copyScript = async () => {
-  const head = `Generate a ${scriptLang.value} presentation script for this topic or story and pass it to tool 'pushScript.'`;
+  // const head = `Generate a ${scriptLang.value} presentation script for this topic or story and pass it to tool 'pushScript.'`;
+  const head = t("project.chat.prompt.generatePrompt", { scriptLang: scriptLangLocalize.value });
   // Generate a Japanese script for a presentation of the given topic and pass it to tool 'pushScript.'
   const template = templateDataSet[promptTemplates[selectedTemplateIndex.value].filename];
+
   userInput.value = head + " " + template;
 };
 

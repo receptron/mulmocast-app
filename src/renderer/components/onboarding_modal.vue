@@ -66,19 +66,8 @@
           </Card>
         </div>
 
-        <!-- Step 2: LLM Settings -->
+        <!-- Step 2: API Key -->
         <div v-if="currentStep === 2">
-          <LlmSettings
-            :selected-l-l-m="selectedLLM"
-            :llm-configs="llmConfigs"
-            :hide-errors="true"
-            @update:selected-l-l-m="updateSelectedLLM"
-            @update:llm-configs="updateLlmConfigs"
-          />
-        </div>
-
-        <!-- Step 3: API Key -->
-        <div v-if="currentStep === 3 && selectedLLM !== 'ollamaAgent'">
           <Card>
             <CardHeader>
               <CardTitle>{{ t("settings.apiKeys.title") }}</CardTitle>
@@ -87,21 +76,20 @@
             <CardContent>
               <div class="space-y-3">
                 <ApiKeyInput
-                  v-for="(config, envKey) in getRequiredApiKeys()"
-                  :key="envKey"
-                  :env-key="envKey"
-                  :config="config"
-                  :api-key="apiKeys[envKey]"
-                  :show-key="showKeys[envKey]"
-                  @update:api-key="(value) => updateApiKey(envKey, value)"
-                  @update:show-key="(value) => updateShowKey(envKey, value)"
+                  :key="DEFAULT_LLM_API_KEY"
+                  :env-key="DEFAULT_LLM_API_KEY"
+                  :config="ENV_KEYS[DEFAULT_LLM_API_KEY]"
+                  :api-key="apiKeys[DEFAULT_LLM_API_KEY]"
+                  :show-key="showKeys[DEFAULT_LLM_API_KEY]"
+                  @update:api-key="(value) => updateApiKey(DEFAULT_LLM_API_KEY, value)"
+                  @update:show-key="(value) => updateShowKey(DEFAULT_LLM_API_KEY, value)"
                 />
               </div>
             </CardContent>
           </Card>
         </div>
 
-        <!-- Step 4: Complete -->
+        <!-- Step 3: Complete -->
         <div v-if="currentStep === totalSteps">
           <Card>
             <CardHeader>
@@ -178,7 +166,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, toRaw } from "vue";
+import { ref, computed, toRaw } from "vue";
 import { useI18n } from "vue-i18n";
 import { Loader2, AlertCircle, Check, FileText, Palette, BarChart3, Globe } from "lucide-vue-next";
 
@@ -193,7 +181,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import LlmSettings from "@/components/llm_settings.vue";
 import ApiKeyInput from "@/components/api_key_input.vue";
 
 import { notifySuccess, notifyError } from "@/lib/notification";
@@ -237,7 +224,8 @@ const emit = defineEmits<{
 
 const isSaving = ref(false);
 const errorMessage = ref("");
-const selectedLLM = ref("openAIAgent");
+const DEFAULT_LLM_AGENT = "openAIAgent";
+const DEFAULT_LLM_API_KEY = "OPENAI_API_KEY";
 const currentStep = ref(1);
 
 const apiKeys = ref<Record<string, string>>({});
@@ -261,24 +249,18 @@ Object.keys(ENV_KEYS).forEach((envKey) => {
 const steps = [
   { id: 1, name: "welcome" },
   { id: 2, name: "llm" },
-  { id: 3, name: "apiKey" },
-  { id: 4, name: "complete" },
+  { id: 3, name: "complete" },
 ];
 
 const totalSteps = computed(() => {
-  return selectedLLM.value === "ollamaAgent" ? 3 : 4;
+  return steps.length;
 });
 
 const canSave = computed(() => {
-  if (selectedLLM.value === "ollamaAgent") {
-    return true; // Ollama doesn't require API key
-  }
-
-  const selectedLlmConfig = llms.find((llm) => llm.id === selectedLLM.value);
+  const selectedLlmConfig = llms.find((llm) => llm.id === DEFAULT_LLM_AGENT);
   if (!selectedLlmConfig?.apiKey) {
     return false;
   }
-
   return apiKeys.value[selectedLlmConfig.apiKey]?.trim() !== "";
 });
 
@@ -287,32 +269,13 @@ const canProceedToNext = computed(() => {
     return true;
   }
   if (currentStep.value === 2) {
-    return true;
-  }
-  if (currentStep.value === 3) {
     return canSave.value;
   }
-  if (currentStep.value === 4) {
+  if (currentStep.value === 3) {
     return true;
   }
   return false;
 });
-
-const getRequiredApiKeys = () => {
-  const selectedLlmConfig = llms.find((llm) => llm.id === selectedLLM.value);
-  if (!selectedLlmConfig?.apiKey) {
-    return {};
-  }
-
-  return {
-    [selectedLlmConfig.apiKey]: ENV_KEYS[selectedLlmConfig.apiKey as keyof typeof ENV_KEYS],
-  };
-};
-
-const updateSelectedLLM = (llm: string) => {
-  selectedLLM.value = llm;
-  errorMessage.value = "";
-};
 
 const updateApiKey = (envKey: string, value: string) => {
   apiKeys.value[envKey] = value;
@@ -321,10 +284,6 @@ const updateApiKey = (envKey: string, value: string) => {
 
 const updateShowKey = (envKey: string, value: boolean) => {
   showKeys.value[envKey] = value;
-};
-
-const updateLlmConfigs = (configs: LlmConfigs) => {
-  llmConfigs.value = configs;
 };
 
 const nextStep = () => {
@@ -355,7 +314,8 @@ const handleSave = async () => {
       ...apiKeys.value,
       APIKEY: toRaw({ ...apiKeys.value }),
       APP_LANGUAGE: locale.value,
-      CHAT_LLM: selectedLLM.value,
+      MAIN_LANGUAGE: locale.value,
+      CHAT_LLM: DEFAULT_LLM_AGENT,
       llmConfigs: toRaw(llmConfigs.value),
     };
 
@@ -372,12 +332,4 @@ const handleSave = async () => {
     isSaving.value = false;
   }
 };
-
-watch(selectedLLM, () => {
-  errorMessage.value = "";
-  // If user is on step 3 (API key) but switches to Ollama, go back to step 2
-  if (selectedLLM.value === "ollamaAgent" && currentStep.value === 3) {
-    currentStep.value = 2;
-  }
-});
 </script>

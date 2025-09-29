@@ -1,32 +1,51 @@
 <template>
   <Tabs class="w-full" :model-value="currentTab" @update:model-value="handleUpdateScriptEditorActiveTab">
-    <TabsList class="grid w-full grid-cols-6">
+    <TabsList class="grid w-full grid-cols-5" v-if="globalStore.userIsPro">
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA" data-testid="script-editor-tab-media">{{
+        t("project.scriptEditor.media.tabLabel")
+      }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.REFERENCE" data-testid="script-editor-tab-reference">{{
+        t("project.scriptEditor.reference.tabLabel")
+      }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.STYLE" data-testid="script-editor-tab-style">{{
+        t("project.scriptEditor.style.tabLabel")
+      }}</TabsTrigger>
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.TEXT" data-testid="script-editor-tab-text">{{
         t("project.scriptEditor.text.tabLabel")
       }}</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.YAML" data-testid="script-editor-tab-yaml">{{
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.YAML" data-testid="script-editor-tab-yaml" v-if="false">{{
         t("project.scriptEditor.yaml.tabLabel")
       }}</TabsTrigger>
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.JSON" data-testid="script-editor-tab-json">{{
         t("project.scriptEditor.json.tabLabel")
       }}</TabsTrigger>
+    </TabsList>
+
+    <TabsList class="grid w-full grid-cols-3" v-if="!globalStore.userIsPro">
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA" data-testid="script-editor-tab-media">{{
         t("project.scriptEditor.media.tabLabel")
-      }}</TabsTrigger>
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.STYLE" data-testid="script-editor-tab-style">{{
-        t("project.scriptEditor.style.tabLabel")
       }}</TabsTrigger>
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.REFERENCE" data-testid="script-editor-tab-reference">{{
         t("project.scriptEditor.reference.tabLabel")
       }}</TabsTrigger>
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.STYLE" data-testid="script-editor-tab-style">{{
+        t("project.scriptEditor.style.tabLabel")
+      }}</TabsTrigger>
     </TabsList>
-
     <div
-      v-if="mulmoError?.script && hasScriptError"
+      v-if="(mulmoError?.script && hasScriptError) || hasZodError"
       class="border-destructive bg-destructive/10 text-destructive mt-2 w-full rounded border p-2 text-sm"
     >
       <div v-for="(message, key) in Object.values(mulmoError?.script ?? {}).flat()" :key="key">
         {{ message }}
+      </div>
+
+      <div v-for="objectKey in Object.keys(zodErrors ?? {})" :key="objectKey">
+        <div v-if="zodErrors[objectKey].length > 0">
+          <div v-for="(error, index) in zodErrors[objectKey]" key="${objectKey}_${index}">
+            {{ objectKey }}:{{ zodErrors[objectKey]?.[index] }}
+          </div>
+        </div>
       </div>
     </div>
 
@@ -39,7 +58,7 @@
         </p>
         <div class="mx-auto space-y-2">
           <div class="px-2 py-1">
-            <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" />
+            <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" :isPro="globalStore.userIsPro" />
           </div>
 
           <TransitionGroup
@@ -60,7 +79,7 @@
                   :audioFile="audioFiles[beat.id]"
                   :projectId="projectId"
                   :mulmoScript="mulmoScript"
-                  :lang="mulmoScript.lang"
+                  :lang="mulmoScript.lang ?? globalStore.settings.APP_LANGUAGE"
                   :mulmoMultiLingual="mulmoMultiLinguals?.[beatId(beat?.id, index)]?.multiLingualTexts"
                   :speakers="mulmoScript?.speechParams?.speakers ?? {}"
                   @update="update"
@@ -88,7 +107,11 @@
                 />
               </div>
               <div class="px-4 pt-2">
-                <BeatSelector @emitBeat="(beat) => addBeat(beat, index)" buttonKey="insert" />
+                <BeatSelector
+                  @emitBeat="(beat) => addBeat(beat, index)"
+                  buttonKey="insert"
+                  :isPro="globalStore.userIsPro"
+                />
               </div>
             </div>
           </TransitionGroup>
@@ -149,7 +172,7 @@
 
         <div class="mx-auto space-y-2">
           <div class="px-2 py-1">
-            <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" />
+            <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" :isPro="globalStore.userIsPro" />
           </div>
 
           <TransitionGroup
@@ -169,6 +192,10 @@
                   :mulmoScript="mulmoScript"
                   :index="index"
                   :isEnd="(mulmoScript?.beats ?? []).length === index + 1"
+                  :isPro="globalStore.userIsPro"
+                  :isBeginner="globalStore.userIsBeginner"
+                  :lang="mulmoScript.lang ?? globalStore.settings.APP_LANGUAGE"
+                  :audioFile="audioFiles[beat.id]"
                   :imageFile="imageFiles[beat.id]"
                   :movieFile="movieFiles[beat.id]"
                   :lipSyncFiles="lipSyncFiles[beat.id]"
@@ -201,7 +228,11 @@
                 />
               </div>
               <div class="px-4 pt-2">
-                <BeatSelector @emitBeat="(beat) => addBeat(beat, index)" buttonKey="insert" />
+                <BeatSelector
+                  @emitBeat="(beat) => addBeat(beat, index)"
+                  buttonKey="insert"
+                  :isPro="globalStore.userIsPro"
+                />
               </div>
             </div>
           </TransitionGroup>
@@ -215,12 +246,13 @@
         <p class="text-muted-foreground mb-2 text-sm">
           {{ t("project.scriptEditor.style.mode") }} - {{ t("project.scriptEditor.style.modeDescription") }}
         </p>
-        <PresentationStyleEditor
+        <PresentationStyle
           :projectId="projectId"
           :presentationStyle="mulmoScript"
           @update:presentationStyle="updatePresentationStyle"
           :mulmoError="mulmoError"
           :settingPresence="settingPresence"
+          :mulmoScript="mulmoScript"
         />
       </div>
     </TabsContent>
@@ -231,6 +263,9 @@
         <p class="text-muted-foreground mb-2 text-sm">
           {{ t("project.scriptEditor.reference.mode") }} -
           {{ t("project.scriptEditor.reference.modeDescription") }}
+        </p>
+        <p class="text-muted-foreground text-sm">
+          {{ t("project.scriptEditor.reference.description", { key: t("beat.imageReference.keyField") }) }}
         </p>
         <Reference
           :projectId="projectId"
@@ -272,12 +307,11 @@ import CodeEditor from "@/components/code_editor.vue";
 
 import BeatEditor from "./script_editor/beat_editor.vue";
 import BeatSelector from "./script_editor/beat_selector.vue";
-import PresentationStyleEditor from "./script_editor/presentation_style_editor.vue";
-import Reference from "./script_editor/reference.vue";
+import PresentationStyle from "./script_editor/presentation_style.vue";
+import Reference from "./script_editor/charactor.vue";
 import TextEditor from "./script_editor/text_editor.vue";
 
 import { MulmoError } from "../../../types";
-import { removeEmptyValues } from "@/lib/utils";
 import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
 import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
 
@@ -344,6 +378,15 @@ const syncTextFromInternal = () => {
 
 const hasScriptError = computed(() => {
   return Object.values(props.mulmoError?.script ?? {}).flat().length;
+});
+
+const zodErrors = computed(() => {
+  const { beats: ___, script: __, ...errors } = props.mulmoError ?? {};
+  return errors;
+});
+
+const hasZodError = computed(() => {
+  return Object.values(zodErrors.value ?? {}).flat().length > 0;
 });
 
 watch(
@@ -462,7 +505,9 @@ const changeBeat = (beat: MulmoBeat, index: number) => {
 };
 
 const addBeat = (beat: MulmoBeat, index: number) => {
-  beat.speaker = MulmoPresentationStyleMethods.getDefaultSpeaker(props.mulmoScript);
+  beat.speaker = props.mulmoScript?.speechParams?.speakers
+    ? MulmoPresentationStyleMethods.getDefaultSpeaker(props.mulmoScript)
+    : "Presenter";
   const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, setRandomBeatId(beat));
   emit("updateMulmoScriptAndPushToHistory", {
     ...props.mulmoScript,
@@ -471,9 +516,7 @@ const addBeat = (beat: MulmoBeat, index: number) => {
 };
 
 const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
-  emit("updateMulmoScript", {
-    ...removeEmptyValues(style),
-  });
+  emit("updateMulmoScript", { ...style });
 };
 
 const updateImage = (imageKey: string, prompt: string) => {

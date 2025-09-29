@@ -1,6 +1,6 @@
 <template>
   <Card class="p-4">
-    <h4 class="mb-3 font-medium">{{ t("parameters.speechParams.title") }}</h4>
+    <h4 class="font-medium">{{ t("parameters.speechParams.title") }}</h4>
     <div v-if="speechParams" class="space-y-4">
       <div v-if="speechParams.speakers && Object.keys(speechParams.speakers).length" class="mb-2">
         <Label class="mb-2">{{ t("parameters.speechParams.defaultSpeaker") }}</Label>
@@ -36,7 +36,7 @@
                 >{{ t("ui.actions.update") }}</Button
               >
             </div>
-            <h5 class="text-sm font-medium" @click="changeKey(name)" v-else>{{ name }}</h5>
+            <h5 class="cursor-pointer text-sm font-medium" @click="changeKey(name)" v-else>{{ name }}</h5>
           </div>
           <Button
             v-if="Object.keys(speechParams.speakers).length > 1"
@@ -98,14 +98,16 @@
               @update:model-value="(value) => handleSpeechOptionsChange(name, 'speed', value)"
               class="h-8"
               type="number"
+              :placeholder="t('parameters.speechParams.speedPlaceholder')"
             />
           </div>
-          <div v-if="speaker.provider === 'openai'">
+          <div v-if="speaker.provider === 'openai' || !speaker.provider">
             <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
             <Input
-              :model-value="speaker.instruction || ''"
+              :model-value="speaker?.speechOptions?.instruction || ''"
               @update:model-value="(value) => handleSpeechOptionsChange(name, 'instruction', value)"
               class="h-8"
+              :placeholder="t('parameters.speechParams.instructionPlaceholder')"
             />
           </div>
           <div v-if="speaker.displayName">
@@ -144,7 +146,12 @@
         </div>
       </div>
       <div class="template-dropdown-container flex items-center gap-4">
-        <Input v-model="speechKey" :invalid="!validateKey && speechKey !== ''" class="w-64" />
+        <Input
+          v-model="speechKey"
+          :invalid="!validateKey && speechKey !== ''"
+          class="w-64"
+          :placeholder="t('parameters.speechParams.placeholder')"
+        />
 
         <Button variant="outline" size="sm" @click="handleAddSpeaker" :disabled="!validateKey">{{
           t("ui.actions.addThing", { thing: t("ui.common.speaker") })
@@ -163,7 +170,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick } from "vue";
+import { ref, computed } from "vue";
 import { Card, Button, Label, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
@@ -232,10 +239,17 @@ const updateSpeaker = (name: string, updates: Partial<Speaker>): void => {
 };
 
 const handleProviderChange = async (name: string, provider: string) => {
-  updateSpeaker(name, { provider });
-  await nextTick();
+  const { [name]: currentSpeaker, ...currentSpeakers } = { ...speakers.value };
   const voiceId = DEFAULT_VOICE_IDS[provider];
-  updateSpeaker(name, { voiceId });
+  const updatedSpeakers = {
+    ...currentSpeakers,
+    [name]: {
+      provider,
+      voiceId,
+      displayName: currentSpeaker.displayName,
+    },
+  };
+  updateSpeakers(updatedSpeakers);
 };
 
 const handleLanguageChange = (name: string, language: string) => {
@@ -286,13 +300,17 @@ const handleDeleteSpeaker = (name: string) => {
 
 // add or update key
 const validateKeyFunc = (key: string) => {
-  return key !== "" && /^[a-zA-Z0-9]+$/.test(key) && !Object.keys(speakers.value).includes(key);
+  return key !== "" && /^[a-zA-Z0-9]+$/.test(key);
 };
 
 const isUpdate = ref(false);
 const updateSpeakerId = ref("");
+// for update
 const validUpdateKey = computed(() => {
-  return validateKeyFunc(updateSpeakerId.value);
+  return (
+    validateKeyFunc(updateSpeakerId.value) &&
+    (!Object.keys(speakers.value).includes(updateSpeakerId.value) || updateSpeakerId.value === updateKey.value)
+  );
 });
 
 const updateKey = ref("");
@@ -322,8 +340,9 @@ const handleUpdateSpeakerId = () => {
 
 const speechKey = ref("");
 
+// for add
 const validateKey = computed(() => {
-  return validateKeyFunc(speechKey.value);
+  return validateKeyFunc(speechKey.value) && !Object.keys(speakers.value).includes(speechKey.value);
 });
 
 const handleAddSpeaker = () => {

@@ -38,11 +38,12 @@ const lang = {
       height: "高さ",
       duration: "再生時間",
       quality: "品質",
+      renderingQuality: "画質",
       style: "スタイル",
       type: "種類",
       format: "フォーマット",
       language: "言語",
-      provider: "プロバイダ",
+      provider: "AIの種類",
       model: "モデル",
       speed: "速度",
       volume: "音量",
@@ -50,7 +51,7 @@ const lang = {
       beat: "ビート",
       slide: "スライド",
       chart: "チャート",
-      speaker: "スピーカー",
+      speaker: "登場人物",
       chat: "チャット",
       panel: "パネル",
       parameters: "パラメータ",
@@ -96,7 +97,7 @@ const lang = {
       generateImage: "画像生成",
       generateMovie: "動画生成",
       changeBeatTypeFirst: "まずビートタイプを変更してください",
-      generateReference: "参照イメージ生成",
+      generateReference: "キャラ生成",
       generateAudio: "音声生成",
       translateBeat: "翻訳",
 
@@ -258,6 +259,16 @@ const lang = {
         placeholder: "言語を選択",
         description: "アプリケーションの表示言語を選択してください",
       },
+      mode: {
+        label: "モード設定",
+        placeholder: "モードを選択",
+        description: "入門者向けはシンプルに、上級者向けは詳細な設定まで表示されます",
+      },
+      userLevel: {
+        beginner: "入門",
+        semiPro: "中級",
+        pro: "上級",
+      },
     },
     apiKeys: {
       title: "APIキー設定",
@@ -345,7 +356,15 @@ const lang = {
       titleAsc: "タイトル（昇順）",
       titleDesc: "タイトル（降順）",
     },
-    empty: "まだプロジェクトはありません。最初のプロジェクトを作成して始めましょう！",
+    empty: {
+      welcome: "ようこそ、MulmoCast へ！",
+      introduction1: "まずは「{createNew}」ボタンを押してみましょう。",
+      introduction2:
+        "サンプル入りのプロジェクトが自動で用意されます。あとは「{generateVideo}」ボタンを押すだけで体験できます。",
+      introduction3: "「ゼロから始めたい！」人もご安心ください。",
+      introduction4: "最初の3つはサンプル入りですが、4つ目からは空のプロジェクトが作れるようになります。",
+      introduction5: "中級以上の方は、設定画面からモードを変更してご利用いただけます。",
+    },
     confirmDelete: "「{title}」を削除しますか？",
     errors: {
       createProjectFailed: "プロジェクトの作成に失敗しました。再試行してください。",
@@ -363,7 +382,7 @@ const lang = {
       openProjectFolder: "プロジェクトのフォルダを開く",
     },
     menu: {
-      script: "編集",
+      script: "動画のストーリーを作る",
       product: "成果物",
       debugLog: "デバッグログ",
     },
@@ -371,7 +390,9 @@ const lang = {
       openPanel: "出力設定 & 生成 / 成果物パネルを開く",
       outputProduct: "出力設定 & 生成 / 成果物",
       outputSettingsGeneration: "出力設定 & 生成",
+      generationAndPlay: "動画を作る / 動画を見る",
       generateContents: "コンテンツ生成",
+      generateVideo: "動画生成",
       movie: "動画",
       audio: "音声",
       pdfSlide: "PDF (プレゼン)",
@@ -379,8 +400,8 @@ const lang = {
     },
     scriptEditor: {
       text: {
-        tabLabel: "テキスト",
-        mode: "テキストモード",
+        tabLabel: "翻訳",
+        mode: "翻訳モード",
         modeDescription: "話者と会話や字幕へ編集ができます",
       },
       yaml: {
@@ -394,19 +415,21 @@ const lang = {
         modeDescription: "MulmoScript を直接編集します",
       },
       media: {
-        tabLabel: "メディア",
-        mode: "メディアモード",
-        modeDescription: "Beatごとの画像/動画の編集とプレビュー",
+        tabLabel: "BEAT",
+        mode: "ストーリー編集",
+        modeDescription: "Beatごとの音声/画像/動画の編集とプレビュー",
       },
       style: {
-        tabLabel: "スタイル",
+        tabLabel: "スタイル設定",
         mode: "スタイル",
-        modeDescription: "音声/動画/画像/字幕などの設定",
+        modeDescription: "音声/動画/画像/字幕などのスタイルを設定します",
       },
       reference: {
-        tabLabel: "参照",
-        mode: "参照",
-        modeDescription: "キャラクターの一貫性のための参照イメージ",
+        tabLabel: "キャラ設定",
+        mode: "キャラクター設定",
+        modeDescription: "登場するキャラクターの管理をします",
+        description:
+          "各キャラクターの画像を「画像生成プロンプト」から作るか「画像をアップロード」してから、各BEATの「画像設定」で「{key}」指定してください。",
       },
       validationStatus: "検証ステータス",
     },
@@ -458,23 +481,57 @@ const lang = {
       },
     },
     chat: {
-      openPanel: "AI アシスタントチャットパネルを開く",
-      title: "AI アシスタントチャット",
-      aiPoweredGuide: "AI搭載MulmoScript生成ガイド",
-      beginnerDescription: "AI アシスタントとの会話を通じてスクリプトを作成しましょう",
-      advancedDescription: "ChatGPT や他の AI ツールを使用して、実証済みのプロンプトでスクリプトコンテンツを生成",
-      enterMessage: "メッセージを入力してください:",
-      clearChat: "チャットをリセット",
-      copyMessage: "Copy message for debug",
-      enableTools: "Toolsを使う",
-      confirmClear: "チャットをリセットしますか？",
-      undoChat: "編集をやめる",
-      createButtonDescription:
-        "スクリプトを作成するには、テンプレートを選んで「入力欄にコピー」し、内容を修正して送信してください。",
+      openPanel: "AIチャットを開く",
+      title: "AIチャットでストーリー作り",
+      aiPoweredGuide: "AIで作るMulmoScriptガイド",
+      beginnerDescription: "AIに相談しながらストーリーを作成できます。",
+      advancedDescription: "用意されたプロンプトでAIが台本案を仕上げます。",
+      enterMessage: "AIへのメッセージ",
+      clearChat: "会話をリセット",
+      copyMessage: "メッセージをコピー（開発用）",
+      enableTools: "補助ツールを使う",
+      confirmClear: "会話をすべて消しますか？",
+      undoChat: "直前の状態に戻す",
+      createButtonDescription: "テンプレートを選び「入力欄にコピー」→内容を調整→送信で台本を作れます。",
       copyScript: "入力欄にコピー",
+      applyStyle: "スタイルを適用",
       creating: "作成中...",
-      createScript: "スクリプト作成",
-      exampleMessage: "例）ありがとうございます！作成を進めてください。",
+      createScript: "台本を作成",
+      exampleMessage: "例）旅行紹介動画の構成を手伝って。",
+      templates: {
+        akira_comic: "アキラ風マンガ",
+        ani: "Aniのプレゼン",
+        business: "ビジネスプレゼン",
+        characters: "登場人物が多い物語",
+        children_book: "子ども向け絵本",
+        coding: "プログラミング解説",
+        comic_strips: "アメコミ風ストリップ",
+        documentary: "ドキュメンタリー",
+        drslump_comic: "Dr.スランプ風",
+        ghibli_comic: "ジブリ風マンガ",
+        ghibli_comic_strips: "ジブリ風ストリップ",
+        ghost_comic: "攻殻機動隊風",
+        html: "HTMLプレゼン",
+        image_prompt: "画像生成プロンプト",
+        onepiece_comic: "ワンピース風",
+        portrait_movie: "リアルなポートレート動画",
+        realistic_movie: "リアル動画テンプレ",
+        sensei_and_taro: "先生と太郎の会話",
+        shorts: "ショート動画",
+        sifi_story: "SFの群像劇",
+        trailer: "映画予告テンプレ",
+        vision: "ビジネス分析レポート",
+      },
+      prompt: {
+        generatePrompt:
+          "このテーマまたはストーリーの {scriptLang} 向け台本を作り、ツール『pushScript』に渡してください。",
+      },
+      conversationModes: {
+        presentation: "プレゼン(1人)",
+        dialogue: "２人の会話",
+        story: "複数人/物語",
+      },
+      continue: "続けて",
     },
   },
   beat: {
@@ -482,9 +539,10 @@ const lang = {
     imagePreview: "画像プレビュー",
     // Beat speaker settings
     speaker: {
-      selectSpeaker: "スピーカーを選択",
+      label: "登場人物の声",
+      selectSpeaker: "登場人物を選択",
       text: "テキスト",
-      placeholder: "{language}入力: {speaker}の音声生成内容",
+      placeholder: "{language}で{speaker}の話す内容を書いてください",
     },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
@@ -492,7 +550,10 @@ const lang = {
       label: "画像または動画ファイル",
       remoteLabel: "リモートメディア",
       urlField: "URL",
-      placeholder: "画像URLを入力するかファイルをアップロード",
+      placeholder: "画像URLを入力",
+    },
+    mediaImageFile: {
+      label: "画像ファイル",
     },
     textSlide: {
       badge: "Text Slide",
@@ -556,8 +617,9 @@ const lang = {
     },
     imageReference: {
       badge: "Image Reference",
-      keyField: "画像参照キー",
-      placeholder: "キー(英数字のみ)",
+      keyField: "キャラのキー",
+      placeholder: "まずはキャラのキーを登録(英数字のみ)",
+      imagePromptPlaceholder: "キャラ画像を生成するためのプロンプトを入力してください。",
     },
     image: {
       badge: "Image",
@@ -579,24 +641,33 @@ const lang = {
   // Parameters structure (extracted from project.scriptEditor.*)
   parameters: {
     movieParams: {
-      title: "動画設定",
-      transitionType: "トランジションの種類",
-      transitionDuration: "トランジションの長さ（秒）",
+      title: "動画生成設定",
       providerNone: "なし",
       modelAuto: "自動",
-      transitionFade: "フェード",
-      transitionSlideoutLeft: "左にスライドアウト",
+    },
+    transitionParams: {
+      title: "切り替え効果",
+      description:
+        "場面が変わるときの演出を設定します。フェードは画面がふわっと切り替わり、スライドアウトは画面が横に流れて切り替わります。",
+      type: "切り替えの種類",
+      duration: "切り替えの長さ（秒）",
+      typeNone: "なし",
+      typeFade: "フェード",
+      typeSlideoutLeft: "左にスライドアウト",
     },
     speechParams: {
-      title: "音声設定",
-      defaultSpeaker: "標準のスピーカー",
-      speakers: "スピーカー一覧",
-      language: "言語",
+      title: "登場人物の声設定",
+      defaultSpeaker: "標準の登場人物",
+      speakers: "登場人物の声一覧",
+      language: "発話言語",
       displayName: "表示名",
-      voiceId: "音声ID",
-      speed: "速度",
-      instruction: "指示",
-      noSpeakersDefined: "スピーカーが定義されていません",
+      voiceId: "声の種類",
+      speed: "読み上げの速さ",
+      speedPlaceholder: "例）1.2（0.4〜3.0、標準は1.0）",
+      instruction: "読み上げスタイル",
+      instructionPlaceholder: "例）ゆっくりと優しく読んで",
+      placeholder: "登場人物の名前 (英数字のみ)",
+      noSpeakersDefined: "登場人物が定義されていません",
       initializeSpeechParameters: "音声パラメータを初期化",
     },
     canvasSizeParams: {
@@ -620,13 +691,15 @@ const lang = {
       cssDescription: "CSSスタイルを単一文字列または複数行で入力してください",
     },
     imageParams: {
-      title: "画像設定",
+      title: "画像生成設定",
       modelAuto: "自動",
       stylePlaceholder: "例) 鮮やか、自然",
       moderation: "モデレーション",
       moderationPlaceholder: "例) 低、自動",
-      images: "参考画像",
-      imagesEmptyHint: "画像が見つかりません。参照タブで参考画像を設定してください。",
+      images: "キャラクター画像",
+      imagesDescription: "このビートで使うキャラクターを選んでください",
+      imagesEmptyHint:
+        "キャラ画像は設定されていません。生成画像でキャラクターを指定する場合は、「キャラ生成」タブでキャラ画像を設定してください。",
     },
     audioParams: {
       title: "オーディオ設定",
@@ -645,7 +718,12 @@ const lang = {
       clickToSelect: "またはクリックして選択",
     },
   },
-
+  presentationStyle: {
+    styleTemplate: {
+      title: "スタイル テンプレート",
+      description: "スタイルを上書きします。既存のスタイル設定が消えるので注意してください。",
+    },
+  },
   viewer: {
     mediaPreview: {
       modal: {
@@ -683,7 +761,7 @@ const lang = {
     },
     // BeatSessionType
     beat: {
-      imageReference: "参照画像",
+      imageReference: "キャラ画像",
       audio: "音声",
       image: "画像",
       multiLingual: "多言語テキスト",
@@ -703,6 +781,15 @@ const lang = {
     apiKey: {
       error: "{keyName} を設定してください",
       setup: "設定へ移動",
+    },
+    error: {
+      unknownError: "不明なエラーです",
+      image: {
+        fileNotExist: "ビート{beat_index}の画像が存在しない、もしくは正しくないようです",
+      },
+      audio: {
+        generateAudioSpeechParam: "{speechParams} (speechParams) がセットされていません",
+      },
     },
   },
   languages: {
@@ -890,6 +977,12 @@ const lang = {
       steven_casteel: "Steven Casteel",
       sayuri: "Sayuri",
     },
+  },
+  updater: {
+    title: "アプリケーションのアップデート",
+    detail: "新しいバージョンがダウンロードされました。アプリケーションを再起動してアップデートを適用してください。",
+    restartButtonText: "再起動",
+    laterButtonText: "あとで",
   },
 };
 

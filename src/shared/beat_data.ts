@@ -18,8 +18,32 @@ export const initMulmoScript = (title: string, lang: string = "en") => ({
   ],
 });
 
+export const firstInitMulmoScript = (title: string, lang: string = "en") => ({
+  title: title,
+  description: INITIAL_DESCRIPTION,
+  $mulmocast: {
+    version: "1.1",
+    credit: "closing",
+  },
+  lang,
+  beats: [
+    {
+      id: "abc1",
+      speaker: "Presenter",
+      text: "未来の世界ではAIが大活躍します",
+      imagePrompt: "AIが活躍する画像を作って",
+    },
+    {
+      id: "abc2",
+      speaker: "Presenter",
+      text: "人間は仕事をAIにまかせて、好きなことをして暮らします",
+      imagePrompt: "公園で楽しく遊んでいる場面",
+    },
+  ],
+});
+
 // key is i18n key
-export const beatTemplate: { key: string; beat: MulmoBeat }[] = [
+export const beatTemplates: { key: string; beat: MulmoBeat }[] = [
   {
     key: "imagePrompt",
     beat: {
@@ -129,3 +153,8 @@ export const beatTemplate: { key: string; beat: MulmoBeat }[] = [
     },
   },
 ];
+
+// for beginner
+export const simpleTemplates = beatTemplates.filter((temp) => {
+  return ["imagePrompt", "mediaFile", "markdown"].includes(temp.key);
+});

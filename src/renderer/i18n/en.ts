@@ -38,6 +38,7 @@ const lang = {
       height: "Height",
       duration: "Duration",
       quality: "Quality",
+      renderingQuality: "Rendering Quality",
       style: "Style",
       type: "Type",
       format: "Format",
@@ -258,6 +259,16 @@ const lang = {
         placeholder: "Select a language",
         description: "Select your preferred display language for the application",
       },
+      mode: {
+        label: "Mode settings",
+        placeholder: "Select a mode",
+        description: "Beginner mode shows simplified options, while advanced mode displays all detailed settings",
+      },
+      userLevel: {
+        beginner: "Beginner",
+        semiPro: "Intermediate",
+        pro: "Advanced",
+      },
     },
     apiKeys: {
       title: "API Key Settings",
@@ -346,7 +357,16 @@ const lang = {
       titleAsc: "Title (A-Z)",
       titleDesc: "Title (Z-A)",
     },
-    empty: "No projects yet. Create your first project to get started!",
+    empty: {
+      welcome: "Welcome to MulmoCast!",
+      introduction1: "First, click the {createNew} button.",
+      introduction2:
+        "A project with sample content will be created automatically. Then simply press {generateVideo} button to try it out right away.",
+      introduction3: "Prefer to start from scratch? Don't worry.",
+      introduction4:
+        "The first three projects include samples, but from the fourth project onward, you'll get a blank project to build on your own.",
+      introduction5: "For intermediate and advanced users, you can switch modes from the settings screen.",
+    },
     confirmDelete: 'Are you sure you want to delete "{title}"?',
     errors: {
       createProjectFailed: "Failed to create project. Please try again.",
@@ -364,7 +384,7 @@ const lang = {
       openProjectFolder: "Open Project Folder",
     },
     menu: {
-      script: "Script",
+      script: "Create Video Story",
       product: "Product",
       debugLog: "Debug Logs",
     },
@@ -372,7 +392,9 @@ const lang = {
       openPanel: "Open Output & Product panel",
       outputProduct: "Output Settings & Generation / Production",
       outputSettingsGeneration: "Output Settings & Generation",
+      generationAndPlay: "Create Video / Watch Video",
       generateContents: "Generate Contents",
+      generateVideo: "Generate Video",
       movie: "Movie",
       audio: "Podcast",
       pdfSlide: "PDF (Presenter)",
@@ -395,8 +417,8 @@ const lang = {
         modeDescription: "Complete MulmoScript editing",
       },
       media: {
-        tabLabel: "Media",
-        mode: "Media Mode",
+        tabLabel: "BEAT",
+        mode: "Edit Story",
         modeDescription: "Beat-by-beat media editing and preview",
       },
       style: {
@@ -405,9 +427,11 @@ const lang = {
         modeDescription: "Presentation style editing",
       },
       reference: {
-        tabLabel: "Ref",
-        mode: "Reference",
-        modeDescription: "Reference image for character consistency",
+        tabLabel: "Character",
+        mode: "Character Settings",
+        modeDescription: "Manage characters that appear in the presentation",
+        description:
+          'Create character images using "Image Generation Prompt" or "Upload Image", then specify them in the "Image Settings" for each BEAT using "{key}".',
       },
       validationStatus: "Validation Status",
     },
@@ -460,13 +484,14 @@ const lang = {
     },
     chat: {
       openPanel: "Open AI Assistant Chat panel",
-      title: "AI Assistant Chat",
+      title: "Story Creation with AI Chat",
       aiPoweredGuide: "AI-Powered MulmoScript Generation Guide",
-      beginnerDescription: "Let's Create Scripts Through Conversation with AI Assistants",
+      beginnerDescription: "Create stories through consultation with AI.",
       advancedDescription: "Use ChatGPT or other AI tools to generate your Script content with these proven prompts",
       enterMessage: "Enter your message:",
       clearChat: "Clear chat",
       copyMessage: "Copy message for debug",
+      applyStyle: "Apply Style",
       enableTools: "Enable Tools",
       confirmClear: "Are you sure you want to clear the chat?",
       undoChat: "Cancel Editing",
@@ -475,6 +500,40 @@ const lang = {
       creating: "Creating...",
       createScript: "Create Script",
       exampleMessage: "ex) Thank you very much! Please proceed with the creation.",
+      templates: {
+        akira_comic: "Akira style",
+        ani: "Presentation by Ani",
+        business: "Business presentation",
+        characters: "Story with multiple characters",
+        children_book: "Children Book",
+        coding: "Coding presentation",
+        comic_strips: "American Comic Strips",
+        documentary: "Documentary",
+        drslump_comic: "Dr. Slump Style",
+        ghibli_comic: "Ghibli-style comic.",
+        ghibli_comic_strips: "Ghibli-style comic strips",
+        ghost_comic: "Ghost in the shell style",
+        html: "Business presentation in HTML",
+        image_prompt: "Plain Image Prompt",
+        onepiece_comic: "One Piece style",
+        portrait_movie: "Photo realistic movie (portrait)",
+        realistic_movie: "Photo realistic movie template",
+        sensei_and_taro: "Student and Teacher",
+        shorts: "Short movie template",
+        sifi_story: "Multi-character Story",
+        trailer: "Movie Trailer template",
+        vision: "Business Analysis",
+      },
+      prompt: {
+        generatePrompt:
+          "Generate a {scriptLang} presentation script for this topic or story and pass it to tool 'pushScript.'",
+      },
+      conversationModes: {
+        presentation: "Presentation",
+        dialogue: "Dialogue",
+        story: "Story",
+      },
+      continue: "continue",
     },
   },
   beat: {
@@ -482,6 +541,7 @@ const lang = {
     imagePreview: "Image Preview",
     // Beat speaker settings
     speaker: {
+      label: "Select Voice",
       selectSpeaker: "Select a speaker",
       text: "Text",
       placeholder: "{language} input: {speaker}'s voice content",
@@ -492,7 +552,10 @@ const lang = {
       label: "Image or Movie file",
       remoteLabel: "Remote Media",
       urlField: "URL",
-      placeholder: "Enter image URL or upload file",
+      placeholder: "Enter image URL",
+    },
+    mediaImageFile: {
+      label: "Image file",
     },
     textSlide: {
       badge: "Text Slide",
@@ -543,7 +606,7 @@ const lang = {
     },
     imagePrompt: {
       badge: "Image Prompt",
-      label: "Image Prompt",
+      label: "Image Generation Prompt",
       promptField: "Prompt",
       placeholder: "Enter prompt to generate image. If empty, text is used.",
     },
@@ -557,6 +620,7 @@ const lang = {
       badge: "Image Reference",
       keyField: "Image Reference Key",
       placeholder: "Image Reference Key (a-z0-9)",
+      imagePromptPlaceholder: "Enter prompt to generate charactor image.",
     },
     image: {
       badge: "Image",
@@ -579,12 +643,18 @@ const lang = {
   parameters: {
     movieParams: {
       title: "Movie Parameters",
-      transitionType: "Transition Type",
-      transitionDuration: "Transition Duration (seconds)",
       providerNone: "None",
       modelAuto: "Auto",
-      transitionFade: "Fade",
-      transitionSlideoutLeft: "Slide Out Left",
+    },
+    transitionParams: {
+      title: "Transition Effect",
+      description:
+        "Set how scenes change. Fade makes the screen gently switch, while Slide moves the screen sideways to change scenes.",
+      type: "Transition type",
+      duration: "Transition duration (sec)",
+      typeNone: "None",
+      typeFade: "Fade",
+      typeSlideoutLeft: "Slide left",
     },
     speechParams: {
       title: "Speech Parameters",
@@ -593,8 +663,11 @@ const lang = {
       language: "Language",
       displayName: "Display Name",
       voiceId: "Voice ID",
-      speed: "Speed",
-      instruction: "Instruction",
+      speed: "Reading Speed",
+      speedPlaceholder: "e.g., 1.2 (range: 0.4-3.0, default: 1.0)",
+      instruction: "Reading Style",
+      instructionPlaceholder: "e.g., Read slowly and gently",
+      placeholder: "Speaker name (a-z0-9)",
       noSpeakersDefined: "No speakers defined",
       initializeSpeechParameters: "Initialize Speech Parameters",
     },
@@ -624,7 +697,8 @@ const lang = {
       stylePlaceholder: "ex) vivid, natural",
       moderation: "Moderation",
       moderationPlaceholder: "ex) low, auto",
-      images: "Reference Image",
+      images: "Charactor Image",
+      imagesDescription: "Select the character for this beat",
       imagesEmptyHint: "No images found. Please set references in the Ref tab.",
     },
     audioParams: {
@@ -642,6 +716,12 @@ const lang = {
       dropAudioHere: "Drop audio file here",
       clickToReplace: "Click to replace",
       clickToSelect: "or click to select",
+    },
+  },
+  presentationStyle: {
+    styleTemplate: {
+      title: "Style template",
+      description: "Overwrite the style. Be careful as the existing style settings will be lost.",
     },
   },
 
@@ -701,6 +781,15 @@ const lang = {
     apiKey: {
       error: "You need setup {keyName}.",
       setup: "Setup",
+    },
+    error: {
+      unknownError: "Unknown error occurred",
+      image: {
+        fileNotExist: "The image for beat {beat_index} does not exist or is invalid",
+      },
+      audio: {
+        generateAudioSpeechParam: "{speechParams} (speechParams) are not set",
+      },
     },
   },
   languages: {
@@ -888,6 +977,12 @@ const lang = {
       steven_casteel: "Steven Casteel",
       sayuri: "Sayuri",
     },
+  },
+  updater: {
+    title: "Application Update",
+    detail: "A new version has been downloaded. Restart the application to apply the updates.",
+    restartButtonText: "Restart",
+    laterButtonText: "Later",
   },
 };
 

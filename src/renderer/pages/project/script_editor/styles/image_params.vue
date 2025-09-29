@@ -1,6 +1,6 @@
 <template>
-  <Card class="p-4">
-    <h4 class="mb-3 font-medium" v-if="showTitle">{{ t("parameters.imageParams.title") }}</h4>
+  <Card class="mt-4 p-4">
+    <h4 class="text-sm font-medium">{{ t("parameters.imageParams.title") }}</h4>
 
     <div class="space-y-3">
       <div>
@@ -39,7 +39,7 @@
         </Select>
       </div>
       <div>
-        <Label>{{ t("ui.common.quality") }}</Label>
+        <Label>{{ t("ui.common.renderingQuality") }}</Label>
         <Select
           :model-value="imageParams?.quality || IMAGE_PARAMS_DEFAULT_VALUES.quality"
           @update:model-value="(value) => handleUpdate('quality', String(value))"
@@ -70,19 +70,6 @@
           :placeholder="t('parameters.imageParams.moderationPlaceholder')"
         />
       </div>
-      <div v-if="images" class="my-2">
-        <Label>{{ t("parameters.imageParams.images") }}</Label>
-        <div v-if="Object.keys(images).length === 0" class="text-muted-foreground mt-2 text-sm">
-          {{ t("parameters.imageParams.imagesEmptyHint") }}
-        </div>
-        <div v-for="imageKey in Object.keys(images)" :key="imageKey">
-          <Checkbox
-            :model-value="(beat?.imageNames ?? Object.keys(images ?? {})).includes(imageKey)"
-            @update:modelValue="(val) => updateImageNames(imageKey, val)"
-            class="m-2"
-          />{{ imageKey }}
-        </div>
-      </div>
       <MulmoError :mulmoError="mulmoError" />
     </div>
   </Card>
@@ -91,16 +78,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { Label, Input, Checkbox, Card } from "@/components/ui";
+import { Label, Input, Card } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
-import {
-  provider2ImageAgent,
-  type MulmoImageParams,
-  type MulmoBeat,
-  type Text2ImageProvider,
-  type MulmoImageParamsImages,
-} from "mulmocast/browser";
+import { provider2ImageAgent, type MulmoImageParams, type MulmoBeat, type Text2ImageProvider } from "mulmocast/browser";
 import { mulmoOpenAIImageModelSchema } from "mulmocast/browser";
 
 import SettingsAlert from "../settings_alert.vue";
@@ -124,7 +105,6 @@ const PROVIDERS = Object.entries(provider2ImageAgent)
 const props = withDefaults(
   defineProps<{
     imageParams?: MulmoImageParams;
-    images?: MulmoImageParamsImages;
     mulmoError: string[];
     beat?: MulmoBeat;
     showTitle?: boolean;
@@ -136,20 +116,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   update: [imageParams: MulmoImageParams];
-  updateImageNames: [val: string[]];
 }>();
-
-const updateImageNames = (imageKey: string, val: string[]) => {
-  const current = props.beat?.imageNames ?? [];
-
-  const newArray = val
-    ? current.includes(imageKey)
-      ? current
-      : [...current, imageKey]
-    : current.filter((key) => key !== imageKey);
-
-  emit("updateImageNames", newArray);
-};
 
 const handleProviderChange = (value: Text2ImageProvider) => {
   if (value !== props.imageParams?.provider) {

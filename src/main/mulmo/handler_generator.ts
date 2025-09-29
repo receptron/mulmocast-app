@@ -82,6 +82,7 @@ export const mulmoActionRunner = async (
         projectId,
         type: "error",
         data: error,
+        cause: error?.cause,
       });
     }
     return {

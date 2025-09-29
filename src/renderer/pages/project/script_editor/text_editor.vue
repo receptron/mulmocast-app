@@ -4,7 +4,7 @@
     <Badge variant="outline">{{ t("beat." + getBadge(beat) + ".badge") }}</Badge>
   </div>
   <div>
-    <Label>{{ t("ui.common.speaker") }}</Label>
+    <Label>{{ t("beat.speaker.label") }}</Label>
     <Select :model-value="beat?.speaker" @update:model-value="(value) => update(index, 'speaker', String(value))">
       <SelectTrigger class="h-8">
         <SelectValue :placeholder="t('beat.speaker.selectSpeaker')" />
@@ -32,18 +32,28 @@
       class="min-h-8 resize-y"
     />
   </div>
-  <Button variant="outline" size="sm" @click="generateAudio(index)" class="w-fit">{{
-    t("ui.actions.generateAudio")
-  }}</Button>
+  <Button
+    variant="outline"
+    size="sm"
+    @click="generateAudio(index)"
+    class="w-fit"
+    :disabled="beat?.text?.length === 0"
+    >{{ t("ui.actions.generateAudio") }}</Button
+  >
   <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">{{
     t("ui.status.generating")
   }}</span>
   <audio :src="audioFile" v-if="!!audioFile" controls />
   <!-- multi lingal -->
   <div v-if="supporLanguages.length > 0">
-    <Button variant="outline" size="sm" @click="translateBeat(index)" class="w-fit">{{
-      t("ui.actions.translateBeat")
-    }}</Button>
+    <Button
+      variant="outline"
+      size="sm"
+      @click="translateBeat(index)"
+      class="w-fit"
+      :disabled="beat?.text?.length === 0"
+      >{{ t("ui.actions.translateBeat") }}</Button
+    >
   </div>
   <div v-for="(lang, key) in supporLanguages" :key="key">
     {{ t("languages." + lang) }}
@@ -74,7 +84,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { getBadge } from "@/lib/beat_util.js";
 
 import { useMulmoEventStore, useMulmoGlobalStore } from "@/store";
-import { notifyProgress } from "@/lib/notification";
+import { notifyProgress, notifyError } from "@/lib/notification";
 import { useApiErrorNotify } from "@/composables/notify";
 import { getConcurrentTaskStatusMessageComponent } from "../concurrent_task_status_message";
 
@@ -117,22 +127,30 @@ const justSaveAndPushToHistory = () => {
 const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
 
 const generateAudio = async (index: number) => {
-  const { provider } = MulmoStudioContextMethods.getAudioParam(
-    { ...props.mulmoScript, presentationStyle: props.mulmoScript },
-    props.beat,
-    props.lang,
-  );
-  const { keyName } = provider2TTSAgent[provider];
-  if (!hasApiKey(keyName)) {
-    apiErrorNotify(keyName);
-    return;
-  }
+  try {
+    const { provider } = MulmoStudioContextMethods.getAudioParam(
+      { ...props.mulmoScript, presentationStyle: props.mulmoScript },
+      props.beat,
+      props.lang,
+    );
+    const { keyName } = provider2TTSAgent[provider];
+    if (!hasApiKey(keyName)) {
+      apiErrorNotify(keyName);
+      return;
+    }
 
-  notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", props.projectId, index), {
-    loadingMessage: ConcurrentTaskStatusMessageComponent,
-    successMessage: t("notify.audio.successMessage"),
-    errorMessage: t("notify.audio.errorMessage"),
-  });
+    notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", props.projectId, index), {
+      loadingMessage: ConcurrentTaskStatusMessageComponent,
+      successMessage: t("notify.audio.successMessage"),
+      errorMessage: t("notify.audio.errorMessage"),
+    });
+  } catch (error) {
+    notifyError(
+      t("ui.common.error"),
+      t("notify.error.audio.generateAudioSpeechParam", { speechParams: t("parameters.speechParams.title") }),
+    );
+    console.log(error);
+  }
 };
 
 const translateBeat = async (index: number) => {

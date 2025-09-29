@@ -1,8 +1,8 @@
 <template>
   <Card class="p-4">
-    <h4 class="mb-3 font-medium">{{ t("parameters.audioParams.title") }}</h4>
+    <h4 class="font-medium">{{ t("parameters.audioParams.title") }}</h4>
     <div class="space-y-3">
-      <div class="grid grid-cols-2 gap-4">
+      <div class="grid grid-cols-2 gap-4" v-if="globalStore.userIsPro">
         <div>
           <Label>{{ t("parameters.audioParams.padding") }}</Label>
           <Input
@@ -22,7 +22,7 @@
           />
         </div>
       </div>
-      <div class="grid grid-cols-2 gap-4">
+      <div class="grid grid-cols-2 gap-4" v-if="globalStore.userIsPro">
         <div>
           <Label>{{ t("parameters.audioParams.closingPadding") }}</Label>
           <Input
@@ -149,6 +149,8 @@ import { bgmAssets } from "mulmocast/data";
 import MulmoError from "./mulmo_error.vue";
 import { AUDIO_PARAMS_DEFAULT_VALUES, SILENT_BGM } from "@/../shared/constants";
 
+import { useMulmoGlobalStore } from "@/store";
+
 type AudioParams = MulmoPresentationStyle["audioParams"];
 
 const { t } = useI18n();
@@ -158,6 +160,8 @@ const props = defineProps<{
   audioParams?: AudioParams;
   mulmoError: string[];
 }>();
+
+const globalStore = useMulmoGlobalStore();
 
 const emit = defineEmits<{
   update: [audioParams: AudioParams];

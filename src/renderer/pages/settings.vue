@@ -8,9 +8,10 @@
           <CardTitle>{{ t("settings.appSettings.title") }}</CardTitle>
           <CardDescription>{{ t("settings.appSettings.description") }}</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent class="space-y-6">
           <div class="space-y-2">
             <Label for="language">{{ t("settings.appSettings.language.label") }}</Label>
+            <p class="text-muted-foreground text-sm">{{ t("settings.appSettings.language.description") }}</p>
             <Select v-model="selectedLanguage">
               <SelectTrigger id="language" data-testid="language-select">
                 <SelectValue :placeholder="t('settings.appSettings.language.placeholder')" />
@@ -26,7 +27,20 @@
                 </SelectItem>
               </SelectContent>
             </Select>
-            <p class="text-muted-foreground text-sm">{{ t("settings.appSettings.language.description") }}</p>
+          </div>
+          <div class="space-y-2">
+            <Label for="mode">{{ t("settings.appSettings.mode.label") }}</Label>
+            <p class="text-muted-foreground text-sm">{{ t("settings.appSettings.mode.description") }}</p>
+            <Select v-model="selectedUserLevel">
+              <SelectTrigger id="mode">
+                <SelectValue :placeholder="t('settings.appSettings.mode.placeholder')" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem v-for="user_level in userLevels" :key="user_level.id" :value="user_level.id">
+                  {{ t("settings.appSettings.userLevel." + user_level.id) }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>
@@ -72,7 +86,7 @@
             {{ t("settings.languages.mainTitle") }}
           </div>
           <RadioGroup v-model="mainLanguage" class="grid grid-cols-4 gap-2 text-sm">
-            <div v-for="language in languages" :key="language" class="flex items-center space-x-2">
+            <div v-for="language in isPro ? languages : simpleLang" :key="language" class="flex items-center space-x-2">
               <RadioGroupItem :value="language" :id="language" />
               <Label :for="language">{{ t("languages." + language) }}</Label>
             </div>
@@ -80,7 +94,7 @@
           <div class="text-foreground text-base font-semibold">
             {{ t("settings.languages.translatedTitle") }}
           </div>
-          <div v-for="(language, key) in languages" :key="key">
+          <div v-for="(language, key) in isPro ? languages : simpleLang" :key="key">
             &ensp;
             <Checkbox v-model="useLanguage[language]" />
             {{ t("languages." + language) }}
@@ -101,7 +115,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive, watch, nextTick, toRaw } from "vue";
+import { ref, onMounted, reactive, watch, nextTick, toRaw, computed } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import { ChevronDown } from "lucide-vue-next";
@@ -124,6 +138,7 @@ import {
   LLM_ANTHROPIC_DEFAULT_CONFIG,
   LLM_GROQ_DEFAULT_CONFIG,
   LLM_GEMINI_DEFAULT_CONFIG,
+  userLevels,
 } from "../../shared/constants";
 import { useMulmoGlobalStore } from "../store";
 
@@ -140,6 +155,8 @@ const useLanguage = reactive<Record<string, boolean>>({});
 
 const selectedLanguage = ref(locale.value);
 const isInitialLoad = ref(true);
+
+const selectedUserLevel = ref("beginner");
 
 const selectedLLM = ref("openAIAgent");
 
@@ -217,6 +234,9 @@ onMounted(async () => {
     if (settings?.llmConfigs?.groq) {
       llmConfigs.value.groq = settings.llmConfigs.groq;
     }
+    if (settings?.USER_LEVEL) {
+      selectedUserLevel.value = settings.USER_LEVEL;
+    }
     // Wait for the next tick to avoid triggering save during initial load
     await nextTick();
     isInitialLoad.value = false;
@@ -236,8 +256,10 @@ const saveSettings = async () => {
       MAIN_LANGUAGE: mainLanguage.value,
       CHAT_LLM: selectedLLM.value,
       llmConfigs: toRaw(llmConfigs.value),
+      USER_LEVEL: selectedUserLevel.value ?? "beginner",
     };
     await window.electronAPI.settings.set(data);
+    console.log(data);
     globalStore.updateSettings(data);
     notifySuccess(t("settings.notifications.success"));
   } catch (error) {
@@ -286,6 +308,26 @@ watch(
   },
   { deep: true },
 );
+
+watch(selectedUserLevel, () => {
+  if (!isInitialLoad.value) {
+    saveSettings();
+    // console.log(mainLanguage.value, useLanguage, supportLanguages.value);
+    if (!supportLanguages.value.includes(mainLanguage.value)) {
+      mainLanguage.value = "en";
+    }
+  }
+});
+
+const isPro = computed(() => {
+  return selectedUserLevel.value === "pro";
+});
+
+const simpleLang = I18N_SUPPORTED_LANGUAGES.map((a) => a.id);
+
+const supportLanguages = computed(() => {
+  return isPro.value ? languages : simpleLang;
+});
 
 // Watch for changes in language selection - save immediately and update i18n locale
 watch(selectedLanguage, (newLang) => {
