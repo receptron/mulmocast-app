@@ -40,7 +40,7 @@ export const zodError2MulmoError = (error: ZodError) => {
         }
         if (current.code === "invalid_type") {
           if (Array.isArray(tmp[key])) {
-            tmp[key].push(invalidKeysError(current.path, current.keys));
+            tmp[key].push(invalidKeysError(current.path, current.message));
           }
         }
       }
