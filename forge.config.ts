@@ -25,7 +25,8 @@ const config: ForgeConfig = {
       "node_modules/mulmocast/scripts",
       "node_modules/mulmocast-vision/html",
     ],
-    icon: "./images/mulmocast_icon.icns",
+    // Windows packages are built on Windows CI runners, so this platform check stays valid.
+    icon: process.platform === "win32" ? "./images/mulmocast_icon_win.ico" : "./images/mulmocast_icon.icns",
     osxSign: process.env.CODESIGN_IDENTITY
       ? ({
           identity: process.env.CODESIGN_IDENTITY,

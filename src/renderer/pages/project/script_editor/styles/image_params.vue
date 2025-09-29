@@ -1,22 +1,4 @@
 <template>
-  <Card class="p-4">
-    <div class="space-y-3">
-      <h4 class="font-medium">{{ t("parameters.imageParams.images") }}</h4>
-      <div v-if="Object.keys(images ?? {}).length === 0" class="text-muted-foreground mt-2 text-sm">
-        {{ t("parameters.imageParams.imagesEmptyHint") }}
-      </div>
-      <div v-else>
-        <div v-for="imageKey in Object.keys(images)" :key="imageKey">
-          <Checkbox
-            :model-value="(beat?.imageNames ?? Object.keys(images ?? {})).includes(imageKey)"
-            @update:modelValue="(val) => updateImageNames(imageKey, val)"
-            class="m-2"
-          />{{ imageKey }}
-        </div>
-      </div>
-    </div>
-  </Card>
-
   <Card class="mt-4 p-4">
     <h4 class="font-medium">{{ t("parameters.imageParams.title") }}</h4>
 
@@ -96,16 +78,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { Label, Input, Checkbox, Card } from "@/components/ui";
+import { Label, Input, Card } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
-import {
-  provider2ImageAgent,
-  type MulmoImageParams,
-  type MulmoBeat,
-  type Text2ImageProvider,
-  type MulmoImageParamsImages,
-} from "mulmocast/browser";
+import { provider2ImageAgent, type MulmoImageParams, type MulmoBeat, type Text2ImageProvider } from "mulmocast/browser";
 import { mulmoOpenAIImageModelSchema } from "mulmocast/browser";
 
 import SettingsAlert from "../settings_alert.vue";
@@ -129,7 +105,6 @@ const PROVIDERS = Object.entries(provider2ImageAgent)
 const props = withDefaults(
   defineProps<{
     imageParams?: MulmoImageParams;
-    images?: MulmoImageParamsImages;
     mulmoError: string[];
     beat?: MulmoBeat;
     showTitle?: boolean;
@@ -141,20 +116,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   update: [imageParams: MulmoImageParams];
-  updateImageNames: [val: string[]];
 }>();
-
-const updateImageNames = (imageKey: string, val: string[]) => {
-  const current = props.beat?.imageNames ?? [];
-
-  const newArray = val
-    ? current.includes(imageKey)
-      ? current
-      : [...current, imageKey]
-    : current.filter((key) => key !== imageKey);
-
-  emit("updateImageNames", newArray);
-};
 
 const handleProviderChange = (value: Text2ImageProvider) => {
   if (value !== props.imageParams?.provider) {
