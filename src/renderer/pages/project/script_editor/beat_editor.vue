@@ -270,6 +270,7 @@
       @update="update"
       :imageParams="mulmoScript.imageParams"
       :settingPresence="settingPresence"
+      :isPro="isPro"
       @updateImageNames="updateImageNames"
       @justSaveAndPushToHistory="justSaveAndPushToHistory"
       v-if="beatType === 'imagePrompt'"
@@ -483,7 +484,10 @@ const generateAudio = async () => {
       errorMessage: t("notify.audio.errorMessage"),
     });
   } catch (error) {
-    notifyError(t("ui.common.error"), t("notify.error.audio.generateAudioSpeechParam"));
+    notifyError(
+      t("ui.common.error"),
+      t("notify.error.audio.generateAudioSpeechParam", { speechParams: t("parameters.speechParams.title") }),
+    );
     console.log(error);
   }
 };

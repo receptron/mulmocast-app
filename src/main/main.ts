@@ -19,7 +19,7 @@ log.initialize();
 const iconPath =
   os.platform() === "darwin"
     ? path.join(__dirname, "../../images/mulmocast_icon.icns")
-    : path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png");
+    : path.join(__dirname, "../../images/mulmocast_icon_win.ico");
 
 const isDev = process.env.NODE_ENV === "development";
 const isCI = process.env.CI === "true";

@@ -775,6 +775,15 @@ const lang = {
       error: "You need setup {keyName}.",
       setup: "Setup",
     },
+    error: {
+      unknownError: "Unknown error occurred",
+      image: {
+        fileNotExist: "The image for beat {beat_index} does not exist or is invalid",
+      },
+      audio: {
+        generateAudioSpeechParam: "{speechParams} (speechParams) are not set",
+      },
+    },
   },
   languages: {
     ja: "Japanese",

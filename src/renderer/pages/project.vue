@@ -520,12 +520,17 @@ watch(
       downloadImageFile(projectId.value, index, mulmoEvent.id);
     }
     if (mulmoEvent?.kind === "beat") {
-      if (mulmoEvent.sessionType === "audio") {
+      if (mulmoEvent.sessionType === "audio" || mulmoEvent.sessionType === "image") {
         const index = mulmoScriptHistoryStore.currentMulmoScript?.beats?.findIndex((beat) => beat.id === mulmoEvent.id);
         if (index === -1 || index === undefined) {
           return;
         }
-        downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, mulmoEvent.id);
+        if (mulmoEvent.sessionType === "audio") {
+          downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, mulmoEvent.id);
+        }
+        if (mulmoEvent.sessionType === "image") {
+          downloadImageFile(projectId.value, index, mulmoEvent.id);
+        }
       }
       if (mulmoEvent.sessionType === "multiLingual") {
         updateMultiLingual();
