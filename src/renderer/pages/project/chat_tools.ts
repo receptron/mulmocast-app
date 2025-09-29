@@ -4,7 +4,7 @@ type UpdateBeatOnMulmoScript = {
   func: "updateBeatOnMulmoScript";
   arg: {
     index: number;
-    beat: Partial<MulmoBeat>;
+    beat: MulmoBeat;
   };
 };
 
@@ -109,7 +109,7 @@ export const mulmoScriptTools = (namedInputs: FuncNamedInput, script: MulmoScrip
   if (func === "addSpeaker") {
     const { name, imagePrompt, voiceId } = arg;
     if (!script.speechParams) {
-      script.speechParams = {};
+      script.speechParams = { speakers: {} };
     }
     if (!script.speechParams.speakers) {
       script.speechParams.speakers = {};
