@@ -166,7 +166,5 @@ test("test canvasSize extra element error", async () => {
   // console.log(zodError.error.issues);
   const mulmoError = zodError2MulmoError(zodError.error);
   // console.log(mulmoError);
-  assert.deepStrictEqual(mulmoError.canvasSize, [
-    "'height' contains invalid data: Expected number, received string."
-  ]);
+  assert.deepStrictEqual(mulmoError.canvasSize, ["'height' contains invalid data: Expected number, received string."]);
 });
