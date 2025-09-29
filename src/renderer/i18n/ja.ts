@@ -976,6 +976,12 @@ const lang = {
       sayuri: "Sayuri",
     },
   },
+  updater: {
+    title: "アプリケーションのアップデート",
+    detail: "新しいバージョンがダウンロードされました。アプリケーションを再起動してアップデートを適用してください。",
+    restartButtonText: "再起動",
+    laterButtonText: "あとで",
+  },
 };
 
 export default lang;
