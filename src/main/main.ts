@@ -16,10 +16,9 @@ import config from "../renderer/i18n/index";
 log.initialize();
 
 // Cross-platform icon path
-const iconPath =
-  os.platform() === "darwin"
-    ? path.join(__dirname, "../../images/mulmocast_icon.icns")
-    : path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png");
+const iconPath = os.platform() === "darwin"
+  ? path.join(__dirname, "../../images/mulmocast_icon.icns")
+  : path.join(__dirname, "../../images/mulmocast_icon_win.ico");
 
 const isDev = process.env.NODE_ENV === "development";
 const isCI = process.env.CI === "true";
