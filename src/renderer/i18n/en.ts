@@ -528,6 +528,12 @@ const lang = {
         generatePrompt:
           "Generate a {scriptLang} presentation script for this topic or story and pass it to tool 'pushScript.'",
       },
+      conversationModes: {
+        presentation: "Presentation",
+        dialogue: "Dialogue",
+        story: "Story",
+      },
+      continue: "continue",
     },
   },
   beat: {

@@ -75,6 +75,19 @@
         </div>
       </div>
 
+      <div class="template-dropdown-container flex items-center gap-4">
+        <Select v-model="conversationMode">
+          <SelectTrigger class="w-auto">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem v-for="mode in conversationModes" :key="mode.value" :value="mode.value">
+              {{ t("project.chat.conversationModes." + mode.value) }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       <div class="flex flex-wrap">
         <Button @click="undoMessages" variant="outline" size="xs" class="mr-4" v-if="messageHistory.length > 0">
           {{ t("project.chat.undoChat") }}
@@ -82,10 +95,13 @@
         <Button @click="() => (isClearChatDialogOpen = true)" variant="outline" size="xs">
           {{ t("project.chat.clearChat") }}
         </Button>
-        <Button v-if="isDevelopment" variant="outline" size="xs" class="ml-4" @click="copyMessageToClipboard">
+        <Button @click="runNext()" variant="outline" size="xs" class="ml-2"> {{ t("project.chat.continue") }}</Button>
+      </div>
+      <div v-if="isDevelopment">
+        <Button variant="outline" size="xs" @click="copyMessageToClipboard">
           {{ t("project.chat.copyMessage") }}
         </Button>
-        <Label class="mt-2 ml-2 inline-flex" v-if="isDevelopment">
+        <Label class="mt-2 ml-2 inline-flex">
           <Checkbox v-model="enableTools" variant="ghost" size="icon" />
           {{ t("project.chat.enableTools") }}
         </Label>
@@ -114,9 +130,6 @@
           <div class="mt-4 flex">
             <Button size="sm" @click="copyScript" :disabled="noChatMessages || isRunning" class="mr-2">
               {{ t("project.chat.copyScript") }}
-            </Button>
-            <Button size="sm" @click="applyStyle" class="mr-2">
-              {{ t("project.chat.applyStyle") }}
             </Button>
           </div>
         </div>
@@ -185,6 +198,9 @@ import mulmoVisionAgent from "../../agents/mulmo_vision_agent";
 import mulmoScriptAgent from "../../agents/mulmo_script";
 // presentation manuscript
 
+import { useSystemPrompt, conversationModes } from "./chat_system_prompt";
+import { mulmoScriptTools } from "./chat_tools";
+
 import enLang from "../../i18n/en";
 import {
   LLM_OLLAMA_DEFAULT_CONFIG,
@@ -228,6 +244,8 @@ const userInput = ref("");
 const textareaRef = useTemplateRef("textareaRef");
 const enableTools = ref(true);
 
+const { getSystemPrompt, conversationMode } = useSystemPrompt();
+
 // for running...
 const liveToolsData = ref<null | Record<string, unknown>>(null);
 const isRunning = ref(false);
@@ -241,6 +259,7 @@ const agentFilters = [
   },
 ];
 // end of running
+
 const chatHistoryRef = useAutoScroll([streamData, userInput, messages]);
 
 const clearChat = () => {
@@ -323,21 +342,9 @@ const apiKeyName = computed(() => {
   return llm.apiKey;
 });
 
-const anthropicSystemPrompt = [
-  "<use_parallel_tool_calls>",
-  "For maximum efficiency, whenever you perform multiple independent operations, invoke all relevant tools simultaneously rather than sequentially. Prioritize calling tools in parallel whenever possible. For example, when reading 3 files, run 3 tool calls in parallel to read all 3 files into context at the same time. When running multiple read-only commands like `ls` or `list_dir`, always run all of the commands in parallel. Err on the side of maximizing parallel tool calls rather than running too many tools sequentially.",
-  "</use_parallel_tool_calls>",
-].join("\n");
-
-const currentBeats = () => {
-  const beats = mulmoScriptHistoryStore.currentMulmoScript?.beats ?? [];
-  const speakers = Object.keys(mulmoScriptHistoryStore.currentMulmoScript?.speechParams?.speakers ?? {}) ?? [];
-  const speakerMessage = speakers.length > 0 ? "\n\nSpeaker(s) is " + JSON.stringify(speakers ?? []) : "";
-
-  if (beats.length > 0) {
-    return "current beats is " + JSON.stringify(beats) + speakerMessage;
-  }
-  return speakerMessage;
+const runNext = () => {
+  userInput.value = "続けて";
+  run();
 };
 
 const run = async () => {
@@ -363,15 +370,16 @@ const run = async () => {
       ...mulmoCastHelpAgent.tools,
       ...mulmoScriptAgent.tools,
     ];
-    const systemMessage = `Always reply in ${scriptLang.value}, regardless of the language of the user's input or previous conversation.  If the user's message is in a different language, translate it into ${scriptLang.value} before replying.`;
 
+    const systemPrompt = getSystemPrompt(
+      scriptLang.value,
+      mulmoScriptHistoryStore.currentMulmoScript,
+      llmAgent.value === "anthropicAgent",
+    );
     const postMessages = [
       {
         role: "system",
-        content:
-          llmAgent.value === "anthropicAgent"
-            ? [systemMessage, currentBeats(), anthropicSystemPrompt].join("\n")
-            : [systemMessage, currentBeats()].join("\n"),
+        content: systemPrompt,
       },
       ...messages
         .map(filterMessage())
@@ -380,7 +388,6 @@ const run = async () => {
           return message.content !== "" || message.tool_calls;
         }),
     ];
-    console.log(postMessages);
     const graphai = new GraphAI(graphChatWithSearch, graphAIAgents, {
       agentFilters,
       config,
@@ -413,41 +420,12 @@ const run = async () => {
         console.log(data.result.data);
       }
       if (agentId === "mulmoScriptAgent" && state === "completed") {
-        const { arg, func } = data.namedInputs;
         const script = { ...mulmoScriptHistoryStore.currentMulmoScript };
-        if (func === "updateBeatOnMulmoScript") {
-          const { beat, index } = arg;
-          // const { text, speaker, imagePrompt };
-          const newBeat = { ...(mulmoScriptHistoryStore.currentMulmoScript.beats[index] ?? {}), ...beat };
-          script.beats[index] = newBeat;
-          emit("updateMulmoScript", script);
-        } else if (func === "replaceBeatOnMulmoScript") {
-          const { beat, index } = arg;
-          script.beats[index] = beat;
-          emit("updateMulmoScript", script);
-        } else if (func === "addBeatToMulmoScript") {
-          const { beat } = arg;
-          const newBeat = typeof beat === "string" ? JSON.parse(beat) : beat;
-          script.beats.push(newBeat);
-          emit("updateMulmoScript", script);
-        } else if (func === "insertAtBeatToMulmoScript") {
-          const { beat, index } = arg;
-          const newBeat = typeof beat === "string" ? JSON.parse(beat) : beat;
-          script.beats.splice(index, 0, newBeat);
-          emit("updateMulmoScript", script);
-        } else if (func === "deleteBeatOnMulmoScript") {
-          const { index } = arg;
-          if (script.beats[index]) {
-            script.beats.splice(index, 1);
-            emit("updateMulmoScript", script);
-          }
-        } else if (func === "setImagePromptOnBeat") {
-          const { index, imagePrompt } = arg;
-          if (script.beats[index]) {
-            script.beats[index]["imagePrompt"] = imagePrompt;
-            emit("updateMulmoScript", script);
-          }
+        const newScript = mulmoScriptTools(data.namedInputs, script);
+        if (newScript) {
+          emit("updateMulmoScript", newScript);
         }
+
         // addBeatToMulmoScript -> beat
         // insertAtBeatToMulmoScript -> beat, index
         // deleteBeatOnMulmoScript -> index
@@ -504,12 +482,6 @@ const copyScript = async () => {
   const template = templateDataSet[promptTemplates[selectedTemplateIndex.value].filename];
 
   userInput.value = head + " " + template;
-};
-
-const applyStyle = () => {
-  const style = promptTemplates[selectedTemplateIndex.value].presentationStyle;
-  const script = { ...mulmoScriptHistoryStore.currentMulmoScript, ...style };
-  emit("updateMulmoScript", script);
 };
 
 const noChatMessages = computed(() => messages.length === 0);
