@@ -1,7 +1,7 @@
 <template>
   <div>
     <CharaParams :beat="beat" :images="imageParams.images" @updateImageNames="updateImageNames" />
-    <Collapsible :open="!!beat?.imageParams" @update:open="updateBeatImageParams">
+    <Collapsible :open="!!beat?.imageParams" @update:open="updateBeatImageParams" v-if="isPro">
       <CollapsibleTrigger as-child>
         <div class="mb-3 flex items-center gap-2">
           <Checkbox variant="ghost" size="icon" :modelValue="!!beat?.imageParams" />
@@ -42,6 +42,7 @@ interface Props {
   beat: MulmoBeat;
   imageParams: MulmoImageParams;
   settingPresence: Record<string, boolean>;
+  isPro: boolean;
 }
 
 const props = defineProps<Props>();

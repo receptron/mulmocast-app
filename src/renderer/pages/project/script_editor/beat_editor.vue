@@ -270,6 +270,7 @@
       @update="update"
       :imageParams="mulmoScript.imageParams"
       :settingPresence="settingPresence"
+      :isPro="isPro"
       @updateImageNames="updateImageNames"
       @justSaveAndPushToHistory="justSaveAndPushToHistory"
       v-if="beatType === 'imagePrompt'"
