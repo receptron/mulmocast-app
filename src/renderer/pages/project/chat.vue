@@ -4,7 +4,7 @@
       <SelectLanguage :mulmoScript="mulmoScript" @updateMulmoScript="(script) => emit('updateMulmoScript', script)" />
       <div class="template-dropdown-container flex items-center gap-4">
         <Select v-model="conversationMode">
-          <SelectTrigger class="ml-2 border-border h-6! w-auto text-xs">
+          <SelectTrigger class="border-border ml-2 h-6! w-auto text-xs">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -88,7 +88,6 @@
           </Button>
         </div>
       </div>
-
 
       <div class="flex flex-wrap">
         <Button @click="undoMessages" variant="outline" size="xs" class="mr-4" v-if="messageHistory.length > 0">
