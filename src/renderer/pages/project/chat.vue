@@ -1,6 +1,20 @@
 <template>
   <div class="flex h-full flex-col space-y-2">
-    <SelectLanguage :mulmoScript="mulmoScript" @updateMulmoScript="(script) => emit('updateMulmoScript', script)" />
+    <div class="flex flex-wrap">
+      <SelectLanguage :mulmoScript="mulmoScript" @updateMulmoScript="(script) => emit('updateMulmoScript', script)" />
+      <div class="template-dropdown-container flex items-center gap-4">
+        <Select v-model="conversationMode">
+          <SelectTrigger class="ml-2 border-border h-6! w-auto text-xs">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem v-for="mode in conversationModes" :key="mode.value" :value="mode.value">
+              {{ t("project.chat.conversationModes." + mode.value) }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
     <!-- Chat history -->
     <div
       ref="chatHistoryRef"
@@ -75,18 +89,6 @@
         </div>
       </div>
 
-      <div class="template-dropdown-container flex items-center gap-4">
-        <Select v-model="conversationMode">
-          <SelectTrigger class="w-auto">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem v-for="mode in conversationModes" :key="mode.value" :value="mode.value">
-              {{ t("project.chat.conversationModes." + mode.value) }}
-            </SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
 
       <div class="flex flex-wrap">
         <Button @click="undoMessages" variant="outline" size="xs" class="mr-4" v-if="messageHistory.length > 0">
