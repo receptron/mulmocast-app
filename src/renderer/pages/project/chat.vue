@@ -96,7 +96,9 @@
         <Button @click="() => (isClearChatDialogOpen = true)" variant="outline" size="xs">
           {{ t("project.chat.clearChat") }}
         </Button>
-        <Button @click="runNext()" variant="outline" size="xs" class="ml-2"> {{ t("project.chat.continue") }}</Button>
+        <Button @click="runNext()" variant="outline" size="xs" class="ml-2" v-if="messages.length > 0">
+          {{ t("project.chat.continue") }}</Button
+        >
       </div>
       <div v-if="isDevelopment">
         <Button variant="outline" size="xs" @click="copyMessageToClipboard">
