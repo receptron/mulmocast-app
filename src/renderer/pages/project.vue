@@ -439,7 +439,6 @@ const insertSpeakers = (data) => {
 
 const formatAndPushHistoryMulmoScript = () => {
   const data = mulmoScriptSchemaNoBeats.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
-  console.log(data);
   if (data.success) {
     data.data.beats.map(setRandomBeatId);
     insertSpeakers(data.data);
