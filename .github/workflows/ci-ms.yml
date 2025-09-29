@@ -42,14 +42,14 @@ jobs:
           PUPPETEER_CACHE_DIR: ${{ github.workspace }}\\.puppeteer-cache
         run: npx puppeteer browsers install chrome
 
-      - name: Run package
+      - name: Run make (Squirrel installer)
         shell: powershell
         env:
           PUPPETEER_CACHE_DIR: ${{ github.workspace }}\\.puppeteer-cache
-        run: yarn run package
+        run: yarn run make:ci:win
         
       - name: Upload generated media
         uses: actions/upload-artifact@v4
         with:
           name: bin-win-${{ matrix.node-version }}
-          path: out/
+          path: out/make/

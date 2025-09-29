@@ -82,7 +82,7 @@ jobs:
           AC_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           CODESIGN_IDENTITY: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
           PUPPETEER_CACHE_DIR: ${{ github.workspace }}/.puppeteer-cache
-        run: yarn run make:ci
+        run: yarn run make:ci:mac
         
       # 6. 生成物のアップロード（アーティファクトとして）
       # ビルドが成功したかどうかを後で確認できるように、生成された全てのファイルを一時的に保存する
