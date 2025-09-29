@@ -1,27 +1,29 @@
 <template>
-  <Collapsible :open="!!beat?.imageParams" @update:open="updateBeatImageParams">
-    <CollapsibleTrigger as-child>
-      <div class="mb-3 flex items-center gap-2">
-        <Checkbox variant="ghost" size="icon" :modelValue="!!beat?.imageParams" />
-        <h4 class="font-medium" :class="!beat?.imageParams ? 'text-muted-foreground' : ''">
-          {{ t("parameters.imageParams.title") }}
-        </h4>
-      </div>
-    </CollapsibleTrigger>
-    <CollapsibleContent>
-      <ImageParams
-        :image-params="beat.imageParams"
-        :images="imageParams.images"
-        :beat="beat"
-        :showTitle="false"
-        :defaultStyle="imageParams.style"
-        @update="(value) => updateParam(value)"
-        @updateImageNames="updateImageNames"
-        :mulmoError="[]"
-        :settingPresence="settingPresence"
-      />
-    </CollapsibleContent>
-  </Collapsible>
+  <div>
+    <Collapsible :open="!!beat?.imageParams" @update:open="updateBeatImageParams">
+      <CollapsibleTrigger as-child>
+        <div class="mb-3 flex items-center gap-2">
+          <Checkbox variant="ghost" size="icon" :modelValue="!!beat?.imageParams" />
+          <h4 class="font-medium" :class="!beat?.imageParams ? 'text-muted-foreground' : ''">
+            {{ t("parameters.imageParams.title") }}
+          </h4>
+        </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <ImageParams
+          :image-params="beat.imageParams"
+          :images="imageParams.images"
+          :beat="beat"
+          :showTitle="false"
+          :defaultStyle="imageParams.style"
+          @update="(value) => updateParam(value)"
+          @updateImageNames="updateImageNames"
+          :mulmoError="[]"
+          :settingPresence="settingPresence"
+        />
+      </CollapsibleContent>
+    </Collapsible>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -61,13 +63,10 @@ const updateBeatImageParams = async (event) => {
   if (event) {
     const { images } = props?.imageParams ?? {};
     emit("update", "imageParams", IMAGE_PARAMS_DEFAULT_VALUES);
-    await nextTick();
-    emit("updateImageNames", Object.keys(images ?? {}));
   } else {
     emit("update", "imageParams", undefined);
-    await nextTick();
-    emit("updateImageNames", undefined);
   }
+  await nextTick();
   emit("justSaveAndPushToHistory");
 };
 </script>

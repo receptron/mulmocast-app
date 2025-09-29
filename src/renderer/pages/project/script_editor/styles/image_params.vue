@@ -1,22 +1,4 @@
 <template>
-  <Card class="p-4">
-    <div class="space-y-3">
-      <h4 class="font-medium">{{ t("parameters.imageParams.images") }}</h4>
-      <div v-if="Object.keys(images ?? {}).length === 0" class="text-muted-foreground mt-2 text-sm">
-        {{ t("parameters.imageParams.imagesEmptyHint") }}
-      </div>
-      <div v-else>
-        <div v-for="imageKey in Object.keys(images)" :key="imageKey">
-          <Checkbox
-            :model-value="(beat?.imageNames ?? Object.keys(images ?? {})).includes(imageKey)"
-            @update:modelValue="(val) => updateImageNames(imageKey, val)"
-            class="m-2"
-          />{{ imageKey }}
-        </div>
-      </div>
-    </div>
-  </Card>
-
   <Card class="mt-4 p-4">
     <h4 class="font-medium">{{ t("parameters.imageParams.title") }}</h4>
 
