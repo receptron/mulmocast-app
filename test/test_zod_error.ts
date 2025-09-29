@@ -148,3 +148,25 @@ test("test speechParams extra element error", async () => {
     // "The object at 'speechParams' contains unrecognized key(s): 'aaa'.",
   ]);
 });
+
+// canvasSize
+test("test canvasSize extra element error", async () => {
+  const mulmoScript = {
+    $mulmocast: {
+      version: "1.1",
+    },
+    canvasSize: {
+      width: 1280,
+      height: "aa",
+    },
+    beats: [{}],
+  };
+
+  const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
+  // console.log(zodError.error.issues);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  // console.log(mulmoError);
+  assert.deepStrictEqual(mulmoError.canvasSize, [
+    "'height' contains invalid data: Expected number, received string."
+  ]);
+});

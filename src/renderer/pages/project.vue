@@ -412,6 +412,7 @@ const mulmoScriptSchemaNoBeats = mulmoScriptSchema.extend({
 const mulmoError = computed<MulmoError>(() => {
   const zodError = mulmoScriptSchemaNoBeats.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
   if (!zodError.success) {
+    console.log(zodError.error);
     return zodError2MulmoError(zodError.error);
   }
   return null;
