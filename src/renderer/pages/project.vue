@@ -163,6 +163,10 @@
               </CardContent>
             </Card>
 
+            <Button size="sm" @click="downloadMulmoScriptWithImages"  class="p-3 transition-colors hover:text-red-400 mt-2">
+              Download Mulmo Script
+            </Button>
+
             <!-- Product Section -->
             <Card class="relative" v-if="globalStore.userIsPro">
               <div class="absolute right-4 z-50 mt-[-16px] flex items-center rounded-lg bg-black/50 text-white">
@@ -280,6 +284,7 @@ import { getConcurrentTaskStatusMessageComponent } from "./project/concurrent_ta
 import { projectApi, type ProjectMetadata } from "@/lib/project_api";
 import { notifySuccess, notifyProgress } from "@/lib/notification";
 import { setRandomBeatId } from "@/lib/beat_util.js";
+import { downloadFile } from "@/lib/utils";
 
 import { useMulmoEventStore, useMulmoScriptHistoryStore, useMulmoGlobalStore } from "@/store";
 
@@ -539,6 +544,43 @@ watch(
     console.log(mulmoEvent);
   },
 );
+
+
+const downloadMulmoScriptWithImages = async () => {
+  const downloadJSON = (obj: unknown, filename = "mulmo-script.json") => {
+    const json = JSON.stringify(obj, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  const blobUrlToDataUrl = async (blobUrl: string): Promise<string> => {
+    const res = await fetch(blobUrl);
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result));
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  const images: Record<string, any> = {};
+  for (const [id, blobUrl] of Object.entries(imageFiles.value)) {
+    images[id] = await blobUrlToDataUrl(blobUrl);
+  }
+  
+  const data = {
+    ...mulmoScriptHistoryStore.currentMulmoScript,
+    images: images,
+  };
+  downloadJSON(data);
+};
 </script>
 
 <style scoped>
