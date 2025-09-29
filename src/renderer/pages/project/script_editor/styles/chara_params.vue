@@ -2,7 +2,7 @@
   <div v-if="Object.keys(images ?? {}).length !== 0" class="mb-4">
     <h4 class="font-medium">{{ t("parameters.imageParams.images") }}</h4>
 
-    <Card class="p-4 mt-2">
+    <Card class="mt-2 p-4">
       <div class="space-y-3">
         <div v-for="imageKey in Object.keys(images)" :key="imageKey">
           <Checkbox
