@@ -696,7 +696,8 @@ const lang = {
       stylePlaceholder: "例) 鮮やか、自然",
       moderation: "モデレーション",
       moderationPlaceholder: "例) 低、自動",
-      images: "キャラ画像",
+      images: "キャラクター画像",
+      imagesDescription: "このビートで使うキャラクターを選んでください",
       imagesEmptyHint:
         "キャラ画像は設定されていません。生成画像でキャラクターを指定する場合は、「キャラ生成」タブでキャラ画像を設定してください。",
     },
