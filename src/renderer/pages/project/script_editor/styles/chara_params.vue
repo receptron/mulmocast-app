@@ -1,15 +1,17 @@
 <template>
   <div v-if="Object.keys(images ?? {}).length !== 0" class="mb-4">
-    <h4 class="font-medium">{{ t("parameters.imageParams.images") }}</h4>
+    <h4 class="mb-1 block text-sm">{{ t("parameters.imageParams.images") }}</h4>
+    <p class="text-muted-foreground mb-2 text-xs">{{ t("parameters.imageParams.imagesDescription") }}</p>
 
-    <Card class="mt-2 p-4">
-      <div class="space-y-3">
-        <div v-for="imageKey in Object.keys(images)" :key="imageKey">
+    <Card class="mt-2 p-3">
+      <div class="space-y-2">
+        <div v-for="imageKey in Object.keys(images)" :key="imageKey" class="flex items-center">
           <Checkbox
             :model-value="(beat?.imageNames ?? Object.keys(images ?? {})).includes(imageKey)"
             @update:modelValue="(val) => updateImageNames(imageKey, val)"
-            class="m-2"
-          />{{ imageKey }}
+            class="mr-2"
+          />
+          <span class="text-sm">{{ imageKey }}</span>
         </div>
       </div>
     </Card>
