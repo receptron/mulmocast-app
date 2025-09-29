@@ -38,8 +38,15 @@ export const zodError2MulmoError = (error: ZodError) => {
             tmp[key].push(unrecognizedKeysError(current.path, current.keys));
           }
         }
+        if (current.code === "invalid_type") {
+          if (Array.isArray(tmp[key])) {
+            console.log(current.path, current.keys);
+            tmp[key].push(invalidKeysError(current.path, current.keys));
+          }
+        }
       }
 
+      // for beat
       if (current.path[0] === "beats") {
         if (current.path.length === 1) {
           if (current.code === "too_small") {
@@ -72,9 +79,12 @@ export const zodError2MulmoError = (error: ZodError) => {
       }
       if (
         [
+          "canvasSize",
           "speechParams",
           "imageParams",
           "movieParams",
+          "soundEffectParams",
+          "lipSyncParams",
           "htmlImageParams",
           "textSlideParams",
           "captionParams",
@@ -101,11 +111,14 @@ export const zodError2MulmoError = (error: ZodError) => {
     },
     {
       script: {},
-      canvasSize: [],
       beats: {},
+      lang: [],
+      canvasSize: [],
       speechParams: [],
       imageParams: [],
       movieParams: [],
+      soundEffectParams: [],
+      lipSyncParams: [],
       htmlImageParams: [],
       textSlideParams: [],
       captionParams: [],
