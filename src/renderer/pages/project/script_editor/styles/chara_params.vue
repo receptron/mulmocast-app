@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { Checkbox, Card } from "@/components/ui";
-import { type MulmoImageParamsImages } from "mulmocast/browser";
+import { type MulmoImageParamsImages, type MulmoBeat } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();

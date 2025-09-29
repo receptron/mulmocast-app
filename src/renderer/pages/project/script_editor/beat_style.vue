@@ -45,7 +45,7 @@ interface Props {
   isPro: boolean;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const emit = defineEmits<{
   update: [key: string, imageParams: ImageParams | undefined];
@@ -63,7 +63,6 @@ const updateImageNames = (value: string[]) => {
 
 const updateBeatImageParams = async (event) => {
   if (event) {
-    const { images } = props?.imageParams ?? {};
     emit("update", "imageParams", IMAGE_PARAMS_DEFAULT_VALUES);
   } else {
     emit("update", "imageParams", undefined);

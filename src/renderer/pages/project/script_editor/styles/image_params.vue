@@ -78,16 +78,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { Label, Input, Checkbox, Card } from "@/components/ui";
+import { Label, Input, Card } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
-import {
-  provider2ImageAgent,
-  type MulmoImageParams,
-  type MulmoBeat,
-  type Text2ImageProvider,
-  type MulmoImageParamsImages,
-} from "mulmocast/browser";
+import { provider2ImageAgent, type MulmoImageParams, type MulmoBeat, type Text2ImageProvider } from "mulmocast/browser";
 import { mulmoOpenAIImageModelSchema } from "mulmocast/browser";
 
 import SettingsAlert from "../settings_alert.vue";
@@ -111,7 +105,6 @@ const PROVIDERS = Object.entries(provider2ImageAgent)
 const props = withDefaults(
   defineProps<{
     imageParams?: MulmoImageParams;
-    images?: MulmoImageParamsImages;
     mulmoError: string[];
     beat?: MulmoBeat;
     showTitle?: boolean;
