@@ -32,13 +32,20 @@
         t("project.scriptEditor.style.tabLabel")
       }}</TabsTrigger>
     </TabsList>
-
     <div
-      v-if="mulmoError?.script && hasScriptError"
+      v-if="(mulmoError?.script && hasScriptError) || hasZodError"
       class="border-destructive bg-destructive/10 text-destructive mt-2 w-full rounded border p-2 text-sm"
     >
       <div v-for="(message, key) in Object.values(mulmoError?.script ?? {}).flat()" :key="key">
         {{ message }}
+      </div>
+
+      <div v-for="objectKey in Object.keys(zodErrors ?? {})" :key="objectKey">
+        <div v-if="zodErrors[objectKey].length > 0">
+          <div v-for="(error, index) in zodErrors[objectKey]" key="${objectKey}_${index}">
+            {{ objectKey }}:{{ zodErrors[objectKey]?.[index] }}
+          </div>
+        </div>
       </div>
     </div>
 
@@ -371,6 +378,15 @@ const syncTextFromInternal = () => {
 
 const hasScriptError = computed(() => {
   return Object.values(props.mulmoError?.script ?? {}).flat().length;
+});
+
+const zodErrors = computed(() => {
+  const { beats: ___, script: __, ...errors } = props.mulmoError ?? {};
+  return errors;
+});
+
+const hasZodError = computed(() => {
+  return Object.values(zodErrors.value ?? {}).flat().length > 0;
 });
 
 watch(
