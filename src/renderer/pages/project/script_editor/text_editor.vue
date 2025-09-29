@@ -145,7 +145,7 @@ const generateAudio = async (index: number) => {
       errorMessage: t("notify.audio.errorMessage"),
     });
   } catch (error) {
-    notifyError(t("ui.common.error"), t("notify.error.audio.generateAudioSpeechParam"));
+    notifyError(t("ui.common.error"), t("notify.error.audio.generateAudioSpeechParam", { speechParams: t("parameters.speechParams.title") }));
     console.log(error);
   }
 };
