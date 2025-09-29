@@ -1,6 +1,6 @@
 <template>
   <Card class="mt-4 p-4">
-    <h4 class="font-medium">{{ t("parameters.imageParams.title") }}</h4>
+    <h4 class="text-sm font-medium">{{ t("parameters.imageParams.title") }}</h4>
 
     <div class="space-y-3">
       <div>

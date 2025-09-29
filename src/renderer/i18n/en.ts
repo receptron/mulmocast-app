@@ -698,6 +698,7 @@ const lang = {
       moderation: "Moderation",
       moderationPlaceholder: "ex) low, auto",
       images: "Charactor Image",
+      imagesDescription: "Select the character for this beat",
       imagesEmptyHint: "No images found. Please set references in the Ref tab.",
     },
     audioParams: {
