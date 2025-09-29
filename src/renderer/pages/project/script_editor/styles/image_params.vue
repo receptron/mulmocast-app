@@ -123,20 +123,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   update: [imageParams: MulmoImageParams];
-  updateImageNames: [val: string[]];
 }>();
-
-const updateImageNames = (imageKey: string, val: string[]) => {
-  const current = props.beat?.imageNames ?? [];
-
-  const newArray = val
-    ? current.includes(imageKey)
-      ? current
-      : [...current, imageKey]
-    : current.filter((key) => key !== imageKey);
-
-  emit("updateImageNames", newArray);
-};
 
 const handleProviderChange = (value: Text2ImageProvider) => {
   if (value !== props.imageParams?.provider) {

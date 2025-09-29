@@ -1,5 +1,11 @@
 <template>
   <div>
+    <CharaParams
+      :beat="beat"
+      :images="imageParams.images"
+      @updateImageNames="updateImageNames"
+
+      />
     <Collapsible :open="!!beat?.imageParams" @update:open="updateBeatImageParams">
       <CollapsibleTrigger as-child>
         <div class="mb-3 flex items-center gap-2">
@@ -17,7 +23,6 @@
           :showTitle="false"
           :defaultStyle="imageParams.style"
           @update="(value) => updateParam(value)"
-          @updateImageNames="updateImageNames"
           :mulmoError="[]"
           :settingPresence="settingPresence"
         />
@@ -34,6 +39,7 @@ import { Checkbox } from "@/components/ui";
 import { type MulmoBeat, type MulmoImageParams } from "mulmocast";
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../shared/constants";
 import ImageParams from "./styles/image_params.vue";
+import CharaParams from "./styles/chara_params.vue";
 
 const { t } = useI18n();
 
