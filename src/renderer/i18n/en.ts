@@ -533,6 +533,7 @@ const lang = {
         dialogue: "Dialogue",
         story: "Story",
       },
+      continue: "continue",
     },
   },
   beat: {

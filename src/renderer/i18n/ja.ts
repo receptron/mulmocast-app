@@ -531,6 +531,7 @@ const lang = {
         dialogue: "２人の会話/対談",
         story: "複数人の物語、ストーリー",
       },
+      continue: "続けて",
     },
   },
   beat: {

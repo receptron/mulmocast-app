@@ -95,10 +95,13 @@
         <Button @click="() => (isClearChatDialogOpen = true)" variant="outline" size="xs">
           {{ t("project.chat.clearChat") }}
         </Button>
-        <Button v-if="isDevelopment" variant="outline" size="xs" class="ml-4" @click="copyMessageToClipboard">
+        <Button @click="runNext()"  variant="outline" size="xs" class="ml-2"> {{ t("project.chat.continue") }}</Button>
+      </div>
+      <div v-if="isDevelopment">
+        <Button variant="outline" size="xs" @click="copyMessageToClipboard">
           {{ t("project.chat.copyMessage") }}
         </Button>
-        <Label class="mt-2 ml-2 inline-flex" v-if="isDevelopment">
+        <Label class="mt-2 ml-2 inline-flex">
           <Checkbox v-model="enableTools" variant="ghost" size="icon" />
           {{ t("project.chat.enableTools") }}
         </Label>
@@ -127,9 +130,6 @@
           <div class="mt-4 flex">
             <Button size="sm" @click="copyScript" :disabled="noChatMessages || isRunning" class="mr-2">
               {{ t("project.chat.copyScript") }}
-            </Button>
-            <Button size="sm" @click="applyStyle" class="mr-2">
-              {{ t("project.chat.applyStyle") }}
             </Button>
           </div>
         </div>
@@ -342,9 +342,10 @@ const apiKeyName = computed(() => {
   return llm.apiKey;
 });
 
-// for system prompt
-
-//  end of system prompt
+const runNext = () => {
+  userInput.value = "続けて";
+  run();
+};
 
 const run = async () => {
   if (isRunning.value) {
@@ -481,12 +482,6 @@ const copyScript = async () => {
   const template = templateDataSet[promptTemplates[selectedTemplateIndex.value].filename];
 
   userInput.value = head + " " + template;
-};
-
-const applyStyle = () => {
-  const style = promptTemplates[selectedTemplateIndex.value].presentationStyle;
-  const script = { ...mulmoScriptHistoryStore.currentMulmoScript, ...style };
-  emit("updateMulmoScript", script);
 };
 
 const noChatMessages = computed(() => messages.length === 0);
