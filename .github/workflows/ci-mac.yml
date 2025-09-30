@@ -76,7 +76,7 @@ jobs:
 
       # 5. ビルド、署名、公証の実行
       # forge.config.tsの設定に基づいて全ての処理を行う
-      - name: Publush
+      - name: Publish
         run: yarn run publish:ci:mac
         env:
           # forge.config.tsが期待する環境変数名
