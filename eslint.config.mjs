@@ -72,6 +72,7 @@ const sonarjsRules = {
   "sonarjs/todo-tag": "off",
   "sonarjs/no-nested-conditional": "off",
   "sonarjs/slow-regex": "warn",
+  "sonarjs/prefer-regexp-exec": "off",
 };
 
 export default [
