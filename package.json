@@ -1,7 +1,7 @@
 {
   "name": "mulmocast-app",
   "productName": "MulmoCast",
-  "version": "1.0.0",
+  "version": "0.0.6",
   "description": "MulmoCast",
   "main": ".vite/build/main.js",
   "scripts": {
@@ -13,9 +13,10 @@
     "make:ci": "npx puppeteer browsers install chrome && electron-forge make",
     "make:ci:mac": "yarn run make:ci -- --platform=darwin --arch=arm64",
     "make:ci:win": "yarn run make:ci -- --platform=win32 --arch=x64",
+    "publish:ci": "npx puppeteer browsers install chrome && electron-forge publish",
+    "publish:ci:mac": "yarn run publish:ci -- --platform=darwin --arch=arm64",
     "format": "prettier --write '{test/*,src/**/*,*}.{js,ts,vue,json}'",
     "format:check": "prettier --check '{src/**/*,*}.{js,ts,vue,json}'",
-    "publish": "electron-forge publish",
     "dumpi18n": "npx tsx test/i18n-dump.ts",
     "lint": "yarn run dumpi18n && eslint --ext .js,.ts,.vue src test",
     "lint:fix": "eslint --ext .js,.ts,.vue src --fix",
