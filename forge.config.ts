@@ -8,6 +8,7 @@ import { FusesPlugin } from "@electron-forge/plugin-fuses";
 import { FuseV1Options, FuseVersion } from "@electron/fuses";
 
 import { execSync } from "child_process";
+import path from "node:path";
 const gitCommit = execSync("git rev-parse --short HEAD").toString().trim();
 const now = new Date();
 const buildDate = now.toISOString().slice(0, 10).replace(/-/g, "");
@@ -25,8 +26,8 @@ const config: ForgeConfig = {
       "node_modules/mulmocast/scripts",
       "node_modules/mulmocast-vision/html",
     ],
-    // Windows packages are built on Windows CI runners, so this platform check stays valid.
-    icon: process.platform === "win32" ? "./images/mulmocast_icon_win.ico" : "./images/mulmocast_icon.icns",
+    // Use extension-less icon path so Electron Packager picks the right format per platform.
+    icon: path.resolve(__dirname, "images/mulmocast_icon"),
     osxSign: process.env.CODESIGN_IDENTITY
       ? ({
           identity: process.env.CODESIGN_IDENTITY,
@@ -46,7 +47,9 @@ const config: ForgeConfig = {
   },
   rebuildConfig: {},
   makers: [
-    new MakerSquirrel({}),
+    new MakerSquirrel({
+      setupIcon: path.resolve(__dirname, "images/mulmocast_icon.ico"),
+    }),
     new MakerZIP({ macUpdateManifestBaseUrl: "https://s3.aws.mulmocast.com/releases/test/darwin/arm64" }, ["darwin"]),
     new MakerRpm({}),
     new MakerDeb({}),
