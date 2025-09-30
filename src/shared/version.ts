@@ -1,3 +1,20 @@
+export const resolveTargetFromVersion = (
+  packageVersion: string,
+  isDev: boolean = false,
+): "prod" | "dev" | "test" | "unknown" => {
+  if (isDev) {
+    return "test";
+  }
+  if (/^\d+\.\d+\.\d+$/.test(packageVersion)) {
+    return "prod";
+  }
+  if (/^\d+\.\d+\.\d+-rc-\d+$/.test(packageVersion)) {
+    return "dev";
+  }
+  // mainブランチ用のバージョンは通常 "alpha" や "test" などが含まれる場合が多いが、ここでは判定しない
+  return "unknown";
+};
+
 export const resolveTargetAndVersion = (
   branch: string,
   packageVersion: string,
@@ -6,14 +23,11 @@ export const resolveTargetAndVersion = (
     return { target: "test" };
   }
 
-  const releaseRcMatch = branch.match(/^release\/(\d+\.\d+\.\d+-rc-\d+)$/);
-  if (releaseRcMatch && releaseRcMatch[1] === packageVersion) {
-    return { target: "dev", version: releaseRcMatch[1] };
-  }
-
-  const releaseMatch = branch.match(/^release\/(\d+\.\d+\.\d+)$/);
-  if (releaseMatch && releaseMatch[1] === packageVersion) {
-    return { target: "prod", version: releaseMatch[1] };
+  if (`release/${packageVersion}` === branch) {
+    const target = resolveTargetFromVersion(packageVersion);
+    if (target !== "unknown") {
+      return { target, version: packageVersion };
+    }
   }
 
   return { target: "unknown" }; // fallback
