@@ -18,6 +18,7 @@ const buildDate = now.toISOString().slice(0, 10).replace(/-/g, "");
 
 const packageJSON = JSON.parse(fs.readFileSync("./package.json", "utf8"));
 const { version: packageVersion } = packageJSON;
+console.log(`packageVersion: ${packageVersion}`);
 
 function resolveTargetAndVersion(branch: string): { target: string; version?: string } {
   if (branch === "main") {
