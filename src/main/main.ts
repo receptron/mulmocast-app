@@ -169,8 +169,10 @@ updateElectronApp({
   logger: log,
   // @ts-expect-error update-electron-app types are not correct
   notifyUser: () => {
+    console.log("🚀 call notifyUser");
     const lang = settingsManager.loadAppLanguage();
     const notifyProps = config.messages[lang as keyof typeof config.messages].updater;
+    console.log("🚀 notifyProps", notifyProps);
     return makeUserNotifier(notifyProps);
   },
 });
