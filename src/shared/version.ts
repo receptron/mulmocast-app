@@ -6,12 +6,12 @@ export const resolveTargetAndVersion = (
     return { target: "test" };
   }
 
-  const releaseRcMatch = branch.match(/^release\/([\d]+\.\d+\.\d+-rc-\d+)$/);
+  const releaseRcMatch = branch.match(/^release\/(\d+\.\d+\.\d+-rc-\d+)$/);
   if (releaseRcMatch && releaseRcMatch[1] === packageVersion) {
     return { target: "dev", version: releaseRcMatch[1] };
   }
 
-  const releaseMatch = branch.match(/^release\/([\d]+\.\d+\.\d+)$/);
+  const releaseMatch = branch.match(/^release\/(\d+\.\d+\.\d+)$/);
   if (releaseMatch && releaseMatch[1] === packageVersion) {
     return { target: "prod", version: releaseMatch[1] };
   }
