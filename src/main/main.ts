@@ -10,11 +10,11 @@ import { registerIPCHandler } from "./ipc_handler";
 import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
 import { ENV_KEYS } from "../shared/constants";
+import { resolveTargetFromVersion } from "../shared/version";
 import { getWindowState, saveWindowState } from "./utils/windw_state";
 import config from "../renderer/i18n/index";
 
 import packageJSON from "../../package.json" with { type: "json" };
-console.log(packageJSON);
 
 log.initialize();
 
@@ -41,6 +41,9 @@ if (isCI || process.env.ELECTRON_DISABLE_SANDBOX === "1") {
 if (started) {
   app.quit();
 }
+
+const versionData = resolveTargetFromVersion(packageJSON.version, isDev);
+console.log({ versionData });
 
 const createSplashWindow = async () => {
   const splashWindow = new BrowserWindow({
@@ -167,7 +170,7 @@ const createWindow = (splashWindow?: BrowserWindow) => {
 updateElectronApp({
   updateSource: {
     type: UpdateSourceType.StaticStorage,
-    baseUrl: `https://s3.aws.mulmocast.com/releases/test/${process.platform}/${process.arch}`,
+    baseUrl: `https://s3.aws.mulmocast.com/releases/${versionData}/${process.platform}/${process.arch}`,
   },
   logger: log,
   notifyUser: true,
