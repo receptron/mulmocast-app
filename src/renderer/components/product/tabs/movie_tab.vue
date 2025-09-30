@@ -9,6 +9,8 @@
         :src="videoUrl"
         ref="videoRef"
         @loadedmetadata="updateVideoMetadata"
+        @pause="onPause"
+        @play="onPlay"
       />
 
       <template v-else>
@@ -69,11 +71,17 @@ const isPlaying = ref(false);
 const playVideo = () => {
   if (videoRef.value?.paused) {
     videoRef.value?.play();
-    isPlaying.value = true;
   } else {
     videoRef.value?.pause();
-    isPlaying.value = false;
   }
+};
+
+const onPause = () => {
+  isPlaying.value = false;
+};
+
+const onPlay = () => {
+  isPlaying.value = true;
 };
 
 const downloadMp4 = async () => {
