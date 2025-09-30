@@ -2,7 +2,6 @@ import test from "node:test";
 import assert from "node:assert";
 import { resolveTargetAndVersion } from "../src/shared/version";
 
-
 // テストケース一覧
 const cases = [
   // mainブランチは常にtest
