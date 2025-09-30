@@ -43,7 +43,7 @@ if (started) {
 }
 
 const versionData = resolveTargetFromVersion(packageJSON.version, isDev);
-console.log({versionData});
+console.log({ versionData });
 
 const createSplashWindow = async () => {
   const splashWindow = new BrowserWindow({
