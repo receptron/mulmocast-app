@@ -26,12 +26,12 @@ function resolveTargetAndVersion(branch: string): { target: string; version?: st
   }
 
   const releaseRcMatch = branch.match(/^release\/([\d]+\.\d+\.\d+-rc-\d+)$/);
-  if (releaseRcMatch && releaseRcMatch[1] === packageJSON) {
+  if (releaseRcMatch && releaseRcMatch[1] === packageVersion) {
     return { target: "dev", version: releaseRcMatch[1] };
   }
 
   const releaseMatch = branch.match(/^release\/([\d]+\.\d+\.\d+)$/);
-  if (releaseMatch && releaseRcMatch[1] === packageJSON) {
+  if (releaseMatch && releaseRcMatch[1] === packageVersion) {
     return { target: "prod", version: releaseMatch[1] };
   }
 
