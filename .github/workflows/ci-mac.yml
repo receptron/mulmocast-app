@@ -74,13 +74,10 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -s -k actions temp.keychain
           security list-keychain -d user -s temp.keychain login.keychain
 
-      - name: Install
-        run: yarn run install:ci
-             
       # 5. ビルド、署名、公証の実行
       # forge.config.tsの設定に基づいて全ての処理を行う
       - name: Publush
-        run: yarn run publish
+        run: yarn run publish:ci:mac
         env:
           # forge.config.tsが期待する環境変数名
           AC_APPLE_ID: ${{ secrets.APPLE_ID }}

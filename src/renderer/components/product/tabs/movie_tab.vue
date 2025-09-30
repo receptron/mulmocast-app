@@ -9,6 +9,8 @@
         :src="videoUrl"
         ref="videoRef"
         @loadedmetadata="updateVideoMetadata"
+        @pause="onPause"
+        @play="onPlay"
       />
 
       <template v-else>
@@ -51,6 +53,7 @@ import { Video, Play, Pause } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { formatFileSize, formatDuration } from "@/lib/format";
 import { useMulmoEventStore } from "@/store";
+import { sleep } from "graphai";
 
 import { downloadFile, useMediaContents } from "./utils";
 
@@ -68,11 +71,17 @@ const isPlaying = ref(false);
 const playVideo = () => {
   if (videoRef.value?.paused) {
     videoRef.value?.play();
-    isPlaying.value = true;
   } else {
     videoRef.value?.pause();
-    isPlaying.value = false;
   }
+};
+
+const onPause = () => {
+  isPlaying.value = false;
+};
+
+const onPlay = () => {
+  isPlaying.value = true;
 };
 
 const downloadMp4 = async () => {
@@ -104,6 +113,7 @@ const {
   updateResources,
 } = useMediaContents("movie", "video/mp4", async () => {
   await nextTick();
+  await sleep(200);
   updateMetadata();
 });
 

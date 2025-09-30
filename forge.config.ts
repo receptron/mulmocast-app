@@ -1,3 +1,4 @@
+import fs from "fs";
 import type { ForgeConfig } from "@electron-forge/shared-types";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { MakerZIP } from "@electron-forge/maker-zip";
@@ -8,9 +9,34 @@ import { FusesPlugin } from "@electron-forge/plugin-fuses";
 import { FuseV1Options, FuseVersion } from "@electron/fuses";
 
 import { execSync } from "child_process";
-const gitCommit = execSync("git rev-parse --short HEAD").toString().trim();
+import path from "node:path";
+const gitBranch = execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
+
 const now = new Date();
 const buildDate = now.toISOString().slice(0, 10).replace(/-/g, "");
+
+const packageJSON = JSON.parse(fs.readFileSync("./package.json", "utf8"));
+const { version: packageVersion } = packageJSON;
+
+function resolveTargetAndVersion(branch: string): { target: string; version?: string } {
+  if (branch === "main") {
+    return { target: "test" };
+  }
+
+  const releaseRcMatch = branch.match(/^release\/([\d]+\.\d+\.\d+-rc-\d+)$/);
+  if (releaseRcMatch && releaseRcMatch[1] === packageJSON) {
+    return { target: "dev", version: releaseRcMatch[1] };
+  }
+
+  const releaseMatch = branch.match(/^release\/([\d]+\.\d+\.\d+)$/);
+  if (releaseMatch && releaseRcMatch[1] === packageJSON) {
+    return { target: "prod", version: releaseMatch[1] };
+  }
+
+  return { target: "unknown" }; // fallback
+}
+
+const { target, version } = resolveTargetAndVersion(gitBranch);
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -25,8 +51,8 @@ const config: ForgeConfig = {
       "node_modules/mulmocast/scripts",
       "node_modules/mulmocast-vision/html",
     ],
-    // Windows packages are built on Windows CI runners, so this platform check stays valid.
-    icon: process.platform === "win32" ? "./images/mulmocast_icon_win.ico" : "./images/mulmocast_icon.icns",
+    // Use extension-less icon path so Electron Packager picks the right format per platform.
+    icon: path.resolve(__dirname, "images/mulmocast_icon"),
     osxSign: process.env.CODESIGN_IDENTITY
       ? ({
           identity: process.env.CODESIGN_IDENTITY,
@@ -46,8 +72,12 @@ const config: ForgeConfig = {
   },
   rebuildConfig: {},
   makers: [
-    new MakerSquirrel({}),
-    new MakerZIP({ macUpdateManifestBaseUrl: "https://s3.aws.mulmocast.com/releases/test/darwin/arm64" }, ["darwin"]),
+    new MakerSquirrel({
+      setupIcon: path.resolve(__dirname, "images/mulmocast_icon.ico"),
+    }),
+    new MakerZIP({ macUpdateManifestBaseUrl: `https://s3.aws.mulmocast.com/releases/${target}/darwin/arm64` }, [
+      "darwin",
+    ]),
     new MakerRpm({}),
     new MakerDeb({}),
   ],
@@ -87,17 +117,20 @@ const config: ForgeConfig = {
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),
   ],
-  publishers: [
-    {
-      name: "@electron-forge/publisher-s3",
-      config: {
-        bucket: "mulmocast-app-update",
-        region: "ap-northeast-1",
-        folder: "releases/test",
-        omitAcl: true,
-      },
-    },
-  ],
+  publishers:
+    target === "unknown"
+      ? []
+      : [
+          {
+            name: "@electron-forge/publisher-s3",
+            config: {
+              bucket: "mulmocast-app-update",
+              region: "ap-northeast-1",
+              folder: `releases/${target}`,
+              omitAcl: true,
+            },
+          },
+        ],
 };
 
 export default config;
