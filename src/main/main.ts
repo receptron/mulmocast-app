@@ -167,11 +167,11 @@ updateElectronApp({
     baseUrl: `https://s3.aws.mulmocast.com/releases/test/${process.platform}/${process.arch}`,
   },
   logger: log,
-  // @ts-expect-error update-electron-app types are not correct
-  notifyUser: () => {
+  notifyUser: true,
+  onNotifyUser: (info) => {
     const lang = settingsManager.loadAppLanguage();
     const notifyProps = config.messages[lang as keyof typeof config.messages].updater;
-    return makeUserNotifier(notifyProps);
+    return makeUserNotifier(notifyProps)(info);
   },
 });
 
