@@ -10,13 +10,14 @@ import { FuseV1Options, FuseVersion } from "@electron/fuses";
 
 import { execSync } from "child_process";
 import path from "node:path";
+import packageJSON from "./package.json" with { type: "json" };
+
 const gitBranch = process.env.BRANCH_NAME || execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
 console.log(`gitBranch: ${gitBranch}`);
 
 const now = new Date();
 const buildDate = now.toISOString().slice(0, 10).replace(/-/g, "");
 
-const packageJSON = JSON.parse(fs.readFileSync("./package.json", "utf8"));
 const { version: packageVersion } = packageJSON;
 console.log(`packageVersion: ${packageVersion}`);
 
