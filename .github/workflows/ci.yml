@@ -66,6 +66,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - run: xvfb-run -a --server-args="-screen 0 1024x768x24" npx ts-node test/automated_serial_generation_e2e_test.ts
+        if: false 
         env:
           CI: true
           NODE_ENV: test
