@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert";
-import { resolveTargetAndVersion } from "../src/shared/version";
+import { resolveTargetAndVersion, resolveTargetFromVersion } from "../src/shared/version";
 
 // テストケース一覧
 const cases = [
@@ -29,5 +29,31 @@ test("resolveTargetAndVersion branch/version matrix", () => {
   for (const { branch, packageVersion, expected } of cases) {
     const result = resolveTargetAndVersion(branch, packageVersion);
     assert.deepStrictEqual(result, expected, `branch=${branch}, packageVersion=${packageVersion}`);
+  }
+});
+
+// resolveTargetFromVersion のテスト（isDevフラグ含む）
+const versionCases = [
+  { packageVersion: "1.2.3", expected: "prod" },
+  { packageVersion: "1.2.3-rc-1", expected: "dev" },
+  { packageVersion: "1.2.3-rc-2", expected: "dev" },
+  { packageVersion: "1.2.3-rc1", expected: "unknown" }, // ハイフンなしは仕様外
+  { packageVersion: "1.2.3-alpha", expected: "unknown" },
+  { packageVersion: "main", expected: "unknown" },
+  { packageVersion: "feature/foo", expected: "unknown" },
+  { packageVersion: "test", expected: "unknown" },
+];
+
+test("resolveTargetFromVersion version matrix", () => {
+  for (const { packageVersion, expected } of versionCases) {
+    const result = resolveTargetFromVersion(packageVersion);
+    assert.strictEqual(result, expected, `packageVersion=${packageVersion}`);
+  }
+});
+
+test("resolveTargetFromVersion with isDev=true always returns test", () => {
+  for (const { packageVersion } of versionCases) {
+    const result = resolveTargetFromVersion(packageVersion, true);
+    assert.strictEqual(result, "test", `packageVersion=${packageVersion}, isDev=true`);
   }
 });

@@ -1,4 +1,10 @@
-export const resolveTargetFromVersion = (packageVersion: string): "prod" | "dev" | "test" | "unknown" => {
+export const resolveTargetFromVersion = (
+  packageVersion: string,
+  isDev: boolean = false,
+): "prod" | "dev" | "test" | "unknown" => {
+  if (isDev) {
+    return "test";
+  }
   if (/^\d+\.\d+\.\d+$/.test(packageVersion)) {
     return "prod";
   }
