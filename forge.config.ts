@@ -31,7 +31,7 @@ function resolveTargetAndVersion(branch: string): { target: string; version?: st
   }
 
   const releaseMatch = branch.match(/^release\/([\d]+\.\d+\.\d+)$/);
-  if (releaseMatch && releaseRcMatch[1] === packageVersion) {
+  if (releaseMatch && releaseMatch[1] === packageVersion) {
     return { target: "prod", version: releaseMatch[1] };
   }
 
