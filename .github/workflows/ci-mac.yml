@@ -80,6 +80,7 @@ jobs:
         run: yarn run publish:ci:mac
         env:
           # forge.config.tsが期待する環境変数名
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
           AC_APPLE_ID: ${{ secrets.APPLE_ID }}
           AC_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           AC_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
