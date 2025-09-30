@@ -168,10 +168,10 @@ updateElectronApp({
   },
   logger: log,
   notifyUser: true,
-  onNotifyUser: () => {
+  onNotifyUser: (info) => {
     const lang = settingsManager.loadAppLanguage();
     const notifyProps = config.messages[lang as keyof typeof config.messages].updater;
-    return makeUserNotifier(notifyProps);
+    return makeUserNotifier(notifyProps)(info);
   },
 });
 
