@@ -11,6 +11,7 @@ import { FuseV1Options, FuseVersion } from "@electron/fuses";
 import { execSync } from "child_process";
 import path from "node:path";
 import packageJSON from "./package.json" with { type: "json" };
+import { resolveTargetAndVersion } from "./src/shared/version";
 
 const gitBranch = process.env.BRANCH_NAME || execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
 console.log(`gitBranch: ${gitBranch}`);
@@ -20,24 +21,6 @@ const buildDate = now.toISOString().slice(0, 10).replace(/-/g, "");
 
 const { version: packageVersion } = packageJSON;
 console.log(`packageVersion: ${packageVersion}`);
-
-function resolveTargetAndVersion(branch: string): { target: string; version?: string } {
-  if (branch === "main") {
-    return { target: "test" };
-  }
-
-  const releaseRcMatch = branch.match(/^release\/([\d]+\.\d+\.\d+-rc-\d+)$/);
-  if (releaseRcMatch && releaseRcMatch[1] === packageVersion) {
-    return { target: "dev", version: releaseRcMatch[1] };
-  }
-
-  const releaseMatch = branch.match(/^release\/([\d]+\.\d+\.\d+)$/);
-  if (releaseMatch && releaseMatch[1] === packageVersion) {
-    return { target: "prod", version: releaseMatch[1] };
-  }
-
-  return { target: "unknown" }; // fallback
-}
 
 const { target, version } = resolveTargetAndVersion(gitBranch);
 console.log(`target: ${target}`);
