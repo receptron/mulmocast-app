@@ -15,7 +15,7 @@ const gitBranch = execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
 const now = new Date();
 const buildDate = now.toISOString().slice(0, 10).replace(/-/g, "");
 
-const packageJSON = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+const packageJSON = JSON.parse(fs.readFileSync("./package.json", "utf8"));
 const { version: packageVersion } = packageJSON;
 
 function resolveTargetAndVersion(branch: string): { target: string; version?: string } {
@@ -75,7 +75,9 @@ const config: ForgeConfig = {
     new MakerSquirrel({
       setupIcon: path.resolve(__dirname, "images/mulmocast_icon.ico"),
     }),
-    new MakerZIP({ macUpdateManifestBaseUrl: `https://s3.aws.mulmocast.com/releases/${target}/darwin/arm64` }, ["darwin"]),
+    new MakerZIP({ macUpdateManifestBaseUrl: `https://s3.aws.mulmocast.com/releases/${target}/darwin/arm64` }, [
+      "darwin",
+    ]),
     new MakerRpm({}),
     new MakerDeb({}),
   ],
@@ -115,17 +117,20 @@ const config: ForgeConfig = {
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),
   ],
-  publishers: target === "unknown" ? [] : [
-    {
-      name: "@electron-forge/publisher-s3",
-      config: {
-        bucket: "mulmocast-app-update",
-        region: "ap-northeast-1",
-        folder: `releases/${target}`,
-        omitAcl: true,
-      },
-    },
-  ],
+  publishers:
+    target === "unknown"
+      ? []
+      : [
+          {
+            name: "@electron-forge/publisher-s3",
+            config: {
+              bucket: "mulmocast-app-update",
+              region: "ap-northeast-1",
+              folder: `releases/${target}`,
+              omitAcl: true,
+            },
+          },
+        ],
 };
 
 export default config;
