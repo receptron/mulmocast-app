@@ -1,4 +1,4 @@
-export const resolveTargetAndVersion = (branch: string): { target: string; version?: string } => {
+export const resolveTargetAndVersion = (branch: string, packageVersion: string): { target: string; version?: string } => {
   if (branch === "main") {
     return { target: "test" };
   }

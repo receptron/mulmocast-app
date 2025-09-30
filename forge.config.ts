@@ -22,7 +22,7 @@ const buildDate = now.toISOString().slice(0, 10).replace(/-/g, "");
 const { version: packageVersion } = packageJSON;
 console.log(`packageVersion: ${packageVersion}`);
 
-const { target, version } = resolveTargetAndVersion(gitBranch);
+const { target, version } = resolveTargetAndVersion(gitBranch, packageVersion);
 console.log(`target: ${target}`);
 console.log(`version: ${version}`);
 

@@ -13,6 +13,9 @@ import { ENV_KEYS } from "../shared/constants";
 import { getWindowState, saveWindowState } from "./utils/windw_state";
 import config from "../renderer/i18n/index";
 
+import packageJSON from "../../package.json" with { type: "json" };
+console.log(packageJSON);
+
 log.initialize();
 
 // Cross-platform icon path
