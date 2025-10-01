@@ -265,7 +265,12 @@
           {{ t("project.scriptEditor.reference.modeDescription") }}
         </p>
         <p class="text-muted-foreground text-sm">
-          {{ t("project.scriptEditor.reference.description", { key: t("beat.imageReference.keyField"), imageParamsImages: t("parameters.imageParams.images") }) }}
+          {{
+            t("project.scriptEditor.reference.description", {
+              key: t("beat.imageReference.keyField"),
+              imageParamsImages: t("parameters.imageParams.images"),
+            })
+          }}
         </p>
         <Reference
           :projectId="projectId"
