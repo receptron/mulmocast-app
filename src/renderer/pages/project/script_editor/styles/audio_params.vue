@@ -5,6 +5,9 @@
       <div class="grid grid-cols-2 gap-4" v-if="globalStore.userIsPro">
         <div>
           <Label>{{ t("parameters.audioParams.padding") }}</Label>
+          <p class="text-muted-foreground mt-1 text-xs">
+            {{ t("parameters.audioParams.paddingDescription") }}
+          </p>
           <Input
             :model-value="audioParams?.padding ?? AUDIO_PARAMS_DEFAULT_VALUES.padding"
             @update:model-value="(value) => handleUpdate('padding', Number(value))"
@@ -14,6 +17,9 @@
         </div>
         <div>
           <Label>{{ t("parameters.audioParams.introPadding") }}</Label>
+          <p class="text-muted-foreground mt-1 text-xs">
+            {{ t("parameters.audioParams.introPaddingDescription") }}
+          </p>
           <Input
             :model-value="audioParams?.introPadding ?? AUDIO_PARAMS_DEFAULT_VALUES.introPadding"
             @update:model-value="(value) => handleUpdate('introPadding', Number(value))"
@@ -25,6 +31,9 @@
       <div class="grid grid-cols-2 gap-4" v-if="globalStore.userIsPro">
         <div>
           <Label>{{ t("parameters.audioParams.closingPadding") }}</Label>
+          <p class="text-muted-foreground mt-1 text-xs">
+            {{ t("parameters.audioParams.closingPaddingDescription") }}
+          </p>
           <Input
             :model-value="audioParams?.closingPadding ?? AUDIO_PARAMS_DEFAULT_VALUES.closingPadding"
             @update:model-value="(value) => handleUpdate('closingPadding', Number(value))"
@@ -34,6 +43,9 @@
         </div>
         <div>
           <Label>{{ t("parameters.audioParams.outroPadding") }}</Label>
+          <p class="text-muted-foreground mt-1 text-xs">
+            {{ t("parameters.audioParams.outroPaddingDescription") }}
+          </p>
           <Input
             :model-value="audioParams?.outroPadding ?? AUDIO_PARAMS_DEFAULT_VALUES.outroPadding"
             @update:model-value="(value) => handleUpdate('outroPadding', Number(value))"
@@ -45,6 +57,9 @@
       <div class="grid grid-cols-2 gap-4">
         <div>
           <Label>{{ t("parameters.audioParams.bgmVolume") }}</Label>
+          <p class="text-muted-foreground mt-1 text-xs">
+            {{ t("parameters.audioParams.bgmVolumeDescription") }}
+          </p>
           <Input
             :model-value="audioParams?.bgmVolume ?? AUDIO_PARAMS_DEFAULT_VALUES.bgmVolume"
             @update:model-value="(value) => handleUpdate('bgmVolume', Number(value))"
@@ -56,6 +71,9 @@
         </div>
         <div>
           <Label>{{ t("parameters.audioParams.audioVolume") }}</Label>
+          <p class="text-muted-foreground mt-1 text-xs">
+            {{ t("parameters.audioParams.audioVolumeDescription") }}
+          </p>
           <Input
             :model-value="audioParams?.audioVolume ?? AUDIO_PARAMS_DEFAULT_VALUES.audioVolume"
             @update:model-value="(value) => handleUpdate('audioVolume', Number(value))"
