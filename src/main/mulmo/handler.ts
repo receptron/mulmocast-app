@@ -56,9 +56,11 @@ if (isDev) {
 }
 const ffmpegPath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffmpeg");
 const ffprobePath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffprobe");
+const ffmpegBinary = path.basename(ffmpegPath);
+const ffprobeBinary = path.basename(ffprobePath);
 
-setFfmpegPath(isDev ? ffmpegPath : path.join(process.resourcesPath, "ffmpeg", "ffmpeg"));
-setFfprobePath(isDev ? ffprobePath : path.join(process.resourcesPath, "ffmpeg", "ffprobe"));
+setFfmpegPath(isDev ? ffmpegPath : path.join(process.resourcesPath, "ffmpeg", ffmpegBinary));
+setFfprobePath(isDev ? ffprobePath : path.join(process.resourcesPath, "ffmpeg", ffprobeBinary));
 
 // generate all reference
 export const mulmoReferenceImages = async (projectId: string, webContents: WebContents) => {

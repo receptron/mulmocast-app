@@ -26,8 +26,11 @@ export default defineConfig({
         const destDir = path.resolve(__dirname, ".vite/build/ffmpeg");
         fs.mkdirSync(destDir, { recursive: true });
 
-        fs.copyFileSync(ffmpegFfprobeStatic.ffmpegPath, path.join(destDir, "ffmpeg"));
-        fs.copyFileSync(ffmpegFfprobeStatic.ffprobePath, path.join(destDir, "ffprobe"));
+        const ffmpegBinary = path.basename(ffmpegFfprobeStatic.ffmpegPath);
+        const ffprobeBinary = path.basename(ffmpegFfprobeStatic.ffprobePath);
+
+        fs.copyFileSync(ffmpegFfprobeStatic.ffmpegPath, path.join(destDir, ffmpegBinary));
+        fs.copyFileSync(ffmpegFfprobeStatic.ffprobePath, path.join(destDir, ffprobeBinary));
         console.log("✅ ffmpeg and ffprobe copied by Vite plugin");
       },
     },
