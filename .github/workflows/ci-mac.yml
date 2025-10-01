@@ -12,12 +12,7 @@ on:
     tags:
       - 'v*'
   
-  # GitHubのActionsページから手動で実行できるようにする
-  workflow_dispatch:
-
-# 実行される一連のタスク（ジョブ）
 jobs:
-  # ジョブのID（任意の名前）
   build-and-release:
     # 実行環境：最新のmacOS
     runs-on: macos-14
