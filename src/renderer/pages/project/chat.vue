@@ -111,7 +111,7 @@
       </div>
 
       <!-- Template selection section -->
-      <div class="template-section">
+      <div class="template-section" v-if="false">
         <div class="rounded-lg p-1">
           <Label class="mb-3 block">
             {{ t("project.chat.createButtonDescription") }}
