@@ -49,11 +49,30 @@ import { mulmoCallbackGenerator, getContext } from "./handler_common";
 
 const isDev = !app.isPackaged;
 
+const devMulmocastRoot = path.resolve(__dirname, "../../node_modules/mulmocast");
+const asarMulmocastRoot = path.join(app.getAppPath(), "node_modules", "mulmocast");
+const unpackedMulmocastRoot = path.join(
+  process.resourcesPath,
+  "app.asar.unpacked",
+  "node_modules",
+  "mulmocast",
+);
+
+const packagedChromiumRoot = path.join(
+  isDev ? devMulmocastRoot : unpackedMulmocastRoot,
+  "node_modules",
+  "puppeteer",
+  ".local-chromium",
+);
+
 if (isDev) {
-  updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
+  updateNpmRoot(devMulmocastRoot);
 } else {
-  updateNpmRoot(process.resourcesPath);
+  updateNpmRoot(asarMulmocastRoot);
 }
+
+process.env.PUPPETEER_CACHE_DIR ??= packagedChromiumRoot;
+process.env.PUPPETEER_DOWNLOAD_PATH ??= packagedChromiumRoot;
 const ffmpegPath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffmpeg");
 const ffprobePath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffprobe");
 const ffmpegBinary = path.basename(ffmpegPath);
