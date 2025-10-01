@@ -618,7 +618,7 @@ const lang = {
     imageReference: {
       badge: "Image Reference",
       keyField: "キャラのキー",
-      placeholder: "キャラのキーを登録(英数字のみ)",
+      placeholder: "キャラクターのキーを登録(英数字のみ)",
       imagePromptPlaceholder: "キャラ画像を生成するためのプロンプトを入力してください。",
     },
     image: {
