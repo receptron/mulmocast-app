@@ -51,12 +51,7 @@ const isDev = !app.isPackaged;
 
 const devMulmocastRoot = path.resolve(__dirname, "../../node_modules/mulmocast");
 const asarMulmocastRoot = path.join(app.getAppPath(), "node_modules", "mulmocast");
-const unpackedMulmocastRoot = path.join(
-  process.resourcesPath,
-  "app.asar.unpacked",
-  "node_modules",
-  "mulmocast",
-);
+const unpackedMulmocastRoot = path.join(process.resourcesPath, "app.asar.unpacked", "node_modules", "mulmocast");
 
 const packagedChromiumRoot = path.join(
   isDev ? devMulmocastRoot : unpackedMulmocastRoot,
