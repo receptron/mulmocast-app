@@ -15,6 +15,7 @@
     "make:ci:win": "yarn run make:ci -- --platform=win32 --arch=x64",
     "publish:ci": "npx puppeteer browsers install chrome && electron-forge publish",
     "publish:ci:mac": "yarn run publish:ci -- --platform=darwin --arch=arm64",
+    "publish:ci:win": "yarn run publish:ci -- --platform=win32 --arch=x64",
     "format": "prettier --write '{test/*,src/**/*,*}.{js,ts,vue,json}'",
     "format:check": "prettier --check '{src/**/*,*}.{js,ts,vue,json}'",
     "dumpi18n": "npx tsx test/i18n-dump.ts",
