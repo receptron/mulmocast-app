@@ -429,7 +429,7 @@ const lang = {
         mode: "キャラクター設定",
         modeDescription: "登場するキャラクターの管理をします",
         description:
-          "各キャラクターの画像を「画像生成プロンプト」から作るか「画像をアップロード」してから、各BEATの「{imageParamsImages}」で「{key}」指定してください。",
+          "生成AIで作るキャラクターの見た目を安定させます。キャラクター画像は「画像生成プロンプト」で作るか、「画像をアップロード」して設定します。その後、各BEATの「{imageParamsImages}」で「{key}」を指定してください。",
       },
       validationStatus: "検証ステータス",
     },
