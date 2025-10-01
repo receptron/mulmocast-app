@@ -1,5 +1,3 @@
-#!/usr/bin/env tsx
-
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync } from "node:fs";
 import path from "node:path";
