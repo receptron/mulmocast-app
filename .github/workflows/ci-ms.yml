@@ -32,7 +32,7 @@ jobs:
       - name: Restore Puppeteer cache
         uses: actions/cache@v4
         with:
-          path: ${{ github.workspace }}\\.puppeteer-cache
+          path: ${{ github.workspace }}\\node_modules\\mulmocast\\node_modules\\puppeteer\\.local-chromium
           key: puppeteer-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             puppeteer-${{ runner.os }}-
@@ -40,8 +40,9 @@ jobs:
       - name: Install Chromium for Puppeteer
         shell: powershell
         env:
-          PUPPETEER_CACHE_DIR: ${{ github.workspace }}\\.puppeteer-cache
-        run: npx puppeteer browsers install chrome
+          PUPPETEER_CACHE_DIR: ${{ github.workspace }}\\node_modules\\mulmocast\\node_modules\\puppeteer\\.local-chromium
+          PUPPETEER_DOWNLOAD_PATH: ${{ github.workspace }}\\node_modules\\mulmocast\\node_modules\\puppeteer\\.local-chromium
+        run: yarn run puppeteer:install:mulmocast
 
       - name: Run make (Squirrel installer)
         shell: powershell
@@ -53,7 +54,8 @@ jobs:
           AC_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           AC_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           CODESIGN_IDENTITY: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
-          PUPPETEER_CACHE_DIR: ${{ github.workspace }}\\.puppeteer-cache
+          PUPPETEER_CACHE_DIR: ${{ github.workspace }}\\node_modules\\mulmocast\\node_modules\\puppeteer\\.local-chromium
+          PUPPETEER_DOWNLOAD_PATH: ${{ github.workspace }}\\node_modules\\mulmocast\\node_modules\\puppeteer\\.local-chromium
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         
