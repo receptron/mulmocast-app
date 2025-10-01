@@ -46,14 +46,13 @@ jobs:
         shell: powershell
         run: yarn run publish:ci:win
         env:
-          PUPPETEER_CACHE_DIR: ${{ github.workspace }}\\.puppeteer-cache
           # forge.config.tsが期待する環境変数名
           BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
           AC_APPLE_ID: ${{ secrets.APPLE_ID }}
           AC_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           AC_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           CODESIGN_IDENTITY: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
-          PUPPETEER_CACHE_DIR: ${{ github.workspace }}/.puppeteer-cache
+          PUPPETEER_CACHE_DIR: ${{ github.workspace }}\\.puppeteer-cache
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         
