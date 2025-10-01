@@ -5,7 +5,7 @@
       v-model="referenceKey"
       @input="referenceKeyDirty = true"
       :invalid="showInvalid"
-      class="w-64"
+      class="w-80"
     />
     <Select v-model="selectedImageKey">
       <SelectTrigger class="w-auto">
