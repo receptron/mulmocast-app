@@ -49,26 +49,51 @@ import { mulmoCallbackGenerator, getContext } from "./handler_common";
 
 const isDev = !app.isPackaged;
 
+const pickExistingPath = (candidates: string[]) => candidates.find((candidate) => fs.existsSync(candidate));
+
 const devMulmocastRoot = path.resolve(__dirname, "../../node_modules/mulmocast");
 const asarMulmocastRoot = path.join(app.getAppPath(), "node_modules", "mulmocast");
-const packagedMulmocastRoot = path.join(
-  process.resourcesPath,
-  process.platform === "win32" ? "app" : "app.asar.unpacked",
-  "node_modules",
-  "mulmocast",
-);
-const packagedChromiumRoot = path.join(
-  packagedMulmocastRoot,
-  "node_modules",
-  "puppeteer",
-  ".local-chromium",
-);
+
+const packagedMulmocastCandidates = (() => {
+  const appNodeModules = path.join(process.resourcesPath, "app", "node_modules", "mulmocast");
+  const unpackedNodeModules = path.join(process.resourcesPath, "app.asar.unpacked", "node_modules", "mulmocast");
+  const windowsAssetsRoot = path.join(process.resourcesPath, "assets");
+
+  if (process.platform === "win32") {
+    return [appNodeModules, unpackedNodeModules, windowsAssetsRoot];
+  }
+
+  return [unpackedNodeModules, appNodeModules];
+})();
 
 const mulmocastRoot = isDev
   ? devMulmocastRoot
-  : fs.existsSync(packagedMulmocastRoot)
-    ? packagedMulmocastRoot
-    : asarMulmocastRoot;
+  : (pickExistingPath(packagedMulmocastCandidates.filter((candidate) => fs.existsSync(candidate))) ??
+    asarMulmocastRoot);
+
+const packagedChromiumRoot =
+  pickExistingPath([
+    path.join(mulmocastRoot, "node_modules", "puppeteer", ".local-chromium"),
+    path.join(
+      process.resourcesPath,
+      "app",
+      "node_modules",
+      "mulmocast",
+      "node_modules",
+      "puppeteer",
+      ".local-chromium",
+    ),
+    path.join(
+      process.resourcesPath,
+      "app.asar.unpacked",
+      "node_modules",
+      "mulmocast",
+      "node_modules",
+      "puppeteer",
+      ".local-chromium",
+    ),
+    path.join(process.resourcesPath, "assets", "node_modules", "puppeteer", ".local-chromium"),
+  ]) ?? path.join(mulmocastRoot, "node_modules", "puppeteer", ".local-chromium");
 
 updateNpmRoot(mulmocastRoot);
 
