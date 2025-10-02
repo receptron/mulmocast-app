@@ -48,6 +48,8 @@ import { graphaiPuppeteerAgent } from "./handler_graphai";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 
 const isDev = !app.isPackaged;
+const packagedMulmocastRoot = path.join(process.resourcesPath, "app.asar.unpacked", "node_modules", "mulmocast");
+const packagedChromiumRoot = path.join(packagedMulmocastRoot, "node_modules", "puppeteer", ".local-chromium");
 
 const devMulmocastRoot = path.resolve(__dirname, "../../node_modules/mulmocast");
 const asarMulmocastRoot = path.join(app.getAppPath(), "node_modules", "mulmocast");
