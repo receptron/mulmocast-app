@@ -1,4 +1,4 @@
-import { type MessageBoxOptions, type autoUpdater, dialog, autoUpdater } from "electron";
+import { type MessageBoxOptions, dialog, autoUpdater } from "electron";
 
 import type { IUpdateDialogStrings, IUpdateInfo } from "update-electron-app";
 
@@ -22,7 +22,7 @@ export function makeUserNotifier(dialogProps?: IUpdateDialogStrings): (info: IUp
     const { releaseNotes, releaseName } = info;
     const { title, restartButtonText, laterButtonText, detail } = assignedDialog;
 
-    const dialogOpts: Electron.MessageBoxOptions = {
+    const dialogOpts: MessageBoxOptions = {
       type: "info",
       buttons: [restartButtonText, laterButtonText],
       title,
@@ -30,13 +30,12 @@ export function makeUserNotifier(dialogProps?: IUpdateDialogStrings): (info: IUp
       detail,
     };
 
-    dialog.showMessageBox(dialogOpts).then(({ response }) => {
-      if (response === 0) {
-        autoUpdater.quitAndInstall();
-      }
-      if (callback) {
-        callback(response);
-      }
-    });
+    const { response } = dialog.showMessageBox(dialogOpts);
+    if (response === 0) {
+      autoUpdater.quitAndInstall();
+    }
+    if (callback) {
+      callback(response);
+    }
   };
 }

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell, Menu, WebContents, ipcRenderer } from "electron";
+import { app, BrowserWindow, ipcMain, shell, Menu } from "electron";
 import path from "node:path";
 import os from "node:os";
 import started from "electron-squirrel-startup";
@@ -170,7 +170,9 @@ const createWindow = (splashWindow?: BrowserWindow) => {
   });
 
   const updateCallBack = (response: number) => {
-    mainWindow.webContents.send("navigate", "/upadteInstall");
+    if (response === 1) {
+      mainWindow.webContents.send("navigate", "/upadteInstall");
+    }
   };
 
   updateElectronApp({
