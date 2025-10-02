@@ -28,18 +28,20 @@ const template: MenuItemConstructorOptions[] = [
         ],
   },
   { role: "windowMenu" },
-  { role: "help", submenu: [
-    { role: "about" },
-    {
-      label: "Settings",
-      click: () => {
-        const win = BrowserWindow.getFocusedWindow();
-        if (win) {
-          win.webContents.send("navigate", "/settings");
-        }
+  {
+    role: "help",
+    submenu: [
+      { role: "about" },
+      {
+        label: "Settings",
+        click: () => {
+          const win = BrowserWindow.getFocusedWindow();
+          if (win) {
+            win.webContents.send("navigate", "/settings");
+          }
+        },
       },
-    }
-  ]
+    ],
   },
 ];
 
