@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell } from "electron";
+import { app, BrowserWindow, ipcMain, shell, Menu } from "electron";
 import path from "node:path";
 import os from "node:os";
 import started from "electron-squirrel-startup";
@@ -13,6 +13,8 @@ import { ENV_KEYS } from "../shared/constants";
 import { resolveTargetFromVersion } from "../shared/version";
 import { getWindowState, saveWindowState } from "./utils/windw_state";
 import config from "../renderer/i18n/index";
+
+import { menu } from "./menu";
 
 import packageJSON from "../../package.json" with { type: "json" };
 
@@ -224,7 +226,7 @@ app.on("ready", () => {
         process.env[envKey] = value;
       }
     }
-
+    Menu.setApplicationMenu(menu);
     createWindow(splashWindow);
   })();
 });
