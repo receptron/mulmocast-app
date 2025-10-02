@@ -26,7 +26,7 @@ const main = async () => {
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
     },
   });
-  const key = `/releases/${versionData}/win32/x64/RELEASE.json`;
+  const key = `releases/${versionData}/win32/x64/RELEASE.json`;
 
   const body = JSON.stringify({
     currentVersion: packageJSON.version,
