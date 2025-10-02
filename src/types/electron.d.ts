@@ -24,6 +24,7 @@ export interface ElectronAPI {
     get: () => Promise<Settings>;
     set: (settings: Settings) => Promise<void>;
   };
+  onNavigate: (callback: (path: string) => void) => Promise<void>;
 }
 
 declare global {

@@ -1,4 +1,4 @@
-import { Menu, MenuItemConstructorOptions } from "electron";
+import { Menu, MenuItemConstructorOptions, BrowserWindow } from "electron";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -28,7 +28,19 @@ const template: MenuItemConstructorOptions[] = [
         ],
   },
   { role: "windowMenu" },
-  { role: "help", submenu: [{ role: "about" }] },
+  { role: "help", submenu: [
+    { role: "about" },
+    {
+      label: "Settings",
+      click: () => {
+        const win = BrowserWindow.getFocusedWindow();
+        if (win) {
+          win.webContents.send("navigate", "/settings");
+        }
+      },
+    }
+  ]
+  },
 ];
 
 if (process.platform === "darwin") template.unshift({ role: "appMenu" });

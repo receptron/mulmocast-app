@@ -28,4 +28,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
     set: (settings: unknown) => ipcRenderer.invoke("settings:set", settings),
   },
   writeClipboardText: (text: string) => ipcRenderer.invoke("writeClipboardText", text),
+  onNavigate: (callback: (path: string) => void) => {
+    ipcRenderer.on("navigate", (_, path) => callback(path));
+  },
 });
