@@ -109,9 +109,11 @@
         :api-keys="apiKeys"
         @update:selected-l-l-m="updateSelectedLLM"
         @update:llm-configs="updateLlmConfigs"
-        />
-      
-      <Button @click="updateInstall">{{ t("update") }}</Button>
+      />
+
+      <div v-if="globalStore.hasUpdateInstall">
+        <Button @click="updateInstall">{{ t("update") }}</Button>
+      </div>
     </div>
   </div>
 </template>
@@ -122,7 +124,7 @@ import { useDebounceFn } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import { ChevronDown } from "lucide-vue-next";
 
-import { Label, Checkbox, Button} from "@/components/ui";
+import { Label, Checkbox, Button } from "@/components/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -332,7 +334,7 @@ const supportLanguages = computed(() => {
 });
 
 const updateInstall = () => {
-  window.electronAPI.updateInstall()
+  window.electronAPI.updateInstall();
 };
 
 // Watch for changes in language selection - save immediately and update i18n locale

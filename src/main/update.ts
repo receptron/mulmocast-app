@@ -1,8 +1,8 @@
 import { type MessageBoxOptions, type autoUpdater, dialog, autoUpdater } from "electron";
 
-
 import type { IUpdateDialogStrings, IUpdateInfo } from "update-electron-app";
 
+// copy from update-electron-app.
 /**
  * Helper function that generates a callback for use with {@link IUpdateElectronAppOptions.onNotifyUser}.
  *
@@ -10,10 +10,10 @@ import type { IUpdateDialogStrings, IUpdateInfo } from "update-electron-app";
  */
 export function makeUserNotifier(dialogProps?: IUpdateDialogStrings): (info: IUpdateInfo) => void {
   const defaultDialogMessages = {
-    title: 'Application Update',
-    detail: 'A new version has been downloaded. Restart the application to apply the updates.',
-    restartButtonText: 'Restart',
-    laterButtonText: 'Later',
+    title: "Application Update",
+    detail: "A new version has been downloaded. Restart the application to apply the updates.",
+    restartButtonText: "Restart",
+    laterButtonText: "Later",
   };
 
   const assignedDialog = Object.assign({}, defaultDialogMessages, dialogProps);
@@ -23,10 +23,10 @@ export function makeUserNotifier(dialogProps?: IUpdateDialogStrings): (info: IUp
     const { title, restartButtonText, laterButtonText, detail } = assignedDialog;
 
     const dialogOpts: Electron.MessageBoxOptions = {
-      type: 'info',
+      type: "info",
       buttons: [restartButtonText, laterButtonText],
       title,
-      message: process.platform === 'win32' ? releaseNotes : releaseName,
+      message: process.platform === "win32" ? releaseNotes : releaseName,
       detail,
     };
 
@@ -39,4 +39,4 @@ export function makeUserNotifier(dialogProps?: IUpdateDialogStrings): (info: IUp
       }
     });
   };
-};
+}

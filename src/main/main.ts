@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell, Menu, dialog } from "electron";
+import { app, BrowserWindow, ipcMain, shell, Menu, WebContents, ipcRenderer } from "electron";
 import path from "node:path";
 import os from "node:os";
 import started from "electron-squirrel-startup";
@@ -15,7 +15,7 @@ import { getWindowState, saveWindowState } from "./utils/windw_state";
 import config from "../renderer/i18n/index";
 
 import { menu } from "./menu";
-import { makeUserNotifier } from "./update"
+import { makeUserNotifier } from "./update";
 
 import packageJSON from "../../package.json" with { type: "json" };
 
@@ -168,33 +168,25 @@ const createWindow = (splashWindow?: BrowserWindow) => {
       event.reply("response-env", envData);
     })();
   });
-};
 
-const updateCallBack = (response: number) => {
-  dialog.showMessageBox({
-    type: "info",
-    buttons: ["OK"],
-    title: "Debug",
-    message: `response is ${response}`,
+  const updateCallBack = (response: number) => {
+    mainWindow.webContents.send("navigate", "/upadteInstall");
+  };
+
+  updateElectronApp({
+    updateSource: {
+      type: UpdateSourceType.StaticStorage,
+      baseUrl: `https://s3.aws.mulmocast.com/releases/${versionData}/${process.platform}/${process.arch}`,
+    },
+    logger: log,
+    notifyUser: true,
+    onNotifyUser: (info) => {
+      const lang = settingsManager.loadAppLanguage();
+      const notifyProps = config.messages[lang as keyof typeof config.messages].updater;
+      return makeUserNotifier(notifyProps)(info, updateCallBack);
+    },
   });
-  //if (response === 1) {
-  //autoUpdater.quitAndInstall();
-  //}
 };
-
-updateElectronApp({
-  updateSource: {
-    type: UpdateSourceType.StaticStorage,
-    baseUrl: `https://s3.aws.mulmocast.com/releases/${versionData}/${process.platform}/${process.arch}`,
-  },
-  logger: log,
-  notifyUser: true,
-  onNotifyUser: (info) => {
-    const lang = settingsManager.loadAppLanguage();
-    const notifyProps = config.messages[lang as keyof typeof config.messages].updater;
-    return makeUserNotifier(notifyProps)(info, updateCallBack);
-  },
-});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
