@@ -61,7 +61,7 @@ export const registerIPCHandler = () => {
     clipboard.writeText(text ?? "");
   });
 
-  ipcMain.handle("updateInstall", (_event: IpcMainInvokeEvent) => {
+  ipcMain.handle("updateInstall", (__event: IpcMainInvokeEvent) => {
     autoUpdater.quitAndInstall();
   });
 };
