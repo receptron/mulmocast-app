@@ -110,10 +110,19 @@
         @update:selected-l-l-m="updateSelectedLLM"
         @update:llm-configs="updateLlmConfigs"
       />
-
-      <div v-if="globalStore.hasUpdateInstall">
-        <Button @click="updateInstall">{{ t("update") }}</Button>
-      </div>
+      <Card>
+        <CardHeader>
+          {{ t("updater.title") }}
+        </CardHeader>
+        <CardContent>
+          <div class="mb-4 ml-2">
+            {{ t("updater.detail") }}
+          </div>
+          <div v-if="globalStore.hasUpdateInstall">
+            <Button size="sm" variant="outline" @click="updateInstall">{{ t("updater.restartButtonText") }}</Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   </div>
 </template>
