@@ -35,7 +35,7 @@ export const useGridLayoutClass = () => {
 
     // 3-column layout for semi-pro and above
     if (isLeftColumnOpen.value && isRightColumnOpen.value) {
-      return "lg:grid-cols-[30%_40%_1fr]";
+      return "lg:grid-cols-[35%_35%_1fr]";
     } else if (isLeftColumnOpen.value) {
       return "lg:grid-cols-[30%_1fr_48px]";
     } else if (isRightColumnOpen.value) {

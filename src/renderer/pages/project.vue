@@ -9,7 +9,7 @@
           @updateMulmoScript="handleUpdateMulmoScript"
         />
         <!-- 3 Split Layout -->
-        <div class="relative grid h-auto grid-cols-1 gap-4 lg:h-[calc(100vh-180px)]" :class="gridLayoutClass">
+        <div class="relative grid h-auto grid-cols-1 lg:h-[calc(100vh-180px)]" :class="gridLayoutClass">
           <!-- Left Column - AI Chat -->
           <div
             class="h-full overflow-y-auto pr-2"
