@@ -31,9 +31,10 @@ const main = async () => {
   const body = JSON.stringify({
     currentVersion: packageJSON.version,
   });
-  
+
+  const BUCKET_NAME = "mulmocast-app-update";
   const putCommand = new PutObjectCommand({
-    Bucket: "mulmocast-app-update",
+    Bucket: BUCKET_NAME,
     Key: key,
     Body: body,
     ContentType: "application/json",
