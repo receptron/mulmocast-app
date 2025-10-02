@@ -68,14 +68,32 @@ const packagedMulmocastCandidates = (() => {
 
 const mulmocastRoot = isDev
   ? devMulmocastRoot
-  : pickExistingPath(packagedMulmocastCandidates.filter((candidate) => fs.existsSync(candidate))) ?? asarMulmocastRoot;
+  : (pickExistingPath(packagedMulmocastCandidates.filter((candidate) => fs.existsSync(candidate))) ??
+    asarMulmocastRoot);
 
-const packagedChromiumRoot = pickExistingPath([
-  path.join(mulmocastRoot, "node_modules", "puppeteer", ".local-chromium"),
-  path.join(process.resourcesPath, "app", "node_modules", "mulmocast", "node_modules", "puppeteer", ".local-chromium"),
-  path.join(process.resourcesPath, "app.asar.unpacked", "node_modules", "mulmocast", "node_modules", "puppeteer", ".local-chromium"),
-  path.join(process.resourcesPath, "assets", "node_modules", "puppeteer", ".local-chromium"),
-]) ?? path.join(mulmocastRoot, "node_modules", "puppeteer", ".local-chromium");
+const packagedChromiumRoot =
+  pickExistingPath([
+    path.join(mulmocastRoot, "node_modules", "puppeteer", ".local-chromium"),
+    path.join(
+      process.resourcesPath,
+      "app",
+      "node_modules",
+      "mulmocast",
+      "node_modules",
+      "puppeteer",
+      ".local-chromium",
+    ),
+    path.join(
+      process.resourcesPath,
+      "app.asar.unpacked",
+      "node_modules",
+      "mulmocast",
+      "node_modules",
+      "puppeteer",
+      ".local-chromium",
+    ),
+    path.join(process.resourcesPath, "assets", "node_modules", "puppeteer", ".local-chromium"),
+  ]) ?? path.join(mulmocastRoot, "node_modules", "puppeteer", ".local-chromium");
 
 updateNpmRoot(mulmocastRoot);
 
