@@ -1,7 +1,7 @@
 <template>
   <Layout>
     <TooltipProvider>
-      <div class="mx-auto max-w-[95%] space-y-6 p-6">
+      <div class="mx-auto space-y-2 px-2">
         <!-- Header Section -->
         <ProjectHeader
           :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript"
