@@ -1,9 +1,9 @@
-import { app, BrowserWindow, ipcMain, shell, Menu } from "electron";
+import { app, BrowserWindow, ipcMain, shell, Menu, dialog } from "electron";
 import path from "node:path";
 import os from "node:os";
 import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
-import { updateElectronApp, UpdateSourceType, makeUserNotifier } from "update-electron-app";
+import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 import log from "electron-log/main";
 
 import { registerIPCHandler } from "./ipc_handler";
@@ -15,6 +15,7 @@ import { getWindowState, saveWindowState } from "./utils/windw_state";
 import config from "../renderer/i18n/index";
 
 import { menu } from "./menu";
+import { makeUserNotifier } from "./update"
 
 import packageJSON from "../../package.json" with { type: "json" };
 
@@ -169,6 +170,18 @@ const createWindow = (splashWindow?: BrowserWindow) => {
   });
 };
 
+const updateCallBack = (response: number) => {
+  dialog.showMessageBox({
+    type: "info",
+    buttons: ["OK"],
+    title: "Debug",
+    message: `response is ${response}`,
+  });
+  //if (response === 1) {
+  //autoUpdater.quitAndInstall();
+  //}
+};
+
 updateElectronApp({
   updateSource: {
     type: UpdateSourceType.StaticStorage,
@@ -179,7 +192,7 @@ updateElectronApp({
   onNotifyUser: (info) => {
     const lang = settingsManager.loadAppLanguage();
     const notifyProps = config.messages[lang as keyof typeof config.messages].updater;
-    return makeUserNotifier(notifyProps)(info);
+    return makeUserNotifier(notifyProps)(info, updateCallBack);
   },
 });
 
