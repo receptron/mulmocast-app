@@ -1,7 +1,7 @@
 <template>
   <Layout>
     <TooltipProvider>
-      <div class="mx-auto max-w-[95%] space-y-6 p-6">
+      <div class="mx-auto space-y-2 px-2">
         <!-- Header Section -->
         <ProjectHeader
           :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript"
@@ -9,7 +9,7 @@
           @updateMulmoScript="handleUpdateMulmoScript"
         />
         <!-- 3 Split Layout -->
-        <div class="relative grid h-auto grid-cols-1 gap-4 lg:h-[calc(100vh-180px)]" :class="gridLayoutClass">
+        <div class="relative grid h-auto grid-cols-1 lg:h-[calc(100vh-180px)]" :class="gridLayoutClass">
           <!-- Left Column - AI Chat -->
           <div
             class="h-full overflow-y-auto pr-2"

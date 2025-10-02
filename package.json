@@ -18,6 +18,7 @@
     "publish:ci": "yarn run puppeteer:install:mulmocast && electron-forge publish",
     "publish:ci:mac": "yarn run publish:ci -- --platform=darwin --arch=arm64",
     "publish:ci:win": "yarn run publish:ci -- --platform=win32 --arch=x64",
+    "publish:ci:win_json": "npx tsx batch/win_meta.ts",
     "format": "prettier --write '{test/*,src/**/*,*}.{js,ts,vue,json}'",
     "format:check": "prettier --check '{src/**/*,*}.{js,ts,vue,json}'",
     "dumpi18n": "npx tsx test/i18n-dump.ts",

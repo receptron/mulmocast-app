@@ -62,6 +62,7 @@ const config: ForgeConfig = {
   makers: [
     new MakerSquirrel({
       setupIcon: path.resolve(__dirname, "images/mulmocast_icon.ico"),
+      setupExe: `MulmoCast-${packageVersion}-setup.exe`,
     }),
     new MakerZIP({ macUpdateManifestBaseUrl: `https://s3.aws.mulmocast.com/releases/${target}/darwin/arm64` }, [
       "darwin",
