@@ -78,5 +78,10 @@ onMounted(async () => {
       zodErrorStore.zodErrorLogCallback(message);
     }
   });
+  window.electronAPI.onNavigate((path: string) => {
+    if (path === "/settings") {
+      globalStore.toggleSettingModal();
+    }
+  });
 });
 </script>
