@@ -51,12 +51,19 @@ const isDev = !app.isPackaged;
 const packagedMulmocastRoot = path.join(process.resourcesPath, "app.asar.unpacked", "node_modules", "mulmocast");
 const packagedChromiumRoot = path.join(packagedMulmocastRoot, "node_modules", "puppeteer", ".local-chromium");
 
+const devMulmocastRoot = path.resolve(__dirname, "../../node_modules/mulmocast");
+const asarMulmocastRoot = path.join(app.getAppPath(), "node_modules", "mulmocast");
+const packagedMulmocastRoot = path.join(process.resourcesPath, "app.asar.unpacked", "node_modules", "mulmocast");
+
+const packagedChromiumRoot = path.join(packagedMulmocastRoot, "node_modules", "puppeteer", ".local-chromium");
+
 if (isDev) {
-  updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
+  updateNpmRoot(devMulmocastRoot);
 } else {
-  updateNpmRoot(packagedMulmocastRoot);
-  process.env.PUPPETEER_CACHE_DIR = packagedChromiumRoot;
-  process.env.PUPPETEER_DOWNLOAD_PATH = packagedChromiumRoot;
+  updateNpmRoot(asarMulmocastRoot);
+
+  process.env.PUPPETEER_CACHE_DIR ??= packagedChromiumRoot;
+  process.env.PUPPETEER_DOWNLOAD_PATH ??= packagedChromiumRoot;
 
   if (!process.env.PUPPETEER_EXECUTABLE_PATH) {
     const chromiumConfig = (() => {
