@@ -18,6 +18,8 @@ export const notifyError = (
   toast.error(message, {
     description,
     action,
+    duration: Infinity,
+    closeButton: true,
   });
 };
 
@@ -29,23 +31,21 @@ export const notifyProgress = <T>(
     errorMessage,
   }: { loadingMessage: string | Component; successMessage: string; errorMessage: string },
 ) => {
-  toast.promise(
-    (async () => {
-      const result = await promise;
+  const toastId = toast.loading(loadingMessage, {
+    duration: Infinity,
+  });
+  promise
+    .then((result) => {
+      toast.dismiss(toastId);
       if (result?.result === false) {
-        console.log("error");
-        if (result.error) {
-          throw result.error;
-        }
-        throw Error("Unknown error");
+        notifyError(errorMessage, result.error instanceof Error ? result.error.message : "Unknown error");
+      } else {
+        notifySuccess(successMessage);
       }
-      return result;
-    })(),
-    {
-      loading: loadingMessage,
-      success: successMessage,
-      error: errorMessage,
-    },
-  );
+    })
+    .catch((error) => {
+      toast.dismiss(toastId);
+      notifyError(errorMessage, error instanceof Error ? error.message : "Unknown error");
+    });
   return promise;
 };
