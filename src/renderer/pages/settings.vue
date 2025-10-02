@@ -110,6 +110,19 @@
         @update:selected-l-l-m="updateSelectedLLM"
         @update:llm-configs="updateLlmConfigs"
       />
+      <Card>
+        <CardHeader>
+          {{ t("updater.title") }}
+        </CardHeader>
+        <CardContent>
+          <div class="mb-4 ml-2">
+            {{ t("updater.detail") }}
+          </div>
+          <div v-if="globalStore.hasUpdateInstall">
+            <Button size="sm" variant="outline" @click="updateInstall">{{ t("updater.restartButtonText") }}</Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   </div>
 </template>
@@ -120,7 +133,7 @@ import { useDebounceFn } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import { ChevronDown } from "lucide-vue-next";
 
-import { Label, Checkbox } from "@/components/ui";
+import { Label, Checkbox, Button } from "@/components/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -328,6 +341,10 @@ const simpleLang = I18N_SUPPORTED_LANGUAGES.map((a) => a.id);
 const supportLanguages = computed(() => {
   return isPro.value ? languages : simpleLang;
 });
+
+const updateInstall = () => {
+  window.electronAPI.updateInstall();
+};
 
 // Watch for changes in language selection - save immediately and update i18n locale
 watch(selectedLanguage, (newLang) => {

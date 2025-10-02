@@ -17,6 +17,7 @@ type SETTINGS = {
 export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
   const settings = ref<SETTINGS>({});
   const userMode = ref<{ id?: string; mode?: number }>(userLevels[0]);
+  const hasUpdateInstall = ref(false);
 
   const updateSettings = (data: SETTINGS) => {
     const { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs, APIKEY, USER_LEVEL, APP_LANGUAGE } = data;
@@ -76,6 +77,10 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
     return userMode.value.id === "beginner";
   });
 
+  const upadteInstall = () => {
+    hasUpdateInstall.value = true;
+  };
+
   return {
     settings,
     updateSettings,
@@ -99,5 +104,8 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
     useLanguages,
 
     hasApiKey,
+
+    hasUpdateInstall,
+    upadteInstall,
   };
 });
