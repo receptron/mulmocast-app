@@ -49,11 +49,22 @@ import { mulmoCallbackGenerator, getContext } from "./handler_common";
 
 const isDev = !app.isPackaged;
 
-if (isDev) {
-  updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
-} else {
-  updateNpmRoot(process.resourcesPath);
-}
+const devMulmocastRoot = path.resolve(__dirname, "../../node_modules/mulmocast");
+const asarMulmocastRoot = path.join(app.getAppPath(), "node_modules", "mulmocast");
+const packagedMulmocastRoot = path.join(
+  process.resourcesPath,
+  process.platform === "win32" ? "app" : "app.asar.unpacked",
+  "node_modules",
+  "mulmocast",
+);
+
+const mulmocastRoot = isDev
+  ? devMulmocastRoot
+  : fs.existsSync(packagedMulmocastRoot)
+    ? packagedMulmocastRoot
+    : asarMulmocastRoot;
+
+updateNpmRoot(mulmocastRoot);
 const ffmpegPath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffmpeg");
 const ffprobePath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffprobe");
 const ffmpegBinary = path.basename(ffmpegPath);
