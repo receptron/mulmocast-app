@@ -1,4 +1,4 @@
-import type { MessageBoxOptions, autoUpdater, dialog } from "electron";
+import { type MessageBoxOptions, type autoUpdater, dialog } from "electron";
 
 
 import type { IUpdateDialogStrings, IUpdateInfo } from "update-electron-app";
