@@ -57,6 +57,12 @@ const packagedMulmocastRoot = path.join(
   "node_modules",
   "mulmocast",
 );
+const packagedChromiumRoot = path.join(
+  packagedMulmocastRoot,
+  "node_modules",
+  "puppeteer",
+  ".local-chromium",
+);
 
 const mulmocastRoot = isDev
   ? devMulmocastRoot
@@ -65,6 +71,46 @@ const mulmocastRoot = isDev
     : asarMulmocastRoot;
 
 updateNpmRoot(mulmocastRoot);
+
+if (!isDev) {
+  process.env.PUPPETEER_CACHE_DIR ??= packagedChromiumRoot;
+  process.env.PUPPETEER_DOWNLOAD_PATH ??= packagedChromiumRoot;
+
+  if (!process.env.PUPPETEER_EXECUTABLE_PATH) {
+    const chromiumConfig = (() => {
+      switch (process.platform) {
+        case "darwin":
+          return { folder: "chrome-mac", executable: ["Chromium.app", "Contents", "MacOS", "Chromium"] };
+        case "win32":
+          return { folder: "chrome-win", executable: ["chrome.exe"] };
+        case "linux":
+          return { folder: "chrome-linux", executable: ["chrome"] };
+        default:
+          return undefined;
+      }
+    })();
+
+    if (chromiumConfig && fs.existsSync(packagedChromiumRoot)) {
+      const revisionDirectories = fs
+        .readdirSync(packagedChromiumRoot, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory());
+
+      for (const revisionDirectory of revisionDirectories) {
+        const candidate = path.join(
+          packagedChromiumRoot,
+          revisionDirectory.name,
+          chromiumConfig.folder,
+          ...chromiumConfig.executable,
+        );
+
+        if (fs.existsSync(candidate)) {
+          process.env.PUPPETEER_EXECUTABLE_PATH = candidate;
+          break;
+        }
+      }
+    }
+  }
+}
 const ffmpegPath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffmpeg");
 const ffprobePath = path.resolve(__dirname, "../../node_modules/ffmpeg-ffprobe-static/ffprobe");
 const ffmpegBinary = path.basename(ffmpegPath);
