@@ -60,7 +60,7 @@ const packagedMulmocastRoot = path.join(
 const packagedChromiumRoot = path.join(packagedMulmocastRoot, "node_modules", "puppeteer", ".local-chromium");
 
 // Puppeteer設定は複雑なパス解決を維持（Chromium検出のため）
-const mulmocastRoot = isDev
+const __mulmocastRoot = isDev
   ? devMulmocastRoot
   : fs.existsSync(packagedMulmocastRoot)
     ? packagedMulmocastRoot
