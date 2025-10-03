@@ -26,18 +26,31 @@ log.initialize();
 let executablePath = puppeteer.executablePath();
 if (process.env.NODE_ENV !== "development") {
   // In production, puppeteer.executablePath() can return a path inside app.asar,
-  // which is not directly executable. We need to construct the path to the
-  // binary within the extraResource directory.
-  const platform = os.platform();
-  const chromiumPath = path.join(
-    process.resourcesPath,
-    "chromium",
-    // The path inside the cache directory is slightly different for each platform.
-    platform === "win32" ? "chrome-win" : "chrome-mac",
-    platform === "win32" ? "chrome.exe" : "Chromium.app/Contents/MacOS/Chromium",
-  );
-  if (fs.existsSync(chromiumPath)) {
-    executablePath = chromiumPath;
+  // which is not directly executable. We need to construct the correct path
+  // to the binary within the `extraResource` directory.
+  // The default path is something like:
+  // ".../node_modules/puppeteer/.local-chromium/win64-141.0.7390.54/chrome-win/chrome.exe"
+  // We need to extract the part after the cache directory marker.
+  const cacheDirMarker = ".local-chromium";
+  const defaultPath = puppeteer.executablePath();
+  console.log(`[PUPPETEER_DEBUG] Default executable path: ${defaultPath}`);
+  const markerIndex = defaultPath.lastIndexOf(cacheDirMarker);
+  console.log(`[PUPPETEER_DEBUG] Marker index for '${cacheDirMarker}': ${markerIndex}`);
+
+  if (markerIndex !== -1) {
+    // Extracts the platform/version specific part of the path
+    const relativePath = defaultPath.substring(markerIndex + cacheDirMarker.length + 1);
+    console.log(`[PUPPETEER_DEBUG] Extracted relative path: ${relativePath}`);
+    const finalPath = path.join(process.resourcesPath, "chromium", relativePath);
+    console.log(`[PUPPETEER_DEBUG] Constructed final path: ${finalPath}`);
+    if (fs.existsSync(finalPath)) {
+      executablePath = finalPath;
+      console.log(`[PUPPETEER_DEBUG] Final path exists. Using it.`);
+    } else {
+      console.log(`[PUPPETEER_DEBUG] Final path does NOT exist.`);
+    }
+  } else {
+    console.log(`[PUPPETEER_DEBUG] Marker '${cacheDirMarker}' not found in default path.`);
   }
 }
 console.log(`[PUPPETEER] Resolved executable path: ${executablePath}`);
