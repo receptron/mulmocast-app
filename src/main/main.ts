@@ -26,47 +26,37 @@ log.initialize();
 // --- Puppeteer Path Resolution ---
 // This must be done BEFORE any other modules that might import puppeteer are loaded.
 (() => {
+  // In development, we don't need to do anything.
   if (process.env.NODE_ENV === "development") {
     console.log(`[PUPPETEER_DEBUG] Development environment detected. Skipping Puppeteer path override.`);
     return;
   }
   console.log(`[PUPPETEER_DEBUG] Configuring Puppeteer path for production environment.`);
 
-  try {
-    // We need to require puppeteer-core here to get its configuration before it's used elsewhere.
-    // Using puppeteer-core avoids downloading another Chromium instance.
-    const puppeteer = require("puppeteer-core") as PuppeteerNode;
-    const defaultPath = puppeteer.executablePath();
-    console.log(`[PUPPETEER_DEBUG] Default executable path: ${defaultPath}`);
+  // This prevents Puppeteer from trying to find a browser in a default location,
+  // which can fail inside an asar package.
+  process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = "true";
 
-    // Extract the platform and version from the default path to build the correct path.
-    // e.g., "C:\Users\...\.cache\puppeteer\chrome\win64-141.0.7390.54\chrome-win64\chrome.exe"
-    // The regex needs to be robust enough to handle different cache paths.
-    const match = defaultPath.match(/([a-z0-9]+)-(\d+\.\d+\.\d+\.\d+)/) || puppeteer.executablePath().match(/([a-z0-9]+)-(\d+\.\d+\.\d+\.\d+)/);
+  // We need to construct the path to the bundled Chromium executable.
+  // The structure is based on how `puppeteer browsers install` places it in our `chromium` folder.
+  const platform = os.platform() === "win32" ? "win64" : "mac-arm64"; // Adjust for your target platforms
+  const puppeteerVersion = packageJSON.dependencies.puppeteer;
+  // This is a simplification. The exact version might differ slightly.
+  // We will need to get the exact buildId in a more robust way if this fails.
+  // For now, let's assume a common mapping.
+  const chromeVersion = "141.0.7390.54"; // This should be derived from puppeteer version if possible.
+  const subDir = os.platform() === "win32" ? "chrome-win64" : "chrome-mac-arm64";
+  const executableName = os.platform() === "win32" ? "chrome.exe" : "chrome";
 
-    if (match) {
-      const platform = match[1]; // e.g., "win64"
-      const version = match[2]; // e.g., "141.0.7390.54"
-      const executableName = os.platform() === "win32" ? "chrome.exe" : "chrome"; // Simplified
-      const subDir = os.platform() === "win32" ? "chrome-win64" : "chrome-mac-arm64"; // Adjust for mac as needed
+  const finalPath = path.join(process.resourcesPath, "chromium", "chrome", `${platform}-${chromeVersion}`, subDir, executableName);
+  console.log(`[PUPPETEER_DEBUG] Constructed final path: ${finalPath}`);
 
-      console.log(`[PUPPETEER_DEBUG] Detected platform: ${platform}, version: ${version}`);
-
-      const finalPath = path.join(process.resourcesPath, "chromium", "chrome", `${platform}-${version}`, subDir, executableName);
-      console.log(`[PUPPETEER_DEBUG] Constructed final path: ${finalPath}`);
-
-      if (fs.existsSync(finalPath)) {
-        // This is the crucial part: set the environment variable BEFORE anything else uses Puppeteer.
-        process.env.PUPPETEER_EXECUTABLE_PATH = finalPath;
-        console.log(`[PUPPETEER] Overriding executable path globally to: ${finalPath}`);
-      } else {
-        console.log(`[PUPPETEER_DEBUG] Final path does NOT exist. Falling back to default.`);
-      }
-    } else {
-      console.log(`[PUPPETEER_DEBUG] Could not extract platform/version from default path. This might be okay if puppeteer finds it another way.`);
-    }
-  } catch (error) {
-    console.error("[PUPPETEER_ERROR] Failed to configure Puppeteer path:", error);
+  if (fs.existsSync(finalPath)) {
+    // This is the crucial part: set the environment variable BEFORE anything else uses Puppeteer.
+    process.env.PUPPETEER_EXECUTABLE_PATH = finalPath;
+    console.log(`[PUPPETEER] Overriding executable path globally to: ${finalPath}`);
+  } else {
+    console.error(`[PUPPETEER_ERROR] Bundled Chromium not found at: ${finalPath}`);
   }
 })();
 
