@@ -5,6 +5,10 @@
  renderer/app.vueで通知を受け取る。
  エラーをmulmocast-app/src/renderer/lib/error.tsのconvCauseToErrorMessageで変換。i18n化
 
+- cliでassert + causeでエラーにデータを追加する
+- src/renderer/lib/error.tsを変更して、そのデータを受け取れるようにする
+- i18を追加する
+
 # notifyProgress
 generate系。Promiseの例外が発生したら表示（これで上記と重複？）
 
