@@ -29,7 +29,7 @@
     "type-check": "tsc --noEmit -p ./src/renderer/tsconfig.json"
   },
   "config": {
-    "chromiumVersion": "128.0.6613.12"
+    "chromiumVersion": "141.0.7390.54"
   },
   "keywords": [],
   "author": {
