@@ -25,15 +25,9 @@ import type { SessionProgressEvent } from "mulmocast/browser";
 
 import { notifyError } from "@/lib/notification";
 import { useI18n } from "vue-i18n";
+import { convCauseToErrorMessage } from "./lib/error";
 
 const { t } = useI18n();
-
-const convCauseToErrorMessage = (cause: { action: string; type: string; beat_index: number }) => {
-  if (cause.action === "images" && cause.type === "FileNotExist") {
-    return t("notify.error.image.fileNotExist", { beat_index: cause.beat_index + 1 });
-  }
-  return t("notify.error.unknownError");
-};
 
 const mulmoEventStore = useMulmoEventStore();
 const graphAIDebugStore = useGraphAIDebugLogStore();
@@ -68,7 +62,8 @@ onMounted(async () => {
     if (message.type === "error") {
       const errorData = message.data as { message?: string };
       if (message.cause) {
-        notifyError("", convCauseToErrorMessage(message.cause));
+        const data = convCauseToErrorMessage(message.cause);
+        notifyError("", t(data[0], data[1] ?? {}));
       } else if (errorData?.message) {
         notifyError("Error", errorData.message);
       }
@@ -78,6 +73,7 @@ onMounted(async () => {
       zodErrorStore.zodErrorLogCallback(message);
     }
   });
+
   window.electronAPI.onNavigate((path: string) => {
     if (path === "/settings") {
       globalStore.toggleSettingModal();
