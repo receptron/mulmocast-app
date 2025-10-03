@@ -8,7 +8,7 @@
           @click="generateContents"
           class="mt-2 flex h-auto w-full items-center justify-center space-y-2 py-4 whitespace-normal"
           data-testid="generate-contents-button"
-          :disabled="mulmoEventStore.isArtifactGenerating[projectId]"
+          :disabled="mulmoEventStore.isArtifactGenerating[projectId] || !mulmoScriptHistoryStore.isValidScript"
         >
           <div class="mb-0 flex items-center justify-center gap-2">
             <Monitor :size="24" />
@@ -26,7 +26,7 @@ import { Button } from "@/components/ui/button";
 import { getConcurrentTaskStatusMessageComponent } from "./concurrent_task_status_message";
 
 import MovieTab from "../../components/product/tabs/movie_tab.vue";
-import { useMulmoEventStore } from "../../store";
+import { useMulmoEventStore, useMulmoScriptHistoryStore } from "@/store";
 
 import { useI18n } from "vue-i18n";
 
@@ -38,6 +38,7 @@ const props = defineProps<Props>();
 const { t } = useI18n();
 
 const mulmoEventStore = useMulmoEventStore();
+const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
 const generateContents = () => {
   notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", props.projectId, ["movie"]), {
