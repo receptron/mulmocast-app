@@ -35,11 +35,11 @@ export const getMenu = async () => {
     },
     { role: "windowMenu" },
     {
-      label: "Help",
+      label: menuProps["help"],
       submenu: [
         { role: "about" },
         {
-          label: "Settings",
+          label: menuProps["settings"],
           click: () => {
             const win = BrowserWindow.getFocusedWindow();
             if (win) {
@@ -48,7 +48,7 @@ export const getMenu = async () => {
           },
         },
         {
-          label: "FAQ",
+          label: menuProps["FAQ"],
           click: () => {
             shell.openExternal("https://mulmocast.com/faq").catch((error) => {
               console.error("Failed to open external URL:", error);
@@ -56,7 +56,7 @@ export const getMenu = async () => {
           },
         },
         {
-          label: "ASK/Request",
+          label: menuProps["ASK"],
           click: () => {
             shell
               .openExternal(

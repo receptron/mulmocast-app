@@ -990,6 +990,13 @@ const lang = {
     restartButtonText: "再起動",
     laterButtonText: "あとで",
   },
+  nativeMenu: {
+    view: "表示",
+    help: "ヘルプ",
+    settings: "設定",
+    FAQ: "よくある質問",
+    ASK: "問い合わせ"
+  },
 };
 
 export default lang;
