@@ -59,11 +59,23 @@ log.initialize();
       // Set the environment variable for compatibility
       process.env.PUPPETEER_EXECUTABLE_PATH = finalPath;
 
-      // Directly override Puppeteer's BrowserFetcher executable path
-      const browserFetcher = puppeteer.createBrowserFetcher({});
-      // @ts-expect-error - _executablePath is private but necessary for direct control
-      browserFetcher._executablePath = finalPath;
-      console.log(`[PUPPETEER] Directly set executable path for Puppeteer to: ${finalPath}`);
+      // Override Puppeteer executable path for v24+
+      try {
+        // Method 1: Set cache directory to parent of executable
+        const chromiumDir = path.dirname(path.dirname(finalPath)); // .../chrome-win64 -> .../
+        process.env.PUPPETEER_CACHE_DIR = chromiumDir;
+
+        // Method 2: Try to access internal configuration (may not work in v24+)
+        // @ts-expect-error - Accessing potential internal APIs
+        if (puppeteer._configuration) {
+          puppeteer._configuration.executablePath = finalPath;
+        }
+
+        console.log(`[PUPPETEER] Configured for v24+ - Cache dir: ${chromiumDir}`);
+        console.log(`[PUPPETEER] Target executable: ${finalPath}`);
+      } catch (configError) {
+        console.log(`[PUPPETEER] Advanced configuration failed, relying on environment variables: ${configError}`);
+      }
     } else {
       console.error(`[PUPPETEER_ERROR] Bundled Chromium not found at: ${finalPath}`);
     }
