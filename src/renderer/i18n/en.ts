@@ -990,6 +990,16 @@ const lang = {
     restartButtonText: "Restart",
     laterButtonText: "Later",
   },
+  nativeMenu: {
+    fileMenu: "File",
+    editMenu: "Edit",
+    windowMenu: "Window",
+    view: "View",
+    help: "Help",
+    settings: "Settings",
+    FAQ: "FAQ",
+    ASK: "ASK/Request",
+  },
 };
 
 export default lang;

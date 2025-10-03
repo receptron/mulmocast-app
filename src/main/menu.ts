@@ -9,8 +9,8 @@ export const getMenu = async () => {
   const menuProps = config.messages[lang as keyof typeof config.messages].nativeMenu;
 
   const template: MenuItemConstructorOptions[] = [
-    { role: "fileMenu" },
-    { role: "editMenu" },
+    { role: "fileMenu", label: menuProps["fileMenu"] },
+    { role: "editMenu", label: menuProps["editMenu"] },
     {
       label: menuProps["view"],
       submenu: isDev
@@ -33,13 +33,13 @@ export const getMenu = async () => {
             { role: "togglefullscreen" },
           ],
     },
-    { role: "windowMenu" },
+    { role: "windowMenu", label: menuProps["windowMenu"] },
     {
-      label: "Help",
+      label: menuProps["help"],
       submenu: [
         { role: "about" },
         {
-          label: "Settings",
+          label: menuProps["settings"],
           click: () => {
             const win = BrowserWindow.getFocusedWindow();
             if (win) {
@@ -48,7 +48,7 @@ export const getMenu = async () => {
           },
         },
         {
-          label: "FAQ",
+          label: menuProps["FAQ"],
           click: () => {
             shell.openExternal("https://mulmocast.com/faq").catch((error) => {
               console.error("Failed to open external URL:", error);
@@ -56,7 +56,7 @@ export const getMenu = async () => {
           },
         },
         {
-          label: "ASK/Request",
+          label: menuProps["ASK"],
           click: () => {
             shell
               .openExternal(
