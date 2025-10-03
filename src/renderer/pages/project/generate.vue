@@ -13,7 +13,9 @@
           @click="generateContents"
           class="mt-2 flex h-auto w-full items-center justify-center space-y-2 py-4 whitespace-normal"
           :disabled="
-            mulmoEventStore.isArtifactGenerating[projectId] || !checkboxOptions.some((option) => options[option.key])
+            mulmoEventStore.isArtifactGenerating[projectId] ||
+            !checkboxOptions.some((option) => options[option.key]) ||
+            !mulmoScriptHistoryStore.isValidScript
           "
           data-testid="generate-contents-button"
         >
@@ -30,7 +32,7 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { useMulmoEventStore } from "../../store";
+import { useMulmoEventStore, useMulmoScriptHistoryStore } from "../../store";
 import { notifyProgress } from "@/lib/notification";
 import { FileText, Monitor, Volume2Icon } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
@@ -80,6 +82,7 @@ const generateContents = () => {
   });
 };
 const mulmoEventStore = useMulmoEventStore();
+const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
 const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
 </script>

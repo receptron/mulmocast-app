@@ -131,7 +131,7 @@
                     @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
                     @update:isValidScriptData="(val) => (isValidScriptData = val)"
                     @update:scriptEditorActiveTab="handleUpdateScriptEditorActiveTab"
-                    :mulmoError="mulmoError"
+                    :mulmoError="mulmoScriptHistoryStore.mulmoError"
                     @updateMultiLingual="updateMultiLingual"
                     :mulmoMultiLinguals="mulmoMultiLinguals"
                   />
@@ -289,10 +289,9 @@ import {
   useGridLayoutClass,
   setupUserLevelWatch,
 } from "./project/composable/style";
-import { ChatMessage, MulmoError } from "@/types";
+import { ChatMessage } from "@/types";
 import { type ScriptEditorTab, type MulmoViewerTab } from "../../shared/constants";
 
-import { zodError2MulmoError } from "../lib/error";
 import { useImageFiles, useAudioFiles } from "./composable";
 
 // State
@@ -407,15 +406,6 @@ const handleUpdateMulmoViewerActiveTab = (tab: MulmoViewerTab) => {
 
 const mulmoScriptSchemaNoBeats = mulmoScriptSchema.extend({
   beats: z.array(mulmoBeatSchema).min(0),
-});
-
-const mulmoError = computed<MulmoError>(() => {
-  const zodError = mulmoScriptSchemaNoBeats.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
-  if (!zodError.success) {
-    console.log(zodError.error);
-    return zodError2MulmoError(zodError.error);
-  }
-  return null;
 });
 
 const insertSpeakers = (data) => {
