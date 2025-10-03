@@ -998,7 +998,7 @@ const lang = {
     help: "Help",
     settings: "Settings",
     FAQ: "FAQ",
-    ASK: "ASK/Request"
+    ASK: "ASK/Request",
   },
 };
 
