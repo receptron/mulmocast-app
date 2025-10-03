@@ -144,7 +144,7 @@ const handleDrop = (event: DragEvent) => {
       return;
     }
     update("image.type", imageType);
-    const extension = fileType === "jpeg" ? "jpg" : videoSubtypeToExtensions[fileType];
+    const extension = imageType === "image" ? fileType : videoSubtypeToExtensions[fileType];
 
     const reader = new FileReader();
     reader.onload = async () => {
