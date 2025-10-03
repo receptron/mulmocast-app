@@ -44,15 +44,21 @@ const template: MenuItemConstructorOptions[] = [
       {
         label: "FAQ",
         click: () => {
-          shell.openExternal("https://mulmocast.com/faq");
+          shell.openExternal("https://mulmocast.com/faq").catch((error) => {
+            console.error("Failed to open external URL:", error);
+          });
         },
       },
       {
         label: "ASK/Request",
         click: () => {
-          shell.openExternal(
-            "https://docs.google.com/forms/d/e/1FAIpQLSdOOhskhHyjIUhVTeDJaaNcX04nWT_s7xJTRao3gnC9fT6xkA/viewform?usp=dialog",
-          );
+          shell
+            .openExternal(
+              "https://docs.google.com/forms/d/e/1FAIpQLSdOOhskhHyjIUhVTeDJaaNcX04nWT_s7xJTRao3gnC9fT6xkA/viewform?usp=dialog",
+            )
+            .catch((error) => {
+              console.error("Failed to open external URL:", error);
+            });
         },
       },
     ],
