@@ -67,7 +67,6 @@ log.initialize();
 })();
 
 // Now that the environment variable is set, we can import other modules.
-import { registerIPCHandler } from "./ipc_handler";
 import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
 
@@ -273,6 +272,13 @@ app.on("ready", () => {
       await installExtension(VUEJS_DEVTOOLS);
     }
 
+    // Dynamically import IPC handlers AFTER Puppeteer path is configured.
+    console.log("[MAIN] Attempting to dynamically import IPC handlers...");
+    const { registerIPCHandler } = await import("./ipc_handler");
+    console.log("[MAIN] IPC handlers module imported successfully.");
+    registerIPCHandler();
+    console.log("[MAIN] IPC handlers registered.");
+
     await projectManager.ensureProjectBaseDirectory();
 
     const settings = await settingsManager.loadSettings();
@@ -304,5 +310,3 @@ app.on("activate", () => {
     createWindow();
   }
 });
-
-registerIPCHandler();
