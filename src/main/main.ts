@@ -14,7 +14,7 @@ import { resolveTargetFromVersion } from "../shared/version";
 import { getWindowState, saveWindowState } from "./utils/windw_state";
 import config from "../renderer/i18n/index";
 
-import { menu } from "./menu";
+import { getMenu } from "./menu";
 import { makeUserNotifier } from "./update";
 
 import packageJSON from "../../package.json" with { type: "json" };
@@ -233,6 +233,7 @@ app.on("ready", () => {
         process.env[envKey] = value;
       }
     }
+    const menu = await getMenu();
     Menu.setApplicationMenu(menu);
     createWindow(splashWindow);
   })();
