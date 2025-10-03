@@ -1,5 +1,4 @@
 import { ipcMain, dialog, shell, clipboard, autoUpdater, type IpcMainInvokeEvent } from "electron";
-import { mulmoHandler } from "./mulmo/handler";
 import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
 
@@ -18,6 +17,10 @@ export const registerIPCHandler = () => {
 
   ipcMain.handle("mulmoHandler", async (event: IpcMainInvokeEvent, method, ...args) => {
     const webContents = event.sender;
+    // Dynamically import mulmoHandler to ensure Puppeteer path is set before loading mulmocast
+    console.log("[IPC] Dynamically importing mulmo handler...");
+    const { mulmoHandler } = await import("./mulmo/handler");
+    console.log("[IPC] mulmo handler imported successfully");
     return await mulmoHandler(method, webContents, ...args);
   });
 
