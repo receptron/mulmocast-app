@@ -9,8 +9,8 @@ export const getMenu = async () => {
   const menuProps = config.messages[lang as keyof typeof config.messages].nativeMenu;
 
   const template: MenuItemConstructorOptions[] = [
-    { role: "fileMenu" },
-    { role: "editMenu" },
+    { role: "fileMenu", label: menuProps["fileMenu"] },
+    { role: "editMenu", label: menuProps["editMenu"] },
     {
       label: menuProps["view"],
       submenu: isDev
@@ -33,7 +33,7 @@ export const getMenu = async () => {
             { role: "togglefullscreen" },
           ],
     },
-    { role: "windowMenu" },
+    { role: "windowMenu", label: menuProps["windowMenu"] },
     {
       label: menuProps["help"],
       submenu: [
