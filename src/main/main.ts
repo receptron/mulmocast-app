@@ -1,6 +1,6 @@
 import { app, BrowserWindow, ipcMain, shell, Menu } from "electron";
 import path from "node:path";
-import puppeteer from "puppeteer";
+import puppeteer, { KnownBrowsers } from "puppeteer";
 import os from "node:os";
 import fs from "node:fs";
 import started from "electron-squirrel-startup";
@@ -28,29 +28,27 @@ if (process.env.NODE_ENV !== "development") {
   // In production, puppeteer.executablePath() can return a path inside app.asar,
   // which is not directly executable. We need to construct the correct path
   // to the binary within the `extraResource` directory.
-  // The default path is something like:
-  // ".../node_modules/puppeteer/.local-chromium/win64-141.0.7390.54/chrome-win/chrome.exe"
-  // We need to extract the part after the cache directory marker.
-  const cacheDirMarker = ".local-chromium";
-  const defaultPath = puppeteer.executablePath();
-  console.log(`[PUPPETEER_DEBUG] Default executable path: ${defaultPath}`);
-  const markerIndex = defaultPath.lastIndexOf(cacheDirMarker);
-  console.log(`[PUPPETEER_DEBUG] Marker index for '${cacheDirMarker}': ${markerIndex}`);
-
-  if (markerIndex !== -1) {
-    // Extracts the platform/version specific part of the path
-    const relativePath = defaultPath.substring(markerIndex + cacheDirMarker.length + 1);
-    console.log(`[PUPPETEER_DEBUG] Extracted relative path: ${relativePath}`);
-    const finalPath = path.join(process.resourcesPath, "chromium", relativePath);
+  // We get the browser metadata from Puppeteer itself to build the path.
+  const browser = KnownBrowsers.Chrome;
+  const buildId = browser.versions.get(packageJSON.dependencies.puppeteer);
+  const platform = browser.platform;
+  console.log(`[PUPPETEER_DEBUG] Browser: ${browser.name}, Platform: ${platform}, BuildId: ${buildId}`);
+  
+  if (buildId && platform) {
+    const finalPath = path.join(
+      process.resourcesPath,
+      "chromium",
+      `${platform}-${buildId}`,
+      browser.executablePath(platform, buildId)
+    );
     console.log(`[PUPPETEER_DEBUG] Constructed final path: ${finalPath}`);
+    
     if (fs.existsSync(finalPath)) {
       executablePath = finalPath;
       console.log(`[PUPPETEER_DEBUG] Final path exists. Using it.`);
     } else {
-      console.log(`[PUPPETEER_DEBUG] Final path does NOT exist.`);
+      console.log(`[PUPPETEER_DEBUG] Final path does NOT exist. Falling back to: ${executablePath}`);
     }
-  } else {
-    console.log(`[PUPPETEER_DEBUG] Marker '${cacheDirMarker}' not found in default path.`);
   }
 }
 console.log(`[PUPPETEER] Resolved executable path: ${executablePath}`);
