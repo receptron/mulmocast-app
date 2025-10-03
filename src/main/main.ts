@@ -6,6 +6,7 @@ import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 import log from "electron-log/main";
+import puppeteer from "puppeteer";
 
 import { ENV_KEYS } from "../shared/constants";
 import { resolveTargetFromVersion } from "../shared/version";
@@ -55,9 +56,14 @@ log.initialize();
     console.log(`[PUPPETEER_DEBUG] Constructed final path: ${finalPath}`);
 
     if (fs.existsSync(finalPath)) {
-      // Set the environment variable for all subsequent Puppeteer launches.
+      // Set the environment variable for compatibility
       process.env.PUPPETEER_EXECUTABLE_PATH = finalPath;
-      console.log(`[PUPPETEER] Overriding executable path globally to: ${finalPath}`);
+
+      // Directly override Puppeteer's BrowserFetcher executable path
+      const browserFetcher = puppeteer.createBrowserFetcher({});
+      // @ts-expect-error - _executablePath is private but necessary for direct control
+      browserFetcher._executablePath = finalPath;
+      console.log(`[PUPPETEER] Directly set executable path for Puppeteer to: ${finalPath}`);
     } else {
       console.error(`[PUPPETEER_ERROR] Bundled Chromium not found at: ${finalPath}`);
     }
@@ -66,9 +72,10 @@ log.initialize();
   }
 })();
 
-// Now that the environment variable is set, we can import other modules.
+// Now that Puppeteer is configured, we can import other modules.
 import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
+import { registerIPCHandler } from "./ipc_handler";
 
 // Cross-platform icon path
 const iconPath =
@@ -272,12 +279,16 @@ app.on("ready", () => {
       await installExtension(VUEJS_DEVTOOLS);
     }
 
-    // Dynamically import IPC handlers AFTER Puppeteer path is configured.
-    console.log("[MAIN] Attempting to dynamically import IPC handlers...");
-    const { registerIPCHandler } = await import("./ipc_handler");
-    console.log("[MAIN] IPC handlers module imported successfully.");
-    registerIPCHandler();
-    console.log("[MAIN] IPC handlers registered.");
+    // Register IPC handlers
+    try {
+      console.log("[MAIN] Registering IPC handlers...");
+      registerIPCHandler();
+      console.log("[MAIN] IPC handlers registered successfully.");
+    } catch (error) {
+      console.error("[MAIN] Failed to register IPC handlers:", error);
+      app.quit();
+      return;
+    }
 
     await projectManager.ensureProjectBaseDirectory();
 
