@@ -65,6 +65,15 @@ log.initialize();
         const chromiumDir = path.dirname(path.dirname(finalPath)); // .../chrome-win64 -> .../
         process.env.PUPPETEER_CACHE_DIR = chromiumDir;
 
+        // Method 1.5: Set additional Puppeteer environment variables
+        process.env.PUPPETEER_EXECUTABLE_PATH = finalPath;
+        process.env.PUPPETEER_DOWNLOAD_PATH = chromiumDir;
+        process.env.PUPPETEER_BROWSER_REVISION = chromeVersion;
+        console.log(`[PUPPETEER] Set PUPPETEER_EXECUTABLE_PATH: ${finalPath}`);
+        console.log(`[PUPPETEER] Set PUPPETEER_CACHE_DIR: ${chromiumDir}`);
+        console.log(`[PUPPETEER] Set PUPPETEER_DOWNLOAD_PATH: ${chromiumDir}`);
+        console.log(`[PUPPETEER] Set PUPPETEER_BROWSER_REVISION: ${chromeVersion}`);
+
         // Method 2: Try to access internal configuration (may not work in v24+)
         // @ts-expect-error - Accessing potential internal APIs
         if (puppeteer._configuration) {
