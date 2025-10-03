@@ -343,7 +343,6 @@ const emit = defineEmits([
   "updateMulmoScript",
   "updateMulmoScriptAndPushToHistory",
   "formatAndPushHistoryMulmoScript",
-  "update:isValidScriptData",
   "generateImage",
   "update:scriptEditorActiveTab",
   "updateMultiLingual",
@@ -356,9 +355,11 @@ const globalStore = useMulmoGlobalStore();
 const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
 
 const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
+  /*
   if (!props.isValidScriptData) {
     return;
   }
+  */
   emit("formatAndPushHistoryMulmoScript");
   emit("update:scriptEditorActiveTab", tab);
 };
@@ -419,10 +420,8 @@ const onJsonInput = (value: string) => {
     internalValue.value = parsed;
     yamlText.value = YAML.stringify(parsed);
     emit("updateMulmoScript", parsed);
-    emit("update:isValidScriptData", true);
   } catch (err) {
     console.log(err);
-    emit("update:isValidScriptData", false);
   }
 };
 
@@ -433,10 +432,8 @@ const onYamlInput = (value: string) => {
     internalValue.value = parsed;
     jsonText.value = JSON.stringify(parsed, null, 2);
     emit("updateMulmoScript", parsed);
-    emit("update:isValidScriptData", true);
   } catch (err) {
     console.log(err);
-    emit("update:isValidScriptData", false);
   }
 };
 
