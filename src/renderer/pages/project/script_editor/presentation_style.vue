@@ -16,6 +16,7 @@
       @update="(value) => updateParam('imageParams', value)"
       :mulmoError="mulmoError?.imageParams ?? []"
       :settingPresence="settingPresence"
+      :isPro="globalStore.userIsPro"
     />
     <MovieParams
       :movie-params="presentationStyle?.movieParams"

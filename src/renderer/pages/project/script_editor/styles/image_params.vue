@@ -62,7 +62,7 @@
           :placeholder="defaultStyle ?? t('parameters.imageParams.stylePlaceholder')"
         />
       </div>
-      <div class="my-2">
+      <div class="my-2" v-if="isPro">
         <Label>{{ t("parameters.imageParams.moderation") }}</Label>
         <Input
           :model-value="imageParams?.moderation || IMAGE_PARAMS_DEFAULT_VALUES.moderation"
@@ -110,6 +110,7 @@ const props = withDefaults(
     showTitle?: boolean;
     defaultStyle?: string;
     settingPresence: Record<string, boolean>;
+    isPro: boolean;
   }>(),
   { showTitle: true },
 );
