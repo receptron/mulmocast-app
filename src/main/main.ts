@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, shell, Menu } from "electron";
 import path from "node:path";
+import puppeteer from "puppeteer";
 import os from "node:os";
 import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
@@ -20,6 +21,9 @@ import { makeUserNotifier } from "./update";
 import packageJSON from "../../package.json" with { type: "json" };
 
 log.initialize();
+
+const executablePath = puppeteer.executablePath();
+console.log(`[PUPPETEER] Resolved executable path: ${executablePath}`);
 
 // Cross-platform icon path
 const iconPath =
