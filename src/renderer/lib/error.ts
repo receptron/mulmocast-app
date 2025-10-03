@@ -125,3 +125,11 @@ export const zodError2MulmoError = (error: ZodError) => {
     },
   );
 };
+
+// for throw Error. convert error cause to notify
+export const convCauseToErrorMessage = (cause: { action: string; type: string; beat_index: number }) => {
+  if (cause.action === "images" && cause.type === "FileNotExist") {
+    return ["notify.error.image.fileNotExist", { beat_index: cause.beat_index + 1 }];
+  }
+  return ["notify.error.unknownError"];
+};
