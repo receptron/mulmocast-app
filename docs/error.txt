@@ -1,0 +1,13 @@
+
+# tsのエラー
+ cliで、例外が発生する(assert(false, message, false cause)を送るのがベター
+ src/main/mulmo/handler/*.tsでエラーをcatch. progress-updateでnode -> vueへデータを送る
+ renderer/app.vueで通知を受け取る。
+ エラーをmulmocast-app/src/renderer/lib/error.tsのconvCauseToErrorMessageで変換。i18n化
+
+# notifyProgress
+generate系。Promiseの例外が発生したら表示（これで上記と重複？）
+
+# schema
+  src/renderer/lib/error.ts
+  zodのエラーを変換している。
