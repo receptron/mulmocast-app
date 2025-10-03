@@ -28,6 +28,9 @@
     "type": "yarn run lint && yarn run type-check",
     "type-check": "tsc --noEmit -p ./src/renderer/tsconfig.json"
   },
+  "config": {
+    "chromiumVersion": "128.0.6613.12"
+  },
   "keywords": [],
   "author": {
     "name": "receptron team"

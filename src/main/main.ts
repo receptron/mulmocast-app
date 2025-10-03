@@ -33,30 +33,25 @@ log.initialize();
   console.log(`[PUPPETEER_DEBUG] Configuring Puppeteer path for production environment.`);
 
   try {
-    // This prevents Puppeteer from trying to find a browser in a default location,
-    // which can fail inside an asar package.
+    // Prevent Puppeteer from trying to find a browser, which can fail inside an asar.
     process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = "true";
 
-    // Dynamically get the correct Chrome buildId from Puppeteer's internal version mapping.
-    // This avoids hardcoding the version and is more robust than parsing executable paths.
-    const puppeteerVersions = require("@puppeteer/browsers/lib/cjs/versions.js");
-    console.log(`[PUPPETEER_DEBUG] Loaded puppeteerVersions:`, puppeteerVersions);
-    const chromeVersion = puppeteerVersions.versions.chrome;
-    console.log(`[PUPPETEER_DEBUG] Found Chrome version for Puppeteer: ${chromeVersion}`);
+    // Get the required Chromium version from our own package.json config.
+    // This is the single source of truth.
+    const chromeVersion = (packageJSON as any).config.chromiumVersion;
+    console.log(`[PUPPETEER_DEBUG] Using configured Chrome version: ${chromeVersion}`);
 
     // Construct the path to the bundled Chromium executable.
     const platform = os.platform() === "win32" ? "win64" : "mac-arm64"; // Adjust for your target platforms
     console.log(`[PUPPETEER_DEBUG] Detected platform: ${platform}`);
     const subDir = os.platform() === "win32" ? "chrome-win64" : "chrome-mac-arm64";
-    console.log(`[PUPPETEER_DEBUG] Using sub-directory: ${subDir}`);
     const executableName = os.platform() === "win32" ? "chrome.exe" : "chrome";
-    console.log(`[PUPPETEER_DEBUG] Using executable name: ${executableName}`);
 
     const finalPath = path.join(process.resourcesPath, "chromium", "chrome", `${platform}-${chromeVersion}`, subDir, executableName);
     console.log(`[PUPPETEER_DEBUG] Constructed final path: ${finalPath}`);
 
     if (fs.existsSync(finalPath)) {
-      // This is the crucial part: set the environment variable BEFORE anything else uses Puppeteer.
+      // Set the environment variable for all subsequent Puppeteer launches.
       process.env.PUPPETEER_EXECUTABLE_PATH = finalPath;
       console.log(`[PUPPETEER] Overriding executable path globally to: ${finalPath}`);
     } else {
