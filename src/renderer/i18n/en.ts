@@ -991,6 +991,9 @@ const lang = {
     laterButtonText: "Later",
   },
   nativeMenu: {
+    fileMenu: "File",
+    editMenu: "Edit",
+    windowMenu: "Window",
     view: "View",
     help: "Help",
     settings: "Settings",
