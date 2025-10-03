@@ -58,6 +58,16 @@ if (process.env.NODE_ENV !== "development") {
   }
 }
 console.log(`[PUPPETEER] Resolved executable path: ${executablePath}`);
+// This is a private API, but it's the most reliable way to override
+// the executable path for all subsequent launches within the app.
+const browserFetcher = (puppeteer as any)._launcher.browserFetcher;
+if (browserFetcher && typeof browserFetcher.setExecutablePath === 'function') {
+  console.log(`[PUPPETEER_DEBUG] Overriding default executable path globally to: ${executablePath}`);
+  browserFetcher.setExecutablePath(executablePath);
+} else {
+  // This might happen in future versions of Puppeteer if the API changes.
+  console.error(`[PUPPETEER_ERROR] Could not set global executable path. Puppeteer might fail in other parts of the app.`);
+}
 
 // Cross-platform icon path
 const iconPath =
