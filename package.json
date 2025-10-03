@@ -117,5 +117,8 @@
     "vue-router": "^4.5.1",
     "vue-sonner": "^2.0.9",
     "zod-to-json-schema": "^3.24.6"
+  },
+  "resolutions": {
+    "puppeteer": "24.23.0"
   }
 }
