@@ -64,13 +64,19 @@ const packagedChromiumRoot = path.join(
   ".local-chromium",
 );
 
+// Puppeteer設定は複雑なパス解決を維持（Chromium検出のため）
 const mulmocastRoot = isDev
   ? devMulmocastRoot
   : fs.existsSync(packagedMulmocastRoot)
     ? packagedMulmocastRoot
     : asarMulmocastRoot;
 
-updateNpmRoot(mulmocastRoot);
+// しかし、updateNpmRootは単純なパス設定に戻す（ffmpegアセットアクセスのため）
+if (isDev) {
+  updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
+} else {
+  updateNpmRoot(path.dirname(process.resourcesPath));
+}
 
 if (!isDev) {
   process.env.PUPPETEER_CACHE_DIR ??= packagedChromiumRoot;
@@ -173,7 +179,7 @@ const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: M
   const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.beats);
 
   const beat = context.studio.script?.beats?.[index];
-  Object.values(data).foreach((d) => {
+  Object.values(data).forEach((d) => {
     if (!d.cacheKey) {
       d.cacheKey = hashSHA256(beat?.text ?? "");
     }
