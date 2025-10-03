@@ -30,14 +30,13 @@ const config: ForgeConfig = {
   packagerConfig: {
     buildVersion: buildDate,
     // Enable ASAR and unpack Puppeteer's Chromium binaries so they can be executed at runtime
-    asar: {
-      unpack: "**/puppeteer/.local-chromium/**",
-    },
+    asar: true,
     extraResource: [
       ".vite/build/ffmpeg",
       "node_modules/mulmocast/assets",
       "node_modules/mulmocast/scripts",
       "node_modules/mulmocast-vision/html",
+      "chromium",
     ],
     // Use extension-less icon path so Electron Packager picks the right format per platform.
     icon: path.resolve(__dirname, "images/mulmocast_icon"),

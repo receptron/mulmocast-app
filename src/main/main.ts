@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain, shell, Menu } from "electron";
 import path from "node:path";
 import puppeteer from "puppeteer";
 import os from "node:os";
+import fs from "node:fs";
 import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
@@ -22,7 +23,23 @@ import packageJSON from "../../package.json" with { type: "json" };
 
 log.initialize();
 
-const executablePath = puppeteer.executablePath();
+let executablePath = puppeteer.executablePath();
+if (process.env.NODE_ENV !== "development") {
+  // In production, puppeteer.executablePath() can return a path inside app.asar,
+  // which is not directly executable. We need to construct the path to the
+  // binary within the extraResource directory.
+  const platform = os.platform();
+  const chromiumPath = path.join(
+    process.resourcesPath,
+    "chromium",
+    // The path inside the cache directory is slightly different for each platform.
+    platform === "win32" ? "chrome-win" : "chrome-mac",
+    platform === "win32" ? "chrome.exe" : "Chromium.app/Contents/MacOS/Chromium",
+  );
+  if (fs.existsSync(chromiumPath)) {
+    executablePath = chromiumPath;
+  }
+}
 console.log(`[PUPPETEER] Resolved executable path: ${executablePath}`);
 
 // Cross-platform icon path

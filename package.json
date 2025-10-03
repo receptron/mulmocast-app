@@ -8,7 +8,7 @@
     "start": "NODE_ENV=development electron-forge start",
     "rebuild:native": "npx electron-rebuild -f",
     "dev": "NODE_ENV=development vite --config vite.renderer.config.ts",
-    "puppeteer:install": "npx puppeteer browsers install chrome",
+    "puppeteer:install": "PUPPETEER_CACHE_DIR=./chromium npx puppeteer browsers install chrome",
     "package": "yarn run puppeteer:install && electron-forge package",
     "make:local": "bash -c 'set -a && source .env && set +a && yarn run puppeteer:install && electron-forge make'",
     "make:ci": "yarn run puppeteer:install && electron-forge make",
