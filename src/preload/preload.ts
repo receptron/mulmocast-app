@@ -23,9 +23,13 @@ contextBridge.exposeInMainWorld("electronAPI", {
     saveProjectScript: (id: string, data: unknown) => ipcRenderer.invoke("project:saveProjectScript", id, data),
     openProjectFolder: (id: string) => ipcRenderer.invoke("project:openProjectFolder", id),
   },
+  updateInstall: () => ipcRenderer.invoke("updateInstall"),
   settings: {
     get: () => ipcRenderer.invoke("settings:get"),
     set: (settings: unknown) => ipcRenderer.invoke("settings:set", settings),
   },
   writeClipboardText: (text: string) => ipcRenderer.invoke("writeClipboardText", text),
+  onNavigate: (callback: (path: string) => void) => {
+    ipcRenderer.on("navigate", (_, path) => callback(path));
+  },
 });

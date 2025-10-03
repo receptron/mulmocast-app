@@ -1,9 +1,9 @@
-import { app, BrowserWindow, ipcMain, shell } from "electron";
+import { app, BrowserWindow, ipcMain, shell, Menu } from "electron";
 import path from "node:path";
 import os from "node:os";
 import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
-import { updateElectronApp, UpdateSourceType, makeUserNotifier } from "update-electron-app";
+import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 import log from "electron-log/main";
 
 import { registerIPCHandler } from "./ipc_handler";
@@ -13,6 +13,9 @@ import { ENV_KEYS } from "../shared/constants";
 import { resolveTargetFromVersion } from "../shared/version";
 import { getWindowState, saveWindowState } from "./utils/windw_state";
 import config from "../renderer/i18n/index";
+
+import { menu } from "./menu";
+import { makeUserNotifier } from "./update";
 
 import packageJSON from "../../package.json" with { type: "json" };
 
@@ -165,21 +168,27 @@ const createWindow = (splashWindow?: BrowserWindow) => {
       event.reply("response-env", envData);
     })();
   });
-};
 
-updateElectronApp({
-  updateSource: {
-    type: UpdateSourceType.StaticStorage,
-    baseUrl: `https://s3.aws.mulmocast.com/releases/${versionData}/${process.platform}/${process.arch}`,
-  },
-  logger: log,
-  notifyUser: true,
-  onNotifyUser: (info) => {
-    const lang = settingsManager.loadAppLanguage();
-    const notifyProps = config.messages[lang as keyof typeof config.messages].updater;
-    return makeUserNotifier(notifyProps)(info);
-  },
-});
+  const updateCallBack = (response: number) => {
+    if (response === 1) {
+      mainWindow.webContents.send("navigate", "/upadteInstall");
+    }
+  };
+
+  updateElectronApp({
+    updateSource: {
+      type: UpdateSourceType.StaticStorage,
+      baseUrl: `https://s3.aws.mulmocast.com/releases/${versionData}/${process.platform}/${process.arch}`,
+    },
+    logger: log,
+    notifyUser: true,
+    onNotifyUser: (info) => {
+      const lang = settingsManager.loadAppLanguage();
+      const notifyProps = config.messages[lang as keyof typeof config.messages].updater;
+      return makeUserNotifier(notifyProps)(info, updateCallBack);
+    },
+  });
+};
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -224,7 +233,7 @@ app.on("ready", () => {
         process.env[envKey] = value;
       }
     }
-
+    Menu.setApplicationMenu(menu);
     createWindow(splashWindow);
   })();
 });
