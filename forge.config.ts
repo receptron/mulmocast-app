@@ -40,6 +40,10 @@ const config: ForgeConfig = {
     ],
     // Use extension-less icon path so Electron Packager picks the right format per platform.
     icon: path.resolve(__dirname, "images/mulmocast_icon"),
+    // This is a workaround to require a script before the main process starts.
+    // It ensures that our Puppeteer path override is set before any other module loads.
+    // The path is relative to the packaged app's resources/app.asar directory.
+    "node-options": `--require ./.vite/build/scripts/setup-puppeteer.js`,
     osxSign: process.env.CODESIGN_IDENTITY
       ? ({
           identity: process.env.CODESIGN_IDENTITY,

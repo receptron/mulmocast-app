@@ -1,7 +1,5 @@
 import { app, BrowserWindow, ipcMain, shell, Menu } from "electron";
 import path from "node:path";
-import os from "node:os";
-import fs from "node:fs";
 import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
@@ -22,45 +20,7 @@ import packageJSON from "../../package.json" with { type: "json" };
 
 log.initialize();
 
-// --- Puppeteer Path Resolution ---
-// This must be done BEFORE any other modules that might import puppeteer are loaded.
-(() => {
-  // In development, we don't need to do anything.
-  if (process.env.NODE_ENV === "development") {
-    console.log(`[PUPPETEER_DEBUG] Development environment detected. Skipping Puppeteer path override.`);
-    return;
-  }
-  console.log(`[PUPPETEER_DEBUG] Configuring Puppeteer path for production environment.`);
-
-  try {
-    // Prevent Puppeteer from trying to find a browser, which can fail inside an asar.
-    process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = "true";
-
-    // Get the required Chromium version from our own package.json config.
-    // This is the single source of truth.
-    const chromeVersion = (packageJSON as any).config.chromiumVersion;
-    console.log(`[PUPPETEER_DEBUG] Using configured Chrome version: ${chromeVersion}`);
-
-    // Construct the path to the bundled Chromium executable.
-    const platform = os.platform() === "win32" ? "win64" : "mac-arm64"; // Adjust for your target platforms
-    console.log(`[PUPPETEER_DEBUG] Detected platform: ${platform}`);
-    const subDir = os.platform() === "win32" ? "chrome-win64" : "chrome-mac-arm64";
-    const executableName = os.platform() === "win32" ? "chrome.exe" : "chrome";
-
-    const finalPath = path.join(process.resourcesPath, "chromium", "chrome", `${platform}-${chromeVersion}`, subDir, executableName);
-    console.log(`[PUPPETEER_DEBUG] Constructed final path: ${finalPath}`);
-
-    if (fs.existsSync(finalPath)) {
-      // Set the environment variable for all subsequent Puppeteer launches.
-      process.env.PUPPETEER_EXECUTABLE_PATH = finalPath;
-      console.log(`[PUPPETEER] Overriding executable path globally to: ${finalPath}`);
-    } else {
-      console.error(`[PUPPETEER_ERROR] Bundled Chromium not found at: ${finalPath}`);
-    }
-  } catch (error) {
-    console.error("[PUPPETEER_ERROR] Failed to configure Puppeteer path:", error);
-  }
-})();
+console.log(`[PUPPETEER_MAIN] Checking env var on main process start: ${process.env.PUPPETEER_EXECUTABLE_PATH}`);
 
 // Cross-platform icon path
 const iconPath =
