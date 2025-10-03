@@ -25,11 +25,11 @@ export const buttonVariants = cva(
       },
     },
     compoundVariants: [
-      { size: "xs",      iconSize: "none", class: "[&>svg]:size-3" },
-      { size: "sm",      iconSize: "none", class: "[&>svg]:size-4" },
-      { size: "default", iconSize: "none", class: "[&>svg]:size-5" },
-      { size: "lg",      iconSize: "none", class: "[&>svg]:size-6" },
-      { size: "icon",    iconSize: "none", class: "[&>svg]:size-5" },
+      { size: "xs", class: "[&>svg]:size-3" },
+      { size: "sm", class: "[&>svg]:size-4" },
+      { size: "default", class: "[&>svg]:size-5" },
+      { size: "lg", class: "[&>svg]:size-6" },
+      { size: "icon", class: "[&>svg]:size-5" },
     ],
     defaultVariants: {
       variant: "default",

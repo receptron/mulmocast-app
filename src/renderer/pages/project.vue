@@ -97,9 +97,7 @@
                         :disabled="!mulmoScriptHistoryStore.undoable"
                         @click="mulmoScriptHistoryStore.undo"
                       >
-                        <Undo
-                          :class="mulmoScriptHistoryStore.undoable ? 'text-foreground' : 'text-muted-foreground'"
-                        />
+                        <Undo :class="mulmoScriptHistoryStore.undoable ? 'text-foreground' : 'text-muted-foreground'" />
                       </Button>
                       <Button
                         variant="ghost"
@@ -107,9 +105,7 @@
                         :disabled="!mulmoScriptHistoryStore.redoable"
                         @click="mulmoScriptHistoryStore.redo"
                       >
-                        <Redo
-                          :class="mulmoScriptHistoryStore.redoable ? 'text-foreground' : 'text-muted-foreground'"
-                        />
+                        <Redo :class="mulmoScriptHistoryStore.redoable ? 'text-foreground' : 'text-muted-foreground'" />
                       </Button>
                     </div>
                   </div>
