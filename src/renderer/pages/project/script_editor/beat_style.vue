@@ -20,6 +20,7 @@
           @update="(value) => updateParam(value)"
           :mulmoError="[]"
           :settingPresence="settingPresence"
+          :isPro="isPro"
         />
       </CollapsibleContent>
     </Collapsible>
