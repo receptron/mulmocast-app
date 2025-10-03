@@ -1,8 +1,15 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
-import type { MulmoScript } from "mulmocast";
+import { type MulmoScript, mulmoScriptSchema, mulmoBeatSchema } from "mulmocast/browser";
+import { z } from "zod";
 import cloneDeep from "clone-deep";
 import deepEqual from "deep-equal";
+import { MulmoError } from "@/types";
+import { zodError2MulmoError } from "../lib/error";
+
+const mulmoScriptSchemaNoBeats = mulmoScriptSchema.extend({
+  beats: z.array(mulmoBeatSchema).min(0),
+});
 
 export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () => {
   const index = ref(0);
@@ -72,6 +79,22 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
     return currentMulmoScript.value?.lang ?? "en";
   });
 
+  // internal
+  const zodError = computed(() => {
+    return mulmoScriptSchemaNoBeats.safeParse(currentMulmoScript.value);
+  });
+
+  const mulmoError = computed<MulmoError>(() => {
+    if (!zodError.value.success) {
+      console.log(zodError.value.error);
+      return zodError2MulmoError(zodError.value.error);
+    }
+    return null;
+  });
+  const isValidScript = computed(() => {
+    return zodError.value.success;
+  });
+
   return {
     currentMulmoScript,
     initMulmoScript,
@@ -83,5 +106,8 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
     redo,
     resetMulmoScript,
     lang,
+
+    mulmoError,
+    isValidScript,
   };
 });
