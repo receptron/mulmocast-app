@@ -93,25 +93,19 @@
                       <!-- Undo/Redo buttons -->
                       <Button
                         variant="ghost"
-                        size="sm"
+                        size="lg"
                         :disabled="!mulmoScriptHistoryStore.undoable"
                         @click="mulmoScriptHistoryStore.undo"
                       >
-                        <Undo
-                          :size="16"
-                          :class="mulmoScriptHistoryStore.undoable ? 'text-foreground' : 'text-muted-foreground'"
-                        />
+                        <Undo :class="mulmoScriptHistoryStore.undoable ? 'text-foreground' : 'text-muted-foreground'" />
                       </Button>
                       <Button
                         variant="ghost"
-                        size="sm"
+                        size="lg"
                         :disabled="!mulmoScriptHistoryStore.redoable"
                         @click="mulmoScriptHistoryStore.redo"
                       >
-                        <Redo
-                          :size="16"
-                          :class="mulmoScriptHistoryStore.redoable ? 'text-foreground' : 'text-muted-foreground'"
-                        />
+                        <Redo :class="mulmoScriptHistoryStore.redoable ? 'text-foreground' : 'text-muted-foreground'" />
                       </Button>
                     </div>
                   </div>
