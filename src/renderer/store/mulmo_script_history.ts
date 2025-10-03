@@ -1,15 +1,10 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
-import { type MulmoScript, mulmoScriptSchema, mulmoBeatSchema } from "mulmocast/browser";
-import { z } from "zod";
+import { type MulmoScript, mulmoScriptSchema } from "mulmocast/browser";
 import cloneDeep from "clone-deep";
 import deepEqual from "deep-equal";
 import { MulmoError } from "@/types";
 import { zodError2MulmoError } from "../lib/error";
-
-const mulmoScriptSchemaNoBeats = mulmoScriptSchema.extend({
-  beats: z.array(mulmoBeatSchema).min(0),
-});
 
 export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () => {
   const index = ref(0);
@@ -81,7 +76,7 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
 
   // internal
   const zodError = computed(() => {
-    return mulmoScriptSchemaNoBeats.safeParse(currentMulmoScript.value);
+    return mulmoScriptSchema.safeParse(currentMulmoScript.value);
   });
 
   const mulmoError = computed<MulmoError>(() => {
