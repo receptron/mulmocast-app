@@ -1,6 +1,6 @@
 import { app, BrowserWindow, ipcMain, shell, Menu } from "electron";
 import path from "node:path";
-import { PuppeteerNode } from "puppeteer";
+import { PuppeteerNode } from "puppeteer-core";
 import os from "node:os";
 import fs from "node:fs";
 import started from "electron-squirrel-startup";
@@ -26,7 +26,6 @@ log.initialize();
 // --- Puppeteer Path Resolution ---
 // This must be done BEFORE any other modules that might import puppeteer are loaded.
 (() => {
-  // In development, we don't need to do anything.
   if (process.env.NODE_ENV === "development") {
     console.log(`[PUPPETEER_DEBUG] Development environment detected. Skipping Puppeteer path override.`);
     return;
@@ -34,20 +33,22 @@ log.initialize();
   console.log(`[PUPPETEER_DEBUG] Configuring Puppeteer path for production environment.`);
 
   try {
-    // We need to require puppeteer here to get its configuration before it's used elsewhere.
-    const puppeteer = require("puppeteer") as PuppeteerNode;
+    // We need to require puppeteer-core here to get its configuration before it's used elsewhere.
+    // Using puppeteer-core avoids downloading another Chromium instance.
+    const puppeteer = require("puppeteer-core") as PuppeteerNode;
     const defaultPath = puppeteer.executablePath();
     console.log(`[PUPPETEER_DEBUG] Default executable path: ${defaultPath}`);
 
     // Extract the platform and version from the default path to build the correct path.
     // e.g., "C:\Users\...\.cache\puppeteer\chrome\win64-141.0.7390.54\chrome-win64\chrome.exe"
-    const match = defaultPath.match(/([a-z0-9]+)-(\d+\.\d+\.\d+\.\d+)/);
+    // The regex needs to be robust enough to handle different cache paths.
+    const match = defaultPath.match(/([a-z0-9]+)-(\d+\.\d+\.\d+\.\d+)/) || puppeteer.executablePath().match(/([a-z0-9]+)-(\d+\.\d+\.\d+\.\d+)/);
 
     if (match) {
       const platform = match[1]; // e.g., "win64"
       const version = match[2]; // e.g., "141.0.7390.54"
       const executableName = os.platform() === "win32" ? "chrome.exe" : "chrome"; // Simplified
-      const subDir = os.platform() === "win32" ? "chrome-win64" : "chrome-mac-arm64"; // Adjust for mac
+      const subDir = os.platform() === "win32" ? "chrome-win64" : "chrome-mac-arm64"; // Adjust for mac as needed
 
       console.log(`[PUPPETEER_DEBUG] Detected platform: ${platform}, version: ${version}`);
 
@@ -57,12 +58,12 @@ log.initialize();
       if (fs.existsSync(finalPath)) {
         // This is the crucial part: set the environment variable BEFORE anything else uses Puppeteer.
         process.env.PUPPETEER_EXECUTABLE_PATH = finalPath;
-        console.log(`[PUPPETEER] Overriding executable path to: ${finalPath}`);
+        console.log(`[PUPPETEER] Overriding executable path globally to: ${finalPath}`);
       } else {
         console.log(`[PUPPETEER_DEBUG] Final path does NOT exist. Falling back to default.`);
       }
     } else {
-      console.log(`[PUPPETEER_DEBUG] Could not extract platform/version from default path. Falling back.`);
+      console.log(`[PUPPETEER_DEBUG] Could not extract platform/version from default path. This might be okay if puppeteer finds it another way.`);
     }
   } catch (error) {
     console.error("[PUPPETEER_ERROR] Failed to configure Puppeteer path:", error);
