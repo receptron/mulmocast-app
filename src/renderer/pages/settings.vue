@@ -109,7 +109,7 @@
         :api-keys="apiKeys"
         @update:selected-l-l-m="updateSelectedLLM"
         @update:llm-configs="updateLlmConfigs"
-        />
+      />
 
       <!-- software update -->
       <Card v-if="globalStore.hasUpdateInstall">
