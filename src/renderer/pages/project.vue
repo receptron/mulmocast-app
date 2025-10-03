@@ -77,7 +77,7 @@
                     <div class="flex items-center space-x-2">
                       <!-- Validation Status -->
                       <div class="flex items-center space-x-2">
-                        <div v-if="isValidScriptData" class="group relative">
+                        <div v-if="mulmoScriptHistoryStore.isValidScript" class="group relative">
                           <CheckCircle
                             :size="16"
                             class="cursor-pointer text-green-500 group-hover:text-green-600 dark:text-green-400 dark:group-hover:text-green-300"
@@ -88,7 +88,7 @@
                             {{ t("project.scriptEditor.validationStatus") }}
                           </span>
                         </div>
-                        <XCircle v-if="!isValidScriptData" :size="16" class="text-destructive" />
+                        <XCircle v-if="!mulmoScriptHistoryStore.isValidScript" :size="16" class="text-destructive" />
                       </div>
                       <!-- Undo/Redo buttons -->
                       <Button
@@ -124,12 +124,11 @@
                     :audioFiles="audioFiles[mulmoScriptHistoryStore.lang ?? globalStore.settings.APP_LANGUAGE] ?? {}"
                     :lipSyncFiles="lipSyncFiles"
                     :scriptEditorActiveTab="projectMetadata?.scriptEditorActiveTab"
-                    :isValidScriptData="isValidScriptData"
+                    :isValidScriptData="mulmoScriptHistoryStore.isValidScript"
                     @updateMulmoScript="handleUpdateMulmoScript"
                     @updateMulmoScriptAndPushToHistory="handleUpdateMulmoScriptAndPushToHistory"
                     @generateImage="generateImage"
                     @formatAndPushHistoryMulmoScript="formatAndPushHistoryMulmoScript"
-                    @update:isValidScriptData="(val) => (isValidScriptData = val)"
                     @update:scriptEditorActiveTab="handleUpdateScriptEditorActiveTab"
                     :mulmoError="mulmoScriptHistoryStore.mulmoError"
                     @updateMultiLingual="updateMultiLingual"
@@ -474,8 +473,6 @@ const resetMediaFiles = () => {
   resetImagesData();
   resetAudioData();
 };
-
-const isValidScriptData = ref(true);
 
 const openModal = () => {
   globalStore.setMulmoViewerProjectId(projectId.value);
