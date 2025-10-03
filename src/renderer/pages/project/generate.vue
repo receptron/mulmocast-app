@@ -13,7 +13,9 @@
           @click="generateContents"
           class="mt-2 flex h-auto w-full items-center justify-center space-y-2 py-4 whitespace-normal"
           :disabled="
-            mulmoEventStore.isArtifactGenerating[projectId] || !checkboxOptions.some((option) => options[option.key]) || !mulmoScriptHistoryStore.isValidScript
+            mulmoEventStore.isArtifactGenerating[projectId] ||
+            !checkboxOptions.some((option) => options[option.key]) ||
+            !mulmoScriptHistoryStore.isValidScript
           "
           data-testid="generate-contents-button"
         >
