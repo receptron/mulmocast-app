@@ -7,9 +7,6 @@ import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 import log from "electron-log/main";
 
-import { registerIPCHandler } from "./ipc_handler";
-import * as projectManager from "./project_manager";
-import * as settingsManager from "./settings_manager";
 import { ENV_KEYS } from "../shared/constants";
 import { resolveTargetFromVersion } from "../shared/version";
 import { getWindowState, saveWindowState } from "./utils/windw_state";
@@ -38,7 +35,7 @@ log.initialize();
 
     // Get the required Chromium version from our own package.json config.
     // This is the single source of truth.
-    const chromeVersion = (packageJSON as any).config.chromiumVersion;
+    const chromeVersion = (packageJSON as { config: { chromiumVersion: string } }).config.chromiumVersion;
     console.log(`[PUPPETEER_DEBUG] Using configured Chrome version: ${chromeVersion}`);
 
     // Construct the path to the bundled Chromium executable.
@@ -47,7 +44,14 @@ log.initialize();
     const subDir = os.platform() === "win32" ? "chrome-win64" : "chrome-mac-arm64";
     const executableName = os.platform() === "win32" ? "chrome.exe" : "chrome";
 
-    const finalPath = path.join(process.resourcesPath, "chromium", "chrome", `${platform}-${chromeVersion}`, subDir, executableName);
+    const finalPath = path.join(
+      process.resourcesPath,
+      "chromium",
+      "chrome",
+      `${platform}-${chromeVersion}`,
+      subDir,
+      executableName,
+    );
     console.log(`[PUPPETEER_DEBUG] Constructed final path: ${finalPath}`);
 
     if (fs.existsSync(finalPath)) {
@@ -61,6 +65,11 @@ log.initialize();
     console.error("[PUPPETEER_ERROR] Failed to configure Puppeteer path:", error);
   }
 })();
+
+// Now that the environment variable is set, we can import other modules.
+import { registerIPCHandler } from "./ipc_handler";
+import * as projectManager from "./project_manager";
+import * as settingsManager from "./settings_manager";
 
 // Cross-platform icon path
 const iconPath =
