@@ -109,8 +109,10 @@
         :api-keys="apiKeys"
         @update:selected-l-l-m="updateSelectedLLM"
         @update:llm-configs="updateLlmConfigs"
-      />
-      <Card>
+        />
+
+      <!-- software update -->
+      <Card v-if="globalStore.hasUpdateInstall">
         <CardHeader>
           {{ t("updater.title") }}
         </CardHeader>
@@ -118,7 +120,7 @@
           <div class="mb-4 ml-2">
             {{ t("updater.detail") }}
           </div>
-          <div v-if="globalStore.hasUpdateInstall">
+          <div>
             <Button size="sm" variant="outline" @click="updateInstall">{{ t("updater.restartButtonText") }}</Button>
           </div>
         </CardContent>
