@@ -1,6 +1,5 @@
 import { app, BrowserWindow, ipcMain, shell, Menu } from "electron";
 import path from "node:path";
-import { PuppeteerNode } from "puppeteer-core";
 import os from "node:os";
 import fs from "node:fs";
 import started from "electron-squirrel-startup";
@@ -33,30 +32,38 @@ log.initialize();
   }
   console.log(`[PUPPETEER_DEBUG] Configuring Puppeteer path for production environment.`);
 
-  // This prevents Puppeteer from trying to find a browser in a default location,
-  // which can fail inside an asar package.
-  process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = "true";
+  try {
+    // This prevents Puppeteer from trying to find a browser in a default location,
+    // which can fail inside an asar package.
+    process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = "true";
 
-  // We need to construct the path to the bundled Chromium executable.
-  // The structure is based on how `puppeteer browsers install` places it in our `chromium` folder.
-  const platform = os.platform() === "win32" ? "win64" : "mac-arm64"; // Adjust for your target platforms
-  const puppeteerVersion = packageJSON.dependencies.puppeteer;
-  // This is a simplification. The exact version might differ slightly.
-  // We will need to get the exact buildId in a more robust way if this fails.
-  // For now, let's assume a common mapping.
-  const chromeVersion = "141.0.7390.54"; // This should be derived from puppeteer version if possible.
-  const subDir = os.platform() === "win32" ? "chrome-win64" : "chrome-mac-arm64";
-  const executableName = os.platform() === "win32" ? "chrome.exe" : "chrome";
+    // Dynamically get the correct Chrome buildId from Puppeteer's internal version mapping.
+    // This avoids hardcoding the version and is more robust than parsing executable paths.
+    const puppeteerVersions = require("@puppeteer/browsers/lib/cjs/versions.js");
+    console.log(`[PUPPETEER_DEBUG] Loaded puppeteerVersions:`, puppeteerVersions);
+    const chromeVersion = puppeteerVersions.versions.chrome;
+    console.log(`[PUPPETEER_DEBUG] Found Chrome version for Puppeteer: ${chromeVersion}`);
 
-  const finalPath = path.join(process.resourcesPath, "chromium", "chrome", `${platform}-${chromeVersion}`, subDir, executableName);
-  console.log(`[PUPPETEER_DEBUG] Constructed final path: ${finalPath}`);
+    // Construct the path to the bundled Chromium executable.
+    const platform = os.platform() === "win32" ? "win64" : "mac-arm64"; // Adjust for your target platforms
+    console.log(`[PUPPETEER_DEBUG] Detected platform: ${platform}`);
+    const subDir = os.platform() === "win32" ? "chrome-win64" : "chrome-mac-arm64";
+    console.log(`[PUPPETEER_DEBUG] Using sub-directory: ${subDir}`);
+    const executableName = os.platform() === "win32" ? "chrome.exe" : "chrome";
+    console.log(`[PUPPETEER_DEBUG] Using executable name: ${executableName}`);
 
-  if (fs.existsSync(finalPath)) {
-    // This is the crucial part: set the environment variable BEFORE anything else uses Puppeteer.
-    process.env.PUPPETEER_EXECUTABLE_PATH = finalPath;
-    console.log(`[PUPPETEER] Overriding executable path globally to: ${finalPath}`);
-  } else {
-    console.error(`[PUPPETEER_ERROR] Bundled Chromium not found at: ${finalPath}`);
+    const finalPath = path.join(process.resourcesPath, "chromium", "chrome", `${platform}-${chromeVersion}`, subDir, executableName);
+    console.log(`[PUPPETEER_DEBUG] Constructed final path: ${finalPath}`);
+
+    if (fs.existsSync(finalPath)) {
+      // This is the crucial part: set the environment variable BEFORE anything else uses Puppeteer.
+      process.env.PUPPETEER_EXECUTABLE_PATH = finalPath;
+      console.log(`[PUPPETEER] Overriding executable path globally to: ${finalPath}`);
+    } else {
+      console.error(`[PUPPETEER_ERROR] Bundled Chromium not found at: ${finalPath}`);
+    }
+  } catch (error) {
+    console.error("[PUPPETEER_ERROR] Failed to configure Puppeteer path:", error);
   }
 })();
 
