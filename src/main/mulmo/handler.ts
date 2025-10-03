@@ -75,12 +75,18 @@ const mulmocastRoot = isDev
 if (isDev) {
   updateNpmRoot(path.resolve(__dirname, "../../node_modules/mulmocast"));
 } else {
-  updateNpmRoot(path.dirname(process.resourcesPath));
+  updateNpmRoot(process.resourcesPath);
 }
 
 if (!isDev) {
-  process.env.PUPPETEER_CACHE_DIR ??= packagedChromiumRoot;
-  process.env.PUPPETEER_DOWNLOAD_PATH ??= packagedChromiumRoot;
+  // 強制的に環境変数を設定（??=ではなく=を使用）
+  process.env.PUPPETEER_CACHE_DIR = packagedChromiumRoot;
+  process.env.PUPPETEER_DOWNLOAD_PATH = packagedChromiumRoot;
+
+  // Chromiumがない場合のfallback設定
+  process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = 'false';
+
+  console.log(`Setting PUPPETEER_CACHE_DIR to: ${packagedChromiumRoot}`);
 
   if (!process.env.PUPPETEER_EXECUTABLE_PATH) {
     const chromiumConfig = (() => {
