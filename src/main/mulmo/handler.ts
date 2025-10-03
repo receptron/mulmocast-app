@@ -57,12 +57,7 @@ const packagedMulmocastRoot = path.join(
   "node_modules",
   "mulmocast",
 );
-const packagedChromiumRoot = path.join(
-  packagedMulmocastRoot,
-  "node_modules",
-  "puppeteer",
-  ".local-chromium",
-);
+const packagedChromiumRoot = path.join(packagedMulmocastRoot, "node_modules", "puppeteer", ".local-chromium");
 
 // Puppeteer設定は複雑なパス解決を維持（Chromium検出のため）
 const mulmocastRoot = isDev
@@ -84,7 +79,7 @@ if (!isDev) {
   process.env.PUPPETEER_DOWNLOAD_PATH = packagedChromiumRoot;
 
   // Chromiumがない場合のfallback設定
-  process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = 'false';
+  process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = "false";
 
   console.log(`Setting PUPPETEER_CACHE_DIR to: ${packagedChromiumRoot}`);
 
