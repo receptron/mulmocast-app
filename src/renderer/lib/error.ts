@@ -1,5 +1,6 @@
 import type { ZodError, ZodIssue } from "zod";
 import type { MulmoError } from "../../types/index.js";
+import { unknownMediaType } from "mulmocast/browser";
 
 const unrecognizedKeysError = (paths: (string | number)[], keys: string[]) => {
   const pathStr = paths
@@ -137,10 +138,12 @@ export const convCauseToErrorMessage = (cause: {
   key?: string;
 }) => {
   // notify.error.{action}.{type}
-
+  /*
   if (cause.action === "images" && cause.type === "FileNotExist") {
     return ["notify.error.image.fileNotExist", { beat_index: cause.beat_index + 1 }];
-  }
+    }
+  */
+
   if (cause?.target) {
     const { beatIndex, url, key } = cause;
     // beatIndex, url
@@ -149,6 +152,9 @@ export const convCauseToErrorMessage = (cause: {
       { url, key, beat_index: beatIndex !== undefined ? beatIndex + 1 : null },
     ];
   }
-  console.log(cause);
+  if (unknownMediaType === cause.type) {
+    return [["notify.error", cause.action, cause.type].join(".")];
+  }
+  // console.log(cause);
   return ["notify.error.unknownError"];
 };
