@@ -25,7 +25,7 @@ log.initialize();
 
 // --- Runtime Puppeteer Patch ---
 (() => {
-  const originalLaunch = puppeteer.launch;
+  const originalLaunch = puppeteer.launch.bind(puppeteer);
   puppeteer.launch = function (options = {}) {
     const finalOptions = {
       ...options,
@@ -38,7 +38,7 @@ log.initialize();
       );
     }
 
-    return originalLaunch.call(this, finalOptions);
+    return originalLaunch(finalOptions);
   };
 
   console.log("[PUPPETEER_PATCH] Runtime patch applied");
