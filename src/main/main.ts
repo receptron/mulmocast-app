@@ -20,6 +20,28 @@ import packageJSON from "../../package.json" with { type: "json" };
 
 log.initialize();
 
+// --- Runtime Puppeteer Patch ---
+// Intercept all puppeteer.launch() calls to ensure executablePath is set
+(() => {
+  const originalLaunch = puppeteer.launch;
+  puppeteer.launch = function(options = {}) {
+    const finalOptions = {
+      ...options,
+      executablePath: options.executablePath || process.env.PUPPETEER_EXECUTABLE_PATH || undefined
+    };
+
+    if (process.env.NODE_ENV !== "development") {
+      console.log(`[PUPPETEER_PATCH] Intercepting launch with executablePath: ${finalOptions.executablePath || 'default'}`);
+    }
+
+    return originalLaunch.call(this, finalOptions);
+  };
+
+  if (process.env.NODE_ENV !== "development") {
+    console.log('[PUPPETEER_PATCH] Runtime patch applied - all puppeteer.launch() calls will use bundled Chromium');
+  }
+})();
+
 // --- Puppeteer Path Resolution ---
 // This must be done BEFORE any other modules that might import puppeteer are loaded.
 (() => {
