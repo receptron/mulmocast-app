@@ -38,7 +38,9 @@ export const notifyProgress = <T>(
     .then((result) => {
       toast.dismiss(toastId);
       if (result?.result === false) {
-        notifyError(errorMessage, result.error instanceof Error ? result.error.message : "Unknown error");
+        if (result?.error) {
+          notifyError(errorMessage, result.error instanceof Error ? result.error.message : "Unknown error");
+        }
       } else {
         notifySuccess(successMessage);
       }

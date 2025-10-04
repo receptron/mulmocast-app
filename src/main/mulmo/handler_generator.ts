@@ -87,7 +87,6 @@ export const mulmoActionRunner = async (
     }
     return {
       result: false,
-      error,
     };
   }
 };
@@ -170,14 +169,15 @@ export const mulmoGenerateBeatImage = async (
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
+
     webContents.send("progress-update", {
       projectId,
       type: "error",
       data: error,
+      cause: error?.cause,
     });
     return {
       result: false,
-      error,
     };
   }
 };
@@ -198,10 +198,10 @@ export const mulmoGenerateBeatAudio = async (projectId: string, index: number, w
       projectId,
       type: "error",
       data: error,
+      cause: error?.cause,
     });
     return {
       result: false,
-      error,
     };
   }
 };
@@ -235,6 +235,7 @@ export const mulmoReferenceImage = async (
       projectId,
       type: "error",
       data: error,
+      cause: error?.cause,
     });
     return null;
   }
@@ -260,10 +261,10 @@ export const mulmoTranslateBeat = async (
       projectId,
       type: "error",
       data: error,
+      cause: error?.cause,
     });
     return {
       result: false,
-      error,
     };
   }
 };
@@ -283,10 +284,10 @@ export const mulmoTranslate = async (projectId: string, targetLangs: string[], w
       projectId,
       type: "error",
       data: error,
+      cause: error?.cause,
     });
     return {
       result: false,
-      error,
     };
   }
 };

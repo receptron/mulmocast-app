@@ -1,16 +1,32 @@
 
 # tsのエラー
- cliで、例外が発生する(assert(false, message, false cause)を送るのがベター
- src/main/mulmo/handler/*.tsでエラーをcatch. progress-updateでnode -> vueへデータを送る
- renderer/app.vueで通知を受け取る。
- エラーをmulmocast-app/src/renderer/lib/error.tsのconvCauseToErrorMessageで変換。i18n化
+
+## cause -> progress-updateの流れ
+ - cliで、例外が発生する(assert(false, message, false cause)を送るのがベター
+ - src/main/mulmo/handler/*.tsでエラーをcatch. progress-updateでnode -> vueへデータを送る
+```
+    webContents.send("progress-update", {
+      projectId,
+      type: "error",
+      data: error,
+      cause: error?.cause,
+    });
+```
+ -  renderer/app.vueで通知を受け取る。
+ - エラーをmulmocast-app/src/renderer/lib/error.tsのconvCauseToErrorMessageで変換。i18n化
+
+
 
 - cliでassert + causeでエラーにデータを追加する
 - src/renderer/lib/error.tsを変更して、そのデータを受け取れるようにする
 - i18を追加する
 
-# notifyProgress
+## notifyProgress
 generate系。Promiseの例外が発生したら表示（これで上記と重複？）
+ - src/main/mulmo/handler/*.tsでの結果がfalseの場合に表示される
+ - src/renderer/lib/notification.ts
+ - result = false + errorが存在するときに表示する
+   - progress-updateと重複しないように、その処理がある場合はerrroは送らない
 
 # schema
   src/renderer/lib/error.ts
