@@ -790,9 +790,26 @@ const lang = {
     },
     error: {
       unknownError: "不明なエラーです",
-      image: {
-        fileNotExist: "ビート{beat_index}の画像が存在しない、もしくは正しくないようです",
+      // action, type, target
+      movie: {
+        fileNotExist: {
+          imageFile: "ビート{beatIndex}の画像が存在しない、もしくは正しくないようです",
+          audioFile: "ビート{beatIndex}の音声が存在しない、もしくは正しくないようです",
+        },
       },
+      images: {
+        fileNotExist: {
+          imageFile: "ビート{beatIndex}の画像が存在しない、もしくは正しくないようです",
+        },
+        urlFileNotFound: {
+          imageFile: "ビートの画像が存在しない、もしくは正しくないようです",
+          movieFile: "ビートの動画が存在しない、もしくは正しくないようです",
+          codeText: "Mermaidのコードがが存在しない、もしくは正しくないようです",
+        },
+        // undefinedSourceType: { }
+        // unknownMedia: "",
+      },
+      imageReference: {},
       audio: {
         generateAudioSpeechParam: "{speechParams} (speechParams) がセットされていません",
       },
