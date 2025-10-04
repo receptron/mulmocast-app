@@ -132,7 +132,9 @@ export const convCauseToErrorMessage = (cause: {
   action: string;
   type: string;
   target?: string;
-  beat_index: number;
+  beat_index?: number;
+  url?: string;
+  key?: string;
 }) => {
   // notify.error.{action}.{type}
 
