@@ -1,10 +1,12 @@
 import { app, BrowserWindow, ipcMain, shell, Menu } from "electron";
 import path from "node:path";
 import os from "node:os";
+import fs from "node:fs";
 import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 import log from "electron-log/main";
+import puppeteer from "puppeteer";
 
 import { registerIPCHandler } from "./ipc_handler";
 import * as projectManager from "./project_manager";
@@ -20,6 +22,64 @@ import { makeUserNotifier } from "./update";
 import packageJSON from "../../package.json" with { type: "json" };
 
 log.initialize();
+
+// --- Runtime Puppeteer Patch ---
+(() => {
+  const originalLaunch = puppeteer.launch.bind(puppeteer);
+  puppeteer.launch = function (options = {}) {
+    const finalOptions = {
+      ...options,
+      executablePath: options.executablePath || process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+    };
+
+    if (process.env.NODE_ENV !== "development") {
+      console.log(
+        `[PUPPETEER_PATCH] Intercepting launch with executablePath: ${finalOptions.executablePath || "default"}`,
+      );
+    }
+
+    return originalLaunch(finalOptions);
+  };
+
+  console.log("[PUPPETEER_PATCH] Runtime patch applied");
+})();
+
+// Production環境でのChromiumパス設定
+if (app.isPackaged) {
+  console.log("[PUPPETEER] Production environment detected, configuring Chromium path");
+  const chromiumDir = path.join(process.resourcesPath, "chromium", "chrome");
+  console.log(`[PUPPETEER] Looking for Chromium in: ${chromiumDir}`);
+
+  try {
+    const versionDirs = fs.readdirSync(chromiumDir).filter((dir) => dir.startsWith("win64-") || dir.startsWith("mac-"));
+    console.log(`[PUPPETEER] Found version directories: ${versionDirs.join(", ")}`);
+
+    if (versionDirs.length > 0) {
+      const platform = os.platform() === "win32" ? "win64" : "mac-arm64";
+      console.log(`[PUPPETEER] Detected platform: ${platform}`);
+
+      const targetDir = versionDirs.find((dir) => dir.startsWith(platform));
+      console.log(`[PUPPETEER] Target directory: ${targetDir || "none found"}`);
+
+      if (targetDir) {
+        const subDir = os.platform() === "win32" ? "chrome-win64" : "chrome-mac-arm64";
+        const executableName = os.platform() === "win32" ? "chrome.exe" : "chrome";
+
+        const finalPath = path.join(chromiumDir, targetDir, subDir, executableName);
+        process.env.PUPPETEER_EXECUTABLE_PATH = finalPath;
+        console.log(`[PUPPETEER] Set PUPPETEER_EXECUTABLE_PATH: ${finalPath}`);
+      } else {
+        console.warn(`[PUPPETEER] No matching directory found for platform: ${platform}`);
+      }
+    } else {
+      console.warn("[PUPPETEER] No Chromium version directories found");
+    }
+  } catch (error) {
+    console.error("[PUPPETEER] Failed to auto-detect Chromium path:", error);
+  }
+} else {
+  console.log("[PUPPETEER] Development environment detected, skipping Chromium path configuration");
+}
 
 // Cross-platform icon path
 const iconPath =
