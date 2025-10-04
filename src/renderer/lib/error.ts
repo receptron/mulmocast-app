@@ -127,9 +127,19 @@ export const zodError2MulmoError = (error: ZodError) => {
 };
 
 // for throw Error. convert error cause to notify
-export const convCauseToErrorMessage = (cause: { action: string; type: string; beat_index: number }) => {
+// refere: mulmocast-cli/src/utils/error_cause.ts
+export const convCauseToErrorMessage = (cause: { action: string; type: string; target?: string; beat_index: number }) => {
+
+  // notify.error.{action}.{type}
+  
   if (cause.action === "images" && cause.type === "FileNotExist") {
     return ["notify.error.image.fileNotExist", { beat_index: cause.beat_index + 1 }];
   }
+  if (cause?.target) {
+    const { beatIndex, url, key} = cause;
+    // beatIndex, url
+    return [["notify.error", cause.action, cause.type, cause.target].join("."), { url, key, beat_index: beatIndex !== undefined ? beatIndex + 1 : null  } ];
+  }
+  console.log(cause);
   return ["notify.error.unknownError"];
 };
