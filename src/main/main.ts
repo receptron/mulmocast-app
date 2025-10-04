@@ -26,40 +26,40 @@ log.initialize();
 // --- Runtime Puppeteer Patch ---
 (() => {
   const originalLaunch = puppeteer.launch;
-  puppeteer.launch = function(options = {}) {
+  puppeteer.launch = function (options = {}) {
     const finalOptions = {
       ...options,
-      executablePath: options.executablePath || process.env.PUPPETEER_EXECUTABLE_PATH || undefined
+      executablePath: options.executablePath || process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
     };
 
     if (process.env.NODE_ENV !== "development") {
-      console.log(`[PUPPETEER_PATCH] Intercepting launch with executablePath: ${finalOptions.executablePath || 'default'}`);
+      console.log(
+        `[PUPPETEER_PATCH] Intercepting launch with executablePath: ${finalOptions.executablePath || "default"}`,
+      );
     }
 
     return originalLaunch.call(this, finalOptions);
   };
 
-  console.log('[PUPPETEER_PATCH] Runtime patch applied');
+  console.log("[PUPPETEER_PATCH] Runtime patch applied");
 })();
 
 // Production環境でのChromiumパス設定
 if (app.isPackaged) {
-  console.log('[PUPPETEER] Production environment detected, configuring Chromium path');
+  console.log("[PUPPETEER] Production environment detected, configuring Chromium path");
   const chromiumDir = path.join(process.resourcesPath, "chromium", "chrome");
   console.log(`[PUPPETEER] Looking for Chromium in: ${chromiumDir}`);
 
   try {
-    const versionDirs = fs.readdirSync(chromiumDir).filter(dir =>
-      dir.startsWith("win64-") || dir.startsWith("mac-")
-    );
-    console.log(`[PUPPETEER] Found version directories: ${versionDirs.join(', ')}`);
+    const versionDirs = fs.readdirSync(chromiumDir).filter((dir) => dir.startsWith("win64-") || dir.startsWith("mac-"));
+    console.log(`[PUPPETEER] Found version directories: ${versionDirs.join(", ")}`);
 
     if (versionDirs.length > 0) {
       const platform = os.platform() === "win32" ? "win64" : "mac-arm64";
       console.log(`[PUPPETEER] Detected platform: ${platform}`);
 
-      const targetDir = versionDirs.find(dir => dir.startsWith(platform));
-      console.log(`[PUPPETEER] Target directory: ${targetDir || 'none found'}`);
+      const targetDir = versionDirs.find((dir) => dir.startsWith(platform));
+      console.log(`[PUPPETEER] Target directory: ${targetDir || "none found"}`);
 
       if (targetDir) {
         const subDir = os.platform() === "win32" ? "chrome-win64" : "chrome-mac-arm64";
@@ -72,13 +72,13 @@ if (app.isPackaged) {
         console.warn(`[PUPPETEER] No matching directory found for platform: ${platform}`);
       }
     } else {
-      console.warn('[PUPPETEER] No Chromium version directories found');
+      console.warn("[PUPPETEER] No Chromium version directories found");
     }
   } catch (error) {
     console.error("[PUPPETEER] Failed to auto-detect Chromium path:", error);
   }
 } else {
-  console.log('[PUPPETEER] Development environment detected, skipping Chromium path configuration');
+  console.log("[PUPPETEER] Development environment detected, skipping Chromium path configuration");
 }
 
 // Cross-platform icon path
