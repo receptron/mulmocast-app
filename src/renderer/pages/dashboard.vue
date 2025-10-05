@@ -195,11 +195,19 @@ const handleCreateProject = async () => {
   const title = t("project.newProject.defaultTitle");
   const settings = await window.electronAPI.settings.get();
 
+  const onboardProject = settings.onboardProject ?? 0;
+  if (onboardProject < 3) {
+    await window.electronAPI.settings.set({
+      ...settings,
+      onboardProject: onboardProject + 1,
+    });
+  }
+
   try {
     creating.value = true;
     // First project gets sample data, subsequent projects start empty
     const isFirstProject = !hasProjects.value;
-    const project = await projectApi.create(title, settings.MAIN_LANGUAGE ?? "en", isFirstProject);
+    const project = await projectApi.create(title, settings.MAIN_LANGUAGE ?? "en", onboardProject);
     // Navigate to the new project
     router.push(`/project/${project.metadata.id}`);
   } catch (error) {

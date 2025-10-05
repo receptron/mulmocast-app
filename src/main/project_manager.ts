@@ -106,7 +106,7 @@ export const listProjects = async (): Promise<Project[]> => {
 };
 
 // Create a new project
-export const createProject = async (title: string, lang: string, isFirstProject: boolean): Promise<Project> => {
+export const createProject = async (title: string, lang: string, onboardProject: number): Promise<Project> => {
   const id = generateId();
   try {
     await fs.mkdir(getProjectPath(id), { recursive: true });
@@ -126,7 +126,7 @@ export const createProject = async (title: string, lang: string, isFirstProject:
 
     const newScript = mulmoScriptSchema
       .strip()
-      .safeParse((isFirstProject ? firstInitMulmoScript : initMulmoScript)(title, lang));
+      .safeParse((false ? firstInitMulmoScript : initMulmoScript)(title, lang));
     const mulmoScript = newScript.data;
 
     await saveProjectMetadata(id, initialData);
