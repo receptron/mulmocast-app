@@ -144,7 +144,7 @@ export const convCauseToErrorMessage = (cause: {
   // agentInvalidResponseError(invalidResponse) -> agentName
 
   if (cause?.target) {
-    const { beatIndex, url, key, agentName } = cause;
+    const { beatIndex, url, key } = cause;
     // beatIndex, url
     if (cause.type === "invalidResponse" || cause.type === "apiError") {
       return [["notify.error", cause.action, cause.type, cause.agentName].join(".")];
