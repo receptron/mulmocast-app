@@ -22,24 +22,23 @@ export const notifyError = (
   });
 };
 
-export const notifyProgress = <T>(
+export const notifyProgress = async <T>(
   promise: Promise<T & { result?: boolean; error?: unknown }>,
   { successMessage, errorMessage }: { successMessage: string; errorMessage: string },
 ) => {
-  promise
-    .then((result) => {
-      if (result?.result === false) {
-        if (result?.error) {
-          notifyError(errorMessage, result.error instanceof Error ? result.error.message : "Unknown error");
-        } else {
-          notifyError(errorMessage);
-        }
+  try {
+    const result = await promise;
+    if (result?.result === false) {
+      if (result?.error) {
+        notifyError(errorMessage, result.error instanceof Error ? result.error.message : "Unknown error");
       } else {
-        notifySuccess(successMessage);
+        notifyError(errorMessage);
       }
-    })
-    .catch((error) => {
-      notifyError(errorMessage, error instanceof Error ? error.message : "Unknown error");
-    });
-  return promise;
+    } else {
+      notifySuccess(successMessage);
+    }
+    return result;
+  } catch (error) {
+    notifyError(errorMessage, error instanceof Error ? error.message : "Unknown error");
+  }
 };
