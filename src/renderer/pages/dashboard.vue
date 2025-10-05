@@ -207,7 +207,7 @@ const handleCreateProject = async () => {
     creating.value = true;
     // First project gets sample data, subsequent projects start empty
     const isFirstProject = !hasProjects.value;
-    const project = await projectApi.create(title, settings.MAIN_LANGUAGE ?? "en", onboardProject);
+    const project = await projectApi.create(title, settings.APP_LANGUAGE ?? "en", onboardProject);
     // Navigate to the new project
     router.push(`/project/${project.metadata.id}`);
   } catch (error) {
