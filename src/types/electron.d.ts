@@ -11,7 +11,7 @@ export interface ElectronAPI {
   getEnv: () => Promise<Record<string, string | undefined>>;
   project: {
     list: () => Promise<Project[]>;
-    create: (title: string, lang: string, isFirstProject: boolean) => Promise<Project>;
+    create: (title: string, lang: string, onboardProject: number) => Promise<Project>;
     getProjectMetadata: (name: string) => Promise<ProjectMetadata>;
     getProjectMulmoScript: (name: string) => Promise<MulmoScript | null>;
     delete: (name: string) => Promise<boolean>;

@@ -172,9 +172,11 @@ const loadProjectThumbnails = async () => {
   );
 };
 
+/*
 const hasProjects = computed(() => {
   return projects.value.length > 0;
 });
+*/
 
 const sortedProjects = computed(() => {
   return projects.value.toSorted((a, b) => {
@@ -206,7 +208,7 @@ const handleCreateProject = async () => {
   try {
     creating.value = true;
     // First project gets sample data, subsequent projects start empty
-    const isFirstProject = !hasProjects.value;
+    // const isFirstProject = !hasProjects.value;
     const project = await projectApi.create(title, settings.APP_LANGUAGE ?? "en", onboardProject);
     // Navigate to the new project
     router.push(`/project/${project.metadata.id}`);
