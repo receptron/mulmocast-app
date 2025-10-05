@@ -796,21 +796,40 @@ const lang = {
           imageFile: "ビート{beatIndex}の画像が存在しない、もしくは正しくないようです",
           audioFile: "ビート{beatIndex}の音声が存在しない、もしくは正しくないようです",
         },
+        undefinedSourceType: {
+          videoSource: "",
+        },
+        apiError: "",
       },
       images: {
         fileNotExist: {
           imageFile: "ビート{beatIndex}の画像が存在しない、もしくは正しくないようです",
+          audioFile: "ビート{beatIndex}の音声が存在しない、もしくは正しくないようです",
         },
         urlFileNotFound: {
           imageFile: "ビートの画像が存在しない、もしくは正しくないようです",
           movieFile: "ビートの動画が存在しない、もしくは正しくないようです",
           codeText: "Mermaidのコードがが存在しない、もしくは正しくないようです",
         },
-        // undefinedSourceType: { }
-        // unknownMedia: "",
+        unknownMedia: "不明なメディアタイプです",
+        invalidResponse: "", // TODO: API情報が欲しい
+        apiError: "", // TODO: API情報が欲しい
       },
-      imageReference: {},
+      imageReference: {
+        urlFileNotFound: {
+          imageFile: "キャラ画像が存在しない、もしくは正しくないようです",
+        },
+        unknownMedia: "不明なメディアタイプです",
+        apiError: "",
+      },
       audio: {
+        fileNotExist: {
+          audioFile: "ビート{beatIndex}の音声が存在しない、もしくは正しくないようです",
+        },
+        undefinedSourceType: {
+          audioSource: "",
+        },
+        apiError: "",
         generateAudioSpeechParam: "{speechParams} (speechParams) がセットされていません",
       },
     },
