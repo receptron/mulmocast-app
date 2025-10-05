@@ -559,19 +559,29 @@ const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageCompo
 );
 
 const toastId = ref<null | string>(null);
-watch(generatingMessage, (value) => {
-  if (value === "") {
-    if (toastId) {
-      toast.dismiss(toastId.value);
+watch(
+  generatingMessage,
+  (value) => {
+    if (value === "") {
+      if (toastId.value) {
+        toast.dismiss(toastId.value);
+      }
+      toastId.value = null;
+    } else {
+      if (toastId.value == null) {
+        toastId.value = toast.loading(ConcurrentTaskStatusMessageComponent, {
+          duration: Infinity,
+        });
+      }
     }
-    toastId.value = null;
-  } else {
-    if (toastId.value == null) {
-      toastId.value = toast.loading(ConcurrentTaskStatusMessageComponent, {
-        duration: Infinity,
-      });
-    }
+  },
+  { immediate: true },
+);
+onUnmounted(() => {
+  if (toastId.value) {
+    toast.dismiss(toastId.value);
   }
+  toastId.value = null;
 });
 </script>
 

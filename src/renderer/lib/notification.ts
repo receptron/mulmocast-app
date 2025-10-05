@@ -1,4 +1,3 @@
-import { Component } from "vue";
 import { toast } from "vue-sonner";
 
 export const notifySuccess = (message: string, description?: string) => {
@@ -25,10 +24,7 @@ export const notifyError = (
 
 export const notifyProgress = <T>(
   promise: Promise<T & { result?: boolean; error?: unknown }>,
-  {
-    successMessage,
-    errorMessage,
-  }: { successMessage: string; errorMessage: string },
+  { successMessage, errorMessage }: { successMessage: string; errorMessage: string },
 ) => {
   promise
     .then((result) => {

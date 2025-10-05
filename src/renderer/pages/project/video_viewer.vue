@@ -45,5 +45,4 @@ const generateContents = () => {
     errorMessage: t("notify.content.errorMessage"),
   });
 };
-
 </script>

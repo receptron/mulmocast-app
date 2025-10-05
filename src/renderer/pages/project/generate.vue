@@ -81,5 +81,4 @@ const generateContents = () => {
 };
 const mulmoEventStore = useMulmoEventStore();
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
-
 </script>
