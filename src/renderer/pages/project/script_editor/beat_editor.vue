@@ -324,8 +324,6 @@ import Mermaid from "./beat_editors/mermaid.vue";
 import Vision from "./beat_editors/vision.vue";
 import { useApiErrorNotify } from "@/composables/notify";
 
-import { getConcurrentTaskStatusMessageComponent } from "../concurrent_task_status_message";
-
 type FileData = ArrayBuffer | string | null;
 
 interface Props {
@@ -463,8 +461,6 @@ const generateLipSyncMovie = async () => {
   emit("generateImage", props.index, "lipSync");
 };
 
-const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(projectId.value);
-
 const generateAudio = async () => {
   try {
     const { provider } = MulmoStudioContextMethods.getAudioParam(
@@ -479,7 +475,6 @@ const generateAudio = async () => {
     }
 
     notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", projectId.value, props.index), {
-      loadingMessage: ConcurrentTaskStatusMessageComponent,
       successMessage: t("notify.audio.successMessage"),
       errorMessage: t("notify.audio.errorMessage"),
     });

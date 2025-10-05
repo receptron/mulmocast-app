@@ -28,7 +28,7 @@ export const notifyProgress = <T>(
   {
     successMessage,
     errorMessage,
-  }: { loadingMessage: string | Component; successMessage: string; errorMessage: string },
+  }: { successMessage: string; errorMessage: string },
 ) => {
   promise
     .then((result) => {
