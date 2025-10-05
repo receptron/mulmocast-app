@@ -136,17 +136,20 @@ export const convCauseToErrorMessage = (cause: {
   beatIndex?: number;
   url?: string;
   key?: string;
+  agentName?: string;
 }) => {
   // notify.error.{action}.{type}
-  /*
-  if (cause.action === "images" && cause.type === "FileNotExist") {
-    return ["notify.error.image.fileNotExist", { beat_index: cause.beat_index + 1 }];
-    }
-  */
+
+  // agentGenerationError(apiError)  -> agentName
+  // agentInvalidResponseError(invalidResponse) -> agentName
 
   if (cause?.target) {
     const { beatIndex, url, key } = cause;
     // beatIndex, url
+    if (cause.type === "invalidResponse" || cause.type === "apiError") {
+      return [["notify.error", cause.action, cause.type, cause.agentName].join(".")];
+    }
+
     return [
       ["notify.error", cause.action, cause.type, cause.target].join("."),
       { url, key, beatIndex: beatIndex !== undefined ? beatIndex + 1 : null },

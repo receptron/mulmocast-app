@@ -797,9 +797,8 @@ const lang = {
           audioFile: "ビート{beatIndex}の音声が存在しない、もしくは正しくないようです",
         },
         undefinedSourceType: {
-          videoSource: "",
+          audioSource: "動画ソースが指定されていません。",
         },
-        apiError: "",
       },
       images: {
         fileNotExist: {
@@ -812,24 +811,43 @@ const lang = {
           codeText: "Mermaidのコードがが存在しない、もしくは正しくないようです",
         },
         unknownMedia: "不明なメディアタイプです",
-        invalidResponse: "", // TODO: API情報が欲しい
-        apiError: "", // TODO: API情報が欲しい
+        invalidResponse: {
+          imageReplicateAgent: "画像生成（Replicate）でエラーが発生しました。",
+          imageGenAIAgent: "画像生成（GenAI）でエラーが発生しました。",
+          imageOpenaiAgent: "画像生成（OpenAI）でエラーが発生しました。",
+          movieGenAIAgent: "動画生成（GenAI）でエラーが発生しました。",
+          movieReplicateAgent: "動画生成（Replicate）でエラーが発生しました。",
+        },
+        apiError: {
+          imageReplicateAgent: "画像生成（Replicate）でエラーが発生しました。",
+          imageGenAIAgent: "画像生成（GenAI）でエラーが発生しました。",
+          imageOpenaiAgent: "画像生成（OpenAI）でエラーが発生しました。",
+          movieGenAIAgent: "動画生成（GenAI）でエラーが発生しました。",
+          movieReplicateAgent: "動画生成（Replicate）でエラーが発生しました。",
+          lipSyncReplicateAgent: "リップシンク（Replicate）でエラーが発生しました。",
+          soundEffectReplicateAgent: "効果音生成（Replicate）でエラーが発生しました。",
+        },
       },
       imageReference: {
         urlFileNotFound: {
           imageFile: "キャラ画像が存在しない、もしくは正しくないようです",
         },
         unknownMedia: "不明なメディアタイプです",
-        apiError: "",
       },
       audio: {
         fileNotExist: {
           audioFile: "ビート{beatIndex}の音声が存在しない、もしくは正しくないようです",
         },
         undefinedSourceType: {
-          audioSource: "",
+          audioSource: "音声ソースが指定されていません。",
         },
-        apiError: "",
+        apiError: {
+          addBGMAgent: "BGM追加処理でエラーが発生しました。",
+          ttsGoogleAgent: "音声合成（Google TTS）でエラーが発生しました。",
+          ttsOpenaiAgent: "音声合成（OpenAI TTS）でエラーが発生しました。",
+          ttsNijivoiceAgent: "音声合成（Nijivoice）でエラーが発生しました。",
+          ttsElevenlabsAgent: "音声合成（ElevenLabs）でエラーが発生しました。",
+        },
         generateAudioSpeechParam: "{speechParams} (speechParams) がセットされていません",
       },
     },
