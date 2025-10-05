@@ -40,6 +40,8 @@ export const notifyProgress = <T>(
       if (result?.result === false) {
         if (result?.error) {
           notifyError(errorMessage, result.error instanceof Error ? result.error.message : "Unknown error");
+        } else {
+          notifyError(errorMessage);
         }
       } else {
         notifySuccess(successMessage);

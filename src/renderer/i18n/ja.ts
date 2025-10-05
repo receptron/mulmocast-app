@@ -762,8 +762,8 @@ const lang = {
       errorMessage: "翻訳失敗",
     },
     content: {
-      successMessage: "作成成功!!",
-      errorMessage: "作成失敗",
+      successMessage: "成果物作成成功!!",
+      errorMessage: "成果物作成失敗",
     },
     // BeatSessionType
     beat: {
