@@ -14,7 +14,7 @@
               :model-value="images[imageKey].prompt"
               @update:model-value="(value) => update('imagePrompt', imageKey, String(value))"
               class="mb-2 h-20 overflow-y-auto"
-              :disabled="isGeneratings[imageKey]"
+              :disabled="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['imageReference'][imageKey]"
             />
           </template>
           <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'path'">
@@ -54,9 +54,12 @@
               size="icon"
               class="border-border bg-card hover:bg-muted absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border shadow transition-colors"
               @click="() => submitImage(imageKey, key)"
-              :disabled="isGeneratings[imageKey]"
+              :disabled="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['imageReference'][imageKey]"
             >
-              <Loader2 v-if="isGeneratings[imageKey]" class="h-4 w-4 animate-spin" />
+              <Loader2
+                v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['imageReference'][imageKey]"
+                class="h-4 w-4 animate-spin"
+              />
               <Sparkles v-else class="h-4 w-4" />
             </Button>
             <div v-if="imageRefs[imageKey]" class="flex items-center justify-center">
@@ -108,6 +111,7 @@ import CharactorSelector from "./charactor_selector.vue";
 import { getConcurrentTaskStatusMessageComponent } from "../concurrent_task_status_message";
 import { notifyProgress } from "@/lib/notification";
 import { useApiErrorNotify } from "@/composables/notify";
+import { useMulmoEventStore } from "../../../store";
 
 interface Props {
   projectId: string;
@@ -116,6 +120,7 @@ interface Props {
 }
 
 const { t } = useI18n();
+const mulmoEventStore = useMulmoEventStore();
 
 const props = defineProps<Props>();
 const emit = defineEmits([
@@ -239,10 +244,8 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
 
 const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId ?? "");
 
-const isGeneratings = ref({});
-
 const submitImage = async (imageKey: string, key: number) => {
-  if (isGeneratings.value[imageKey]) {
+  if (mulmoEventStore.sessionState?.[props.projectId]?.["beat"]?.["imageReference"][imageKey]) {
     return;
   }
   const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(props.mulmoScript);
@@ -251,7 +254,6 @@ const submitImage = async (imageKey: string, key: number) => {
     return;
   }
 
-  isGeneratings.value[imageKey] = true;
   try {
     imageFetching.value = true;
     await notifyProgress(
@@ -271,6 +273,6 @@ const submitImage = async (imageKey: string, key: number) => {
   } catch (error) {
     console.log(error);
   }
-  isGeneratings.value[imageKey] = false;
+  imageFetching.value = false;
 };
 </script>
