@@ -790,10 +790,64 @@ const lang = {
     },
     error: {
       unknownError: "Unknown error occurred",
-      image: {
-        fileNotExist: "The image for beat {beat_index} does not exist or is invalid",
+      // action, type, target
+      movie: {
+        fileNotExist: {
+          imageFile: "The image for beat {beatIndex} does not exist or is invalid",
+          audioFile: "The audio for beat {beatIndex} does not exist or is invalid",
+        },
+        undefinedSourceType: {
+          audioSource: "Video source is not specified.",
+        },
+      },
+      images: {
+        fileNotExist: {
+          imageFile: "The image for beat {beatIndex} does not exist or is invalid",
+          audioFile: "The audio for beat {beatIndex} does not exist or is invalid",
+        },
+        urlFileNotFound: {
+          imageFile: "The beat image does not exist or is invalid",
+          movieFile: "The beat movie does not exist or is invalid",
+          codeText: "Mermaid code does not exist or is invalid",
+        },
+        unknownMedia: "Unknown media type",
+        invalidResponse: {
+          imageReplicateAgent: "An error occurred with image generation (Replicate).",
+          imageGenAIAgent: "An error occurred with image generation (GenAI).",
+          imageOpenaiAgent: "An error occurred with image generation (OpenAI).",
+          movieGenAIAgent: "An error occurred with video generation (GenAI).",
+          movieReplicateAgent: "An error occurred with video generation (Replicate).",
+        },
+        apiError: {
+          imageReplicateAgent: "An error occurred with image generation (Replicate).",
+          imageGenAIAgent: "An error occurred with image generation (GenAI).",
+          imageOpenaiAgent: "An error occurred with image generation (OpenAI).",
+          movieGenAIAgent: "An error occurred with video generation (GenAI).",
+          movieReplicateAgent: "An error occurred with video generation (Replicate).",
+          lipSyncReplicateAgent: "An error occurred with lip sync (Replicate).",
+          soundEffectReplicateAgent: "An error occurred with sound effect generation (Replicate).",
+        },
+      },
+      imageReference: {
+        urlFileNotFound: {
+          imageFile: "Character image does not exist or is invalid",
+        },
+        unknownMedia: "Unknown media type",
       },
       audio: {
+        fileNotExist: {
+          audioFile: "The audio for beat {beatIndex} does not exist or is invalid",
+        },
+        undefinedSourceType: {
+          audioSource: "Audio source is not specified.",
+        },
+        apiError: {
+          addBGMAgent: "An error occurred while adding BGM.",
+          ttsGoogleAgent: "An error occurred with speech synthesis (Google TTS).",
+          ttsOpenaiAgent: "An error occurred with speech synthesis (OpenAI TTS).",
+          ttsNijivoiceAgent: "An error occurred with speech synthesis (Nijivoice).",
+          ttsElevenlabsAgent: "An error occurred with speech synthesis (ElevenLabs).",
+        },
         generateAudioSpeechParam: "{speechParams} (speechParams) are not set",
       },
     },
