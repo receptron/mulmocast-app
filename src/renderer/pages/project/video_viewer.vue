@@ -23,7 +23,6 @@
 import { notifyProgress } from "@/lib/notification";
 import { Monitor } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
-import { getConcurrentTaskStatusMessageComponent } from "./concurrent_task_status_message";
 
 import MovieTab from "../../components/product/tabs/movie_tab.vue";
 import { useMulmoEventStore, useMulmoScriptHistoryStore } from "@/store";
@@ -42,11 +41,8 @@ const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
 const generateContents = () => {
   notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", props.projectId, ["movie"]), {
-    loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: t("notify.content.successMessage"),
     errorMessage: t("notify.content.errorMessage"),
   });
 };
-
-const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
 </script>

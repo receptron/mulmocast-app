@@ -36,7 +36,6 @@ import { useMulmoEventStore, useMulmoScriptHistoryStore } from "../../store";
 import { notifyProgress } from "@/lib/notification";
 import { FileText, Monitor, Volume2Icon } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
-import { getConcurrentTaskStatusMessageComponent } from "./concurrent_task_status_message";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { useI18n } from "vue-i18n";
@@ -76,13 +75,10 @@ watch(
 const generateContents = () => {
   const keys = Object.keys(options.value).filter((key) => options.value[key]);
   notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", props.projectId, keys), {
-    loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: t("notify.content.successMessage"),
     errorMessage: t("notify.content.errorMessage"),
   });
 };
 const mulmoEventStore = useMulmoEventStore();
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
-
-const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
 </script>

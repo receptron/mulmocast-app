@@ -108,7 +108,6 @@ import { bufferToUrl } from "@/lib/utils";
 
 import CharactorSelector from "./charactor_selector.vue";
 
-import { getConcurrentTaskStatusMessageComponent } from "../concurrent_task_status_message";
 import { notifyProgress } from "@/lib/notification";
 import { useApiErrorNotify } from "@/composables/notify";
 import { useMulmoEventStore } from "../../../store";
@@ -242,8 +241,6 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
   }
 };
 
-const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId ?? "");
-
 const submitImage = async (imageKey: string, key: number) => {
   if (mulmoEventStore.sessionState?.[props.projectId]?.["beat"]?.["imageReference"][imageKey]) {
     return;
@@ -262,7 +259,6 @@ const submitImage = async (imageKey: string, key: number) => {
         prompt: props.images[imageKey].prompt,
       }),
       {
-        loadingMessage: ConcurrentTaskStatusMessageComponent,
         successMessage: t("notify.image.successMessage"),
         errorMessage: t("notify.image.errorMessage"),
       },

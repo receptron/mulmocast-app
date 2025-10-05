@@ -249,8 +249,16 @@ import {
   Expand,
 } from "lucide-vue-next";
 import dayjs from "dayjs";
-import { mulmoScriptSchema, mulmoBeatSchema, type MulmoScript } from "mulmocast/browser";
+import {
+  mulmoScriptSchema,
+  mulmoBeatSchema,
+  type MulmoScript,
+  type BeatSessionType,
+  type SessionType,
+} from "mulmocast/browser";
+
 import { z } from "zod";
+import { toast } from "vue-sonner";
 
 import { Button } from "@/components/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -452,12 +460,10 @@ const openProjectFolder = async () => {
   await projectApi.openProjectFolder(projectId.value);
 };
 
-const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(projectId.value ?? "");
-
 const generateImage = async (index: number, target: string) => {
   // await saveMulmoScript();
   notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatImage", projectId.value, index, target), {
-    loadingMessage: ConcurrentTaskStatusMessageComponent,
+    // loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: t("notify.image.successMessage"),
     errorMessage: t("notify.image.errorMessage"),
   });
@@ -520,6 +526,63 @@ watch(
     console.log(mulmoEvent);
   },
 );
+
+//
+const generatingMessage = computed(() => {
+  const data = mulmoEventStore.sessionState?.[projectId.value];
+  if (!data) {
+    return "";
+  }
+  const ret: string[] = [];
+  Object.keys(data["artifact"] ?? {}).forEach((key: SessionType) => {
+    if (data["artifact"][key]) {
+      ret.push(t(`notify.task.${key}`));
+    }
+  });
+  Object.keys(data["beat"] ?? {}).forEach((key: BeatSessionType) => {
+    if (data["beat"][key] && Object.values(data["beat"][key]).some((value) => value)) {
+      const indexes = Object.keys(data["beat"][key])
+        .filter((index: string) => data["beat"][key][Number(index)])
+        .map((index: string) => Number(index) + 1);
+      ret.push(t(`notify.beat.${key}`) + " " + indexes.join(","));
+    }
+  });
+  if (ret.length === 0) {
+    return "";
+  }
+  return t("ui.status.generatingThing", { thing: ret.join(", ") });
+});
+
+const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(
+  projectId.value,
+  generatingMessage,
+);
+
+const toastId = ref<null | string>(null);
+watch(
+  generatingMessage,
+  (value) => {
+    if (value === "") {
+      if (toastId.value) {
+        toast.dismiss(toastId.value);
+      }
+      toastId.value = null;
+    } else {
+      if (toastId.value == null) {
+        toastId.value = toast.loading(ConcurrentTaskStatusMessageComponent, {
+          duration: Infinity,
+        });
+      }
+    }
+  },
+  { immediate: true },
+);
+onUnmounted(() => {
+  if (toastId.value) {
+    toast.dismiss(toastId.value);
+  }
+  toastId.value = null;
+});
 </script>
 
 <style scoped>

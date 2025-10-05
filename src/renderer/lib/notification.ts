@@ -1,4 +1,3 @@
-import { Component } from "vue";
 import { toast } from "vue-sonner";
 
 export const notifySuccess = (message: string, description?: string) => {
@@ -25,18 +24,10 @@ export const notifyError = (
 
 export const notifyProgress = <T>(
   promise: Promise<T & { result?: boolean; error?: unknown }>,
-  {
-    loadingMessage,
-    successMessage,
-    errorMessage,
-  }: { loadingMessage: string | Component; successMessage: string; errorMessage: string },
+  { successMessage, errorMessage }: { successMessage: string; errorMessage: string },
 ) => {
-  const toastId = toast.loading(loadingMessage, {
-    duration: Infinity,
-  });
   promise
     .then((result) => {
-      toast.dismiss(toastId);
       if (result?.result === false) {
         if (result?.error) {
           notifyError(errorMessage, result.error instanceof Error ? result.error.message : "Unknown error");
@@ -48,7 +39,6 @@ export const notifyProgress = <T>(
       }
     })
     .catch((error) => {
-      toast.dismiss(toastId);
       notifyError(errorMessage, error instanceof Error ? error.message : "Unknown error");
     });
   return promise;

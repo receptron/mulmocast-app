@@ -86,7 +86,6 @@ import { getBadge } from "@/lib/beat_util.js";
 import { useMulmoEventStore, useMulmoGlobalStore } from "@/store";
 import { notifyProgress, notifyError } from "@/lib/notification";
 import { useApiErrorNotify } from "@/composables/notify";
-import { getConcurrentTaskStatusMessageComponent } from "../concurrent_task_status_message";
 
 const { t } = useI18n();
 const mulmoEventStore = useMulmoEventStore();
@@ -124,7 +123,6 @@ const update = (index: number, path: string, value: unknown) => {
 const justSaveAndPushToHistory = () => {
   emit("justSaveAndPushToHistory");
 };
-const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageComponent(props.projectId);
 
 const generateAudio = async (index: number) => {
   try {
@@ -140,7 +138,6 @@ const generateAudio = async (index: number) => {
     }
 
     notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", props.projectId, index), {
-      loadingMessage: ConcurrentTaskStatusMessageComponent,
       successMessage: t("notify.audio.successMessage"),
       errorMessage: t("notify.audio.errorMessage"),
     });
@@ -159,7 +156,6 @@ const translateBeat = async (index: number) => {
     return;
   }
   notifyProgress(window.electronAPI.mulmoHandler("mulmoTranslateBeat", props.projectId, index, supporLanguages.value), {
-    loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: t("notify.translate.successMessage"),
     errorMessage: t("notify.translate.errorMessage"),
   });
