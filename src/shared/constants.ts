@@ -83,6 +83,11 @@ export const llms = [
     apiKey: "OPENAI_API_KEY",
   },
   {
+    id: "anthropicAgent",
+    apiKey: "ANTHROPIC_API_KEY",
+  },
+  /*
+  {
     id: "ollamaAgent",
   },
   {
@@ -90,13 +95,10 @@ export const llms = [
     apiKey: "GEMINI_API_KEY",
   },
   {
-    id: "anthropicAgent",
-    apiKey: "ANTHROPIC_API_KEY",
-  },
-  {
     id: "groqAgent",
     apiKey: "GROQ_API_KEY",
-  },
+   },
+   */
 ];
 
 export const LLM_DEFAULT_AGENT = "openAIAgent";
