@@ -8,8 +8,8 @@ export const projectApi = {
     return await window.electronAPI.project.list();
   },
 
-  async create(title: string, lang: string, isFirstProject: boolean): Promise<Project> {
-    return await window.electronAPI.project.create(title, lang, isFirstProject);
+  async create(title: string, lang: string, onboardProject: number): Promise<Project> {
+    return await window.electronAPI.project.create(title, lang, onboardProject);
   },
 
   async getProjectMetadata(id: string): Promise<ProjectMetadata> {
