@@ -812,8 +812,22 @@ const lang = {
           codeText: "Mermaidのコードがが存在しない、もしくは正しくないようです",
         },
         unknownMedia: "不明なメディアタイプです",
-        invalidResponse: "", // TODO: API情報が欲しい
-        apiError: "", // TODO: API情報が欲しい
+        invalidResponse: {
+          imageReplicateAgent: "",
+          imageGenAIAgent: "",
+          imageOpenaiAgent: "",
+          movieGenAIAgent: "",
+          movieReplicateAgent: "",
+        },
+        apiError: {
+          imageReplicateAgent: "",
+          imageGenAIAgent: "",
+          imageOpenaiAgent: "",
+          movieGenAIAgent: "",
+          movieReplicateAgent: "",
+          lipSyncReplicateAgent: "",
+          soundEffectReplicateAgent: "",
+        },
       },
       imageReference: {
         urlFileNotFound: {
@@ -829,7 +843,13 @@ const lang = {
         undefinedSourceType: {
           audioSource: "",
         },
-        apiError: "",
+        apiError: {
+          addBGMAgent: "",
+          ttsGoogleAgent: "",
+          ttsOpenaiAgent: "",
+          ttsNijivoiceAgent: "",
+          ttsElevenlabsAgent: "",
+        },
         generateAudioSpeechParam: "{speechParams} (speechParams) がセットされていません",
       },
     },
