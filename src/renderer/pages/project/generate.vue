@@ -52,7 +52,7 @@ type OptionKey = "movie" | "audio" | "pdfSlide" | "pdfHandout";
 const checkboxOptions: { key: OptionKey }[] = [
   { key: "movie" },
   { key: "audio" },
-  { key: "pdfSlide" },
+  //  { key: "pdfSlide" },
   { key: "pdfHandout" },
 ];
 
