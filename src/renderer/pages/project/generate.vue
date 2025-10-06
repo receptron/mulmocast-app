@@ -53,7 +53,7 @@ const checkboxOptions: { key: OptionKey }[] = [
   { key: "movie" },
   { key: "audio" },
   //  { key: "pdfSlide" },
-  //  { key: "pdfHandout" },
+  { key: "pdfHandout" },
 ];
 
 const options = ref<Record<OptionKey, boolean>>({
