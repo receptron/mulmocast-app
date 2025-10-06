@@ -3,11 +3,16 @@
     <CharaParams :beat="beat" :images="imageParams.images" @updateImageNames="updateImageNames" />
     <Collapsible :open="!!beat?.imageParams" @update:open="updateBeatImageParams" v-if="isPro">
       <CollapsibleTrigger as-child>
-        <div class="mb-3 flex items-center gap-2">
-          <Checkbox variant="ghost" size="icon" :modelValue="!!beat?.imageParams" />
-          <h4 class="text-sm font-medium" :class="!beat?.imageParams ? 'text-muted-foreground' : ''">
-            {{ t("parameters.imageParams.title") }}
-          </h4>
+        <div class="mb-3">
+          <div class="flex items-center gap-2">
+            <Checkbox variant="ghost" size="icon" :modelValue="!!beat?.imageParams" />
+            <h4 class="text-sm font-medium" :class="!beat?.imageParams ? 'text-muted-foreground' : ''">
+              {{ t("parameters.imageParams.customTitle") }}
+            </h4>
+          </div>
+          <p class="text-muted-foreground mt-1 ml-6 text-xs" v-if="!!beat?.imageParams">
+            {{ t("parameters.imageParams.customDescription") }}
+          </p>
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent>
