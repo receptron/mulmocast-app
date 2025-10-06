@@ -112,13 +112,15 @@
           </div>
           <div v-if="speaker.displayName">
             <Label class="text-xs">{{ t("parameters.speechParams.displayName") }}</Label>
-            <p class="text-xs text-muted-foreground mb-2">
-              {{ t("parameters.speechParams.displayNameDescription", {
-                language: t("parameters.speechParams.language"),
-                displayName: t("parameters.speechParams.displayName")
-              }) }}
+            <p class="text-muted-foreground mb-2 text-xs">
+              {{
+                t("parameters.speechParams.displayNameDescription", {
+                  language: t("parameters.speechParams.language"),
+                  displayName: t("parameters.speechParams.displayName"),
+                })
+              }}
             </p>
-            <div class="flex items-start gap-2 ml-2">
+            <div class="ml-2 flex items-start gap-2">
               <div class="w-1/4">
                 <Label class="text-xs">{{ t("parameters.speechParams.language") }}</Label>
                 <Select
