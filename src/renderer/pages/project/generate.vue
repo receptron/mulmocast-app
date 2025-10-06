@@ -52,8 +52,8 @@ type OptionKey = "movie" | "audio" | "pdfSlide" | "pdfHandout";
 const checkboxOptions: { key: OptionKey }[] = [
   { key: "movie" },
   { key: "audio" },
-  { key: "pdfSlide" },
-  { key: "pdfHandout" },
+  //  { key: "pdfSlide" },
+  //  { key: "pdfHandout" },
 ];
 
 const options = ref<Record<OptionKey, boolean>>({
