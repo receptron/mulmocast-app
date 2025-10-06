@@ -835,6 +835,11 @@ const lang = {
         urlFileNotFound: {
           imageFile: "キャラ画像が存在しない、もしくは正しくないようです",
         },
+        apiError: {
+          imageOpenaiAgent: "OpenAIのAPI Keyが正しくありません",
+          imageReplicateAgent: "ReplicateのAPI Keyが正しくありません",
+          imageGenAIAgent: "GenAIのAPI Keyが正しくありません",
+        },
         unknownMedia: "不明なメディアタイプです",
       },
       audio: {

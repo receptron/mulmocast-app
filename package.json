@@ -104,7 +104,7 @@
     "marked": "^16.3.0",
     "monaco-editor": "^0.53.0",
     "monaco-yaml": "^5.4.0",
-    "mulmocast": "^1.2.51",
+    "mulmocast": "^1.2.52",
     "pinia": "^3.0.3",
     "puppeteer": "24.23.0",
     "radix-vue": "^1.9.17",

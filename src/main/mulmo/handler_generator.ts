@@ -237,7 +237,9 @@ export const mulmoReferenceImage = async (
       data: error,
       cause: error?.cause,
     });
-    return null;
+    return {
+      result: false,
+    };
   }
 };
 
