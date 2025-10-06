@@ -8,7 +8,11 @@ const nodeModuleRootPath = isDev
   ? path.resolve(__dirname, "../../node_modules")
   : path.join(process.resourcesPath, "app.asar", ".vite", "build", "node_modules");
 
-export const getContext = async (projectId: string, targetLang?: string, index?: number): Promise<MulmoStudioContext | null> => {
+export const getContext = async (
+  projectId: string,
+  targetLang?: string,
+  index?: number,
+): Promise<MulmoStudioContext | null> => {
   const projectPath = getProjectPath(projectId);
 
   const files = getFileObject({
