@@ -59,7 +59,7 @@ export const mulmoAudioFiles = async (projectId: string, lang?: string) => {
 };
 export const mulmoAudioFile = async (projectId: string, index: number) => {
   try {
-    const context = await getContext(projectId);
+    const context = await getContext(projectId, null, index);
     const beat = context.studio.script.beats[index];
     return beatAudio(context)(beat);
   } catch (error) {
@@ -87,7 +87,7 @@ export const mulmoImageFiles = async (projectId: string) => {
 };
 export const mulmoImageFile = async (projectId: string, index: number) => {
   try {
-    const context = await getContext(projectId);
+    const context = await getContext(projectId, null, index);
     const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle);
     const beat = context.studio.script.beats[index];
     return await beatImage(context, imageAgentInfo)(beat, index);
