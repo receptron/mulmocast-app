@@ -670,6 +670,7 @@ const lang = {
       placeholder: "Speaker name (a-z0-9)",
       noSpeakersDefined: "No speakers defined",
       initializeSpeechParameters: "Initialize Speech Parameters",
+      displayNameDescription: "Please set the {displayName} to use for each {language}.",
     },
     canvasSizeParams: {
       title: "Canvas Size",

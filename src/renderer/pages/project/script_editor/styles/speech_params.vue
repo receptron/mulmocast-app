@@ -111,36 +111,45 @@
             />
           </div>
           <div v-if="speaker.displayName">
-            <div class="mb-2">
-              <Label class="text-xs">{{ t("parameters.speechParams.language") }}</Label>
-              <Select
-                :model-value="selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE"
-                @update:model-value="(value) => handleLanguageChange(name, String(value))"
-              >
-                <SelectTrigger class="h-8">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem v-for="lang in SPEECH_LANGUAGES" :key="lang.id" :value="lang.id">
-                    {{ t("languages." + lang.id) }}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label class="text-xs"
-                >{{ t("parameters.speechParams.displayName") }} ({{
-                  t("languages." + (selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE))
-                }})
-              </Label>
-              <Input
-                :model-value="speaker.displayName[selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE] || ''"
-                @update:model-value="
-                  (value) =>
-                    handleDisplayNameChange(name, selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE, String(value))
-                "
-                class="h-8"
-              />
+            <Label class="text-xs">{{ t("parameters.speechParams.displayName") }}</Label>
+            <p class="text-xs text-muted-foreground mb-2">
+              {{ t("parameters.speechParams.displayNameDescription", {
+                language: t("parameters.speechParams.language"),
+                displayName: t("parameters.speechParams.displayName")
+              }) }}
+            </p>
+            <div class="flex items-start gap-2 ml-2">
+              <div class="w-1/4">
+                <Label class="text-xs">{{ t("parameters.speechParams.language") }}</Label>
+                <Select
+                  :model-value="selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE"
+                  @update:model-value="(value) => handleLanguageChange(name, String(value))"
+                >
+                  <SelectTrigger class="h-8">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem v-for="lang in SPEECH_LANGUAGES" :key="lang.id" :value="lang.id">
+                      {{ t("languages." + lang.id) }}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div class="w-3/4">
+                <Label class="text-xs"
+                  >{{ t("parameters.speechParams.displayName") }} ({{
+                    t("languages." + (selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE))
+                  }})
+                </Label>
+                <Input
+                  :model-value="speaker.displayName[selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE] || ''"
+                  @update:model-value="
+                    (value) =>
+                      handleDisplayNameChange(name, selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE, String(value))
+                  "
+                  class="h-8"
+                />
+              </div>
             </div>
           </div>
         </div>

@@ -669,6 +669,7 @@ const lang = {
       placeholder: "登場人物の名前 (英数字のみ)",
       noSpeakersDefined: "登場人物が定義されていません",
       initializeSpeechParameters: "音声パラメータを初期化",
+      displayNameDescription: "各{language}で使用する{displayName}を設定してください。",
     },
     canvasSizeParams: {
       title: "キャンバスサイズ",
