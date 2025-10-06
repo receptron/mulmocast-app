@@ -850,6 +850,16 @@ const lang = {
         },
         generateAudioSpeechParam: "{speechParams} (speechParams) がセットされていません",
       },
+      apiKeyInvalid: {
+        imageOpenaiAgent: "OpenAIのAPI Keyが正しくありません",
+        ttsOpenaiAgent: "OpenAIのAPI Keyが正しくありません",
+      },
+      apiRateLimit: {
+        imageOpenaiAgent:
+          "OpenAIのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
+        ttsOpenaiAgent:
+          "OpenAIのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
+      },
     },
   },
   languages: {
