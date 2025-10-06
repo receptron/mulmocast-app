@@ -2,7 +2,7 @@
   <Tabs :model-value="currentTab" @update:model-value="handleUpdateTab" class="max-h-[90vh] w-full">
     <TabsList class="grid w-full grid-cols-4">
       <TabsTrigger :value="MULMO_VIEWER_TABS.MOVIE">{{ t("project.productTabs.tabs.movie") }}</TabsTrigger>
-      <TabsTrigger :value="MULMO_VIEWER_TABS.PDF">{{ t("project.productTabs.tabs.pdf") }}</TabsTrigger >
+      <TabsTrigger :value="MULMO_VIEWER_TABS.PDF">{{ t("project.productTabs.tabs.pdf") }}</TabsTrigger>
       <TabsTrigger :value="MULMO_VIEWER_TABS.PODCAST">{{ t("project.productTabs.tabs.podcast") }}</TabsTrigger>
       <TabsTrigger :value="MULMO_VIEWER_TABS.SLIDE">{{ t("project.productTabs.tabs.slide") }}</TabsTrigger>
     </TabsList>
