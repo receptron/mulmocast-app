@@ -461,8 +461,18 @@ const run = async () => {
       emit("updateMulmoScript", script);
     }
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    notifyError(t("ui.common.error"), message);
+    if (llmAgent.value === "openAIAgent") {
+      if (error.status === 401) {
+        notifyError(t("notify.error.apiKeyInvalid.ttsOpenaiAgent"));
+      } else if (error.status === 429) {
+        notifyError(t("notify.error.apiKeyInvalid.ttsOpenaiAgent"));
+      } else {
+        notifyError(t("ui.common.error"), error);
+      }
+    } else {
+      const message = error instanceof Error ? error.message : String(error);
+      notifyError(t("ui.common.error"), message);
+    }
     console.error(error);
   }
   isRunning.value = false;
