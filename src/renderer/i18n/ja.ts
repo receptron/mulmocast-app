@@ -701,6 +701,8 @@ const lang = {
       imagesDescription: "このビートで使うキャラクターを選んでください",
       imagesEmptyHint:
         "キャラ画像は設定されていません。生成画像でキャラクターを指定する場合は、「キャラ生成」タブでキャラ画像を設定してください。",
+      customTitle: "このビート専用の画像生成設定",
+      customDescription: "ここで設定した内容は、このビートでのみ適用されます",
     },
     audioParams: {
       title: "オーディオ設定",

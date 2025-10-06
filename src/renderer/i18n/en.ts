@@ -701,6 +701,8 @@ const lang = {
       images: "Charactor Image",
       imagesDescription: "Select the character for this beat",
       imagesEmptyHint: "No images found. Please set references in the Ref tab.",
+      customTitle: "Custom image generation settings for this beat",
+      customDescription: "Settings configured here will only apply to this beat",
     },
     audioParams: {
       title: "Audio Parameters",
