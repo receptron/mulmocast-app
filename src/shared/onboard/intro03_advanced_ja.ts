@@ -86,12 +86,14 @@ export const intro03_ja = {
   lang: "ja",
   beats: [
     {
+      id: "d01e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "ai_expert",
       text: "マルモキャストの基本はマスターしましたね。ここからは、さらに高度な機能で、あなたの創造性をネクストレベルに引き上げます。",
       imagePrompt:
         "未来的なクリエイティブの司令室。ホログラムディスプレイが並び、AIのアイコンが輝いている。サイバーパンク風イラスト。",
     },
     {
+      id: "d02e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "ai_expert",
       text: "より高度な画像を生成したいですか？OpenAIの上位モデルを使ったり、GoogleやReplicateといった他のAIプロバイダーを選択して、ユニークなスタイルの画像を作り出すことができます。",
       image: {
@@ -113,6 +115,7 @@ export const intro03_ja = {
       },
     },
     {
+      id: "d03e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "ai_expert",
       text: "キャラクターの見た目を一貫させたい場合は、キャラクター設定機能が効果的です。参考画像をアップロードするか、AIで生成したキャラクターを参照できます。ストーリー性のある作品作りに最適です。",
       image: {
@@ -134,6 +137,7 @@ export const intro03_ja = {
       },
     },
     {
+      id: "d04e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "tech_guide",
       text: "動画生成も、ReplicateやGoogleのAIを使えば、テキストから映像を生み出すことができます。あなたの言葉が、映像になるのです。",
       image: {
@@ -153,6 +157,7 @@ export const intro03_ja = {
       },
     },
     {
+      id: "d05e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "tech_guide",
       text: "声にもこだわりたいですよね。OpenAIだけでなく、日本語が得意なニジボイスや、高品質な音声合成で知られるElevenLabsなど、様々な声のプロバイダーを利用できます。",
       image: {
@@ -173,6 +178,7 @@ export const intro03_ja = {
       },
     },
     {
+      id: "d06e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "tech_guide",
       text: "さらに、動画の見た目や雰囲気も自由にカスタマイズできます。スライド切り替え効果でスムーズな演出を、BGM変更で作品に合った音楽を、キャンバスサイズ変更で縦動画や正方形など、用途に応じたフォーマットで制作可能です。",
       image: {
@@ -196,6 +202,7 @@ export const intro03_ja = {
       },
     },
     {
+      id: "d07e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "tech_guide",
       text: "マルモキャストには、あなたのスキルに合わせたモードがあります。入門モードから始め、慣れてきたら中級モードのAIチャット機能や、上級モードの詳細設定、多彩なスライドテンプレートに挑戦してみましょう。",
       image: {
@@ -217,6 +224,7 @@ export const intro03_ja = {
       },
     },
     {
+      id: "d08e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "business_advisor",
       text: "箇条書きのスライドも簡単です。見やすいテキストスライドが完成します。",
       image: {
@@ -228,6 +236,7 @@ export const intro03_ja = {
       },
     },
     {
+      id: "d09e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "business_advisor",
       text: "マークダウンを使えば、箇条書きだけでなく表、画像の挿入などの表現が可能です。",
       image: {
@@ -244,6 +253,7 @@ export const intro03_ja = {
       },
     },
     {
+      id: "d10e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "business_advisor",
       text: "データを視覚的に見せたい場合は、チャート機能が便利です。",
       image: {
@@ -269,6 +279,7 @@ export const intro03_ja = {
       },
     },
     {
+      id: "d11e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "business_advisor",
       text: "マーメイドを使えば、フローチャートやシーケンス図などの描画ができます。",
       image: {
@@ -281,6 +292,7 @@ export const intro03_ja = {
       },
     },
     {
+      id: "d12e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "business_advisor",
       text: "さらに、HTMLとTailwind CSSを直接記述して、完全にカスタムされたデザインのスライドを作成することも可能です。",
       image: {
@@ -301,6 +313,7 @@ export const intro03_ja = {
       },
     },
     {
+      id: "d13e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "tech_guide",
       text: "このように、マルモキャストでは様々な形式のスライドを組み合わせることで、表現力豊かな動画コンテンツを効率的に制作できます。",
       image: {
@@ -316,12 +329,14 @@ export const intro03_ja = {
       },
     },
     {
+      id: "d14e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "creator_pro",
       text: "これで、あなたもAIクリエイターの仲間入りです。技術の力を借りながら、人間らしい創造性を発揮してください。マルモキャストならできる、あなたも始められる！未来のコンテンツ制作は、あなたの手の中にあります。",
       imagePrompt:
         "未来の指令室でAIを指揮するクリエイター。ホログラムディスプレイに囲まれている。希望に満ちたSFアニメ風。",
     },
     {
+      id: "d15e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "creator_pro",
       text: "お疲れ様でした！3つの導入は完了しました。今度はあなた自身のアイデアで作品を作ってください！",
       image: {

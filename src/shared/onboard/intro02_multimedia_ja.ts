@@ -64,6 +64,7 @@ export const intro02_ja = {
   lang: "ja",
   beats: [
     {
+      id: "c1e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "presenter",
       text: "マルモキャストの真の力は、様々なメディアを組み合わせられることです。まずは、生成AI画像から始めてみましょう。",
       image: {
@@ -82,12 +83,14 @@ export const intro02_ja = {
       },
     },
     {
+      id: "c2e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "expert",
       text: "生成AI画像の魅力をご覧ください。あなたのアイデアを視覚的に表現することで、メッセージがより印象的になります。",
       imagePrompt:
         "様々なメディア要素（スライド、AIアート、写真）が調和して一つの作品になる様子。未来的で鮮やかなイラスト。",
     },
     {
+      id: "c3e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "presenter",
       text: "そして、実際の写真や",
       image: {
@@ -99,6 +102,7 @@ export const intro02_ja = {
       },
     },
     {
+      id: "c4e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "presenter",
       text: "動画も簡単に組み込めます。",
       image: {
@@ -110,6 +114,7 @@ export const intro02_ja = {
       },
     },
     {
+      id: "c5e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "expert",
       text: "この動画を見終わってから、「BEAT」タブで試してみましょう。ビートとビートの間には、新しいビートを追加するためのプルダウンと「追加」ボタンがあります。プルダウンから「画像または動画ファイル」を選択して「追加」ボタンを押すと、新しいビートが作成されます。そこに好きな画像や動画ファイルをドラッグ＆ドロップするか、URLを入力して「取得」ボタンを押してみましょう。",
       image: {
@@ -128,6 +133,7 @@ export const intro02_ja = {
       },
     },
     {
+      id: "c6e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "expert",
       text: "このように、テキスト、生成画像、実写素材を自由に組み合わせることで、あなただけの独創的な動画が完成します。表現の可能性は無限大です！",
       image: {
@@ -149,6 +155,7 @@ export const intro02_ja = {
       },
     },
     {
+      id: "c7e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "expert",
       text: "これで2つ目の導入は終了です。それでは、ホームに戻り、新規作成ボタンから最後の3つ目のプロジェクトを始めてみましょう！",
       image: {

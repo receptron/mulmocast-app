@@ -65,6 +65,7 @@ export const intro02_en = {
   lang: "en",
   beats: [
     {
+      id: "c1e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "presenter",
       text: "The true power of Mulmocast is the ability to combine various media. First, let's start with generative AI images.",
       image: {
@@ -83,12 +84,14 @@ export const intro02_en = {
       },
     },
     {
+      id: "c2e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "expert",
       text: "Discover the appeal of generative AI images. Visually expressing your ideas makes your message more impactful.",
       imagePrompt:
         "Various media elements (slides, AI art, photos) harmonizing into a single piece of work. A futuristic and vibrant illustration.",
     },
     {
+      id: "c3e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "presenter",
       text: "And also actual photos,",
       image: {
@@ -100,6 +103,7 @@ export const intro02_en = {
       },
     },
     {
+      id: "c4e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "presenter",
       text: "and videos can be easily incorporated.",
       image: {
@@ -111,6 +115,7 @@ export const intro02_en = {
       },
     },
     {
+      id: "c5e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "expert",
       text: "After watching this movie, let's try it in the 'BEAT' tab. Between the beats, there is a dropdown and an 'Insert' button to add a new beat. Select 'Image or Movie file' from the dropdown and press the 'Insert' button to create a new beat. Try dragging and dropping your favorite image or video file there, or enter a URL and press the 'Fetch' button.",
       image: {
@@ -129,6 +134,7 @@ export const intro02_en = {
       },
     },
     {
+      id: "c6e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "expert",
       text: "In this way, by freely combining text, generated images, and live-action materials, you can complete your own original video. The possibilities for expression are endless!",
       image: {
@@ -150,6 +156,7 @@ export const intro02_en = {
       },
     },
     {
+      id: "c7e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "expert",
       text: "This concludes the second introduction. Now, let's return to the dashboard and start the final, third project from the 'New Project' button!",
       image: {

@@ -75,6 +75,7 @@ export const intro01_ja = {
   lang: "ja",
   beats: [
     {
+      id: "b1e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "narrator",
       text: "ようこそ、マルモキャスト へ",
       image: {
@@ -89,21 +90,25 @@ export const intro01_ja = {
       },
     },
     {
+      id: "b2e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "narrator",
       text: "あなたのアイデアが、AIの魔法で美しい映像に変わります。",
       imagePrompt: "AIの魔法で、アイデアが美しい映像に変わる様子。やさしいタッチの水彩画風。",
     },
     {
+      id: "b3e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "guide",
       text: "マルモキャストなら、言葉で伝えるだけで素敵な動画が作れます。",
       imagePrompt: "言葉が映像に変わっていく様子。明るいピクセルアート風。",
     },
     {
+      id: "b4e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "creator",
       text: "今すぐマルモキャストで創造の旅を始めましょう！",
       imagePrompt: "創造の翼を持つ人が、未来の作品が浮かぶ空を飛んでいる。希望に満ちた朝日。日本の90年代アニメ風。",
     },
     {
+      id: "b5e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "guide",
       text: "それでは、戻るボタンを押してホームに戻り、新規作成ボタンから次のプロジェクトを始めてみましょう！",
       image: {

@@ -76,6 +76,7 @@ export const intro01_en = {
   lang: "en",
   beats: [
     {
+      id: "b1e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "narrator",
       text: "Welcome to Mulmocast",
       image: {
@@ -90,23 +91,27 @@ export const intro01_en = {
       },
     },
     {
+      id: "b2e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "narrator",
       text: "Your ideas will be transformed into beautiful videos with the magic of AI.",
       imagePrompt:
         "The process of ideas turning into beautiful videos through the magic of AI. In the style of a gentle watercolor painting.",
     },
     {
+      id: "b3e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "guide",
       text: "With Mulmocast, you can create wonderful videos just by describing them with words.",
       imagePrompt: "The process of words transforming into video. In a bright pixel art style.",
     },
     {
+      id: "b4e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "creator",
       text: "Start your creative journey with Mulmocast now!",
       imagePrompt:
         "A person with creative wings flying in a sky where future works are floating. A hopeful sunrise. In the style of 90s Japanese anime.",
     },
     {
+      id: "b5e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "guide",
       text: "Now, let's go back to the dashboard by pressing the back button and start your next project from the 'New Project' button!",
       image: {
