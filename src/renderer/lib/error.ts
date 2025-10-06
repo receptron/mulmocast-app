@@ -1,6 +1,6 @@
 import type { ZodError, ZodIssue } from "zod";
 import type { MulmoError } from "../../types/index.js";
-import { unknownMediaType } from "mulmocast/browser";
+import { unknownMediaType, apiKeyInvalidType, apiRateLimitErrorType } from "mulmocast/browser";
 
 const unrecognizedKeysError = (paths: (string | number)[], keys: string[]) => {
   const pathStr = paths
@@ -142,6 +142,12 @@ export const convCauseToErrorMessage = (cause: {
 
   // agentGenerationError(apiError)  -> agentName
   // agentInvalidResponseError(invalidResponse) -> agentName
+  if (apiKeyInvalidType === cause.type) {
+    return [["notify.error", cause.type, cause.agentName].join(".")];
+  }
+  if (apiRateLimitErrorType === cause.type) {
+    return [["notify.error", cause.type, cause.agentName].join(".")];
+  }
 
   if (cause?.target) {
     const { beatIndex, url, key } = cause;
