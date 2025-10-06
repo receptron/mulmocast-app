@@ -10,7 +10,7 @@
               {{ t("parameters.imageParams.customTitle") }}
             </h4>
           </div>
-          <p class="text-xs text-muted-foreground mt-1 ml-6" v-if="!!beat?.imageParams">
+          <p class="text-muted-foreground mt-1 ml-6 text-xs" v-if="!!beat?.imageParams">
             {{ t("parameters.imageParams.customDescription") }}
           </p>
         </div>
