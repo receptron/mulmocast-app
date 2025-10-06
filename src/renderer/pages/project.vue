@@ -539,12 +539,17 @@ const generatingMessage = computed(() => {
       ret.push(t(`notify.task.${key}`));
     }
   });
-  Object.keys(data["beat"] ?? {}).forEach((key: BeatSessionType) => {
-    if (data["beat"][key] && Object.values(data["beat"][key]).some((value) => value)) {
-      const indexes = Object.keys(data["beat"][key])
-        .filter((index: string) => data["beat"][key][Number(index)])
+  Object.keys(data["beat"] ?? {}).forEach((beatSessionType: BeatSessionType) => {
+    if (data["beat"][beatSessionType] && Object.values(data["beat"][beatSessionType]).some((value) => value)) {
+      /*
+      const indexes = Object.keys(data["beat"][beatSessionType])
+        .filter((index: string) => {
+          console.log(index);
+          return data["beat"][beatSessionType][Number(index)];
+        })
         .map((index: string) => Number(index) + 1);
-      ret.push(t(`notify.beat.${key}`) + " " + indexes.join(","));
+      */
+      ret.push(t(`notify.beat.${beatSessionType}`));
     }
   });
   if (ret.length === 0) {
