@@ -200,6 +200,7 @@
           :isImageGenerating="isImageGenerating"
           :isHtmlGenerating="isHtmlGenerating"
           :imageFile="imageFile"
+          :movieFile="movieFile"
           :toggleTypeMode="toggleTypeMode"
           :disabled="disabledImageGenearte"
           @openModal="openModal"

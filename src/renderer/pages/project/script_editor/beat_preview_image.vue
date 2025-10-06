@@ -29,24 +29,23 @@
           <!-- TODO update design -->
           {{ t("ui.status.generating") }}
         </template>
-        <!-- image pewview -->
-        <template v-else-if="imageFile">
-          <template v-if="beat?.image?.type === 'movie'">
-            <video
-              :size="64"
-              class="text-muted-foreground mx-auto mb-4 cursor-pointer transition-opacity hover:opacity-80"
-              controls
-              :src="mediaUri(imageFile)"
-              @click="openModal('video', imageFile)"
-            />
-          </template>
-          <template v-else>
-            <img
-              :src="mediaUri(imageFile)"
-              class="cursor-pointer transition-opacity hover:opacity-80"
-              @click="openModal('image', imageFile)"
-            />
-          </template>
+        <template v-else-if="movieFile && beat?.image?.type === 'movie'">
+          <!-- video pewview -->
+          <video
+            :size="64"
+            class="text-muted-foreground mx-auto mb-4 cursor-pointer transition-opacity hover:opacity-80"
+            controls
+            :src="mediaUri(movieFile)"
+            @click="openModal('video', movieFile)"
+          />
+        </template>
+        <template v-else-if="imageFile && beat?.image?.type === 'image'">
+          <!-- image pewview -->
+          <img
+            :src="mediaUri(imageFile)"
+            class="cursor-pointer transition-opacity hover:opacity-80"
+            @click="openModal('image', imageFile)"
+          />
         </template>
         <template v-else>
           <Video v-if="beat?.image?.type === 'movie'" :size="32" class="text-muted-foreground mx-auto mb-2" />
@@ -70,10 +69,13 @@ import { Button } from "@/components/ui/button";
 import { mediaUri } from "@/lib/utils";
 import { isLocalSourceMediaBeat } from "@/lib/beat_util";
 
+type ImageFile = ArrayBuffer | string | null;
+
 interface Props {
   beat: MulmoBeat;
   index: number;
-  imageFile: ArrayBuffer | string | null;
+  imageFile: ImageFile;
+  movieFile: ImageFile;
   isImageGenerating: boolean;
   isHtmlGenerating: boolean;
   toggleTypeMode?: boolean;
