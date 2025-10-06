@@ -29,11 +29,7 @@ export const notifyProgress = async <T>(
   try {
     const result = await promise;
     if (result?.result === false) {
-      if (result?.error) {
-        notifyError(errorMessage, result.error instanceof Error ? result.error.message : "Unknown error");
-      } else {
-        notifyError(errorMessage);
-      }
+      notifyError(errorMessage);
     } else {
       notifySuccess(successMessage);
     }
