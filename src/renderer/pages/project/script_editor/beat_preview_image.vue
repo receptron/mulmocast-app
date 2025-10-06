@@ -69,11 +69,13 @@ import { Button } from "@/components/ui/button";
 import { mediaUri } from "@/lib/utils";
 import { isLocalSourceMediaBeat } from "@/lib/beat_util";
 
+type ImageFile = ArrayBuffer | string | null;
+
 interface Props {
   beat: MulmoBeat;
   index: number;
-  imageFile: ArrayBuffer | string | null;
-  movieFile: ArrayBuffer | string | null;
+  imageFile: ImageFile;
+  movieFile: ImageFile;
   isImageGenerating: boolean;
   isHtmlGenerating: boolean;
   toggleTypeMode?: boolean;
