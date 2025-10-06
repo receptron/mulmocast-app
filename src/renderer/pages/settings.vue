@@ -263,7 +263,9 @@ onMounted(async () => {
 
 const saveSettings = async () => {
   try {
+    const settings = await window.electronAPI.settings.get();
     const data = {
+      ...settings,
       ...apiKeys,
       APIKEY: toRaw(apiKeys),
       APP_LANGUAGE: selectedLanguage.value,
