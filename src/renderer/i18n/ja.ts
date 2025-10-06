@@ -760,6 +760,10 @@ const lang = {
       successMessage: "画像生成成功!!",
       errorMessage: "画像生成失敗",
     },
+    imageReference: {
+      successMessage: "キャラ画像生成成功!!",
+      errorMessage: "キャラ画像生成失敗",
+    },
     translate: {
       successMessage: "翻訳成功!!",
       errorMessage: "翻訳失敗",

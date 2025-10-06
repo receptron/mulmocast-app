@@ -259,8 +259,8 @@ const submitImage = async (imageKey: string, key: number) => {
         prompt: props.images[imageKey].prompt,
       }),
       {
-        successMessage: t("notify.image.successMessage"),
-        errorMessage: t("notify.image.errorMessage"),
+        successMessage: t("notify.imageReference.successMessage"),
+        errorMessage: t("notify.imageReference.errorMessage"),
       },
     );
 
