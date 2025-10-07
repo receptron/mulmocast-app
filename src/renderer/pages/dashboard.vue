@@ -112,6 +112,7 @@ import { ref, onMounted, computed, watch } from "vue";
 import { Plus, List, Grid } from "lucide-vue-next";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
+import { mulmoScriptSchema } from "mulmocast/browser";
 import dayjs from "dayjs";
 
 import Layout from "@/components/layout.vue";
@@ -149,6 +150,10 @@ const thumbnailsLoading = ref<Record<string, boolean>>({});
 
 const loadProjects = async () => {
   projects.value = await projectApi.list();
+  projects.value.map((project) => {
+    const res = mulmoScriptSchema.safeParse(project.script);
+    project.isValud = res.success;
+  });
 };
 
 const loadProjectThumbnails = async () => {
