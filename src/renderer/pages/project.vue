@@ -88,7 +88,7 @@
                             {{ t("project.scriptEditor.validationStatus") }}
                           </span>
                         </div>
-                        <XCircle v-if="!mulmoScriptHistoryStore.isValidScript" :size="16" class="text-destructive" />
+                        <XCircle v-if="!mulmoScriptHistoryStore.isValidScript" :size="32" class="text-destructive" />
                       </div>
                       <!-- Undo/Redo buttons -->
                       <Button
