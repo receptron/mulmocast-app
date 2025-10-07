@@ -5,7 +5,7 @@
       <div>
         <Label>{{ t("ui.common.provider") }}</Label>
         <Select
-          :model-value="movieParams?.provider || DEFAULT_VALUES.provider"
+          :model-value="movieParams?.provider"
           @update:model-value="handleProviderChange"
         >
           <SelectTrigger>
@@ -21,10 +21,10 @@
         <SettingsAlert
           class="mt-2"
           :settingPresence="settingPresence"
-          :provider="movieParams?.provider || DEFAULT_VALUES.provider"
+          :provider="movieParams?.provider"
         />
       </div>
-      <div>
+      <div v-if="movieParams?.provider">
         <Label>{{ t("ui.common.model") }}</Label>
         <Select
           :model-value="movieParams?.model || DEFAULT_VALUES.model"
