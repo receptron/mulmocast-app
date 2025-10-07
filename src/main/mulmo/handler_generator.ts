@@ -108,7 +108,7 @@ export const mulmoGenerateBeatImage = async (
   try {
     const context = await getContext(projectId, null, index);
 
-    const beat = context.studio.script.beats[index];
+    const beat = context.studio.script.beats[0];
     const { id } = beat;
     const forceImage = target === "image";
     const forceMovie = target === "movie";
@@ -156,7 +156,7 @@ export const mulmoGenerateBeatImage = async (
     };
 
     await generateBeatImage({
-      index,
+      index: 0,
       context,
       args: {
         settings: settings.APIKEY ?? {},
@@ -168,6 +168,7 @@ export const mulmoGenerateBeatImage = async (
     });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
+    console.log(error);
     removeSessionProgressCallback(mulmoCallback);
 
     webContents.send("progress-update", {
@@ -190,7 +191,7 @@ export const mulmoGenerateBeatAudio = async (projectId: string, index: number, w
     const context = await getContext(projectId, null, index);
     // context.force = true;
     //await generateBeatAudio(index, context, { settings: settings.APIKEY ?? {}, langs: ["de", "fr"] });
-    await generateBeatAudio(index, context, { settings: settings.APIKEY ?? {} });
+    await generateBeatAudio(0, context, { settings: settings.APIKEY ?? {} });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
@@ -255,9 +256,10 @@ export const mulmoTranslateBeat = async (
     addSessionProgressCallback(mulmoCallback);
     const context = await getContext(projectId, null, index);
     // context.force = true;
-    await translateBeat(index, context, targetLangs, { settings: settings.APIKEY ?? {} });
+    await translateBeat(0, context, targetLangs, { settings: settings.APIKEY ?? {} });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
+    console.log(error);
     removeSessionProgressCallback(mulmoCallback);
     webContents.send("progress-update", {
       projectId,
