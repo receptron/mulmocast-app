@@ -22,7 +22,7 @@
             : 'border-border bg-card text-muted-foreground'
       "
     >
-      {{ t("ui.common.drophere") }}
+      {{ t("ui.common.drophere", { maxSizeMB }) }}
     </div>
     {{ t("ui.common.or") }}
     <div class="flex">
@@ -122,12 +122,13 @@ const videoSubtypeToExtensions = {
   mpg: "mpg",
 };
 
+const maxSizeMB = 50;
+
 const handleDrop = (event: DragEvent) => {
   const files = event.dataTransfer.files;
   if (files.length > 0) {
     const file = files[0];
 
-    const maxSizeMB = 50;
     const maxSize = maxSizeMB * 1024 * 1024;
     if (file.size > maxSize) {
       notifyError(t("notify.error.media.tooLarge", { maxSizeMB }));

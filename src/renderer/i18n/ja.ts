@@ -14,7 +14,7 @@ const lang = {
       next: "次へ",
 
       // File operations
-      drophere: "画像をここにドロップ",
+      drophere: "画像をここにドロップ({maxSizeMB}MBまで)",
       or: "または",
 
       // Common labels and nouns
