@@ -186,7 +186,7 @@
             move-class="transition-all duration-300 ease-in-out"
           >
             <div v-for="(beat, index) in mulmoScript?.beats ?? []" :key="beat?.id ?? index" class="relative">
-              <Card class="p-4">
+              <Card class="p-4" :class="isValid(beat) ? '' : 'border-red-400 border-2'">
                 <BeatEditor
                   :beat="beat"
                   :mulmoScript="mulmoScript"
@@ -295,6 +295,7 @@ import YAML from "yaml";
 import {
   MulmoPresentationStyleMethods,
   mulmoScriptSchema,
+  mulmoBeatSchema,
   beatId,
   type MulmoScript,
   type MulmoBeat,
@@ -596,6 +597,11 @@ const deleteReferenceImage = (imageKey: string) => {
     ...props.mulmoScript,
     imageParams: updatedImageParams,
   });
+};
+
+const isValid = (beat: MulmoBeat) => {
+  const res = mulmoBeatSchema.safeParse(beat);
+  return res?.success;
 };
 
 const justSaveAndPushToHistory = () => {
