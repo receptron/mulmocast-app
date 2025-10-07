@@ -110,7 +110,6 @@ export const mulmoGenerateBeatImage = async (
 
     const beat = context.studio.script.beats[index];
     const { id } = beat;
-    context.studio.script.beats = [beat];
     const forceImage = target === "image";
     const forceMovie = target === "movie";
     const forceLipSync = target === "lipSync";
