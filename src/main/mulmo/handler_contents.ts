@@ -42,6 +42,9 @@ const beatAudio = (context: MulmoStudioContext) => {
 export const mulmoAudioFiles = async (projectId: string, lang?: string) => {
   try {
     const context = await getContext(projectId, lang);
+    if (!context) {
+      return { result: false, noContext: true };
+    }
     const audios = listLocalizedAudioPaths(context);
     return context.studio.script.beats.reduce((tmp, beat, index) => {
       const fileName = audios[index];
@@ -60,6 +63,9 @@ export const mulmoAudioFiles = async (projectId: string, lang?: string) => {
 export const mulmoAudioFile = async (projectId: string, index: number) => {
   try {
     const context = await getContext(projectId, null, index);
+    if (!context) {
+      return { result: false, noContext: true };
+    }
     const beat = context.studio.script.beats[0];
     return beatAudio(context)(beat);
   } catch (error) {
@@ -72,6 +78,9 @@ export const mulmoAudioFile = async (projectId: string, index: number) => {
 export const mulmoImageFiles = async (projectId: string) => {
   try {
     const context = await getContext(projectId);
+    if (!context) {
+      return { result: false, noContext: true };
+    }
     const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle);
     const dataSet = await Promise.all(context.studio.script.beats.map(beatImage(context, imageAgentInfo)));
     return context.studio.script.beats.reduce((tmp, beat, index) => {
@@ -88,6 +97,9 @@ export const mulmoImageFiles = async (projectId: string) => {
 export const mulmoImageFile = async (projectId: string, index: number) => {
   try {
     const context = await getContext(projectId, null, index);
+    if (!context) {
+      return { result: false, noContext: true };
+    }
     const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle);
     const beat = context.studio.script.beats[0];
     return await beatImage(context, imageAgentInfo)(beat, 0);
@@ -144,6 +156,9 @@ const beatImage = (context: MulmoStudioContext, imageAgentInfo) => {
 
 export const mulmoReferenceImagesFiles = async (projectId: string) => {
   const context = await getContext(projectId);
+  if (!context) {
+    return { result: false, noContext: true };
+  }
   const images = context.presentationStyle.imageParams?.images;
   if (!images) {
     return {};
@@ -183,6 +198,9 @@ export const mulmoReferenceImagesFiles = async (projectId: string) => {
 
 export const mulmoReferenceImagesFile = async (projectId: string, key: string) => {
   const context = await getContext(projectId);
+  if (!context) {
+    return { result: false, noContext: true };
+  }
   const images = context.presentationStyle.imageParams?.images;
   if (!images) {
     return {};
@@ -208,6 +226,9 @@ export const mulmoReferenceImagesFile = async (projectId: string, key: string) =
 
 export const mulmoMultiLinguals = async (projectId: string): MulmoStudioMultiLingual => {
   const context = await getContext(projectId);
+  if (!context) {
+    return { result: false, noContext: true };
+  }
   const { outputMultilingualFilePath } = getOutputMultilingualFilePathAndMkdir(context);
   const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.script.beats);
   return multiLingual;
@@ -215,6 +236,9 @@ export const mulmoMultiLinguals = async (projectId: string): MulmoStudioMultiLin
 
 export const mulmoBGM = async (projectId: string) => {
   const context = await getContext(projectId);
+  if (!context) {
+    return { result: false, noContext: true };
+  }
   const content =
     MulmoMediaSourceMethods.resolve(context.presentationStyle.audioParams.bgm, context) ??
     process.env.PATH_BGM ??

@@ -793,6 +793,7 @@ const lang = {
     },
     error: {
       unknownError: "Unknown error occurred",
+      noContext: "Inlvaid MulmoScript.",
       // action, type, target
       movie: {
         fileNotExist: {

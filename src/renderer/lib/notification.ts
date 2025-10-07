@@ -24,12 +24,20 @@ export const notifyError = (
 
 export const notifyProgress = async <T>(
   promise: Promise<T & { result?: boolean; error?: unknown }>,
-  { successMessage, errorMessage }: { successMessage: string; errorMessage: string },
+  {
+    successMessage,
+    errorMessage,
+    errorDescription,
+  }: { successMessage: string; errorMessage: string; errorDescription: string },
 ) => {
   try {
     const result = await promise;
     if (result?.result === false) {
-      notifyError(errorMessage);
+      if (result.noContext) {
+        notifyError(errorMessage, errorDescription);
+      } else {
+        notifyError(errorMessage);
+      }
     } else {
       notifySuccess(successMessage);
     }
