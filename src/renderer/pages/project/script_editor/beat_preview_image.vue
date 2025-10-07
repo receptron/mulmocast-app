@@ -39,7 +39,7 @@
             @click="openModal('video', movieFile)"
           />
         </template>
-        <template v-else-if="imageFile && beat?.image?.type === 'image'">
+        <template v-else-if="imageFile">
           <!-- image pewview -->
           <img
             :src="mediaUri(imageFile)"
