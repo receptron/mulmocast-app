@@ -22,7 +22,7 @@
             : 'border-border bg-card text-muted-foreground'
       "
     >
-      {{ t("ui.common.drophere") }}
+      {{ t("ui.common.drophere", { maxSizeMB }) }}
     </div>
     {{ t("ui.common.or") }}
     <div class="flex">
@@ -44,6 +44,8 @@ import { useRoute } from "vue-router";
 import { Label, Input, Button } from "@/components/ui";
 import type { MulmoBeat } from "mulmocast/browser";
 import { isLocalSourceMediaBeat } from "@/lib/beat_util.js";
+
+import { notifyError } from "@/lib/notification";
 
 import { z } from "zod";
 import { useI18n } from "vue-i18n";
@@ -120,11 +122,19 @@ const videoSubtypeToExtensions = {
   mpg: "mpg",
 };
 
+const maxSizeMB = 50;
+
 const handleDrop = (event: DragEvent) => {
   const files = event.dataTransfer.files;
   if (files.length > 0) {
     const file = files[0];
-    // console.log("File dropped:", file.name);
+
+    const maxSize = maxSizeMB * 1024 * 1024;
+    if (file.size > maxSize) {
+      notifyError(t("notify.error.media.tooLarge", { maxSizeMB }));
+      return;
+    }
+
     const fileExtension = file.name.split(".").pop()?.toLowerCase() ?? "";
     const mimeType = file.type.split("/")[1] ?? "";
     console.log(file.type, mimeType);
@@ -139,8 +149,7 @@ const handleDrop = (event: DragEvent) => {
       }
     })();
     if (!imageType) {
-      console.warn(`Unsupported file type: ${fileType}`);
-      // TODO: Consider showing a toast notification or alert
+      notifyError(t("notify.error.media.unsupportedType", { fileType }));
       return;
     }
     update("image.type", imageType);

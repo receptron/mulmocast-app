@@ -14,7 +14,7 @@ const lang = {
       next: "Next",
 
       // File operations
-      drophere: "Drop file here",
+      drophere: "Drop file here(Upto {maxSizeMB}MB)",
       or: "or",
 
       // Common labels and nouns
@@ -837,6 +837,10 @@ const lang = {
           imageFile: "Character image does not exist or is invalid",
         },
         unknownMedia: "Unknown media type",
+      },
+      media: {
+        tooLarge: "The maximum file size that can be uploaded is {maxSizeMB}MB.",
+        unsupportedType: "Unsupported file type: {fileType}",
       },
       audio: {
         fileNotExist: {

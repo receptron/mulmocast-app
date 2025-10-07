@@ -14,7 +14,7 @@ const lang = {
       next: "次へ",
 
       // File operations
-      drophere: "画像をここにドロップ",
+      drophere: "画像をここにドロップ({maxSizeMB}MBまで)",
       or: "または",
 
       // Common labels and nouns
@@ -846,6 +846,11 @@ const lang = {
           imageGenAIAgent: "GenAIのAPI Keyが正しくありません",
         },
         unknownMedia: "不明なメディアタイプです",
+      },
+      media: {
+        tooLarge: "アップロードできるファイルサイズは{maxSizeMB}MBまでです",
+        unsupportedType: "{fileType}ファイルはサポートされていません",
+        // Unsupported file type: ${fileType}
       },
       audio: {
         fileNotExist: {
