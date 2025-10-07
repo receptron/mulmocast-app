@@ -37,7 +37,7 @@
     size="sm"
     @click="generateAudio(index)"
     class="w-fit"
-    :disabled="beat?.text?.length === 0"
+    :disabled="beat?.text?.length === 0 || !isValidBeat"
     >{{ t("ui.actions.generateAudio") }}</Button
   >
   <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">{{
@@ -51,7 +51,7 @@
       size="sm"
       @click="translateBeat(index)"
       class="w-fit"
-      :disabled="beat?.text?.length === 0"
+      :disabled="beat?.text?.length === 0 || !isValidBeat"
       >{{ t("ui.actions.translateBeat") }}</Button
     >
   </div>
@@ -99,7 +99,7 @@ interface Props {
   audioFile?: string;
   projectId: string;
   lang: string;
-  isValid: boolean;
+  isValidBeat: boolean;
   mulmoMultiLingual: MultiLingualTexts;
   speakers?: MulmoPresentationStyle["speechParams"]["speakers"];
   mulmoScript: MulmoScript;
@@ -167,9 +167,10 @@ const translateBeat = async (index: number) => {
 const multiLingualDataset = ref({});
 
 const saveMultiLingual = async () => {
+  console.log(props.mulmoMultiLingual);
   const data = supporLanguages.value.reduce((tmp, key) => {
     tmp[key] = {
-      ...props.mulmoMultiLingual[key],
+      ...(props.mulmoMultiLingual?.[key] ?? {}),
       text: multiLingualDataset.value[key] ?? "",
       texts: splitText({ localizedText: { text: multiLingualDataset.value[key] ?? "" }, targetLang: key }),
       ttsTexts: splitText({ localizedText: { text: multiLingualDataset.value[key] ?? "" }, targetLang: key }),

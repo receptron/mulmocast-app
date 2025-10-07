@@ -854,6 +854,9 @@ const lang = {
         },
         generateAudioSpeechParam: "{speechParams} (speechParams) are not set",
       },
+      multilinguals: {
+        errorMessage: "Failed to get translation data",
+      },
       apiKeyInvalid: {
         imageOpenaiAgent: "The OpenAI API Key is invalid",
         ttsOpenaiAgent: "The OpenAI API Key is invalid",
