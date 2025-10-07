@@ -4,10 +4,7 @@
     <div class="space-y-3">
       <div>
         <Label>{{ t("ui.common.provider") }}</Label>
-        <Select
-          :model-value="movieParams?.provider"
-          @update:model-value="handleProviderChange"
-        >
+        <Select :model-value="movieParams?.provider" @update:model-value="handleProviderChange">
           <SelectTrigger>
             <SelectValue :placeholder="t('parameters.movieParams.providerNone')" />
           </SelectTrigger>
@@ -18,11 +15,7 @@
             </SelectItem>
           </SelectContent>
         </Select>
-        <SettingsAlert
-          class="mt-2"
-          :settingPresence="settingPresence"
-          :provider="movieParams?.provider"
-        />
+        <SettingsAlert class="mt-2" :settingPresence="settingPresence" :provider="movieParams?.provider" />
       </div>
       <div v-if="movieParams?.provider">
         <Label>{{ t("ui.common.model") }}</Label>
