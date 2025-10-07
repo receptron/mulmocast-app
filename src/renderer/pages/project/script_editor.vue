@@ -186,7 +186,7 @@
             move-class="transition-all duration-300 ease-in-out"
           >
             <div v-for="(beat, index) in mulmoScript?.beats ?? []" :key="beat?.id ?? index" class="relative">
-              <Card class="p-4" :class="isValid(beat) ? '' : 'border-red-400 border-2'">
+              <Card class="p-4" :class="isValid(beat) ? '' : 'border-2 border-red-400'">
                 <BeatEditor
                   :beat="beat"
                   :mulmoScript="mulmoScript"
