@@ -16,8 +16,9 @@ import {
 } from "mulmocast";
 
 import fs from "fs";
-
+import path from "path";
 import { getContext } from "./handler_common";
+import { getProjectPath, getProjectMulmoScript } from "../project_manager";
 
 // audio
 const beatAudio = (context: MulmoStudioContext) => {
@@ -170,15 +171,15 @@ export const mulmoReferenceImagesFiles = async (projectId: string) => {
       .map(async (key) => {
         const image = images[key];
         try {
-          const path = (() => {
+          const imagePath = (() => {
             if (image.type === "imagePrompt") {
               return getReferenceImagePath(context, key, "png");
             } else if (image.type === "image" && image.source.kind === "path") {
               return resolveAssetPath(context, image.source.path);
             }
           })();
-          if (path && fileExstsSync(path)) {
-            const buffer = fs.readFileSync(path);
+          if (imagePath && fileExstsSync(imagePath)) {
+            const buffer = fs.readFileSync(imagePath);
             imageRefs[key] = buffer.buffer;
           }
           if (image.type === "image" && image.source.kind === "url") {
@@ -207,15 +208,15 @@ export const mulmoReferenceImagesFile = async (projectId: string, key: string) =
   }
   const image = images[key];
   try {
-    const path = (() => {
+    const imagePath = (() => {
       if (image.type === "imagePrompt") {
         return getReferenceImagePath(context, key, "png");
       } else if (image.type === "image" && image.source.kind === "path") {
         return resolveAssetPath(context, image.source.path);
       }
     })();
-    if (path && fileExstsSync(path)) {
-      const buffer = fs.readFileSync(path);
+    if (imagePath && fileExstsSync(imagePath)) {
+      const buffer = fs.readFileSync(imagePath);
       return buffer.buffer;
     }
   } catch (error) {
@@ -226,12 +227,22 @@ export const mulmoReferenceImagesFile = async (projectId: string, key: string) =
 
 export const mulmoMultiLinguals = async (projectId: string): MulmoStudioMultiLingual => {
   const context = await getContext(projectId);
+  /*
   if (!context) {
     return { result: false, noContext: true };
+    }
+  */
+  if (context) {
+    const { outputMultilingualFilePath } = getOutputMultilingualFilePathAndMkdir(context);
+    const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.script.beats);
+    return multiLingual;
   }
-  const { outputMultilingualFilePath } = getOutputMultilingualFilePathAndMkdir(context);
-  const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.script.beats);
-  return multiLingual;
+  const projectPath = getProjectPath(projectId);
+  const outdir = path.join(projectPath, "output");
+  fs.mkdirSync(outdir, { recursive: true });
+
+  const script = (await getProjectMulmoScript(projectId)) ?? {};
+  return getMultiLingual(path.join(outdir, "script_lang.json"), script.beats ?? []);
 };
 
 export const mulmoBGM = async (projectId: string) => {
