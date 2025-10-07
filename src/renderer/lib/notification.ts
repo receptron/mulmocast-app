@@ -23,7 +23,7 @@ export const notifyError = (
 };
 
 export const notifyProgress = async <T>(
-  promise: Promise<T & { result?: boolean; error?: unknown }>,
+  promise: Promise<T & { result?: boolean; error?: unknown, noContext?: boolean }>,
   {
     successMessage,
     errorMessage,
