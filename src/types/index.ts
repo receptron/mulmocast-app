@@ -23,6 +23,7 @@ export type ProjectMetadata = {
 export type Project = {
   metadata: ProjectMetadata;
   script: Partial<MulmoScript> | null;
+  isValid: boolean;
 };
 
 export type MulmoProgressLog<T = unknown> = {

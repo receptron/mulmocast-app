@@ -1,7 +1,14 @@
 <template>
   <div :class="containerClass">
     <router-link :to="`/project/${project.metadata.id}`" v-for="project in projects" :key="project.metadata.id">
-      <div :class="cardClass">
+      <div
+        :class="[
+          cardClass,
+          project.isValud
+            ? 'border-border hover:border-primary/50 dark:hover:border-primary/30'
+            : 'border-red-400 hover:border-red-800',
+        ]"
+      >
         <!-- Thumbnail -->
         <div class="thumbnail">
           <template v-if="thumbnailsLoading[project.metadata.id]">
@@ -106,9 +113,10 @@ const containerClass = computed(() => {
 });
 
 const cardClass = computed(() => {
+  const common = "bg-card border shadow-sm transition-all duration-200";
   return props.viewMode === "grid"
-    ? "project-card-grid group cursor-pointer overflow-hidden rounded-lg border border-border bg-card shadow-sm transition-all duration-200 hover:shadow-lg hover:border-primary/50 dark:hover:border-primary/30"
-    : "project-card-list cursor-pointer rounded-lg border border-border bg-card p-4 shadow-sm transition-all duration-200 hover:shadow-md hover:border-primary/50 dark:hover:border-primary/30";
+    ? "project-card-grid group cursor-pointer overflow-hidden rounded-lg hover:shadow-lg " + common
+    : "project-card-list cursor-pointer rounded-lg p-4 hover:shadow-md " + common;
 });
 
 const deleteProject = (event: Event, project: Project) => {
