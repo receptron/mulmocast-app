@@ -77,6 +77,7 @@ const generateContents = () => {
   notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", props.projectId, keys), {
     successMessage: t("notify.content.successMessage"),
     errorMessage: t("notify.content.errorMessage"),
+    errorDescription: t("notify.error.noContext"),
   });
 };
 const mulmoEventStore = useMulmoEventStore();

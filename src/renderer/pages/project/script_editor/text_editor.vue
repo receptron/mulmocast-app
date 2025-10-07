@@ -99,6 +99,7 @@ interface Props {
   audioFile?: string;
   projectId: string;
   lang: string;
+  isValid: boolean;
   mulmoMultiLingual: MultiLingualTexts;
   speakers?: MulmoPresentationStyle["speechParams"]["speakers"];
   mulmoScript: MulmoScript;
@@ -140,6 +141,7 @@ const generateAudio = async (index: number) => {
     notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", props.projectId, index), {
       successMessage: t("notify.audio.successMessage"),
       errorMessage: t("notify.audio.errorMessage"),
+      errorDescription: t("notify.error.noContext"),
     });
   } catch (error) {
     notifyError(
@@ -158,6 +160,7 @@ const translateBeat = async (index: number) => {
   notifyProgress(window.electronAPI.mulmoHandler("mulmoTranslateBeat", props.projectId, index, supporLanguages.value), {
     successMessage: t("notify.translate.successMessage"),
     errorMessage: t("notify.translate.errorMessage"),
+    errorDescription: t("notify.error.noContext"),
   });
 };
 

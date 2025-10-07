@@ -797,6 +797,7 @@ const lang = {
     },
     error: {
       unknownError: "不明なエラーです",
+      noContext: "MulmoScriptが正しくありません",
       // action, type, target
       movie: {
         fileNotExist: {

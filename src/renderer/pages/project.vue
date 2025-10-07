@@ -466,6 +466,7 @@ const generateImage = async (index: number, target: string) => {
     // loadingMessage: ConcurrentTaskStatusMessageComponent,
     successMessage: t("notify.image.successMessage"),
     errorMessage: t("notify.image.errorMessage"),
+    errorDescription: t("notify.error.noContext"),
   });
 };
 

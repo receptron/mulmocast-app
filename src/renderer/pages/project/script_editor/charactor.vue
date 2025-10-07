@@ -261,6 +261,7 @@ const submitImage = async (imageKey: string, key: number) => {
       {
         successMessage: t("notify.imageReference.successMessage"),
         errorMessage: t("notify.imageReference.errorMessage"),
+        errorDescription: t("notify.error.noContext"),
       },
     );
 

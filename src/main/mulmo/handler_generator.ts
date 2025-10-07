@@ -31,6 +31,10 @@ export const mulmoActionRunner = async (
   const settings = await loadSettings();
   try {
     const context = await getContext(projectId, targetLang);
+    if (!context) {
+      return { result: false, noContext: true };
+    }
+
     const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
     addSessionProgressCallback(mulmoCallback);
 
@@ -107,6 +111,9 @@ export const mulmoGenerateBeatImage = async (
   addSessionProgressCallback(mulmoCallback);
   try {
     const context = await getContext(projectId, null, index);
+    if (!context) {
+      return { result: false, noContext: true };
+    }
 
     const beat = context.studio.script.beats[0];
     const { id } = beat;
@@ -189,7 +196,9 @@ export const mulmoGenerateBeatAudio = async (projectId: string, index: number, w
   try {
     addSessionProgressCallback(mulmoCallback);
     const context = await getContext(projectId, null, index);
-    // context.force = true;
+    if (!context) {
+      return { result: false, noContext: true };
+    }
     //await generateBeatAudio(index, context, { settings: settings.APIKEY ?? {}, langs: ["de", "fr"] });
     await generateBeatAudio(0, context, { settings: settings.APIKEY ?? {} });
     removeSessionProgressCallback(mulmoCallback);
@@ -219,6 +228,10 @@ export const mulmoReferenceImage = async (
   try {
     addSessionProgressCallback(mulmoCallback);
     const context = await getContext(projectId);
+    if (!context) {
+      return { result: false, noContext: true };
+    }
+
     const imageProjectDirPath = MulmoStudioContextMethods.getImageProjectDirPath(context);
     fs.mkdirSync(imageProjectDirPath, { recursive: true });
     const returnImage = await generateReferenceImage({
@@ -255,7 +268,10 @@ export const mulmoTranslateBeat = async (
   try {
     addSessionProgressCallback(mulmoCallback);
     const context = await getContext(projectId, null, index);
-    // context.force = true;
+    if (!context) {
+      return { result: false, noContext: true };
+    }
+
     await translateBeat(0, context, targetLangs, { settings: settings.APIKEY ?? {} });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
@@ -279,6 +295,9 @@ export const mulmoTranslate = async (projectId: string, targetLangs: string[], w
   try {
     addSessionProgressCallback(mulmoCallback);
     const context = await getContext(projectId);
+    if (!context) {
+      return { result: false, noContext: true };
+    }
 
     await translate(context, { settings: settings.APIKEY ?? {}, targetLangs });
     removeSessionProgressCallback(mulmoCallback);

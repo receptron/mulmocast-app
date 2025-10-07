@@ -478,6 +478,7 @@ const generateAudio = async () => {
     notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", projectId.value, props.index), {
       successMessage: t("notify.audio.successMessage"),
       errorMessage: t("notify.audio.errorMessage"),
+      errorDescription: t("notify.error.noContext"),
     });
   } catch (error) {
     notifyError(

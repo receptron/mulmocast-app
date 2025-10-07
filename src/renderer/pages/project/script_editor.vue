@@ -72,7 +72,7 @@
             move-class="transition-all duration-300 ease-in-out"
           >
             <div v-for="(beat, index) in mulmoScript?.beats ?? []" :key="beat?.id ?? index" class="relative">
-              <Card class="gap-2 space-y-1 p-4">
+              <Card class="gap-2 space-y-1 p-4" :class="isValidBeats[index] ? '' : 'border-2 border-red-400'">
                 <TextEditor
                   :index="index"
                   :beat="beat"
@@ -82,6 +82,7 @@
                   :lang="mulmoScript.lang ?? globalStore.settings.APP_LANGUAGE"
                   :mulmoMultiLingual="mulmoMultiLinguals?.[beatId(beat?.id, index)]?.multiLingualTexts"
                   :speakers="mulmoScript?.speechParams?.speakers ?? {}"
+                  :isValid="isValidBeats[index]"
                   @update="update"
                   @updateMultiLingual="updateMultiLingual"
                   @justSaveAndPushToHistory="justSaveAndPushToHistory"
@@ -186,7 +187,7 @@
             move-class="transition-all duration-300 ease-in-out"
           >
             <div v-for="(beat, index) in mulmoScript?.beats ?? []" :key="beat?.id ?? index" class="relative">
-              <Card class="p-4" :class="isValid(beat) ? '' : 'border-2 border-red-400'">
+              <Card class="p-4" :class="isValidBeats[index] ? '' : 'border-2 border-red-400'">
                 <BeatEditor
                   :beat="beat"
                   :mulmoScript="mulmoScript"
@@ -599,10 +600,14 @@ const deleteReferenceImage = (imageKey: string) => {
   });
 };
 
-const isValid = (beat: MulmoBeat) => {
+const isValidBeat = (beat: MulmoBeat) => {
   const res = mulmoBeatSchema.safeParse(beat);
   return res?.success;
 };
+
+const isValidBeats = computed(() => {
+  return props.mulmoScript?.beats.map(isValidBeat);
+});
 
 const justSaveAndPushToHistory = () => {
   emit("updateMulmoScriptAndPushToHistory", {
