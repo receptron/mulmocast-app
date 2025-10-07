@@ -847,6 +847,11 @@ const lang = {
         },
         unknownMedia: "不明なメディアタイプです",
       },
+      media: {
+        tooLarge: "アップロードできるファイルサイズは{maxSizeMB}MBまでです",
+        unsupportedType: "{fileType}ファイルはサポートされていません",
+        // Unsupported file type: ${fileType}
+      },
       audio: {
         fileNotExist: {
           audioFile: "ビート{beatIndex}の音声が存在しない、もしくは正しくないようです",

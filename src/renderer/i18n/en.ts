@@ -838,6 +838,10 @@ const lang = {
         },
         unknownMedia: "Unknown media type",
       },
+      media: {
+        tooLarge: "The maximum file size that can be uploaded is {maxSizeMB}MB.",
+        unsupportedType: "Unsupported file type: {fileType}",
+      },
       audio: {
         fileNotExist: {
           audioFile: "The audio for beat {beatIndex} does not exist or is invalid",
