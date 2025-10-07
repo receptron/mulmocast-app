@@ -863,6 +863,9 @@ const lang = {
         },
         generateAudioSpeechParam: "{speechParams} (speechParams) がセットされていません",
       },
+      multilinguals: {
+        errorMessage: "翻訳データ取得に失敗しました",
+      },
       apiKeyInvalid: {
         imageOpenaiAgent: "OpenAIのAPI Keyが正しくありません",
         ttsOpenaiAgent: "OpenAIのAPI Keyが正しくありません",

@@ -82,7 +82,7 @@
                   :lang="mulmoScript.lang ?? globalStore.settings.APP_LANGUAGE"
                   :mulmoMultiLingual="mulmoMultiLinguals?.[beatId(beat?.id, index)]?.multiLingualTexts"
                   :speakers="mulmoScript?.speechParams?.speakers ?? {}"
-                  :isValid="isValidBeats[index]"
+                  :isValidBeat="isValidBeats[index]"
                   @update="update"
                   @updateMultiLingual="updateMultiLingual"
                   @justSaveAndPushToHistory="justSaveAndPushToHistory"

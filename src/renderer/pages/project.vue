@@ -279,7 +279,7 @@ import DebugLog from "./project/debug_log.vue";
 import { getConcurrentTaskStatusMessageComponent } from "./project/concurrent_task_status_message";
 
 import { projectApi, type ProjectMetadata } from "@/lib/project_api";
-import { notifySuccess, notifyProgress } from "@/lib/notification";
+import { notifySuccess, notifyProgress, notifyError } from "@/lib/notification";
 import { setRandomBeatId } from "@/lib/beat_util.js";
 
 import { useMulmoEventStore, useMulmoScriptHistoryStore, useMulmoGlobalStore } from "@/store";
@@ -317,7 +317,12 @@ const project = computed(() => ({
 
 const mulmoMultiLinguals = ref({});
 const updateMultiLingual = async () => {
-  mulmoMultiLinguals.value = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", projectId.value);
+  const res = await window.electronAPI.mulmoHandler("mulmoMultiLinguals", projectId.value);
+  if (res && res.noContext) {
+    notifyError(t("notify.error.multilinguals.errorMessage"), t("notify.error.noContext"));
+  } else {
+    mulmoMultiLinguals.value = res;
+  }
 };
 
 const { imageFiles, movieFiles, lipSyncFiles, resetImagesData, downloadImageFiles, downloadImageFile } =
