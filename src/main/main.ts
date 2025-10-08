@@ -7,6 +7,7 @@ import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
 import log from "electron-log/main";
 import puppeteer from "puppeteer";
+import { GraphAILogger } from "graphai";
 
 import { registerIPCHandler } from "./ipc_handler";
 import * as projectManager from "./project_manager";
@@ -18,10 +19,12 @@ import config from "../renderer/i18n/index";
 
 import { getMenu } from "./menu";
 import { makeUserNotifier } from "./update";
+import { setupLogger } from "./logger";
 
 import packageJSON from "../../package.json" with { type: "json" };
 
 log.initialize();
+setupLogger();
 
 // --- Runtime Puppeteer Patch ---
 const originalLaunch = puppeteer.launch.bind(puppeteer);
@@ -32,7 +35,7 @@ puppeteer.launch = function (options = {}) {
   };
 
   if (process.env.NODE_ENV !== "development") {
-    console.log(
+    GraphAILogger.log(
       `[PUPPETEER_PATCH] Intercepting launch with executablePath: ${finalOptions.executablePath || "default"}`,
     );
   }
@@ -40,43 +43,43 @@ puppeteer.launch = function (options = {}) {
   return originalLaunch(finalOptions);
 };
 
-console.log("[PUPPETEER_PATCH] Runtime patch applied");
+GraphAILogger.log("[PUPPETEER_PATCH] Runtime patch applied");
 // end of Patch
 
 // Production環境でのChromiumパス設定
 if (!app.isPackaged) {
-  console.log("[PUPPETEER] Development environment detected, skipping Chromium path configuration");
+  GraphAILogger.log("[PUPPETEER] Development environment detected, skipping Chromium path configuration");
 } else {
-  console.log("[PUPPETEER] Production environment detected, configuring Chromium path");
+  GraphAILogger.log("[PUPPETEER] Production environment detected, configuring Chromium path");
   const chromiumDir = path.join(process.resourcesPath, "chromium", "chrome");
-  console.log(`[PUPPETEER] Looking for Chromium in: ${chromiumDir}`);
+  GraphAILogger.log(`[PUPPETEER] Looking for Chromium in: ${chromiumDir}`);
 
   try {
     const versionDirs = fs.readdirSync(chromiumDir).filter((dir) => dir.startsWith("win64-") || dir.startsWith("mac-"));
-    console.log(`[PUPPETEER] Found version directories: ${versionDirs.join(", ")}`);
+    GraphAILogger.log(`[PUPPETEER] Found version directories: ${versionDirs.join(", ")}`);
 
     if (versionDirs.length < 1) {
-      console.warn("[PUPPETEER] No Chromium version directories found");
+      GraphAILogger.warn("[PUPPETEER] No Chromium version directories found");
     } else {
       const platform = os.platform() === "win32" ? "win64" : "mac-arm64";
-      console.log(`[PUPPETEER] Detected platform: ${platform}`);
+      GraphAILogger.log(`[PUPPETEER] Detected platform: ${platform}`);
 
       const targetDir = versionDirs.find((dir) => dir.startsWith(platform));
-      console.log(`[PUPPETEER] Target directory: ${targetDir || "none found"}`);
+      GraphAILogger.log(`[PUPPETEER] Target directory: ${targetDir || "none found"}`);
 
       if (!targetDir) {
-        console.warn(`[PUPPETEER] No matching directory found for platform: ${platform}`);
+        GraphAILogger.warn(`[PUPPETEER] No matching directory found for platform: ${platform}`);
       } else {
         const subDir = os.platform() === "win32" ? "chrome-win64" : "chrome-mac-arm64";
         const executableName = os.platform() === "win32" ? "chrome.exe" : "chrome";
 
         const finalPath = path.join(chromiumDir, targetDir, subDir, executableName);
         process.env.PUPPETEER_EXECUTABLE_PATH = finalPath;
-        console.log(`[PUPPETEER] Set PUPPETEER_EXECUTABLE_PATH: ${finalPath}`);
+        GraphAILogger.log(`[PUPPETEER] Set PUPPETEER_EXECUTABLE_PATH: ${finalPath}`);
       }
     }
   } catch (error) {
-    console.error("[PUPPETEER] Failed to auto-detect Chromium path:", error);
+    GraphAILogger.error("[PUPPETEER] Failed to auto-detect Chromium path:", error);
   }
 }
 
@@ -105,7 +108,7 @@ if (started) {
 }
 
 const versionData = resolveTargetFromVersion(packageJSON.version, isDev);
-console.log({ versionData });
+GraphAILogger.log({ versionData });
 
 const createSplashWindow = async () => {
   const splashWindow = new BrowserWindow({
@@ -176,7 +179,7 @@ const createWindow = (splashWindow?: BrowserWindow) => {
     if (url.startsWith("http://") || url.startsWith("https://")) {
       // Use void to explicitly ignore the promise and add error handling
       shell.openExternal(url).catch((error) => {
-        console.error("Failed to open external URL:", error);
+        GraphAILogger.error("Failed to open external URL:", error);
       });
     }
     // Always deny new window creation in Electron
@@ -203,14 +206,14 @@ const createWindow = (splashWindow?: BrowserWindow) => {
         // Open external URLs (http/https) in default browser
         if (parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:") {
           shell.openExternal(url).catch((error) => {
-            console.error("Failed to open external URL during navigation:", error);
+            GraphAILogger.error("Failed to open external URL during navigation:", error);
           });
         }
       }
     } catch (error) {
       // If URL parsing fails, prevent navigation for safety
       event.preventDefault();
-      console.error("Failed to parse URL for navigation:", error);
+      GraphAILogger.error("Failed to parse URL for navigation:", error);
     }
   });
 
@@ -263,7 +266,7 @@ app.on("ready", () => {
           const dockIconPath = path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png");
           app.dock.setIcon(dockIconPath);
         } catch (error) {
-          console.error("Failed to set dock icon:", error);
+          GraphAILogger.error("Failed to set dock icon:", error);
         }
       }
 

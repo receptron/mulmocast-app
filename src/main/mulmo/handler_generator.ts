@@ -1,4 +1,6 @@
 import { WebContents } from "electron";
+import { GraphAILogger } from "graphai";
+
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 import {
   images,
@@ -70,7 +72,7 @@ export const mulmoActionRunner = async (
       result: true,
     };
   } catch (error) {
-    console.log(error);
+    GraphAILogger.log(error);
     if (error instanceof z.ZodError) {
       if (error.issues) {
         error.issues.each((e) => {
@@ -175,7 +177,7 @@ export const mulmoGenerateBeatImage = async (
     });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
-    console.log(error);
+    GraphAILogger.log(error);
     removeSessionProgressCallback(mulmoCallback);
 
     webContents.send("progress-update", {
@@ -275,7 +277,7 @@ export const mulmoTranslateBeat = async (
     await translateBeat(0, context, targetLangs, { settings: settings.APIKEY ?? {} });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
-    console.log(error);
+    GraphAILogger.log(error);
     removeSessionProgressCallback(mulmoCallback);
     webContents.send("progress-update", {
       projectId,
