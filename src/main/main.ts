@@ -18,6 +18,7 @@ import config from "../renderer/i18n/index";
 
 import { getMenu } from "./menu";
 import { makeUserNotifier } from "./update";
+import { setupLogger } from "./logger";
 
 import packageJSON from "../../package.json" with { type: "json" };
 
@@ -254,6 +255,7 @@ const createWindow = (splashWindow?: BrowserWindow) => {
 // Some APIs can only be used after this event occurs.
 app.on("ready", () => {
   void (async () => {
+    setupLogger();
     // In development mode, configure app appearance
     if (isDev) {
       // On macOS, force set the Dock icon for reliable display in dev mode

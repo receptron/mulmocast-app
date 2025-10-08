@@ -136,7 +136,7 @@ const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: M
 };
 
 export const mulmoHandler = async (method: string, webContents: WebContents, ...args) => {
-  console.log(`handler ${method} run`);
+  GraphAILogger.log(`handler ${method} run`);
   try {
     switch (method) {
       case "mulmoActionRunner":
@@ -195,7 +195,7 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         throw new Error(`Unknown method: ${method}`);
     }
   } catch (error) {
-    console.log(error);
+    GraphAILogger.log(error);
     return { error };
   }
 };
