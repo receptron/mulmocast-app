@@ -369,6 +369,8 @@ const lang = {
     errors: {
       createProjectFailed: "プロジェクトの作成に失敗しました。再試行してください。",
       deleteProjectFailed: "プロジェクトの削除に失敗しました。再試行してください。",
+      noPreview: "プレビュー表示不可: プロジェクトを開いてエラー箇所を確認してください",
+      noPreviewInProject: "プレビュー表示不可: エラー箇所を確認してください",
     },
   },
   project: {

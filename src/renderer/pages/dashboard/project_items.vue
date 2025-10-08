@@ -57,10 +57,28 @@
             <Loader2 class="text-primary h-3 w-3 animate-spin" />
             <span class="text-primary text-xs font-medium">{{ t("ui.status.generating") }}</span>
           </div>
+          <!-- Error status for invalid projects (List view only) -->
+          <div
+            v-if="!project.isValud && viewMode === 'list'"
+            class="inline-flex items-center space-x-1 rounded border border-red-200 bg-red-50 px-2 py-1 dark:border-red-800 dark:bg-red-900/20"
+          >
+            <span class="text-xs font-medium text-red-600 dark:text-red-400">{{
+              t("dashboard.errors.noPreview")
+            }}</span>
+          </div>
         </div>
 
         <!-- Actions -->
         <div class="actions">
+          <!-- Error status for invalid projects (Grid view only) -->
+          <div
+            v-if="!project.isValud && viewMode === 'grid'"
+            class="inline-flex items-center space-x-1 rounded border border-red-200 bg-red-50 px-2 py-1 dark:border-red-800 dark:bg-red-900/20"
+          >
+            <span class="text-xs font-medium text-red-600 dark:text-red-400">{{
+              t("dashboard.errors.noPreview")
+            }}</span>
+          </div>
           <Button
             @click="viewProject($event, project)"
             variant="ghost"
