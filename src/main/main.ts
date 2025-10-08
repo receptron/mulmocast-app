@@ -52,7 +52,16 @@ if (!app.isPackaged) {
   console.log(`[PUPPETEER] Looking for Chromium in: ${chromiumDir}`);
 
   try {
-    const versionDirs = fs.readdirSync(chromiumDir).filter((dir) => dir.startsWith("win64-") || dir.startsWith("mac-"));
+    const versionDirs = fs
+      .readdirSync(chromiumDir)
+      .filter(
+        (dir) =>
+          dir.startsWith("win64-") ||
+          dir.startsWith("mac-") ||
+          dir.startsWith("mac_") ||
+          dir.startsWith("mac-arm") ||
+          dir.startsWith("mac_arm"),
+      );
     console.log(`[PUPPETEER] Found version directories: ${versionDirs.join(", ")}`);
 
     if (versionDirs.length < 1) {
@@ -61,16 +70,34 @@ if (!app.isPackaged) {
       const platform = os.platform() === "win32" ? "win64" : "mac-arm64";
       console.log(`[PUPPETEER] Detected platform: ${platform}`);
 
-      const targetDir = versionDirs.find((dir) => dir.startsWith(platform));
+      const targetDir =
+        os.platform() === "win32"
+          ? versionDirs.find((dir) => dir.startsWith("win64-"))
+          : versionDirs.find((dir) =>
+              ["mac-arm64-", "mac-arm-", "mac_arm-"].some((prefix) => dir.startsWith(prefix)),
+            );
       console.log(`[PUPPETEER] Target directory: ${targetDir || "none found"}`);
 
       if (!targetDir) {
         console.warn(`[PUPPETEER] No matching directory found for platform: ${platform}`);
       } else {
         const subDir = os.platform() === "win32" ? "chrome-win64" : "chrome-mac-arm64";
-        const executableName = os.platform() === "win32" ? "chrome.exe" : "chrome";
+        const finalPath =
+          os.platform() === "win32"
+            ? path.join(chromiumDir, targetDir, subDir, "chrome.exe")
+            : path.join(
+                chromiumDir,
+                targetDir,
+                subDir,
+                "Google Chrome for Testing.app",
+                "Contents",
+                "MacOS",
+                "Google Chrome for Testing",
+              );
 
-        const finalPath = path.join(chromiumDir, targetDir, subDir, executableName);
+        if (!fs.existsSync(finalPath)) {
+          console.warn(`[PUPPETEER] Resolved path does not exist: ${finalPath}`);
+        }
         process.env.PUPPETEER_EXECUTABLE_PATH = finalPath;
         console.log(`[PUPPETEER] Set PUPPETEER_EXECUTABLE_PATH: ${finalPath}`);
       }
