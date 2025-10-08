@@ -88,7 +88,12 @@
                             {{ t("project.scriptEditor.validationStatus") }}
                           </span>
                         </div>
-                        <XCircle v-if="!mulmoScriptHistoryStore.isValidScript" :size="32" class="text-destructive" />
+                        <div v-if="!mulmoScriptHistoryStore.isValidScript" class="flex items-center space-x-2">
+                          <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 inline-flex items-center space-x-1 rounded px-2 py-1">
+                            <span class="text-red-600 dark:text-red-400 text-xs font-medium">{{ t("dashboard.errors.noPreviewInProject") }}</span>
+                          </div>
+                          <XCircle :size="32" class="text-destructive" />
+                        </div>
                       </div>
                       <!-- Undo/Redo buttons -->
                       <Button

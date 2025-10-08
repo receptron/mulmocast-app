@@ -372,6 +372,7 @@ const lang = {
       createProjectFailed: "Failed to create project. Please try again.",
       deleteProjectFailed: "Failed to delete project. Please try again.",
       noPreview: "Preview unavailable: Please open project to check errors",
+      noPreviewInProject: "Preview unavailable: Please check errors",
     },
   },
   project: {
