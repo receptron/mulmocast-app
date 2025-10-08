@@ -26,7 +26,7 @@
               draggable="true"
               class="border-border bg-card text-muted-foreground mt-4 cursor-pointer rounded-md border-2 border-dashed p-6 text-center shadow-sm"
             >
-              {{ t("ui.common.drophere") }}
+              {{ t("ui.common.drophere", { maxSizeMB }) }}
             </div>
             {{ t("ui.common.or") }}
             <div class="flex">
@@ -108,7 +108,7 @@ import { bufferToUrl } from "@/lib/utils";
 
 import CharactorSelector from "./charactor_selector.vue";
 
-import { notifyProgress } from "@/lib/notification";
+import { notifyProgress, notifyError } from "@/lib/notification";
 import { useApiErrorNotify } from "@/composables/notify";
 import { useMulmoEventStore } from "../../../store";
 
@@ -133,6 +133,7 @@ const emit = defineEmits([
 const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 
 const imageRefs = ref<Record<string, string>>({});
+const maxSizeMB = 50;
 
 const loadReference = async () => {
   imageRefs.value = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFiles", props.projectId);
@@ -204,7 +205,13 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
   const files = event.dataTransfer.files;
   if (files.length > 0) {
     const file = files[0];
-    // console.log("File dropped:", file.name);
+
+    const maxSize = maxSizeMB * 1024 * 1024;
+    if (file.size > maxSize) {
+      notifyError(t("notify.error.media.tooLarge", { maxSizeMB }));
+      return;
+    }
+
     const fileExtension = file.name.split(".").pop()?.toLowerCase() ?? "";
     const mimeType = file.type.split("/")[1] ?? "";
     const fileType = mimeType || fileExtension;
@@ -215,8 +222,7 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
       }
     })();
     if (!imageType) {
-      console.warn(`Unsupported file type: ${fileType}`);
-      // TODO: Consider showing a toast notification or alert
+      notifyError(t("notify.error.media.unsupportedType", { fileType }));
       return;
     }
     const extension = fileType === "jpeg" ? "jpg" : fileType;
