@@ -35,7 +35,6 @@ const baseRules = {
       caughtErrorsIgnorePattern: "^__",
     },
   ],
-  "@typescript-eslint/unbound-method": "warn",
   "linebreak-style": ["error", "unix"],
   quotes: "off",
   semi: ["error", "always"],
