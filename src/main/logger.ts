@@ -78,8 +78,7 @@ export const setupLogger = () => {
   });
 
   const consoleAndFileLogger = (level: string, ...args: unknown[]) => {
-    const consoleMethod = (log as unknown)[level] || log.log;
-    consoleMethod(...args);
+    ((log as unknown)[level] || log.log)(...args);
   };
   GraphAILogger.setLogger(consoleAndFileLogger);
   return log;
