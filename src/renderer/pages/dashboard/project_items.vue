@@ -60,9 +60,11 @@
           <!-- Error status for invalid projects (List view only) -->
           <div
             v-if="!project.isValud && viewMode === 'list'"
-            class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 inline-flex items-center space-x-1 rounded px-2 py-1"
+            class="inline-flex items-center space-x-1 rounded border border-red-200 bg-red-50 px-2 py-1 dark:border-red-800 dark:bg-red-900/20"
           >
-            <span class="text-red-600 dark:text-red-400 text-xs font-medium">{{ t("dashboard.errors.noPreview") }}</span>
+            <span class="text-xs font-medium text-red-600 dark:text-red-400">{{
+              t("dashboard.errors.noPreview")
+            }}</span>
           </div>
         </div>
 
@@ -71,9 +73,11 @@
           <!-- Error status for invalid projects (Grid view only) -->
           <div
             v-if="!project.isValud && viewMode === 'grid'"
-            class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 inline-flex items-center space-x-1 rounded px-2 py-1"
+            class="inline-flex items-center space-x-1 rounded border border-red-200 bg-red-50 px-2 py-1 dark:border-red-800 dark:bg-red-900/20"
           >
-            <span class="text-red-600 dark:text-red-400 text-xs font-medium">{{ t("dashboard.errors.noPreview") }}</span>
+            <span class="text-xs font-medium text-red-600 dark:text-red-400">{{
+              t("dashboard.errors.noPreview")
+            }}</span>
           </div>
           <Button
             @click="viewProject($event, project)"
