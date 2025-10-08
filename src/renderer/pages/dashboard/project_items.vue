@@ -103,7 +103,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { Calendar, FileText, Trash2, Loader2, Eye, AlertTriangle } from "lucide-vue-next";
+import { Calendar, FileText, Trash2, Loader2, Eye } from "lucide-vue-next";
 import type { Project } from "@/lib/project_api";
 import { formatDate, mediaUri } from "@/lib/utils";
 import { Button, Skeleton } from "@/components/ui";
