@@ -57,10 +57,24 @@
             <Loader2 class="text-primary h-3 w-3 animate-spin" />
             <span class="text-primary text-xs font-medium">{{ t("ui.status.generating") }}</span>
           </div>
+          <!-- Error status for invalid projects (List view only) -->
+          <div
+            v-if="!project.isValud && viewMode === 'list'"
+            class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 inline-flex items-center space-x-1 rounded px-2 py-1"
+          >
+            <span class="text-red-600 dark:text-red-400 text-xs font-medium">{{ t("dashboard.errors.noPreview") }}</span>
+          </div>
         </div>
 
         <!-- Actions -->
         <div class="actions">
+          <!-- Error status for invalid projects (Grid view only) -->
+          <div
+            v-if="!project.isValud && viewMode === 'grid'"
+            class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 inline-flex items-center space-x-1 rounded px-2 py-1"
+          >
+            <span class="text-red-600 dark:text-red-400 text-xs font-medium">{{ t("dashboard.errors.noPreview") }}</span>
+          </div>
           <Button
             @click="viewProject($event, project)"
             variant="ghost"
@@ -85,7 +99,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { Calendar, FileText, Trash2, Loader2, Eye } from "lucide-vue-next";
+import { Calendar, FileText, Trash2, Loader2, Eye, AlertTriangle } from "lucide-vue-next";
 import type { Project } from "@/lib/project_api";
 import { formatDate, mediaUri } from "@/lib/utils";
 import { Button, Skeleton } from "@/components/ui";
