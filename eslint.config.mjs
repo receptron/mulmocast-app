@@ -73,6 +73,7 @@ const sonarjsRules = {
   "sonarjs/no-nested-conditional": "off",
   "sonarjs/slow-regex": "warn",
   "sonarjs/prefer-regexp-exec": "off",
+  "@typescript-eslint/unbound-method": "warn",
 };
 
 export default [

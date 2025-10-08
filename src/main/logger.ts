@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import log from "electron-log";
 import { GraphAILogger } from "graphai";
+import type { LogFile } from "electron-log/main";
 
 const LOG_DIR = path.join(app.getPath("userData"), "mulmocastLog");
 const RETENTION_DAYS = 7;
@@ -35,20 +36,26 @@ function cleanupOldLogs() {
     if (!m) continue;
     const fileDate = new Date(m[1] + "T00:00:00");
     if (fileDate.getTime() < cutoff) {
+      const file = path.join(LOG_DIR, name);
       try {
-        fs.rmSync(path.join(LOG_DIR, name), { force: true });
-      } catch {}
+        fs.rmSync(file, { force: true });
+      } catch (error) {
+        log.warn?.("Failed to remove old log file", {
+          file,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
     }
   }
 }
 
-export function setupLogger() {
+export const setupLogger = () => {
   ensureDir();
 
   log.transports.file.resolvePathFn = () => dailyLogPath();
 
   log.transports.file.maxSize = MAX_SIZE;
-  log.transports.file.archiveLog = (filename) => `${filename}.old`;
+  log.transports.file.archiveLogFn = (file: LogFile) => `${file.path}.old`;
 
   log.transports.file.level = process.env.NODE_ENV === "production" ? "info" : "debug";
   log.transports.console.level = process.env.NODE_ENV === "production" ? false : "debug";
@@ -59,7 +66,7 @@ export function setupLogger() {
     log.error("uncaughtException", err);
   });
   process.on("unhandledRejection", (reason) => {
-    log.error("unhandledRejection", reason as any);
+    log.error("unhandledRejection", reason);
   });
 
   log.info("Logger initialized", {
@@ -70,10 +77,10 @@ export function setupLogger() {
     nodeEnv: process.env.NODE_ENV,
   });
 
-  const consoleAndFileLogger = (level: string, ...args: any[]) => {
-    const consoleMethod = (log as any)[level] || log.log;
+  const consoleAndFileLogger = (level: string, ...args: unknown[]) => {
+    const consoleMethod = (log as unknown)[level] || log.log;
     consoleMethod(...args);
   };
   GraphAILogger.setLogger(consoleAndFileLogger);
   return log;
-}
+};

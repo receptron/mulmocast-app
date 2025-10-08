@@ -14,6 +14,7 @@ import {
   type MulmoStudioContext,
   type MulmoStudioMultiLingual,
 } from "mulmocast";
+import { GraphAILogger } from "graphai";
 
 import fs from "fs";
 import path from "path";

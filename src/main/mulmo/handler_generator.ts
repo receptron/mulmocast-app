@@ -1,4 +1,6 @@
 import { WebContents } from "electron";
+import { GraphAILogger } from "graphai";
+
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 import {
   images,
