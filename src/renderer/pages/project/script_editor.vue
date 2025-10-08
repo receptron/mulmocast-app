@@ -195,6 +195,7 @@
                   :isEnd="(mulmoScript?.beats ?? []).length === index + 1"
                   :isPro="globalStore.userIsPro"
                   :isBeginner="globalStore.userIsBeginner"
+                  :isValidBeat="isValidBeats[index]"
                   :lang="mulmoScript.lang ?? globalStore.settings.APP_LANGUAGE"
                   :audioFile="audioFiles[beat.id]"
                   :imageFile="imageFiles[beat.id]"

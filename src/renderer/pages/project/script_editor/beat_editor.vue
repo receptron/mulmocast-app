@@ -55,7 +55,7 @@
           size="sm"
           @click="generateAudio()"
           class="w-fit"
-          :disabled="beat?.text?.length === 0"
+          :disabled="beat?.text?.length === 0 || !isValidBeat"
           >{{ t("ui.actions.generateAudio") }}</Button
         >
         <audio
@@ -339,6 +339,7 @@ interface Props {
   isEnd: boolean;
   isPro: boolean;
   isBeginner: boolean;
+  isValidBeat: boolean;
   mulmoError: string[];
   settingPresence: Record<string, boolean>;
 }
