@@ -545,6 +545,9 @@ const lang = {
       selectSpeaker: "Select a speaker",
       text: "Text",
       placeholder: "{language} input: {speaker}'s voice content",
+      // Generate audio requirements
+      generateAudioNeedsText: "Text required to '{action}'",
+      generateAudioNeedsMedia: "Image or movie required to '{action}'",
     },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {

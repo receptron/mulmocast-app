@@ -58,6 +58,15 @@
           :disabled="beat?.text?.length === 0 || !isValidBeat"
           >{{ t("ui.actions.generateAudio") }}</Button
         >
+        <!-- Error messages for disabled Generate Audio button -->
+        <div v-if="beat?.text?.length === 0 || !isValidBeat" class="ml-2 text-xs text-red-600">
+          <span v-if="beat?.text?.length === 0">{{
+            t("beat.speaker.generateAudioNeedsText", { action: t("ui.actions.generateAudio").toLowerCase() })
+          }}</span>
+          <span v-else-if="!isValidBeat">{{
+            t("beat.speaker.generateAudioNeedsMedia", { action: t("ui.actions.generateAudio").toLowerCase() })
+          }}</span>
+        </div>
         <audio
           :src="audioFile"
           v-if="!!audioFile"

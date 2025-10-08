@@ -543,6 +543,9 @@ const lang = {
       selectSpeaker: "登場人物を選択",
       text: "テキスト",
       placeholder: "{language}で{speaker}の話す内容を書いてください",
+      // Generate audio requirements
+      generateAudioNeedsText: "「{action}」には話す内容が必要です",
+      generateAudioNeedsMedia: "「{action}」には画像または動画が必要です",
     },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
