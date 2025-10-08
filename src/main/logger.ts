@@ -4,11 +4,13 @@ import path from "node:path";
 import log from "electron-log";
 import { GraphAILogger } from "graphai";
 
-const LOG_DIR = path.join(app.getPath("userData"), "mulmocastLog"); 
+const LOG_DIR = path.join(app.getPath("userData"), "mulmocastLog");
 const RETENTION_DAYS = 7;
 const MAX_SIZE = 10 * 1024 * 1024;
 
-function pad(n: number) { return String(n).padStart(2, "0"); }
+function pad(n: number) {
+  return String(n).padStart(2, "0");
+}
 function ymd(d = new Date()) {
   const y = d.getFullYear();
   const m = pad(d.getMonth() + 1);
@@ -33,7 +35,9 @@ function cleanupOldLogs() {
     if (!m) continue;
     const fileDate = new Date(m[1] + "T00:00:00");
     if (fileDate.getTime() < cutoff) {
-      try { fs.rmSync(path.join(LOG_DIR, name), { force: true }); } catch {}
+      try {
+        fs.rmSync(path.join(LOG_DIR, name), { force: true });
+      } catch {}
     }
   }
 }
