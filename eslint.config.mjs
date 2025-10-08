@@ -35,6 +35,7 @@ const baseRules = {
       caughtErrorsIgnorePattern: "^__",
     },
   ],
+  "@typescript-eslint/unbound-method": "warn",
   "linebreak-style": ["error", "unix"],
   quotes: "off",
   semi: ["error", "always"],
@@ -73,7 +74,6 @@ const sonarjsRules = {
   "sonarjs/no-nested-conditional": "off",
   "sonarjs/slow-regex": "warn",
   "sonarjs/prefer-regexp-exec": "off",
-  "@typescript-eslint/unbound-method": "warn",
 };
 
 export default [
