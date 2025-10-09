@@ -32,7 +32,7 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { useMulmoEventStore, useMulmoScriptHistoryStore } from "../../store";
+import { useMulmoScriptHistoryStore } from "../../store";
 import { notifyProgress } from "@/lib/notification";
 import { FileText, Monitor, Volume2Icon } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
@@ -81,6 +81,5 @@ const generateContents = () => {
     errorDescription: t("notify.error.noContext"),
   });
 };
-const mulmoEventStore = useMulmoEventStore();
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 </script>

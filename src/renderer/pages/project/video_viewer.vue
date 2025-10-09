@@ -25,7 +25,7 @@ import { Monitor } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 
 import MovieTab from "../../components/product/tabs/movie_tab.vue";
-import { useMulmoEventStore, useMulmoScriptHistoryStore } from "@/store";
+import { useMulmoScriptHistoryStore } from "@/store";
 
 import { useI18n } from "vue-i18n";
 
@@ -37,7 +37,6 @@ const props = defineProps<Props>();
 
 const { t } = useI18n();
 
-const mulmoEventStore = useMulmoEventStore();
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
 const generateContents = () => {
