@@ -83,6 +83,7 @@
                   :mulmoMultiLingual="mulmoMultiLinguals?.[beatId(beat?.id, index)]?.multiLingualTexts"
                   :speakers="mulmoScript?.speechParams?.speakers ?? {}"
                   :isValidBeat="isValidBeats[index]"
+                  :isArtifactGenerating="isArtifactGenerating"
                   @update="update"
                   @updateMultiLingual="updateMultiLingual"
                   @justSaveAndPushToHistory="justSaveAndPushToHistory"
@@ -196,6 +197,7 @@
                   :isPro="globalStore.userIsPro"
                   :isBeginner="globalStore.userIsBeginner"
                   :isValidBeat="isValidBeats[index]"
+                  :isArtifactGenerating="isArtifactGenerating"
                   :lang="mulmoScript.lang ?? globalStore.settings.APP_LANGUAGE"
                   :audioFile="audioFiles[beat.id]"
                   :imageFile="imageFiles[beat.id]"
@@ -274,10 +276,12 @@
             })
           }}
         </p>
-        <Reference
+        <Charactor
           :projectId="projectId"
           :images="props.mulmoScript?.imageParams?.images ?? {}"
           :mulmoScript="mulmoScript"
+          :isArtifactGenerating="isArtifactGenerating"
+          :isValidScriptData="isValidScriptData"
           @updateImage="updateImage"
           @updateImagePath="updateImagePath"
           @addReferenceImage="addReferenceImage"
@@ -316,7 +320,7 @@ import CodeEditor from "@/components/code_editor.vue";
 import BeatEditor from "./script_editor/beat_editor.vue";
 import BeatSelector from "./script_editor/beat_selector.vue";
 import PresentationStyle from "./script_editor/presentation_style.vue";
-import Reference from "./script_editor/charactor.vue";
+import Charactor from "./script_editor/charactor.vue";
 import TextEditor from "./script_editor/text_editor.vue";
 
 import { MulmoError } from "../../../types";
@@ -332,6 +336,7 @@ const { t } = useI18n();
 interface Props {
   mulmoScript: MulmoScript;
   isValidScriptData: boolean;
+  isArtifactGenerating: boolean;
   imageFiles: Record<string, string | null>;
   movieFiles: Record<string, string | null>;
   audioFiles: Record<string, string | null>;

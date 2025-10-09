@@ -13,7 +13,7 @@
           @click="generateContents"
           class="mt-2 flex h-auto w-full items-center justify-center space-y-2 py-4 whitespace-normal"
           :disabled="
-            mulmoEventStore.isArtifactGenerating[projectId] ||
+            isArtifactGenerating ||
             !checkboxOptions.some((option) => options[option.key]) ||
             !mulmoScriptHistoryStore.isValidScript
           "
@@ -32,7 +32,7 @@
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { useMulmoEventStore, useMulmoScriptHistoryStore } from "../../store";
+import { useMulmoScriptHistoryStore } from "../../store";
 import { notifyProgress } from "@/lib/notification";
 import { FileText, Monitor, Volume2Icon } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
@@ -42,6 +42,7 @@ import { useI18n } from "vue-i18n";
 
 interface Props {
   projectId: string;
+  isArtifactGenerating: boolean;
 }
 const props = defineProps<Props>();
 
@@ -80,6 +81,5 @@ const generateContents = () => {
     errorDescription: t("notify.error.noContext"),
   });
 };
-const mulmoEventStore = useMulmoEventStore();
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 </script>

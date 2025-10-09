@@ -52,8 +52,12 @@
               variant="ghost"
               size="icon"
               class="border-border bg-card hover:bg-muted absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border shadow transition-colors"
-              @click="() => submitImage(imageKey, key)"
-              :disabled="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['imageReference'][imageKey]"
+              @click="() => generateReferenceImage(imageKey, key)"
+              :disabled="
+                isArtifactGenerating ||
+                !isValidScriptData ||
+                mulmoEventStore.sessionState?.[projectId]?.['beat']?.['imageReference'][imageKey]
+              "
             >
               <Loader2
                 v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['imageReference'][imageKey]"
@@ -116,6 +120,8 @@ import { useMulmoEventStore } from "../../../store";
 interface Props {
   projectId: string;
   images: MulmoImageParamsImages;
+  isArtifactGenerating: boolean;
+  isValidScriptData: boolean;
   mulmoScript: MulmoScript;
 }
 
@@ -257,7 +263,7 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
   }
 };
 
-const submitImage = async (imageKey: string, key: number) => {
+const generateReferenceImage = async (imageKey: string, key: number) => {
   if (mulmoEventStore.sessionState?.[props.projectId]?.["beat"]?.["imageReference"][imageKey]) {
     return;
   }
