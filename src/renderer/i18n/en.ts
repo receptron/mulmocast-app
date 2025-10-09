@@ -737,7 +737,7 @@ const lang = {
       title: "Style template",
       description:
         "Overwrite the style. Be careful as the existing style settings and character settings will be lost.",
-      note: "Select a style and press 'Apply' to reflect changes. The dropdown selection will reset, but the settings will be applied.",
+      note: "Select a style and press '{applyButton}' to reflect changes. The dropdown selection will reset, but the settings will be applied.",
       placeholder: "Please select a style",
     },
   },
