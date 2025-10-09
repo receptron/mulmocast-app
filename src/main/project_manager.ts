@@ -3,6 +3,7 @@ import path from "node:path";
 import fs from "node:fs/promises";
 import dayjs from "dayjs";
 import { MulmoScriptMethods, mulmoScriptSchema, type MulmoScript } from "mulmocast";
+import { GraphAILogger } from "graphai";
 
 import { Project, ProjectMetadata } from "../types";
 import { SCRIPT_EDITOR_TABS, MULMO_VIEWER_TABS } from "../shared/constants";
@@ -32,7 +33,7 @@ export const ensureProjectBaseDirectory = async (): Promise<void> => {
   try {
     await fs.mkdir(getBasePath(), { recursive: true });
   } catch (error) {
-    console.error("Failed to create projects directory:", error);
+    GraphAILogger.error("Failed to create projects directory:", error);
   }
 };
 
@@ -41,7 +42,7 @@ const readJsonFile = async (filePath: string) => {
     const content = await fs.readFile(filePath, "utf-8");
     return JSON.parse(content);
   } catch {
-    console.error(`not hit: ${filePath}`);
+    GraphAILogger.error(`not hit: ${filePath}`);
     return null;
   }
 };
@@ -62,7 +63,7 @@ export const getProjectMulmoScript = async (projectId: string): Promise<MulmoScr
   try {
     return MulmoScriptMethods.validate(mulmo);
   } catch (__error) {
-    console.warn("Validation failed for mulmo script:", __error);
+    GraphAILogger.warn("Validation failed for mulmo script:", __error);
     return mulmo;
   }
 };
@@ -101,7 +102,7 @@ export const listProjects = async (): Promise<Project[]> => {
       )
     ).filter((project): project is Project => project !== null);
   } catch (error) {
-    console.error("Failed to list projects:", error);
+    GraphAILogger.error("Failed to list projects:", error);
     return [];
   }
 };
@@ -140,7 +141,7 @@ export const createProject = async (title: string, lang: string, onboardProject:
   } catch (error) {
     // Cleanup on failure
     await deleteProject(id);
-    console.error("Failed to create project:", error);
+    GraphAILogger.error("Failed to create project:", error);
     throw error;
   }
 };
@@ -150,7 +151,7 @@ export const deleteProject = async (id: string): Promise<boolean> => {
     await fs.rm(getProjectPath(id), { recursive: true, force: true });
     return true;
   } catch (error) {
-    console.error("Failed to delete project:", error);
+    GraphAILogger.error("Failed to delete project:", error);
     throw error;
   }
 };
