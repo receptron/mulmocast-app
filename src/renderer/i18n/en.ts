@@ -769,6 +769,10 @@ const lang = {
       successMessage: "Image generated successfully",
       errorMessage: "Failed to generate image",
     },
+    imageReference: {
+      successMessage: "Character image generated successfully",
+      errorMessage: "Failed to generate character image",
+    },
     translate: {
       successMessage: "Translate successfully",
       errorMessage: "Failed to translate text",
@@ -825,16 +829,16 @@ const lang = {
         unknownMedia: "Unknown media type",
         invalidResponse: {
           imageReplicateAgent: "An error occurred with image generation (Replicate).",
-          imageGenAIAgent: "An error occurred with image generation (GenAI).",
+          imageGenAIAgent: "An error occurred with image generation (Google).",
           imageOpenaiAgent: "An error occurred with image generation (OpenAI).",
-          movieGenAIAgent: "An error occurred with video generation (GenAI).",
+          movieGenAIAgent: "An error occurred with video generation (Google).",
           movieReplicateAgent: "An error occurred with video generation (Replicate).",
         },
         apiError: {
           imageReplicateAgent: "An error occurred with image generation (Replicate).",
-          imageGenAIAgent: "An error occurred with image generation (GenAI).",
+          imageGenAIAgent: "An error occurred with image generation (Google).",
           imageOpenaiAgent: "An error occurred with image generation (OpenAI).",
-          movieGenAIAgent: "An error occurred with video generation (GenAI).",
+          movieGenAIAgent: "An error occurred with video generation (Google).",
           movieReplicateAgent: "An error occurred with video generation (Replicate).",
           lipSyncReplicateAgent: "An error occurred with lip sync (Replicate).",
           soundEffectReplicateAgent: "An error occurred with sound effect generation (Replicate).",
@@ -843,6 +847,11 @@ const lang = {
       imageReference: {
         urlFileNotFound: {
           imageFile: "Character image does not exist or is invalid",
+        },
+        apiError: {
+          imageOpenaiAgent: "The OpenAI API Key is invalid",
+          imageReplicateAgent: "The Replicate API Key is invalid",
+          imageGenAIAgent: "The Google API Key is invalid",
         },
         unknownMedia: "Unknown media type",
       },
@@ -876,6 +885,11 @@ const lang = {
       apiRateLimit: {
         imageOpenaiAgent: "The OpenAI API usage limit has been reached. Please add billing or try again later.",
         ttsOpenaiAgent: "The OpenAI API usage limit has been reached. Please add billing or try again later.",
+      },
+      translate: {
+        apiError: {
+          translateBeat: "An error occurred during translation.",
+        },
       },
     },
   },
