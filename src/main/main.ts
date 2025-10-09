@@ -73,9 +73,7 @@ if (!app.isPackaged) {
       const targetDir =
         os.platform() === "win32"
           ? versionDirs.find((dir) => dir.startsWith("win64-"))
-          : versionDirs.find((dir) =>
-              ["mac-arm64-", "mac-arm-", "mac_arm-"].some((prefix) => dir.startsWith(prefix)),
-            );
+          : versionDirs.find((dir) => ["mac-arm64-", "mac-arm-", "mac_arm-"].some((prefix) => dir.startsWith(prefix)));
       console.log(`[PUPPETEER] Target directory: ${targetDir || "none found"}`);
 
       if (!targetDir) {
