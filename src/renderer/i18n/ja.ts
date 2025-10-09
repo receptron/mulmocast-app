@@ -735,7 +735,9 @@ const lang = {
   presentationStyle: {
     styleTemplate: {
       title: "スタイル テンプレート",
-      description: "スタイルを上書きします。既存のスタイル設定が消えるので注意してください。",
+      description: "スタイルを上書きします。既存のスタイル設定やキャラクター設定は失われますのでご注意ください。",
+      note: "スタイルを選んで「{applyButton}」を押すと反映されます。プルダウンの選択は元に戻りますが、設定内容は反映されています。",
+      placeholder: "スタイルを選択してください",
     },
   },
   viewer: {
