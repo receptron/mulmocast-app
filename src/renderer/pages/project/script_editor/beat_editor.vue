@@ -55,7 +55,7 @@
           size="sm"
           @click="generateAudio()"
           class="w-fit"
-          :disabled="beat?.text?.length === 0 || !isValidBeat"
+          :disabled="!isValidBeat || isArtifactGenerating || beat?.text?.length === 0"
           >{{ t("ui.actions.generateAudio") }}</Button
         >
         <!-- Error messages for disabled Generate Audio button -->
@@ -211,7 +211,7 @@
           :imageFile="imageFile"
           :movieFile="movieFile"
           :toggleTypeMode="toggleTypeMode"
-          :disabled="disabledImageGenearte"
+          :disabled="!isValidBeat || isArtifactGenerating || disabledImageGenearte"
           @openModal="openModal"
           @generateImage="generateImageOnlyImage"
         />
@@ -243,7 +243,7 @@
           :toggleTypeMode="toggleTypeMode"
           @openModal="openModal"
           @generateMovie="generateImageOnlyMovie"
-          :disabled="beat.enableLipSync"
+          :disabled="!isValidBeat || isArtifactGenerating || beat.enableLipSync"
         />
       </div>
 
@@ -417,7 +417,9 @@ const isHtmlGenerating = computed(() => {
 const disabledImageGenearte = computed(() => {
   return beatType.value === "imagePrompt" && (props.beat.text || "") === "" && (props.beat.imagePrompt || "") === "";
 });
-
+const isArtifactGenerating = computed(() => {
+  return mulmoEventStore.isArtifactGenerating[projectId.value];
+});
 const changeBeat = (beat: MulmoBeat) => {
   const { id, speaker, text } = props.beat;
   emit("changeBeat", { ...beat, id, speaker, text }, props.index);
