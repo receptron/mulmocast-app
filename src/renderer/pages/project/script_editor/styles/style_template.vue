@@ -24,7 +24,7 @@
         </div>
         <!-- Note after template selection -->
         <div class="mt-2 ml-2 text-xs text-gray-600">
-          {{ t("presentationStyle.styleTemplate.note") }}
+          {{ t("presentationStyle.styleTemplate.note", { applyButton: t("project.chat.applyStyle") }) }}
         </div>
       </div>
     </div>
