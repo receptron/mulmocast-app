@@ -161,7 +161,7 @@ const reference = async () => {
 
 const isValidData = computed(() => {
   const schema = z.union([mulmoImageMediaSchema, mulmoImagePromptMediaSchema]);
-  return Object.keys(props.images).reduce((tmp, key) => {
+  return Object.keys(props.images).reduce((tmp: Record<string, boolean>, key) => {
     const value = props.images[key];
     tmp[key] = schema.safeParse(value).success;
     return tmp;
