@@ -828,16 +828,16 @@ const lang = {
         unknownMedia: "不明なメディアタイプです",
         invalidResponse: {
           imageReplicateAgent: "画像生成（Replicate）でエラーが発生しました。",
-          imageGenAIAgent: "画像生成（GenAI）でエラーが発生しました。",
+          imageGenAIAgent: "画像生成（Google）でエラーが発生しました。",
           imageOpenaiAgent: "画像生成（OpenAI）でエラーが発生しました。",
-          movieGenAIAgent: "動画生成（GenAI）でエラーが発生しました。",
+          movieGenAIAgent: "動画生成（Google）でエラーが発生しました。",
           movieReplicateAgent: "動画生成（Replicate）でエラーが発生しました。",
         },
         apiError: {
           imageReplicateAgent: "画像生成（Replicate）でエラーが発生しました。",
-          imageGenAIAgent: "画像生成（GenAI）でエラーが発生しました。",
+          imageGenAIAgent: "画像生成（Google）でエラーが発生しました。",
           imageOpenaiAgent: "画像生成（OpenAI）でエラーが発生しました。",
-          movieGenAIAgent: "動画生成（GenAI）でエラーが発生しました。",
+          movieGenAIAgent: "動画生成（Google）でエラーが発生しました。",
           movieReplicateAgent: "動画生成（Replicate）でエラーが発生しました。",
           lipSyncReplicateAgent: "リップシンク（Replicate）でエラーが発生しました。",
           soundEffectReplicateAgent: "効果音生成（Replicate）でエラーが発生しました。",
@@ -850,7 +850,7 @@ const lang = {
         apiError: {
           imageOpenaiAgent: "OpenAIのAPI Keyが正しくありません",
           imageReplicateAgent: "ReplicateのAPI Keyが正しくありません",
-          imageGenAIAgent: "GenAIのAPI Keyが正しくありません",
+          imageGenAIAgent: "GoogleのAPI Keyが正しくありません",
         },
         unknownMedia: "不明なメディアタイプです",
       },
@@ -887,6 +887,11 @@ const lang = {
           "OpenAIのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
         ttsOpenaiAgent:
           "OpenAIのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
+      },
+      translate: {
+        apiError: {
+          translateBeat: "翻訳処理でエラーが発生しました。",
+        },
       },
     },
   },
