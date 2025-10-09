@@ -50,7 +50,9 @@ const readJsonFile = async (filePath: string) => {
 const writeJsonFile = async (filePath: string, data: unknown) => {
   try {
     const dir = path.dirname(filePath);
-    const tmp = `${filePath}.${randomUUID()}.tmp`;
+    const base = path.basename(filePath);
+
+    const tmp = path.join(dir, `.${base}.${Date.now()}.${randomUUID()}.tmp`);
     const json = JSON.stringify(data, null, 2);
 
     await fs.writeFile(tmp, json, { encoding: "utf8", flag: "w" });
