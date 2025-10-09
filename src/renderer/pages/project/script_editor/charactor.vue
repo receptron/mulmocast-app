@@ -1,8 +1,7 @@
 <template>
   <CharactorSelector class="mt-4" @addReferenceImage="addReferenceImage" :referenceKeys="Object.keys(images) ?? []" />
-
   <div v-for="(imageKey, key) in Object.keys(images).sort()" :key="`${imageKey}_${key}`" class="relative">
-    <Card class="mt-8 gap-2 space-y-1 p-4">
+    <Card class="mt-8 gap-2 space-y-1 p-4" :class="isValidData[imageKey] ? '' : 'border-2 border-red-400'">
       <div class="grid grid-cols-2 gap-4">
         <div>
           {{ t("ui.common.key") }} : {{ imageKey }}
@@ -98,6 +97,8 @@ import {
   type MulmoImagePromptMedia,
   type MulmoImageParamsImages,
   MulmoPresentationStyleMethods,
+  mulmoImageMediaSchema,
+  mulmoImagePromptMediaSchema,
 } from "mulmocast/browser";
 import { z } from "zod";
 
@@ -157,6 +158,15 @@ const reference = async () => {
   await loadReference();
 };
 */
+
+const isValidData = computed(() => {
+  const schema = z.union([mulmoImageMediaSchema, mulmoImagePromptMediaSchema]);
+  return Object.keys(props.images).reduce((tmp: Record<string, boolean>, key) => {
+    const value = props.images[key];
+    tmp[key] = schema.safeParse(value).success;
+    return tmp;
+  }, {});
+});
 
 const update = (target: string, imageKey: string, prompt: string) => {
   emit("updateImage", imageKey, prompt);
