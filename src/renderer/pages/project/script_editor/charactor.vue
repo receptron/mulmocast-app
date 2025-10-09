@@ -53,7 +53,7 @@
               size="icon"
               class="border-border bg-card hover:bg-muted absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border shadow transition-colors"
               @click="() => generateReferenceImage(imageKey, key)"
-              :disabled="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['imageReference'][imageKey]"
+              :disabled="isArtifactGenerating || !isValidScriptData || mulmoEventStore.sessionState?.[projectId]?.['beat']?.['imageReference'][imageKey]"
             >
               <Loader2
                 v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['imageReference'][imageKey]"
@@ -116,6 +116,8 @@ import { useMulmoEventStore } from "../../../store";
 interface Props {
   projectId: string;
   images: MulmoImageParamsImages;
+  isArtifactGenerating: boolean;
+  isValidScriptData: boolean;
   mulmoScript: MulmoScript;
 }
 

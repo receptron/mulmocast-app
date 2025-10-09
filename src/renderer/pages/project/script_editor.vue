@@ -280,6 +280,8 @@
           :projectId="projectId"
           :images="props.mulmoScript?.imageParams?.images ?? {}"
           :mulmoScript="mulmoScript"
+          :isArtifactGenerating="isArtifactGenerating"
+          :isValidScriptData="isValidScriptData"
           @updateImage="updateImage"
           @updateImagePath="updateImagePath"
           @addReferenceImage="addReferenceImage"
