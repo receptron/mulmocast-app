@@ -128,6 +128,7 @@
                     :lipSyncFiles="lipSyncFiles"
                     :scriptEditorActiveTab="projectMetadata?.scriptEditorActiveTab"
                     :isValidScriptData="mulmoScriptHistoryStore.isValidScript"
+                    :isArtifactGenerating="isArtifactGenerating"
                     @updateMulmoScript="handleUpdateMulmoScript"
                     @updateMulmoScriptAndPushToHistory="handleUpdateMulmoScriptAndPushToHistory"
                     @generateImage="generateImage"
@@ -161,7 +162,7 @@
                 </div>
               </CardHeader>
               <CardContent class="p-4">
-                <Generate :projectId="projectId" />
+                <Generate :projectId="projectId" :isArtifactGenerating="isArtifactGenerating" />
               </CardContent>
             </Card>
 
@@ -203,7 +204,7 @@
                 </div>
               </CardHeader>
               <CardContent class="p-4">
-                <VideoViewer :projectId="projectId" />
+                <VideoViewer :projectId="projectId" :isArtifactGenerating="isArtifactGenerating" />
               </CardContent>
             </Card>
 
@@ -541,6 +542,10 @@ watch(
     console.log(mulmoEvent);
   },
 );
+
+const isArtifactGenerating = computed(() => {
+  return mulmoEventStore.isArtifactGenerating[projectId.value] ?? false
+});
 
 //
 const generatingMessage = computed(() => {

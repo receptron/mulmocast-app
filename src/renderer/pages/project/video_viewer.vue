@@ -8,7 +8,7 @@
           @click="generateContents"
           class="mt-2 flex h-auto w-full items-center justify-center space-y-2 py-4 whitespace-normal"
           data-testid="generate-contents-button"
-          :disabled="mulmoEventStore.isArtifactGenerating[projectId] || !mulmoScriptHistoryStore.isValidScript"
+          :disabled="isArtifactGenerating || !mulmoScriptHistoryStore.isValidScript"
         >
           <div class="mb-0 flex items-center justify-center gap-2">
             <Monitor :size="24" />
@@ -31,6 +31,7 @@ import { useI18n } from "vue-i18n";
 
 interface Props {
   projectId: string;
+  isArtifactGenerating: boolean;
 }
 const props = defineProps<Props>();
 

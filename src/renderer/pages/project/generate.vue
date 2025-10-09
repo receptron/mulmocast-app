@@ -13,7 +13,7 @@
           @click="generateContents"
           class="mt-2 flex h-auto w-full items-center justify-center space-y-2 py-4 whitespace-normal"
           :disabled="
-            mulmoEventStore.isArtifactGenerating[projectId] ||
+            isArtifactGenerating  ||
             !checkboxOptions.some((option) => options[option.key]) ||
             !mulmoScriptHistoryStore.isValidScript
           "
@@ -42,6 +42,7 @@ import { useI18n } from "vue-i18n";
 
 interface Props {
   projectId: string;
+  isArtifactGenerating: boolean;
 }
 const props = defineProps<Props>();
 
