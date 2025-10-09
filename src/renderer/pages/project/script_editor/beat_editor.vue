@@ -349,6 +349,7 @@ interface Props {
   isPro: boolean;
   isBeginner: boolean;
   isValidBeat: boolean;
+  isArtifactGenerating: boolean;
   mulmoError: string[];
   settingPresence: Record<string, boolean>;
 }
@@ -416,9 +417,6 @@ const isHtmlGenerating = computed(() => {
 });
 const disabledImageGenearte = computed(() => {
   return beatType.value === "imagePrompt" && (props.beat.text || "") === "" && (props.beat.imagePrompt || "") === "";
-});
-const isArtifactGenerating = computed(() => {
-  return mulmoEventStore.isArtifactGenerating[projectId.value];
 });
 const changeBeat = (beat: MulmoBeat) => {
   const { id, speaker, text } = props.beat;

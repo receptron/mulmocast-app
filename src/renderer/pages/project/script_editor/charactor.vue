@@ -52,7 +52,7 @@
               variant="ghost"
               size="icon"
               class="border-border bg-card hover:bg-muted absolute -top-3 -left-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border shadow transition-colors"
-              @click="() => submitImage(imageKey, key)"
+              @click="() => generateReferenceImage(imageKey, key)"
               :disabled="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['imageReference'][imageKey]"
             >
               <Loader2
@@ -257,7 +257,7 @@ const handleDrop = (event: DragEvent, imageKey: string) => {
   }
 };
 
-const submitImage = async (imageKey: string, key: number) => {
+const generateReferenceImage = async (imageKey: string, key: number) => {
   if (mulmoEventStore.sessionState?.[props.projectId]?.["beat"]?.["imageReference"][imageKey]) {
     return;
   }

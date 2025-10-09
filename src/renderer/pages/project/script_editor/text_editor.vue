@@ -37,7 +37,7 @@
     size="sm"
     @click="generateAudio(index)"
     class="w-fit"
-    :disabled="beat?.text?.length === 0 || !isValidBeat"
+    :disabled="isArtifactGenerating || !isValidBeat || beat?.text?.length === 0"
     >{{ t("ui.actions.generateAudio") }}</Button
   >
   <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">{{
@@ -51,7 +51,7 @@
       size="sm"
       @click="translateBeat(index)"
       class="w-fit"
-      :disabled="beat?.text?.length === 0 || !isValidBeat"
+      :disabled="isArtifactGenerating || !isValidBeat || beat?.text?.length === 0"
       >{{ t("ui.actions.translateBeat") }}</Button
     >
   </div>
@@ -100,6 +100,7 @@ interface Props {
   projectId: string;
   lang: string;
   isValidBeat: boolean;
+  isArtifactGenerating: boolean;
   mulmoMultiLingual: MultiLingualTexts;
   speakers?: MulmoPresentationStyle["speechParams"]["speakers"];
   mulmoScript: MulmoScript;
