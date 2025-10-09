@@ -10,7 +10,7 @@
         <div class="template-section flex items-center gap-2">
           <Select v-model="selectedTemplateIndex">
             <SelectTrigger class="w-auto">
-              <SelectValue />
+              <SelectValue :placeholder="t('presentationStyle.styleTemplate.placeholder')" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem v-for="(template, k) in isPro ? promptTemplates : simpleTemplate" :key="k" :value="k">
@@ -43,7 +43,7 @@ const props = defineProps<{
   isPro: boolean;
 }>();
 
-const selectedTemplateIndex = ref(0);
+const selectedTemplateIndex = ref(null);
 
 const simpleTemplate = promptTemplates.filter((temp) => {
   console.log(temp.filename);
@@ -57,6 +57,7 @@ const emit = defineEmits<{
 }>();
 
 const applyStyle = () => {
+  if (selectedTemplateIndex.value === null) return;
   const style = (props.isPro ? promptTemplates : simpleTemplate)[selectedTemplateIndex.value].presentationStyle;
   const script = { ...props.mulmoScript, ...style };
   emit("updateMulmoScript", script);

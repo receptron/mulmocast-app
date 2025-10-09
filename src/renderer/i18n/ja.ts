@@ -736,6 +736,7 @@ const lang = {
     styleTemplate: {
       title: "スタイル テンプレート",
       description: "スタイルを上書きします。既存のスタイル設定が消えるので注意してください。",
+      placeholder: "スタイルを選択してください",
     },
   },
   viewer: {

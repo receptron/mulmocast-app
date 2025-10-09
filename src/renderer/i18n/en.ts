@@ -736,6 +736,7 @@ const lang = {
     styleTemplate: {
       title: "Style template",
       description: "Overwrite the style. Be careful as the existing style settings will be lost.",
+      placeholder: "Please select a style",
     },
   },
 
