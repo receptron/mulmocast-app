@@ -13,7 +13,7 @@
           @click="generateContents"
           class="mt-2 flex h-auto w-full items-center justify-center space-y-2 py-4 whitespace-normal"
           :disabled="
-            isArtifactGenerating  ||
+            isArtifactGenerating ||
             !checkboxOptions.some((option) => options[option.key]) ||
             !mulmoScriptHistoryStore.isValidScript
           "

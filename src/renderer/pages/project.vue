@@ -544,7 +544,7 @@ watch(
 );
 
 const isArtifactGenerating = computed(() => {
-  return mulmoEventStore.isArtifactGenerating[projectId.value] ?? false
+  return mulmoEventStore.isArtifactGenerating[projectId.value] ?? false;
 });
 
 //
