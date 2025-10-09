@@ -2,6 +2,7 @@ import { app } from "electron";
 import path from "node:path";
 import fs from "node:fs/promises";
 import dayjs from "dayjs";
+import { randomUUID } from "node:crypto";
 import { MulmoScriptMethods, mulmoScriptSchema, type MulmoScript } from "mulmocast";
 
 import { Project, ProjectMetadata } from "../types";
@@ -48,7 +49,14 @@ const readJsonFile = async (filePath: string) => {
 
 const writeJsonFile = async (filePath: string, data: unknown) => {
   try {
-    await fs.writeFile(filePath, JSON.stringify(data, null, 2));
+    const dir = path.dirname(filePath);
+    const tmp = `${filePath}.${randomUUID()}.tmp`;
+    const json = JSON.stringify(data, null, 2);
+
+    await fs.writeFile(tmp, json, { encoding: "utf8", flag: "w" });
+    await fs.rename(tmp, filePath);
+
+    // await fs.writeFile(filePath, JSON.stringify(data, null, 2));
     return true;
   } catch {
     return false;
