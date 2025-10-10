@@ -73,6 +73,14 @@
               <p class="text-muted-foreground text-sm">
                 {{ t("beat.imagePreview") }}
               </p>
+              <template v-if="images[imageKey].type === 'imagePrompt' && !mulmoEventStore.sessionState?.[projectId]?.['beat']?.['imageReference'][imageKey]">
+                <p v-if="!images[imageKey].prompt" class="text-red-500 text-xs mt-2">
+                  {{ t("project.scriptEditor.reference.imageGenerationDisabled.needPrompt", { imagePromptLabel: t("beat.imagePrompt.label") }) }}
+                </p>
+                <p v-else-if="!isValidScriptData" class="text-red-500 text-xs mt-2">
+                  {{ t("project.scriptEditor.reference.imageGenerationDisabled.needValidScript", { beatTabLabel: t("project.scriptEditor.media.tabLabel") }) }}
+                </p>
+              </template>
             </template>
           </div>
         </div>
