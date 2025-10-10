@@ -21,6 +21,11 @@
           <Button size="sm" @click="applyStyle">
             {{ t("project.chat.applyStyle") }}
           </Button>
+          <img
+            :src="templateImageDataSet[currentTemplate?.filename]"
+            class="w-20"
+            v-if="templateImageDataSet[currentTemplate?.filename]"
+          />
         </div>
         <!-- Note after template selection -->
         <div class="mt-2 ml-2 text-xs text-gray-600">
@@ -32,14 +37,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { Card, Label, Button } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { MulmoScript } from "mulmocast/browser";
-import { promptTemplates } from "mulmocast/data";
+import { promptTemplates, templateImageDataSet } from "mulmocast/data";
 import { notifySuccess } from "@/lib/notification";
-
 const { t } = useI18n();
 
 const props = defineProps<{
@@ -50,7 +54,6 @@ const props = defineProps<{
 const selectedTemplateIndex = ref(null);
 
 const simpleTemplate = promptTemplates.filter((temp) => {
-  console.log(temp.filename);
   return ["ani", "ghibli_comic", "image_prompt"].includes(temp.filename);
 });
 
@@ -59,6 +62,11 @@ const simpleTemplate = promptTemplates.filter((temp) => {
 const emit = defineEmits<{
   updateMulmoScript: [value: MulmoScript];
 }>();
+
+const currentTemplate = computed(() => {
+  if (selectedTemplateIndex.value === null) return;
+  return (props.isPro ? promptTemplates : simpleTemplate)[selectedTemplateIndex.value];
+});
 
 const applyStyle = () => {
   if (selectedTemplateIndex.value === null) return;
