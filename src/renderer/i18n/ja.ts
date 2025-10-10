@@ -881,6 +881,7 @@ const lang = {
       apiKeyInvalid: {
         imageOpenaiAgent: "OpenAIのAPI Keyが正しくありません",
         ttsOpenaiAgent: "OpenAIのAPI Keyが正しくありません",
+        openaiAgent: "OpenAIのAPI Keyが正しくありません",
       },
       apiRateLimit: {
         imageOpenaiAgent:
