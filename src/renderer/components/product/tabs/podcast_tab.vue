@@ -30,6 +30,7 @@ import { Volume2 } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { formatFileSize, formatDuration } from "@/lib/format";
 import { useMulmoEventStore } from "@/store";
+import { sleep } from "graphai";
 
 import { downloadFile, useMediaContents } from "./utils";
 
@@ -65,6 +66,7 @@ const {
   updateResources,
 } = useMediaContents("audio", "audio/mp3", async () => {
   await nextTick();
+  await sleep(200);
   updateMetadata();
 });
 
