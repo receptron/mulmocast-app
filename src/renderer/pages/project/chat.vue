@@ -461,10 +461,10 @@ const run = async () => {
       emit("updateMulmoScript", script);
     }
   } catch (error) {
-    if (llmAgent.value === "openAIAgent") {
-      if (error.status === 401) {
-        notifyError(t("notify.error.apiKeyInvalid.ttsOpenaiAgent"));
-      } else if (error.status === 429) {
+    if (error.status === 401) {
+      notifyError(t("notify.error.apiKeyInvalid." + llmAgent.value));
+    } else if (llmAgent.value === "openAIAgent") {
+      if (error.status === 429) {
         notifyError(t("notify.error.apiKeyInvalid.ttsOpenaiAgent"));
       } else {
         notifyError(t("ui.common.error"), error);
