@@ -1,6 +1,6 @@
 import type { ZodError, ZodIssue } from "zod";
 import type { MulmoError } from "../../types/index.js";
-import { unknownMediaType, apiKeyInvalidType, apiRateLimitErrorType } from "mulmocast/browser";
+import { unknownMediaType, apiKeyInvalidType, apiRateLimitErrorType, apiKeyMissingType } from "mulmocast/browser";
 
 const unrecognizedKeysError = (paths: (string | number)[], keys: string[]) => {
   const pathStr = paths
@@ -164,6 +164,9 @@ export const convCauseToErrorMessage = (cause: {
   if (unknownMediaType === cause.type) {
     return [["notify.error", cause.action, cause.type].join(".")];
   }
-  // console.log(cause);
+  if (apiKeyMissingType === cause.type) {
+    return [["notify.error", apiKeyMissingType, cause.envVarName].join("."), {}];
+  }
+  console.log(cause);
   return ["notify.error.unknownError"];
 };

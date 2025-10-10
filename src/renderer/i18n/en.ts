@@ -899,6 +899,17 @@ const lang = {
           translateBeat: "An error occurred during translation.",
         },
       },
+      apiKeyMissing: {
+        OPENAI_API_KEY: "OpenAI API key is not set",
+        NIJIVOICE_API_KEY: "NijiVoice API key is not set",
+        TAVILY_API_KEY: "Tavily API key is not set",
+        ELEVENLABS_API_KEY: "ElevenLabs API key is not set",
+        REPLICATE_API_TOKEN: "Replicate API token is not set",
+        GEMINI_API_KEY: "Gemini API key is not set",
+        ANTHROPIC_API_KEY: "Anthropic API key is not set",
+        GROQ_API_KEY: "GROQ API key is not set",
+        EXA_API_KEY: "EXA API key is not set",
+      },
     },
   },
   languages: {
