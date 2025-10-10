@@ -1,4 +1,5 @@
 import { type MessageBoxOptions, dialog, autoUpdater } from "electron";
+import { GraphAILogger } from "graphai";
 
 import type { IUpdateDialogStrings, IUpdateInfo } from "update-electron-app";
 
@@ -18,7 +19,7 @@ export function makeUserNotifier(dialogProps?: IUpdateDialogStrings): (info: IUp
 
   const assignedDialog = Object.assign({}, defaultDialogMessages, dialogProps);
 
-  return (info: IUpdateInfo, callback?: (response) => void) => {
+  return (info: IUpdateInfo, callback?: (response: number) => void) => {
     const { releaseNotes, releaseName } = info;
     const { title, restartButtonText, laterButtonText, detail } = assignedDialog;
 
@@ -30,12 +31,30 @@ export function makeUserNotifier(dialogProps?: IUpdateDialogStrings): (info: IUp
       detail,
     };
 
-    const { response } = dialog.showMessageBox(dialogOpts);
-    if (response === 0) {
-      autoUpdater.quitAndInstall();
-    }
-    if (callback) {
-      callback(response);
-    }
+    const noteLog = Array.isArray(releaseNotes) ? releaseNotes.join("\n") : releaseNotes;
+
+    GraphAILogger.log("[AutoUpdate] Prompting user about available update", {
+      releaseName,
+      releaseNotes: noteLog,
+    });
+
+    void (async () => {
+      try {
+        const { response } = await dialog.showMessageBox(dialogOpts);
+
+        if (response === 0) {
+          GraphAILogger.log("[AutoUpdate] User chose restart; invoking quitAndInstall");
+          autoUpdater.quitAndInstall();
+        } else {
+          GraphAILogger.log("[AutoUpdate] User deferred update");
+        }
+
+        if (callback) {
+          callback(response);
+        }
+      } catch (error) {
+        GraphAILogger.error("[AutoUpdate] Failed to present update dialog", error);
+      }
+    })();
   };
 }
