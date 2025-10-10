@@ -436,7 +436,7 @@ const lang = {
           "生成AIで作るキャラクターの見た目を安定させます。キャラクター画像は「画像生成プロンプト」で作るか、「画像ファイル」で追加して設定します。その後、各BEATの「{imageParamsImages}」で「{key}」を指定してください。",
         imageGenerationDisabled: {
           needPrompt: "「{imagePromptLabel}」を入力してください",
-          needValidScript: "{beatTabLabel}タブの内容が正しく設定されると、画像生成ボタンが押せるようになります。"
+          needValidScript: "{beatTabLabel}タブの内容が正しく設定されると、画像生成ボタンが押せるようになります。",
         },
       },
       validationStatus: "検証ステータス",
