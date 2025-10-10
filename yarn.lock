@@ -7635,10 +7635,10 @@ mulmocast-vision@^1.0.4:
     pdfkit "^0.17.2"
     puppeteer "^24.19.0"
 
-mulmocast@^1.2.58:
-  version "1.2.58"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.58.tgz#eca2bac8a9ab82b34f85752df01082e318f4bae3"
-  integrity sha512-HtO6PMGA3OetfLbmFdl5a77P3NTRmNpOPB9GQAbWVE83kxOpyXGipPrtX5bnkAMMjPBngd4P8TykZ000FDk3EA==
+mulmocast@^1.2.60:
+  version "1.2.60"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-1.2.60.tgz#94cc41857618d442e0090238fb223d74c7395198"
+  integrity sha512-ES62A0sc8v8R/565+kyrCrsKAPHouwms4ivgsVK5rltGZVJxNH8fCgEgUpFZIvuP3A3oDRYqHhpq4XcAIa9IRA==
   dependencies:
     "@google-cloud/text-to-speech" "^6.3.0"
     "@google/genai" "^1.22.0"
@@ -7917,15 +7917,10 @@ onetime@^7.0.0:
   dependencies:
     mimic-function "^5.0.0"
 
-openai@^5.0.1:
-  version "5.12.1"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-5.12.1.tgz#c86b266ce77714eb7b6f5831981acd93edddb662"
-  integrity sha512-26s536j4Fi7P3iUma1S9H33WRrw0Qu8pJ2nYJHffrlKHPU0JK4d0r3NcMgqEcAeTdNLGYNyoFsqN4g4YE9vutg==
-
-openai@^5.15.0:
-  version "5.15.0"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-5.15.0.tgz#de3ae6d0914f7a0fcc12d0faa21a2289f9d5cc5d"
-  integrity sha512-kcUdws8K/A8m02I+IqFBwO51gS+87GP89yWEufGbzEi8anBz4FB/bti2QxaJdGwwY4mwJGzx85XO7TuL/Tpu1w==
+openai@^5.0.1, openai@^5.15.0:
+  version "5.23.2"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-5.23.2.tgz#f13e2dc2ef6b88aab6a9b97cdc68d41a1d083c68"
+  integrity sha512-MQBzmTulj+MM5O8SKEk/gL8a7s5mktS9zUtAkU257WjvobGc9nKcBuVwjyEEcb9SI8a8Y2G/mzn3vm9n1Jlleg==
 
 optionator@^0.9.3:
   version "0.9.4"
