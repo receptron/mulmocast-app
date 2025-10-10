@@ -556,7 +556,7 @@ const lang = {
       placeholder: "{language} input: {speaker}'s voice content",
       // Generate audio requirements
       generateAudioNeedsText: "Text required to '{action}'",
-      generateAudioNeedsMedia: "Image or movie required to '{action}'",
+      generateAudioNeedsMedia: "Image or movie required to '{action}'. Add, fetch, or generate one from Markdown.",
     },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
