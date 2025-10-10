@@ -1,9 +1,12 @@
 <template>
   <Tabs class="w-full" :model-value="currentTab" @update:model-value="handleUpdateScriptEditorActiveTab">
     <TabsList class="grid w-full grid-cols-5" v-if="globalStore.userIsPro">
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA" data-testid="script-editor-tab-media">{{
-        t("project.scriptEditor.media.tabLabel")
-      }}</TabsTrigger>
+      <TabsTrigger
+        :value="SCRIPT_EDITOR_TABS.MEDIA"
+        data-testid="script-editor-tab-media"
+        :class="mulmoScriptHistoryStore.hasBeatSchemaError ? 'border-2 border-red-400' : ''"
+        >{{ t("project.scriptEditor.media.tabLabel") }}</TabsTrigger
+      >
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.REFERENCE" data-testid="script-editor-tab-reference">{{
         t("project.scriptEditor.reference.tabLabel")
       }}</TabsTrigger>
@@ -329,7 +332,7 @@ import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/consta
 
 import { setRandomBeatId } from "@/lib/beat_util";
 import { projectApi } from "@/lib/project_api";
-import { useMulmoGlobalStore } from "@/store";
+import { useMulmoGlobalStore, useMulmoScriptHistoryStore } from "@/store";
 
 const { t } = useI18n();
 
@@ -359,6 +362,7 @@ const emit = defineEmits([
 const route = useRoute();
 const projectId = computed(() => route.params.id as string);
 const globalStore = useMulmoGlobalStore();
+const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
 const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
 

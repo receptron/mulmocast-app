@@ -76,7 +76,7 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
 
   // internal
   const zodError = computed(() => {
-    return mulmoScriptSchema.safeParse(currentMulmoScript.value);
+    return mulmoScriptSchema.safeParse(currentMulmoScript.value ?? {});
   });
 
   const mulmoError = computed<MulmoError>(() => {
@@ -88,6 +88,14 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
   });
   const isValidScript = computed(() => {
     return zodError.value.success;
+  });
+  const hasBeatSchemaError = computed(() => {
+    if (!zodError.value.success) {
+      return zodError?.value?.error.issues.some((error) => {
+        return error.path[0] === "beats";
+      });
+    }
+    return false;
   });
 
   return {
@@ -104,5 +112,6 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
 
     mulmoError,
     isValidScript,
+    hasBeatSchemaError,
   };
 });
