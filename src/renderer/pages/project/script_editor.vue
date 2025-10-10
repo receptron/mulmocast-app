@@ -7,7 +7,8 @@
         :class="mulmoScriptHistoryStore.hasBeatSchemaError ? 'border-2 border-red-400' : ''"
         >{{ t("project.scriptEditor.media.tabLabel") }}</TabsTrigger
       >
-      <TabsTrigger :value="SCRIPT_EDITOR_TABS.REFERENCE" data-testid="script-editor-tab-reference">{{
+      <TabsTrigger :value="SCRIPT_EDITOR_TABS.REFERENCE" data-testid="script-editor-tab-reference"
+                   :class="mulmoScriptHistoryStore.hasImageParamsSchemaError ? 'border-red-400 border-2' :''">{{
         t("project.scriptEditor.reference.tabLabel")
       }}</TabsTrigger>
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.STYLE" data-testid="script-editor-tab-style">{{
