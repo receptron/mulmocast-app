@@ -137,6 +137,7 @@ export const convCauseToErrorMessage = (cause: {
   url?: string;
   key?: string;
   agentName?: string;
+  envVarName?: string;
 }) => {
   // notify.error.{action}.{type}
 
