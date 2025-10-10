@@ -97,6 +97,14 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
     }
     return false;
   });
+  const hasImageParamsSchemaError = computed(() => {
+    if (!zodError.value.success) {
+      return zodError?.value?.error.issues.some((error) => {
+        return error.path[0] === "imageParams";
+      });
+    }
+    return false;
+  });
 
   return {
     currentMulmoScript,
@@ -113,5 +121,6 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
     mulmoError,
     isValidScript,
     hasBeatSchemaError,
+    hasImageParamsSchemaError,
   };
 });
