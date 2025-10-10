@@ -47,6 +47,7 @@ import { isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 
 import { notifyError } from "@/lib/notification";
 
+import { sleep } from "graphai";
 import { z } from "zod";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
@@ -172,6 +173,7 @@ const handleDrop = (event: DragEvent) => {
           path: "./" + path,
         },
       };
+      await sleep(50);
       emit("updateImageData", imageData, () => {
         emit("generateImageOnlyImage");
       });
