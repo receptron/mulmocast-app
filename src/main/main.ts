@@ -259,6 +259,7 @@ const createWindow = (splashWindow?: BrowserWindow) => {
 
   const updateCallBack = (response: number) => {
     if (response === 1) {
+      GraphAILogger.log("[AutoUpdate] Later selected; navigating to /upadteInstall");
       mainWindow.webContents.send("navigate", "/upadteInstall");
     }
   };
