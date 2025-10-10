@@ -425,11 +425,13 @@ const lang = {
       },
       style: {
         tabLabel: "Style",
+        tabLabelShort: "Style",
         mode: "Style",
         modeDescription: "Presentation style editing",
       },
       reference: {
         tabLabel: "Character",
+        tabLabelShort: "Character",
         mode: "Character Settings",
         modeDescription: "Manage characters that appear in the presentation",
         description:

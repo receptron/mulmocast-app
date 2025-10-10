@@ -423,11 +423,13 @@ const lang = {
       },
       style: {
         tabLabel: "スタイル設定",
+        tabLabelShort: "スタイル",
         mode: "スタイル",
         modeDescription: "音声/動画/画像/字幕などのスタイルを設定します",
       },
       reference: {
         tabLabel: "キャラ設定",
+        tabLabelShort: "キャラ",
         mode: "キャラクター設定",
         modeDescription: "登場するキャラクターの管理をします",
         description:
