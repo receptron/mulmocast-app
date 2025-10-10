@@ -889,6 +889,8 @@ const lang = {
         imageOpenaiAgent: "The OpenAI API Key is invalid",
         ttsOpenaiAgent: "The OpenAI API Key is invalid",
         openaiAgent: "The OpenAI API Key is invalid",
+        openAIAgent: "The OpenAI API Key is invalid",
+        anthropicAgent: "Anthropic API Key is invalid",
       },
       apiRateLimit: {
         imageOpenaiAgent: "The OpenAI API usage limit has been reached. Please add billing or try again later.",
