@@ -11,7 +11,13 @@
         :value="SCRIPT_EDITOR_TABS.REFERENCE"
         data-testid="script-editor-tab-reference"
         :class="mulmoScriptHistoryStore.hasImageParamsSchemaError ? 'border-2 border-red-400' : ''"
-        >{{ t(globalStore.userIsPro ? "project.scriptEditor.reference.tabLabelShort" : "project.scriptEditor.reference.tabLabel") }}</TabsTrigger
+        >{{
+          t(
+            globalStore.userIsPro
+              ? "project.scriptEditor.reference.tabLabelShort"
+              : "project.scriptEditor.reference.tabLabel",
+          )
+        }}</TabsTrigger
       >
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.STYLE" data-testid="script-editor-tab-style">{{
         t(globalStore.userIsPro ? "project.scriptEditor.style.tabLabelShort" : "project.scriptEditor.style.tabLabel")
