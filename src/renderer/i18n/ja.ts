@@ -890,7 +890,7 @@ const lang = {
         ttsOpenaiAgent: "OpenAIのAPI Keyが正しくありません",
         openaiAgent: "OpenAIのAPI Keyが正しくありません",
         openAIAgent: "OpenAIのAPI Keyが正しくありません",
-        anthropicAgent: "AnthropicのAPI Keyが正しくありません"
+        anthropicAgent: "AnthropicのAPI Keyが正しくありません",
       },
       apiRateLimit: {
         imageOpenaiAgent:
