@@ -901,6 +901,17 @@ const lang = {
           translateBeat: "翻訳処理でエラーが発生しました。",
         },
       },
+      apiKeyMissing: {
+        OPENAI_API_KEY: "OpenAIのAPI Keyが設定されていません",
+        NIJIVOICE_API_KEY: "NijiVoiceのAPI Keyが設定されていません",
+        TAVILY_API_KEY: "TavilyのAPI Keyが設定されていません",
+        ELEVENLABS_API_KEY: "ElevenLabsのAPI Keyが設定されていません",
+        REPLICATE_API_TOKEN: "ReplicateのAPI Tokenが設定されていません",
+        GEMINI_API_KEY: "GeminiのAPI Keyが設定されていません",
+        ANTHROPIC_API_KEY: "AnthropicのAPI Keyが設定されていません",
+        GROQ_API_KEY: "GROQのAPI Keyが設定されていません",
+        EXA_API_KEY: "EXAのAPI Keyが設定されていません",
+      },
     },
   },
   languages: {
