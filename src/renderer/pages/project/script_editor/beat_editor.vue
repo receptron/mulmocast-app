@@ -6,12 +6,13 @@
         <div class="flex items-center gap-1">
           <CircleUserRound class="size-4 opacity-50" />
           <Badge
-          v-if="beat.speaker && !toggleSpeakerMode"
-          variant="outline"
-          @click="showSpeakerSelector"
-          class="cursor-pointer group"
-          > {{ beat.speaker }}<ChevronDown class="opacity-50 ml-1 size-4" /></Badge
-        >
+            v-if="beat.speaker && !toggleSpeakerMode"
+            variant="outline"
+            @click="showSpeakerSelector"
+            class="group cursor-pointer"
+          >
+            {{ beat.speaker }}<ChevronDown class="ml-1 size-4 opacity-50"
+          /></Badge>
         </div>
         <div v-if="toggleSpeakerMode">
           <SpeakerSelector
