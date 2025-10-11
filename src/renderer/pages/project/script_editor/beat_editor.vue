@@ -3,13 +3,16 @@
     <div class="mb-2 flex items-center justify-between">
       <div class="flex items-center gap-3 font-medium">
         <span class="text-base">{{ t("ui.common.beat") }} {{ index + 1 }}</span>
-        <Badge
+        <div class="flex items-center gap-1">
+          <CircleUserRound class="size-4 opacity-50" />
+          <Badge
           v-if="beat.speaker && !toggleSpeakerMode"
           variant="outline"
           @click="showSpeakerSelector"
-          class="cursor-pointer"
-          >{{ beat.speaker }}</Badge
+          class="cursor-pointer group"
+          > {{ beat.speaker }}<ChevronDown class="opacity-50 ml-1 size-4" /></Badge
         >
+        </div>
         <div v-if="toggleSpeakerMode">
           <SpeakerSelector
             @emitSpeaker="(speaker) => changeSpeaker(speaker)"
@@ -311,6 +314,7 @@ import {
   provider2TTSAgent,
 } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
+import { ChevronDown, CircleUserRound } from "lucide-vue-next";
 
 // components
 import MediaModal from "@/components/media_modal.vue";
