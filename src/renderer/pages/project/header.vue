@@ -7,12 +7,12 @@
           {{ t("project.header.back") }}
         </Button>
       </RouterLink>
-      <div>
+      <div class="flex-1 min-w-0">
         <!-- Title -->
         <div class="group relative flex items-center">
           <h1
             v-if="!isEditingTitle"
-            class="max-w-128 cursor-pointer truncate text-2xl font-bold"
+            class="max-w-sm md:max-w-lg lg:max-w-2xl xl:max-w-4xl cursor-pointer truncate text-2xl font-bold"
             @click="startEditingTitle"
             data-testid="project-title"
           >
@@ -21,7 +21,7 @@
           <Input
             v-else
             v-model="displayTitle"
-            class="w-128 text-2xl font-bold"
+            class="max-w-sm md:max-w-lg lg:max-w-2xl xl:max-w-4xl text-2xl font-bold"
             @blur="saveTitle"
             @keydown.enter="handleTitleEnter"
             autoFocus
@@ -38,7 +38,7 @@
         <div class="group relative flex items-center">
           <p
             v-if="!isEditingDescription"
-            class="text-muted-foreground max-w-128 cursor-pointer truncate"
+            class="text-muted-foreground max-w-sm md:max-w-lg lg:max-w-2xl xl:max-w-4xl cursor-pointer truncate"
             @click="startEditingDescription"
           >
             {{ displayDescription }}
@@ -46,7 +46,7 @@
           <Input
             v-else
             v-model="displayDescription"
-            class="`w-128 text-muted-foreground"
+            class="max-w-sm md:max-w-lg lg:max-w-2xl xl:max-w-4xl text-muted-foreground"
             @blur="saveDescription"
             @keydown.enter="handleDescriptionEnter"
             autoFocus
