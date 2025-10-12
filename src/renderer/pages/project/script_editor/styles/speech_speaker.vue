@@ -74,7 +74,7 @@
         <Label class="text-xs">{{ t("parameters.speechParams.language") }}</Label>
         <Select
           :model-value="selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE"
-          @update:model-value="(value) => handleLanguageChange(name, String(value))"
+          @update:model-value="(value) => handleLanguageChange(String(value))"
         >
           <SelectTrigger class="h-8">
             <SelectValue />
@@ -95,7 +95,7 @@
         <Input
           :model-value="speaker.displayName[selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE] || ''"
           @update:model-value="
-            (value) => handleDisplayNameChange(name, selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE, String(value))
+            (value) => handleDisplayNameChange(selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE, String(value))
           "
           class="h-8"
         />
@@ -125,7 +125,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  updateSpeakerData: [speechParams: MulmoSpeechParams];
+  updateSpeakerData: [updates: Partial<Speaker>, overridden?: boolean];
 }>();
 
 const providers = Object.keys(VOICE_LISTS);
@@ -142,7 +142,11 @@ const getVoiceList = (provider: string) => {
   return VOICE_LISTS[provider as Provider] || VOICE_LISTS.openai;
 };
 
-const selectedLanguages = ref<Record<string, string>>({});
+
+// const selectedLanguages = ref<Record<string, string>>({});
+// const handleLanguageChange = (language: string) => {
+//   console.log(language);
+// };
 
 const localizedSpeaker = computed(() => {
   const lang = mulmoScriptHistoryStore.lang;
