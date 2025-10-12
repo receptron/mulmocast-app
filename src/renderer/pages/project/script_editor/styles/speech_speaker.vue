@@ -142,7 +142,6 @@ const getVoiceList = (provider: string) => {
   return VOICE_LISTS[provider as Provider] || VOICE_LISTS.openai;
 };
 
-
 // const selectedLanguages = ref<Record<string, string>>({});
 // const handleLanguageChange = (language: string) => {
 //   console.log(language);
