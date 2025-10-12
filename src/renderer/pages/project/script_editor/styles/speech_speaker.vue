@@ -56,7 +56,7 @@
       :placeholder="t('parameters.speechParams.instructionPlaceholder')"
     />
   </div>
-  <div v-if="speaker.displayName">
+  <div v-if="false">
     <Label class="text-xs">{{ t("parameters.speechParams.displayName") }}</Label>
     <p class="text-muted-foreground mb-2 text-xs">
       {{
