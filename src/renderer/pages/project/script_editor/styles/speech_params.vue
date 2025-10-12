@@ -87,7 +87,7 @@ import { Card, Button, Label, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
 import { SPEECH_DEFAULT_LANGUAGE, VOICE_LISTS, defaultSpeechProvider } from "@/../shared/constants";
-import type { MulmoSpeechParams, Speaker, SpeakerDictonary } from "mulmocast/browser";
+import { type MulmoSpeechParams, type Speaker, type SpeakerDictonary, defaultSpeaker } from "mulmocast/browser";
 import SpeachSpeaker from "./speech_speaker.vue";
 
 import { useI18n } from "vue-i18n";
@@ -233,10 +233,10 @@ const handleAddSpeaker = () => {
 const initializeSpeechParams = () => {
   updateSpeechParams({
     speakers: {
-      Presenter: {
+      [defaultSpeaker]: {
         voiceId: DEFAULT_VOICE_IDS[defaultSpeechProvider],
         displayName: {
-          [SPEECH_DEFAULT_LANGUAGE]: "Presenter",
+          [SPEECH_DEFAULT_LANGUAGE]: defaultSpeaker,
         },
         isDefault: true,
       },
