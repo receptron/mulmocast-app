@@ -315,6 +315,7 @@ import {
   mulmoScriptSchema,
   mulmoBeatSchema,
   beatId,
+  defaultSpeaker,
   type MulmoScript,
   type MulmoBeat,
   type MulmoPresentationStyle,
@@ -530,7 +531,7 @@ const changeBeat = (beat: MulmoBeat, index: number) => {
 const addBeat = (beat: MulmoBeat, index: number) => {
   beat.speaker = props.mulmoScript?.speechParams?.speakers
     ? MulmoPresentationStyleMethods.getDefaultSpeaker(props.mulmoScript)
-    : "Presenter";
+    : defaultSpeaker;
   const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, setRandomBeatId(beat));
   emit("updateMulmoScriptAndPushToHistory", {
     ...props.mulmoScript,

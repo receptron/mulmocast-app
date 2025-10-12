@@ -105,8 +105,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import type { Speaker, MulmoSpeechParams } from "mulmocast/browser";
+import { computed } from "vue";
+import type { Speaker } from "mulmocast/browser";
 import { SPEECH_LANGUAGES, SPEECH_DEFAULT_LANGUAGE, VOICE_LISTS, defaultSpeechProvider } from "@/../shared/constants";
 import { useMulmoScriptHistoryStore } from "@/store";
 
