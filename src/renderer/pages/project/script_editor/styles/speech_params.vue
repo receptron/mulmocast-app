@@ -49,111 +49,12 @@
           </Button>
         </div>
         <div class="space-y-2">
-          <div>
-            <Label>{{ t("ui.common.provider") }}</Label>
-            <Select
-              :model-value="speaker.provider || defaultSpeechProvider"
-              @update:model-value="(value) => handleProviderChange(name, value)"
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="provider in providers" :value="provider" :key="provider">{{
-                  t("ai.provider." + provider + ".name")
-                }}</SelectItem>
-              </SelectContent>
-            </Select>
-            <SettingsAlert
-              class="mt-2"
-              :settingPresence="settingPresence"
-              :provider="speaker?.provider || defaultSpeechProvider"
-            />
-          </div>
-
-          <div>
-            <Label class="text-xs">{{ t("parameters.speechParams.voiceId") }}</Label>
-            <Select
-              :model-value="speaker.voiceId"
-              @update:model-value="(value) => handleSpeakerVoiceChange(name, String(value))"
-            >
-              <SelectTrigger class="h-8">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem
-                  v-for="voice in getVoiceList(speaker.provider || defaultSpeechProvider)"
-                  :key="voice.id"
-                  :value="voice.id"
-                >
-                  {{ t(["voiceList", speaker?.provider || defaultSpeechProvider, voice.key ?? voice.id].join(".")) }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div v-if="speaker.provider === 'nijivoice'">
-            <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
-            <Input
-              :model-value="speaker.speed || ''"
-              @update:model-value="(value) => handleSpeechOptionsChange(name, 'speed', value)"
-              class="h-8"
-              type="number"
-              :placeholder="t('parameters.speechParams.speedPlaceholder')"
-            />
-          </div>
-          <div v-if="speaker.provider === 'openai' || !speaker.provider">
-            <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
-            <Input
-              :model-value="speaker?.speechOptions?.instruction || ''"
-              @update:model-value="(value) => handleSpeechOptionsChange(name, 'instruction', value)"
-              class="h-8"
-              :placeholder="t('parameters.speechParams.instructionPlaceholder')"
-            />
-          </div>
-          <div v-if="speaker.displayName">
-            <Label class="text-xs">{{ t("parameters.speechParams.displayName") }}</Label>
-            <p class="text-muted-foreground mb-2 text-xs">
-              {{
-                t("parameters.speechParams.displayNameDescription", {
-                  language: t("parameters.speechParams.language"),
-                  displayName: t("parameters.speechParams.displayName"),
-                })
-              }}
-            </p>
-            <div class="ml-2 flex items-start gap-2">
-              <div class="w-1/4">
-                <Label class="text-xs">{{ t("parameters.speechParams.language") }}</Label>
-                <Select
-                  :model-value="selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE"
-                  @update:model-value="(value) => handleLanguageChange(name, String(value))"
-                >
-                  <SelectTrigger class="h-8">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem v-for="lang in SPEECH_LANGUAGES" :key="lang.id" :value="lang.id">
-                      {{ t("languages." + lang.id) }}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div class="w-3/4">
-                <Label class="text-xs"
-                  >{{ t("parameters.speechParams.displayName") }} ({{
-                    t("languages." + (selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE))
-                  }})
-                </Label>
-                <Input
-                  :model-value="speaker.displayName[selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE] || ''"
-                  @update:model-value="
-                    (value) =>
-                      handleDisplayNameChange(name, selectedLanguages[name] || SPEECH_DEFAULT_LANGUAGE, String(value))
-                  "
-                  class="h-8"
-                />
-              </div>
-            </div>
-          </div>
+          <SpeachSpeaker
+            :speaker="speaker"
+            :name="name"
+            @updateSpeakerData="(data, overridden) => updateSpeaker(name, data, overridden)"
+            :settingPresence="settingPresence"
+          />
         </div>
       </div>
       <div class="template-dropdown-container flex items-center gap-4">
@@ -185,15 +86,13 @@ import { ref, computed } from "vue";
 import { Card, Button, Label, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
-import { SPEECH_LANGUAGES, SPEECH_DEFAULT_LANGUAGE, VOICE_LISTS, defaultSpeechProvider } from "@/../shared/constants";
-import type { MulmoPresentationStyle } from "mulmocast/browser";
-import SettingsAlert from "../settings_alert.vue";
+import { SPEECH_DEFAULT_LANGUAGE, VOICE_LISTS, defaultSpeechProvider } from "@/../shared/constants";
+import type { MulmoSpeechParams, Speaker, SpeakerDictonary } from "mulmocast/browser";
+import SpeachSpeaker from "./speech_speaker.vue";
 
 import { useI18n } from "vue-i18n";
 
-type SpeechParams = MulmoPresentationStyle["speechParams"];
 type Provider = keyof typeof VOICE_LISTS;
-type Speaker = NonNullable<SpeechParams>["speakers"][string];
 
 const providers = Object.keys(VOICE_LISTS);
 
@@ -203,28 +102,22 @@ const DEFAULT_VOICE_IDS: Record<string, string> = providers.reduce((tmp, provide
 }, {});
 
 const props = defineProps<{
-  speechParams?: SpeechParams;
+  speechParams?: MulmoSpeechParams;
   mulmoError: string[];
   settingPresence: Record<string, boolean>;
 }>();
 
 const emit = defineEmits<{
-  update: [speechParams: SpeechParams];
+  update: [speechParams: MulmoSpeechParams];
 }>();
 
 const { t } = useI18n();
-
-const selectedLanguages = ref<Record<string, string>>({});
 
 const speakers = computed<Record<string, Speaker>>(() => props.speechParams?.speakers || {});
 const speakerCount = computed(() => Object.keys(speakers.value).length);
 const canDeleteSpeaker = computed(() => speakerCount.value > 1);
 
-const getVoiceList = (provider: string) => {
-  return VOICE_LISTS[provider as Provider] || VOICE_LISTS.openai;
-};
-
-const updateSpeechParams = (updates: Partial<NonNullable<SpeechParams>>): void => {
+const updateSpeechParams = (updates: Partial<NonNullable<MulmoSpeechParams>>): void => {
   const baseParams = props.speechParams || {
     provider: "openai" as Provider,
     speakers: {},
@@ -236,55 +129,19 @@ const updateSpeechParams = (updates: Partial<NonNullable<SpeechParams>>): void =
   });
 };
 
-const updateSpeakers = (speakerUpdates: NonNullable<SpeechParams>["speakers"]): void => {
+const updateSpeakers = (speakerUpdates: NonNullable<SpeakerDictonary>): void => {
   updateSpeechParams({ speakers: speakerUpdates });
 };
 
-const updateSpeaker = (name: string, updates: Partial<Speaker>): void => {
+const updateSpeaker = (name: string, updates: Partial<Speaker>, overridden = true): void => {
   const updatedSpeakers = { ...speakers.value };
-  updatedSpeakers[name] = {
-    ...updatedSpeakers[name],
-    ...updates,
-  };
+  updatedSpeakers[name] = overridden
+    ? {
+        ...updatedSpeakers[name],
+        ...updates,
+      }
+    : updates;
   updateSpeakers(updatedSpeakers);
-};
-
-const handleProviderChange = async (name: string, provider: string) => {
-  const { [name]: currentSpeaker, ...currentSpeakers } = { ...speakers.value };
-  const voiceId = DEFAULT_VOICE_IDS[provider];
-  const updatedSpeakers = {
-    ...currentSpeakers,
-    [name]: {
-      provider,
-      voiceId,
-      displayName: currentSpeaker.displayName,
-    },
-  };
-  updateSpeakers(updatedSpeakers);
-};
-
-const handleLanguageChange = (name: string, language: string) => {
-  selectedLanguages.value[name] = language;
-};
-
-const handleSpeechOptionsChange = (name: string, key: string, value: string) => {
-  updateSpeaker(name, { speechOptions: { [key]: key === "speed" ? Number(value) : value } });
-};
-
-const handleSpeakerVoiceChange = (name: string, voiceId: string) => {
-  updateSpeaker(name, { voiceId });
-};
-
-const handleDisplayNameChange = (name: string, language: string, value: string) => {
-  const speaker = speakers.value[name];
-  if (!speaker) return;
-
-  updateSpeaker(name, {
-    displayName: {
-      ...speaker.displayName,
-      [language]: value,
-    },
-  });
 };
 
 const defaultSpeakerName = computed(() => {
@@ -295,7 +152,7 @@ const defaultSpeakerName = computed(() => {
 });
 
 const handleDefaultSpeakerChange = (name: string) => {
-  const updated: NonNullable<SpeechParams>["speakers"] = {};
+  const updated: NonNullable<MulmoSpeechParams>["speakers"] = {};
   for (const [key, sp] of Object.entries(speakers.value)) {
     updated[key] = { ...sp, isDefault: key === name } as Speaker;
   }
