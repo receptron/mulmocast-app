@@ -11,7 +11,7 @@ import {
   generateBeatImage,
   generateBeatAudio,
   generateReferenceImage,
-  getBeatAudioPath,
+  getBeatAudioPathOrUrl,
   addSessionProgressCallback,
   translateBeat,
   translate,
@@ -99,7 +99,7 @@ export const mulmoActionRunner = async (
 
 const beatAudioPath = (context: MulmoStudioContext, beat) => {
   const { text } = beat;
-  return getBeatAudioPath(text, context, beat, context.studio.script?.lang ?? "en");
+  return getBeatAudioPathOrUrl(text, context, beat, context.studio.script?.lang ?? "en");
 };
 
 export const mulmoGenerateBeatImage = async (

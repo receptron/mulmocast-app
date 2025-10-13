@@ -1,5 +1,5 @@
 import {
-  getBeatAudioPath,
+  getBeatAudioPathOrUrl,
   MulmoPresentationStyleMethods,
   MulmoMediaSourceMethods,
   imagePreprocessAgent,
@@ -28,7 +28,7 @@ const beatAudio = (context: MulmoStudioContext) => {
       const { lang, multiLingual } = option ?? {};
       const text = lang && multiLingual ? localizedText(beat, multiLingual, lang) : beat.text;
 
-      const fileName = getBeatAudioPath(text, context, beat, lang ?? context.studio.script?.lang ?? "en");
+      const fileName = getBeatAudioPathOrUrl(text, context, beat, lang ?? context.studio.script?.lang ?? "en");
       if (fileExstsSync(fileName)) {
         const buffer = fs.readFileSync(fileName);
         return buffer.buffer;
