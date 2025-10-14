@@ -209,7 +209,7 @@
             </Card>
 
             <!-- Debug Log Section -->
-            <Card>
+            <Card v-if="isDevelopment">
               <CardContent class="space-y-4 p-4">
                 <!-- Debug Logs -->
                 <DebugLog />
@@ -304,6 +304,8 @@ import { ChatMessage } from "@/types";
 import { type ScriptEditorTab, type MulmoViewerTab } from "../../shared/constants";
 
 import { useImageFiles, useAudioFiles } from "./composable";
+
+const isDevelopment = import.meta.env.DEV;
 
 // State
 const route = useRoute();
