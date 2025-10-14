@@ -83,8 +83,7 @@ export const mulmoImageFiles = async (projectId: string) => {
     if (!context) {
       return { result: false, noContext: true };
     }
-    const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle);
-    const dataSet = await Promise.all(context.studio.script.beats.map(beatImage(context, imageAgentInfo)));
+    const dataSet = await Promise.all(context.studio.script.beats.map(beatImage(context)));
     return context.studio.script.beats.reduce((tmp, beat, index) => {
       if (beat.id) {
         tmp[beat.id] = dataSet[index];
@@ -102,9 +101,9 @@ export const mulmoImageFile = async (projectId: string, index: number) => {
     if (!context) {
       return { result: false, noContext: true };
     }
-    const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle);
+
     const beat = context.studio.script.beats[0];
-    return await beatImage(context, imageAgentInfo)(beat, 0);
+    return await beatImage(context)(beat, 0);
   } catch (error) {
     GraphAILogger.log(error);
   }
@@ -118,9 +117,10 @@ const fileExstsSync = (filePath: string) => {
   return false;
 };
 
-const beatImage = (context: MulmoStudioContext, imageAgentInfo) => {
+const beatImage = (context: MulmoStudioContext) => {
   return async (beat, index) => {
     try {
+      const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle, beat);
       const res = await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs: {} });
       if (res.htmlImageFile && fileExstsSync(res.htmlImageFile)) {
         const buffer = fs.readFileSync(res.htmlImageFile);
