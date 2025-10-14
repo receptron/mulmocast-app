@@ -11,7 +11,6 @@ import {
   listLocalizedAudioPaths,
   defaultBGMPath,
   resolveAssetPath,
-  type Text2ImageAgentInfo,
   type MulmoStudioContext,
   type MulmoStudioMultiLingual,
 } from "mulmocast";
