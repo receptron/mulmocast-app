@@ -31,7 +31,6 @@
       </div>
       <div class="mt-4 space-y-2" v-if="selectedLLM === 'openAIAgent'">
         {{ t("settings.llmSettings.model") }}:
-        <Input v-model="llmConfigs['openai']['model']" type="text" class="flex-1" />
         <Select v-model="llmConfigs['openai']['model']">
           <SelectTrigger>
             <SelectValue />
