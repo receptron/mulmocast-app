@@ -47,10 +47,7 @@ onMounted(() => {
 });
 
 const disableChange = computed(() => {
-  return (
-    props.currentBeatType &&
-    props.currentBeatType === templates.value[selectedBeat.value]?.key
-  );
+  return props.currentBeatType && props.currentBeatType === templates.value[selectedBeat.value]?.key;
 });
 
 const emitBeat = () => {
