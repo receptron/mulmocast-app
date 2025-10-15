@@ -34,9 +34,12 @@ const { t } = useI18n();
 const emit = defineEmits(["emitBeat"]);
 const selectedBeat = ref(0);
 
+const templates = computed(() => {
+  return props.isPro ? beatTemplates : simpleTemplates;
+});
 onMounted(() => {
   if (props.currentBeatType) {
-    const index = beatTemplates.findIndex((beat) => beat.key === props.currentBeatType);
+    const index = templates.value.findIndex((beat) => beat.key === props.currentBeatType);
     if (index !== -1) {
       selectedBeat.value = index;
     }
@@ -44,14 +47,11 @@ onMounted(() => {
 });
 
 const disableChange = computed(() => {
-  return (
-    props.currentBeatType &&
-    props.currentBeatType === (props.isPro ? beatTemplates : simpleTemplates)[selectedBeat.value].key
-  );
+  return props.currentBeatType && props.currentBeatType === templates.value[selectedBeat.value]?.key;
 });
 
 const emitBeat = () => {
-  const beat = { ...(props.isPro ? beatTemplates : simpleTemplates)[selectedBeat.value].beat };
+  const beat = { ...templates.value[selectedBeat.value].beat };
   emit("emitBeat", beat);
 };
 </script>
