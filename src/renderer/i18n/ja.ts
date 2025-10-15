@@ -555,6 +555,9 @@ const lang = {
       generateAudioNeedsText: "「{action}」には話す内容が必要です",
       generateAudioNeedsMedia:
         "「{action}」には画像または動画が必要です。ファイル追加・URL取得・Markdown等から生成してください。",
+      // Speaker tooltip
+      tooltipTitle: "{speakerLabel}を選択できます",
+      tooltipDescription: "登場人物と声は{tab}タブで追加・編集できます",
     },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {

@@ -557,6 +557,9 @@ const lang = {
       // Generate audio requirements
       generateAudioNeedsText: "Text required to '{action}'",
       generateAudioNeedsMedia: "Image or movie required to '{action}'. Add, fetch, or generate one from Markdown.",
+      // Speaker tooltip
+      tooltipTitle: "Select {speakerLabel}",
+      tooltipDescription: "Manage speakers and voices in the {tab} tab.",
     },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
