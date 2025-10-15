@@ -6,17 +6,13 @@
         <div class="flex items-center gap-1">
           <CircleUserRound class="size-4 opacity-50" />
           <div v-if="beat.speaker && !toggleSpeakerMode" class="group relative">
-            <Badge
-              variant="outline"
-              @click="showSpeakerSelector"
-              class="cursor-pointer"
-            >
+            <Badge variant="outline" @click="showSpeakerSelector" class="cursor-pointer">
               {{ beat.speaker }}<ChevronDown class="ml-1 size-4 opacity-50"
             /></Badge>
             <span
               class="bg-popover text-popover-foreground border-border pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform rounded border px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100"
             >
-              <div>{{ t("beat.speaker.tooltipTitle", { "speakerLabel": t("beat.speaker.label") }) }}</div>
+              <div>{{ t("beat.speaker.tooltipTitle", { speakerLabel: t("beat.speaker.label") }) }}</div>
               <div class="text-muted-foreground">
                 {{ t("beat.speaker.tooltipDescription", { tab: "Style" }) }}
               </div>
