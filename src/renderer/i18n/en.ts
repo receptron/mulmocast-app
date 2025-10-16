@@ -560,6 +560,7 @@ const lang = {
       // Speaker tooltip
       tooltipTitle: "Select {speakerLabel}",
       tooltipDescription: "Manage speakers and voices in the {tab} tab.",
+      tooltipNote: "Regenerate audio after changing speaker.",
     },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
