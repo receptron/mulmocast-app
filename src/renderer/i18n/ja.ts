@@ -852,6 +852,12 @@ const lang = {
           movieReplicateAgent: "動画生成（Replicate）でエラーが発生しました。",
           lipSyncReplicateAgent: "リップシンク（Replicate）でエラーが発生しました。",
           soundEffectReplicateAgent: "効果音生成（Replicate）でエラーが発生しました。",
+          openAIError: {
+            need_verified_organization:
+              "画像生成（OpenAI）エラー: gpt-image-1 モデルを利用するためには組織認証行ってください。 https://platform.openai.com/settings/organization/general",
+            billing_hard_limit_reached:
+              "画像生成（OpenAI）でエラーが発生しました。OpenAI APIのクレジット残高を確認してください",
+          },
         },
       },
       imageReference: {

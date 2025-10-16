@@ -853,6 +853,11 @@ const lang = {
           movieReplicateAgent: "An error occurred with video generation (Replicate).",
           lipSyncReplicateAgent: "An error occurred with lip sync (Replicate).",
           soundEffectReplicateAgent: "An error occurred with sound effect generation (Replicate).",
+          openAIError: {
+            need_verified_organization:
+              "Image generation (OpenAI) error: Please complete organization verification to use the gpt-image-1 model.  https://platform.openai.com/settings/organization/general",
+            billing_hard_limit_reached: "Image generation (OpenAI) error: Please check your OpenAI API credit balance",
+          },
         },
       },
       imageReference: {
