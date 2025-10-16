@@ -558,6 +558,7 @@ const lang = {
       // Speaker tooltip
       tooltipTitle: "{speakerLabel}を選択できます",
       tooltipDescription: "登場人物と声は{tab}タブで追加・編集できます",
+      tooltipNote: "変更後は音声を再生成してください",
     },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {

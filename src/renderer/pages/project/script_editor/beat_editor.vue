@@ -16,6 +16,9 @@
               <div class="text-muted-foreground">
                 {{ t("beat.speaker.tooltipDescription", { tab: "Style" }) }}
               </div>
+              <div class="text-muted-foreground">
+                {{ t("beat.speaker.tooltipNote") }}
+              </div>
             </span>
           </div>
         </div>
