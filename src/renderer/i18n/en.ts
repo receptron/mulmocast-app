@@ -560,6 +560,7 @@ const lang = {
       // Speaker tooltip
       tooltipTitle: "Select {speakerLabel}",
       tooltipDescription: "Manage speakers and voices in the {tab} tab.",
+      tooltipNote: "Regenerate audio after changing speaker.",
     },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
@@ -703,9 +704,12 @@ const lang = {
       stylesDescription: "Enter CSS styles (one per line)",
     },
     textSlideParams: {
-      title: "Text Slide Parameters",
+      title: "Common Slide Parameters",
       css: "CSS Styles",
-      cssDescription: "Enter CSS styles as a single string or multiple lines.",
+      cssDescription:
+        "Enter CSS styles as a single string or multiple lines (applies to Text Slide, Markdown, Chart, and Mermaid).",
+      cssPlaceholder:
+        "h2 { font-size: 48px; margin-left: 40px; text-align: left }\nh3 { font-size: 36px; margin-left: 40px }\nul { margin-left: 40px }\nol { margin-left: 40px }",
     },
     imageParams: {
       title: "Image Parameters",
@@ -852,6 +856,11 @@ const lang = {
           movieReplicateAgent: "An error occurred with video generation (Replicate).",
           lipSyncReplicateAgent: "An error occurred with lip sync (Replicate).",
           soundEffectReplicateAgent: "An error occurred with sound effect generation (Replicate).",
+          openAIError: {
+            need_verified_organization:
+              "Image generation (OpenAI) error: Please complete organization verification to use the gpt-image-1 model.  https://platform.openai.com/settings/organization/general",
+            billing_hard_limit_reached: "Image generation (OpenAI) error: Please check your OpenAI API credit balance",
+          },
         },
       },
       imageReference: {

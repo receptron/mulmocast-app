@@ -558,6 +558,7 @@ const lang = {
       // Speaker tooltip
       tooltipTitle: "{speakerLabel}を選択できます",
       tooltipDescription: "登場人物と声は{tab}タブで追加・編集できます",
+      tooltipNote: "変更後は音声を再生成してください",
     },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
@@ -702,9 +703,12 @@ const lang = {
       stylesDescription: "CSSスタイルを入力してください(1行に1つずつ)",
     },
     textSlideParams: {
-      title: "テキストスライド設定",
+      title: "スライド共通設定",
       css: "CSSスタイル",
-      cssDescription: "CSSスタイルを単一文字列または複数行で入力してください",
+      cssDescription:
+        "CSSスタイルを単一文字列または複数行で入力してください（テキストスライド・Markdown・Chart・Mermaidに適用）",
+      cssPlaceholder:
+        "h2 { font-size: 48px; margin-left: 40px; text-align: left }\nh3 { font-size: 36px; margin-left: 40px }\nul { margin-left: 40px }\nol { margin-left: 40px }",
     },
     imageParams: {
       title: "画像生成設定",
@@ -851,6 +855,12 @@ const lang = {
           movieReplicateAgent: "動画生成（Replicate）でエラーが発生しました。",
           lipSyncReplicateAgent: "リップシンク（Replicate）でエラーが発生しました。",
           soundEffectReplicateAgent: "効果音生成（Replicate）でエラーが発生しました。",
+          openAIError: {
+            need_verified_organization:
+              "画像生成（OpenAI）エラー: gpt-image-1 モデルを利用するためには組織認証行ってください。 https://platform.openai.com/settings/organization/general",
+            billing_hard_limit_reached:
+              "画像生成（OpenAI）でエラーが発生しました。OpenAI APIのクレジット残高を確認してください",
+          },
         },
       },
       imageReference: {

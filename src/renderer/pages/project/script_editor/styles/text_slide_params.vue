@@ -8,7 +8,7 @@
         <Textarea
           :model-value="cssStylesText"
           @update:model-value="handleCssStylesInput"
-          :placeholder="`${t('ui.common.example')}\nfont-size: 24px;\ncolor: #333;\nmargin: 20px;`"
+          :placeholder="`${t('ui.common.example')}\n${t('parameters.textSlideParams.cssPlaceholder')}`"
           class="font-mono"
           rows="6"
         />

@@ -138,6 +138,8 @@ export const convCauseToErrorMessage = (cause: {
   key?: string;
   agentName?: string;
   envVarName?: string;
+  errorCode?: string;
+  errorType?: string;
 }) => {
   // notify.error.{action}.{type}
 
@@ -168,6 +170,10 @@ export const convCauseToErrorMessage = (cause: {
   if (apiKeyMissingType === cause.type) {
     return [["notify.error", apiKeyMissingType, cause.envVarName].join("."), {}];
   }
+  if (cause.errorCode && cause.errorType) {
+    return [["notify.error", cause.action, cause.type, "openAIError", cause.errorCode].join("."), {}];
+  }
+
   console.log(cause);
   return ["notify.error.unknownError"];
 };
