@@ -703,9 +703,9 @@ const lang = {
       stylesDescription: "CSSスタイルを入力してください(1行に1つずつ)",
     },
     textSlideParams: {
-      title: "テキストスライド設定",
+      title: "スライド共通設定",
       css: "CSSスタイル",
-      cssDescription: "CSSスタイルを単一文字列または複数行で入力してください",
+      cssDescription: "CSSスタイルを単一文字列または複数行で入力してください（テキストスライド・Markdown・Chart・Mermaidに適用）",
     },
     imageParams: {
       title: "画像生成設定",

@@ -704,9 +704,9 @@ const lang = {
       stylesDescription: "Enter CSS styles (one per line)",
     },
     textSlideParams: {
-      title: "Text Slide Parameters",
+      title: "Common Slide Parameters",
       css: "CSS Styles",
-      cssDescription: "Enter CSS styles as a single string or multiple lines.",
+      cssDescription: "Enter CSS styles as a single string or multiple lines (applies to Text Slide, Markdown, Chart, and Mermaid).",
     },
     imageParams: {
       title: "Image Parameters",
