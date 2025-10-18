@@ -5,6 +5,7 @@
     :model-value="beat?.chart?.title"
     @update:model-value="(value) => update('image.title', String(value))"
     @blur="save"
+    class="mb-2"
   />
   <Textarea
     :placeholder="t('beat.chart.placeholder')"
