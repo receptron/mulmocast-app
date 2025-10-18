@@ -708,7 +708,7 @@ const lang = {
       cssDescription:
         "CSSスタイルを単一文字列または複数行で入力してください（テキストスライド・Markdown・Chart・Mermaidに適用）",
       cssPlaceholder:
-        "h2 { font-size: 48px; margin-left: 40px; text-align: left }\nh3 { font-size: 36px; margin-left: 40px }\nul { margin-left: 40px }\nol { margin-left: 40px }",
+        "h2 {'{'} font-size: 48px; margin-left: 40px; text-align: left {'}'}\nh3 {'{'} font-size: 36px; margin-left: 40px {'}'}\nul {'{'} margin-left: 40px {'}'}\nol {'{'} margin-left: 40px {'}'}",
     },
     imageParams: {
       title: "画像生成設定",
