@@ -1,5 +1,11 @@
 <template>
   <Label class="mb-1 block">{{ t("beat.chart.label") }}</Label>
+  <Input
+    :placeholder="t('beat.chart.titleField')"
+    :model-value="beat?.chart?.title"
+    @update:model-value="(value) => update('image.title', String(value))"
+    @blur="save"
+  />
   <Textarea
     :placeholder="t('beat.chart.placeholder')"
     :model-value="JSON.stringify(beat.image?.chartData, null, 2)"
@@ -17,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { Label, Textarea } from "@/components/ui";
+import { Label, Input, Textarea } from "@/components/ui";
 import type { MulmoBeat } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
