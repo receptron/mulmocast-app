@@ -14,7 +14,7 @@
     </Select>
   </div>
   <div class="mb-2 flex justify-end">
-    <Button variant="outline" size="sm" @click="updatePreset" :disabled="selectedPreset === null">
+    <Button size="sm" @click="updatePreset" :disabled="selectedPreset === null">
       {{ t("ui.actions.set") }}
     </Button>
   </div>
