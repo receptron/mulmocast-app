@@ -598,6 +598,7 @@ const lang = {
       chartDataField: "チャートデータ",
       placeholder:
         "グラフ描画データをJSON形式で入力してください\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'}'}\n{'}'}",
+      selectChartType: "グラフを選択してください",
       preset: {
         bar: "棒グラフ",
         line: "折れ線グラフ",
