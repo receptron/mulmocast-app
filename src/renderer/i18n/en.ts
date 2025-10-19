@@ -84,6 +84,7 @@ const lang = {
       ok: "OK",
       runningThing: "{thing} is running",
       translate: "Translate",
+      set: "Set",
 
       // Media actions (placeholder pairs)
       play: "Play",
@@ -598,6 +599,17 @@ const lang = {
       titleField: "Title",
       chartDataField: "Chart Data",
       placeholder: "Enter chart data in JSON format\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'}'}\n{'}'}",
+      preset: {
+        bar: "Bar",
+        line: "Line Chart",
+        pie: "Pie Chart",
+        radar: "Radar Chart",
+        scatter: "Scatter Chart",
+        stacked_bar: "Stacked Bar Chart",
+        doughnut: "Doughnut Chart",
+        mixed: "Mixed Chart",
+        time_series: "Time Series Chart",
+      },
     },
     mermaid: {
       badge: "Mermaid",
