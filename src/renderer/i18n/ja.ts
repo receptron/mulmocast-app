@@ -84,6 +84,7 @@ const lang = {
       ok: "OK",
       runningThing: "{thing}を実行中",
       translate: "翻訳する",
+      set: "セット",
 
       // Media actions (placeholder pairs)
       play: "再生",
@@ -597,6 +598,17 @@ const lang = {
       chartDataField: "チャートデータ",
       placeholder:
         "グラフ描画データをJSON形式で入力してください\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'}'}\n{'}'}",
+      preset: {
+        bar: "棒グラフ",
+        line: "折れ線グラフ",
+        pie: "円グラフ",
+        radar: "レーダーチャート",
+        scatter: "散布図",
+        stacked_bar: "積み上げ棒グラフ",
+        doughnut: "ドーナツチャート",
+        mixed: "複合チャート",
+        time_series: "時系列チャート",
+      },
     },
     mermaid: {
       badge: "Mermaid",
