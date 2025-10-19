@@ -600,7 +600,7 @@ const lang = {
       chartDataField: "Chart Data",
       placeholder: "Enter chart data in JSON format\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'}'}\n{'}'}",
       preset: {
-        bar: "Bar",
+        bar: "Bar Chart",
         line: "Line Chart",
         pie: "Pie Chart",
         radar: "Radar Chart",
