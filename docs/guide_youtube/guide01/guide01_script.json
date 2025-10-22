@@ -1,0 +1,310 @@
+{
+  "$mulmocast": {
+    "version": "1.1",
+    "credit": "closing"
+  },
+  "canvasSize": {
+    "width": 1280,
+    "height": 720
+  },
+  "lang": "ja",
+  "title": "MulmoCast 初回セットアップ＆動画生成マニュアル",
+  "description": "MulmoCastの初回起動時のセットアップから、サンプルプロジェクトを利用して最初の動画を生成・保存するまでの一連の手順を解説するガイド",
+  "speechParams": {
+    "speakers": {
+      "Presenter": {
+        "voiceId": "nova",
+        "displayName": {
+          "ja": "ナレーター"
+        }
+      }
+    }
+  },
+  "movieParams": {
+    "provider": "mock",
+    "model": "",
+    "transition": {
+      "type": "fade",
+      "duration": 1
+    }
+  },
+  "textSlideParams": {
+    "cssStyles": "h3 {margin-left: 20px; margin-top: 20px}"
+  },
+  "beats": [
+    {
+      "id": "title-slide",
+      "speaker": "Presenter",
+      "text": "マルモキャスト初回セットアップと動画生成マニュアルへようこそ。このガイドでは、マルモキャストのオンボーディングから、サンプルプロジェクトを利用して最初の動画を生成・保存するまでの一連の手順を解説いたします。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# MulmoCast Onboarding & Video Generation Manual",
+          "# MulmoCast オンボーディング＆動画生成マニュアル",
+          "",
+          "## Complete Guide from Setup to First Video",
+          "## セットアップから最初の動画生成まで完全ガイド",
+          "",
+          "- Initial Setup (Onboarding) / 初回セットアップ（オンボーディング）",
+          "- Sample Project Video Generation / サンプルプロジェクトによる動画生成"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "まず、初回セットアップ、オンボーディングについて説明します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "## 1. Initial Setup (Onboarding) <br> 1. 初回セットアップ（オンボーディング）",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "アプリケーションを初めて起動した際に表示されるセットアップウィザードの設定手順です。最初にウェルカム画面と表示言語の選択を行います。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Welcome Screen and Display Language Selection <br> ウェルカム画面と表示言語の選択",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide01/images/screenshot_00_00.png?raw=true\" alt=\"Welcome Screen\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "「マルモキャストへようこそ」というタイトルのポップアップが表示されます。ディスプレイ ランゲージという項目で、アプリケーションの表示言語を選択します。画像では「English」が選択されています。内容を確認後、右下の次へをクリックします。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Welcome to MulmoCast - Language Selection <br> Welcome to MulmoCast - 言語選択",
+          "",
+          "English",
+          "- \"Welcome to MulmoCast\" popup appears",
+          "- Select Display Language (English shown in image)",
+          "- Click [Next] button in bottom right",
+          "",
+          "日本語",
+          "- 「Welcome to MulmoCast」ポップアップが表示",
+          "- Display Language を選択（画像では English）",
+          "- 右下の [次へ] ボタンをクリック"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "次に、エーピーアイキーの設定を行います。「エーピーアイキー セッティングス」画面に切り替わります。「オープンエーアイ エーピーアイキー」の入力フィールドに、あらかじめ取得しておいたご自身のオープンエーアイエーピーアイキーを入力またはペーストします。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### API Key Settings <br> APIキーの設定",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide01/images/screenshot_00_16.png?raw=true\" alt=\"Setup Complete\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "入力後、右下の次へボタンをクリックします。なお、つまずきやすいポイントとして、この操作には、事前にオープンエーアイのウェブサイトでエーピーアイキーを取得しておく必要があります。エーピーアイキーがないと先に進めませんのでご注意ください。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### API Key Entry Process <br> APIキー入力プロセス",
+          "",
+          "English",
+          "- Switch to \"API Key Settings\" screen",
+          "- Enter your OpenAI API Key in input field",
+          "- Click [Next] button after input",
+          "",
+          "⚠️ **Important**: OpenAI API Key must be obtained beforehand",
+          "",
+          "日本語",
+          "- 「APIキー設定」画面に切り替わり",
+          "- OpenAI API Key 入力フィールドにキーを入力",
+          "- 入力後、右下の [次へ] ボタンをクリック",
+          "",
+          "⚠️ **重要**: 事前にOpenAI APIキーの取得が必要"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "セットアップの完了について説明します。緑色のチェックマークと共に「セットアップが正常に完了しました」と表示されれば、初期設定は完了です。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Setup Complete <br> セットアップの完了",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide01/images/screenshot_00_20.png?raw=true\" alt=\"What's Next\" width=\"70%\">",
+          "</div>"
+          ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "続いて、サンプルプロジェクトによる動画生成について説明します。ホーム画面から、あらかじめ用意されているサンプルプロジェクトを使って動画を生成し、保存する手順です。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "## 2. Sample Project Video Generation <br> 2. サンプルプロジェクトによる動画生成",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "まず、新規プロジェクトの作成を行います。「マルモキャストへようこそ！」と表示されたホーム画面が表示されます。画面左上にある黒い「新規作成」ボタンをクリックします。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Creating New Project <br> 新規プロジェクトの作成",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide01/images/screenshot_00_24.png?raw=true\" alt=\"Dashboard\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "初回から3回目のプロジェクト作成時は、操作に慣れるためのサンプルコンテンツ、台本や画像生成の指示文が自動的に読み込まれた状態でプロジェクトが開始されます。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='margin-left: 20px; margin-top: 20px;'>",
+          "",
+          "### Creating New Project",
+          "### 新規プロジェクトの作成",
+          "</div>",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide01/images/screenshot_00_30.png?raw=true\" alt=\"Generate Video\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "プロジェクト編集画面の確認を行います。「導入1. ようこそ、マルモキャスト へ!!」というタイトルのプロジェクト編集画面が開きます。画面構成のポイントについて説明します。左側エリア「動画のストーリーを作る」では、動画の各シーン「ビート1」「ビート2」のセリフや画像生成プロンプトが設定されています。ここを編集することでオリジナルの動画を作成します。右側エリア「動画を作る / 動画を見る」では、動画の生成ボタンやプレビューが表示されるエリアです。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Project Editor Screen <br> プロジェクト編集画面の確認",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide01/images/screenshot_00_30.png?raw=true\" alt=\"Generate Video\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "動画の生成開始について説明します。画面右側の「動画を作る / 動画を見る」パネル内にある、黒い「動画生成」ボタンをクリックします。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Start Video Generation <br> 動画の生成開始",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide01/images/screenshot_00_31_8.png?raw=true\" alt=\"Generation Process\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "クリック後、動画生成プロセスが開始されます。アプリケーションが各「ビート」に設定された内容に基づいて、音声",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Start Video Generation <br> 動画の生成開始",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide01/images/screenshot_00_36.png?raw=true\" alt=\"Generation Process\" width=\"70%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "画像",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Start Video Generation <br> 動画の生成開始",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide01/images/screenshot_00_58.png?raw=true\" alt=\"Generation Process\" width=\"70%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "動画の順番で処理を進めます。動画の長さやシーン数によって、生成には数分かかる場合があります。処理が完了するまでお待ちください。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Start Video Generation <br> 動画の生成開始",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide01/images/screenshot_01_08.png?raw=true\" alt=\"Generation Process\" width=\"70%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "生成完了と動画プレビューについて説明します。画面右下に緑色の完了通知が表示されたら、動画の生成は完了です。「動画を作る / 動画を見る」パネルに完成した動画のプレビューが表示され、「再生」ボタンで動画を再生して内容確認ができます。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Generation Complete and Video Preview <br> 生成完了と動画プレビュー",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide01/images/screenshot_01_12.png?raw=true\" alt=\"Generation Complete\" width=\"70%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "最後に、動画ファイルのダウンロードについて説明します。プレビュー画面の下にある「ダウンロード エムピーフォー」ボタンをクリックします。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Download Video File <br> 動画ファイルのダウンロード",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide01/images/screenshot_01_23.png?raw=true\" alt=\"Download Button\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "お使いのピーシーのファイル保存ダイアログが開き、動画ファイの保存ができます。なお、画像は Mac版です。以上で、マルモキャストを使った基本的な動画作成の一連の操作は完了です。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### File Save Dialog <br> ファイル保存ダイアログ",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide01/images/screenshot_02_23.png?raw=true\" alt=\"File Save Dialog\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,208 @@
+{
+  "$mulmocast": {
+    "version": "1.1",
+    "credit": "closing"
+  },
+  "canvasSize": {
+    "width": 1280,
+    "height": 720
+  },
+  "lang": "ja",
+  "title": "MulmoCast ダウンロード＆インストール",
+  "description": "MulmoCastアプリケーションのダウンロードとインストール手順を説明するガイド",
+  "speechParams": {
+    "speakers": {
+      "Presenter": {
+        "voiceId": "nova",
+        "displayName": {
+          "ja": "ナレーター"
+        }
+      }
+    }
+  },
+  "movieParams": {
+    "provider": "mock",
+    "model": "",
+    "transition": {
+      "type": "fade",
+      "duration": 1
+    }
+  },
+  "textSlideParams": {
+    "cssStyles": "h3 {margin-left: 20px; margin-top: 20px}"
+  },
+  "beats": [
+    {
+      "id": "title-slide",
+      "speaker": "Presenter",
+      "text": "マルモキャストWindows版のインストールガイドへようこそ。このガイドでは、マルモキャストアプリケーションのダウンロードとインストール手順について順を追って説明いたします。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# MulmoCast Installation Guide (Windows)",
+          "# MulmoCast インストールガイド (Windows版)",
+          "",
+          "## Download and Installation Steps",
+          "## ダウンロードとインストール手順",
+          "",
+          "- Download / ダウンロード",
+          "- Installation / インストール"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "まず最初に、アプリケーションのダウンロード方法について説明します。公式のマルモキャストウェブサイトにアクセスして、「Windows用アプリをダウンロード」のセクションを見つけ、「ダウンロード」のリンクをクリックします。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### 1. Downloading the Application <br> 1. アプリケーションのダウンロード",
+          "",
+          "English",
+          "- Go to `mulmocast.com`",
+          "- Locate Windows app download section",
+          "- Click **Download** link",
+          "",
+          "日本語",
+          "- `mulmocast.com` にアクセス",
+          "- 「Windows用アプリをダウンロード」セクションを見つける",
+          "- **ダウンロード** リンクをクリック"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "ブラウザでセキュリティ警告が表示される場合があります。これは新しいアプリケーションのため、安全性確認のメッセージです。三点ドットアイコンをクリックして続行します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Handle Security Warning - Browser may show security warning: Click three dots (...) icon <br> セキュリティ警告への対処 - ブラウザにセキュリティ警告が表示される場合: 三点ドット（...）アイコンをクリック",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide00_script_win/images/00_04_security_warning.png?raw=true\" alt=\"Security Warning\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "ドロップダウンメニューから「保存」を選択してダウンロードを続行します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Select **Keep** from dropdown <br> ドロップダウンから**保存**を選択",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide00_script_win/images/00_06_keep_dropdown.png?raw=true\" alt=\"Keep Dropdown\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "削除ボタンの横にある下矢印をクリックし、「保持する」を選択してファイルのダウンロードを完了させます。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Click dropdown arrow next to delete button - Select **Keep anyway** <br> 削除ボタン横の下矢印をクリック - **保持する**を選択",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide00_script_win/images/00_08_keep_anyway.png?raw=true\" alt=\"Keep Anyway\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "次に、アプリケーションのインストールを行います。ファイルエクスプローラーを開いて、ダウンロードフォルダーに移動してください。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### 2. Installing the Application <br> 2. アプリケーションのインストール",
+          "",
+          "English",
+          "- Open File Explorer",
+          "- Navigate to Downloads folder",
+          "",
+          "日本語",
+          "- ファイルエクスプローラーを開く",
+          "- ダウンロードフォルダーに移動"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "インストーラーファイルをダブルクリックしてインストールを開始します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### **File:** `MulmoCast-x.x.x-setup.exe` (version may vary) <br> **ファイル:** `MulmoCast-x.x.x-setup.exe` (バージョンは適宜更新されます)",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide00_script_win/images/00_32_installer_doubleclick.png?raw=true\" alt=\"Installer Double-click\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "重要なポイントです。Windows Defender SmartScreenが「Windows によって PC が保護されました」メッセージを表示してアプリの実行を防ぐ可能性があります。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### ⚠️ Important: SmartScreen Warning <br> ⚠️ 重要：SmartScreen警告",
+          "",
+          "English",
+          "- Windows Defender may show warning",
+          "- **Message:** \"Windows protected your PC\"",
+          "",
+          "日本語",
+          "- Windows Defenderが警告を表示する場合",
+          "- **メッセージ:** \"Windows によって PC が保護されました\""
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "「詳細情報」リンクをクリックして、追加オプションを表示させます。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Bypass SmartScreen - Click **More info** link <br> SmartScreenをバイパス - **詳細情報**リンクをクリック",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide00_script_win/images/00_44_more_info.png?raw=true\" alt=\"More Info\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "「実行」ボタンが表示されたら、これをクリックしてインストールを続行します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Click **Run anyway** button <br> **実行**ボタンをクリック",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide00_script_win/images/00_46_run_anyway.png?raw=true\" alt=\"Run Anyway\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "インストーラーウィンドウが起動し、インストールが開始されます。インストールが完了すると、マルモキャストアプリケーションが自動的に起動します。これでインストール作業は完了です。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Installation Starting <br> インストール開始",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide00_script_win/images/01_03_installation_progress.png?raw=true\" alt=\"Installation Progress\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    }
+  ]
+}

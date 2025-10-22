@@ -1,0 +1,102 @@
+{
+  "$mulmocast": {
+    "version": "1.1",
+    "credit": "closing"
+  },
+  "canvasSize": {
+    "width": 1280,
+    "height": 720
+  },
+  "lang": "ja",
+  "title": "MulmoCast ダウンロード＆インストール",
+  "description": "MulmoCastアプリケーション Mac版のダウンロードとインストール手順を説明するガイド",
+  "speechParams": {
+    "speakers": {
+      "Presenter": {
+        "voiceId": "nova",
+        "displayName": {
+          "ja": "ナレーター"
+        }
+      }
+    }
+  },
+  "movieParams": {
+    "provider": "mock",
+    "model": "",
+    "transition": {
+      "type": "fade",
+      "duration": 1
+    }
+  },
+  "textSlideParams": {
+    "cssStyles": "h3 {margin-left: 20px; margin-top: 20px}"
+  },
+  "beats": [
+    {
+      "id": "title-slide",
+      "speaker": "Presenter",
+      "text": "マルモキャストMac版のインストールガイドへようこそ。このガイドでは、マルモキャストアプリケーションのダウンロードとインストール手順について順を追って説明いたします。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# MulmoCast Installation Guide (Mac)",
+          "# MulmoCast インストールガイド (Mac版)",
+          "",
+          "## Download and Installation Steps",
+          "## ダウンロードとインストール手順",
+          "",
+          "- Download / ダウンロード",
+          "- Installation / インストール"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "まず最初に、アプリケーションのダウンロード方法について説明します。公式のマルモキャストウェブサイトにアクセスして、Mac用アプリをダウンロードします。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### 1. Downloading the Application <br> 1. アプリケーションのダウンロード",
+          "",
+          "English",
+          "- Go to `mulmocast.com`",
+          "- Locate Mac app download section",
+          "- Download Mac app",
+          "",
+          "日本語",
+          "- `mulmocast.com` にアクセス",
+          "- 「Mac用アプリをダウンロード」セクションを見つける",
+          "- Mac用アプリをダウンロード"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "zipファイルのダウンロードが完了すると、自動的に展開されてFinderのダウンロードフォルダにマルモキャスト.appが表示されます。このアプリケーションをアプリケーションフォルダにドラッグアンドドロップしてインストールを完了します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### 2. Install Application - Drag MulmoCast.app to Applications folder <br> 2. アプリケーションをインストール - MulmoCast.appをアプリケーションフォルダにドラッグ",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide00_script_mac/images/00_00_download_folder_drag.png?raw=true\" alt=\"Drag to Applications\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "インストールが完了したら、アプリケーションフォルダまたはLaunchpadからマルモキャストを起動できます。初回起動時の場合は「開く」を選択してアプリケーションを実行してください。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### 3. Launch Application - Click \"Open\" when prompted (first launch only) <br> 3. アプリケーション起動 - 確認画面で「開く」をクリック（初回起動時のみ）",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide00_script_mac/images/00_02_app_open.png?raw=true\" alt=\"App Open\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    }
+  ]
+}
