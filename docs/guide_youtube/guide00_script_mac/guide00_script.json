@@ -79,7 +79,7 @@
           "### 2. Install Application - Drag MulmoCast.app to Applications folder <br> 2. アプリケーションをインストール - MulmoCast.appをアプリケーションフォルダにドラッグ",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide00_script_mac/images/00_00_download_folder_drag.png?raw=true\" alt=\"Drag to Applications\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide00_script_mac/images/00_00_download_folder_drag.png?raw=true\" alt=\"Drag to Applications\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -93,7 +93,7 @@
           "### 3. Launch Application - Click \"Open\" when prompted (first launch only) <br> 3. アプリケーション起動 - 確認画面で「開く」をクリック（初回起動時のみ）",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide00_script_mac/images/00_02_app_open.png?raw=true\" alt=\"App Open\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide00_script_mac/images/00_02_app_open.png?raw=true\" alt=\"App Open\" width=\"80%\">",
           "</div>"
         ]
       }
