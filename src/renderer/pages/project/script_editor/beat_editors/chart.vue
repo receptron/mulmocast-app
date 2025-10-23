@@ -21,7 +21,7 @@
 
   <Input
     :placeholder="t('beat.chart.titleField')"
-    :model-value="beat?.chart?.title"
+    :model-value="beat?.image?.title"
     @update:model-value="(value) => update('image.title', String(value))"
     @blur="save"
     class="mb-2"
