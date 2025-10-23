@@ -1,24 +1,5 @@
 <template>
   <Label class="mb-1 block">{{ t("beat.chart.label") }}</Label>
-
-  <div class="mb-2">
-    <Select v-model="selectedPreset">
-      <SelectTrigger class="w-full">
-        <SelectValue :placeholder="t('beat.chart.selectChartType')" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem v-for="(preset, key) in presets" :value="key" :key="preset.name">
-          {{ t("beat.chart.preset." + preset.name) }}
-        </SelectItem>
-      </SelectContent>
-    </Select>
-  </div>
-  <div class="mb-2 flex justify-end">
-    <Button size="sm" @click="updatePreset" :disabled="selectedPreset === null">
-      {{ t("ui.actions.set") }}
-    </Button>
-  </div>
-
   <Input
     :placeholder="t('beat.chart.titleField')"
     :model-value="beat?.chart?.title"
@@ -45,6 +26,22 @@
     class="font-mono"
     rows="8"
   />
+
+  <div class="mt-2">
+    <Select v-model="selectedPreset">
+      <SelectTrigger>
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem v-for="(preset, key) in presets" :value="key" :key="preset.name">
+          {{ t("beat.chart.preset." + preset.name) }}
+        </SelectItem>
+      </SelectContent>
+    </Select>
+    <Button variant="outline" size="sm" @click="updatePreset">
+      {{ t("ui.actions.set") }}
+    </Button>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -84,7 +81,7 @@ const save = () => {
   emit("save");
 };
 
-const selectedPreset = ref<number | null>(null);
+const selectedPreset = ref(0);
 
 const presets = [
   { name: "bar", data: chart_bar },
@@ -99,7 +96,6 @@ const presets = [
 ];
 
 const updatePreset = () => {
-  if (selectedPreset.value === null) return;
   const data = presets[selectedPreset.value].data;
   update("image.chartData", data);
 };

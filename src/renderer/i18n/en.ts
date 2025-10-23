@@ -598,10 +598,9 @@ const lang = {
       label: "Slide: Graph - Chart JSON",
       titleField: "Title",
       chartDataField: "Chart Data",
-      placeholder: "Enter chart data in JSON format\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'{'}\n{'}'}",
-      selectChartType: "Select chart type",
+      placeholder: "Enter chart data in JSON format\n{'{'}\n  \"type\": \"bar\",\n  \"data\": {'{'} ... {'}'}\n{'}'}",
       preset: {
-        bar: "Bar Chart",
+        bar: "Bar",
         line: "Line Chart",
         pie: "Pie Chart",
         radar: "Radar Chart",
