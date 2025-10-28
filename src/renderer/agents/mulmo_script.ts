@@ -15,8 +15,8 @@ export const mulmoScriptAgentInfo: AgentFunctionInfo = {
     {
       type: "function",
       function: {
-        name: "mulmoScriptAgent--createBeatOnMulmoScript",
-        description: "add beat to mulmo script.",
+        name: "mulmoScriptAgent--createBeatsOnMulmoScript",
+        description: "add beats to mulmo script.",
         parameters: {
           type: "object",
           properties: {
