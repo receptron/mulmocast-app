@@ -48,7 +48,7 @@
     "@types/clone-deep": "^4.0.4",
     "@types/deep-equal": "^1.0.4",
     "@types/electron-squirrel-startup": "^1.0.2",
-    "@types/node": "^24.9.1",
+    "@types/node": "^24.9.2",
     "@typescript-eslint/eslint-plugin": "^8.46.2",
     "@typescript-eslint/parser": "^8.46.2",
     "@vitejs/plugin-vue": "^6.0.1",
