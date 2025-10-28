@@ -208,6 +208,27 @@
               </CardContent>
             </Card>
 
+            <!-- Download mulmo script -->
+            <Card>
+              <CardContent class="space-y-4 p-4">
+                <div class="space-y-4">
+                  <div class="flex justify-center">
+                    <Button
+                      @click="downloadMulmoScript"
+                      class="mt-2 flex h-auto w-full items-center justify-center space-y-2 py-4 whitespace-normal"
+                      data-testid="generate-contents-button"
+                      :disabled="!mulmoScriptHistoryStore.isValidScript"
+                    >
+                      <div class="mb-0 flex items-center justify-center gap-2">
+                        <Monitor :size="24" />
+                      </div>
+                      <span>{{ t("project.download.mulmoScript") }}</span>
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             <!-- Debug Log Section -->
             <Card v-if="isDevelopment">
               <CardContent class="space-y-4 p-4">
@@ -485,6 +506,19 @@ const generateImage = async (index: number, target: string) => {
     errorMessage: t("notify.image.errorMessage"),
     errorDescription: t("notify.error.noContext"),
   });
+};
+
+const downloadMulmoScript = () => {
+  const jsonString = JSON.stringify(mulmoScriptHistoryStore.currentMulmoScript, null, 2);
+  const blob = new Blob([jsonString], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "mulmoScript.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
 };
 
 const resetMediaFiles = () => {
