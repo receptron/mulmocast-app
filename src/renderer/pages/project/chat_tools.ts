@@ -55,7 +55,15 @@ type AddSpeaker = {
   };
 };
 
+type CreateBeatOnMulmoScript = {
+  func: "createBeatOnMulmoScript";
+  arg: {
+    beats: MulmoBeat[];
+  };
+};
+
 export type FuncNamedInput =
+  | CreateBeatOnMulmoScript
   | UpdateBeatOnMulmoScript
   | ReplaceBeatOnMulmoScript
   | AddBeatToMulmoScript
