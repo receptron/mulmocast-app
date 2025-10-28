@@ -17,7 +17,7 @@ import SettingModal from "@/components/setting_modal.vue";
 import ViewerModal from "@/components/mulmo_viewer_modal.vue";
 import OnboardingModal from "@/components/onboarding_modal.vue";
 import ApiKeyModal from "@/components/api_key_modal.vue";
-import { useTheme } from "@/composables/use_theme";
+// import { useTheme } from "@/composables/use_theme";
 
 import "vue-sonner/style.css";
 import type { MulmoProgressLog } from "@/types";
@@ -36,7 +36,7 @@ const globalStore = useMulmoGlobalStore();
 
 const isDevelopment = import.meta.env.DEV;
 // Initialize theme
-useTheme();
+// useTheme();
 
 onMounted(async () => {
   try {
