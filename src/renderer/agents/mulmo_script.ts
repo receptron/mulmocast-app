@@ -31,15 +31,17 @@ export const mulmoScriptAgentInfo: AgentFunctionInfo = {
                   speaker: { type: "string", description: "speaker" },
                   imagePrompt: {
                     type: "string",
-                    description: "prompt to generate image. It is exclusive to the image object element in this object.",
+                    description:
+                      "prompt to generate image. It is exclusive to the image object element in this object.",
                   },
                   moviePrompt: {
                     type: "string",
-                    description: "prompt to generate image. It is exclusive to the movie object element in this object.",
+                    description:
+                      "prompt to generate image. It is exclusive to the movie object element in this object.",
                   },
                 },
               },
-            }
+            },
           },
           required: ["beats"],
         },
