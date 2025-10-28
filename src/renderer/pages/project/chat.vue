@@ -96,9 +96,6 @@
         <Button @click="() => (isClearChatDialogOpen = true)" variant="outline" size="xs">
           {{ t("project.chat.clearChat") }}
         </Button>
-        <Button @click="runNext()" variant="outline" size="xs" class="ml-2" v-if="messages.length > 0">
-          {{ t("project.chat.continue") }}</Button
-        >
       </div>
       <div v-if="isDevelopment">
         <Button variant="outline" size="xs" @click="copyMessageToClipboard">
@@ -344,11 +341,6 @@ const apiKeyName = computed(() => {
   const llm = llms.find((_llm) => _llm.id === llmAgent.value);
   return llm.apiKey;
 });
-
-const runNext = () => {
-  userInput.value = "続けて";
-  run();
-};
 
 const run = async () => {
   if (isRunning.value) {
