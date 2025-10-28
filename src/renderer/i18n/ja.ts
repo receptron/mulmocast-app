@@ -489,6 +489,9 @@ const lang = {
         autoPlay: "自動再生",
       },
     },
+    download: {
+      mulmoScript: "MulmoScriptをダウンロード",
+    },
     chat: {
       openPanel: "AIチャットを開く",
       title: "AIチャットでストーリー作り",
