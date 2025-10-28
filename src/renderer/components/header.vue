@@ -54,7 +54,7 @@
         </Button>
 
         <!-- Theme Toggle -->
-        <ThemeToggle />
+        <!-- ThemeToggle /-->
       </div>
     </div>
   </header>
@@ -69,7 +69,7 @@ import { useI18n } from "vue-i18n";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useMulmoEventStore, useMulmoGlobalStore } from "@/store";
-import ThemeToggle from "@/components/theme_toggle.vue";
+// import ThemeToggle from "@/components/theme_toggle.vue";
 
 const route = useRoute();
 const { t } = useI18n();
