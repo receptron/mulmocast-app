@@ -492,6 +492,9 @@ const lang = {
         autoPlay: "Auto Play",
       },
     },
+    download: {
+      mulmoScript: "Download MulmoScript",
+    },
     chat: {
       openPanel: "Open AI Assistant Chat panel",
       title: "Story Creation with AI Chat",
