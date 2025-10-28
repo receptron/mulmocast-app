@@ -56,7 +56,7 @@ type AddSpeaker = {
 };
 
 type CreateBeatOnMulmoScript = {
-  func: "createBeatOnMulmoScript";
+  func: "createBeatsOnMulmoScript";
   arg: {
     beats: MulmoBeat[];
   };
@@ -75,7 +75,7 @@ export type FuncNamedInput =
 export const mulmoScriptTools = (namedInputs: FuncNamedInput, script: MulmoScript) => {
   const { arg, func } = namedInputs;
 
-  if (func === "createBeatOnMulmoScript") {
+  if (func === "createBeatsOnMulmoScript") {
     const { beats } = arg;
     script.beats = beats;
     return script;
