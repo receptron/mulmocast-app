@@ -418,7 +418,7 @@ const lang = {
         modeDescription: "MulmoScript を直接編集します",
       },
       media: {
-        tabLabel: "BEAT",
+        tabLabel: "BEAT({beats})",
         mode: "ストーリー編集",
         modeDescription: "Beatごとの音声/画像/動画の編集とプレビュー",
       },
