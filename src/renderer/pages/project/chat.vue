@@ -369,7 +369,7 @@ const run = async () => {
     const tools = [
       ...mulmoScriptValidatorAgent.tools,
       ...puppeteerAgent.tools,
-      ...mulmoVisionAgent.tools,
+      // ...mulmoVisionAgent.tools,
       ...mulmoCastHelpAgent.tools,
       ...mulmoScriptAgent.tools,
     ];

@@ -15,6 +15,42 @@ export const mulmoScriptAgentInfo: AgentFunctionInfo = {
     {
       type: "function",
       function: {
+        name: "mulmoScriptAgent--createBeatsOnMulmoScript",
+        description: "add beats to mulmo script.",
+        parameters: {
+          type: "object",
+          properties: {
+            beats: {
+              type: "array",
+              description: "current list of beats",
+              items: {
+                type: "object",
+                required: ["text"],
+                properties: {
+                  text: { type: "string", description: "talk script for each beat" },
+                  speaker: { type: "string", description: "speaker" },
+                  imagePrompt: {
+                    type: "string",
+                    description:
+                      "prompt to generate image. It is exclusive to the image object element in this object.",
+                  },
+                  moviePrompt: {
+                    type: "string",
+                    description:
+                      "prompt to generate image. It is exclusive to the movie object element in this object.",
+                  },
+                },
+              },
+            },
+          },
+          required: ["beats"],
+        },
+      },
+    },
+    /*
+    {
+      type: "function",
+      function: {
         name: "mulmoScriptAgent--addBeatToMulmoScript",
         description: "add beat to mulmo script.",
         parameters: {
@@ -222,6 +258,7 @@ export const mulmoScriptAgentInfo: AgentFunctionInfo = {
         },
       },
     },
+    */
   ],
   description: "generate mulmo script json data from prompt messages",
   category: ["net"],
