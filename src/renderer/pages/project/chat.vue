@@ -367,7 +367,7 @@ const run = async () => {
     const llmModel = config[llmAgent.value]?.model || ""; // The model setting in config can be overridden by params.model (even if it is a blank string).
 
     const tools = [
-      ...mulmoScriptValidatorAgent.tools,
+      // ...mulmoScriptValidatorAgent.tools,
       ...puppeteerAgent.tools,
       // ...mulmoVisionAgent.tools,
       ...mulmoCastHelpAgent.tools,
@@ -399,6 +399,7 @@ const run = async () => {
     // graphai.registerCallback(console.log);
     graphai.registerCallback((data) => {
       const { agentId, nodeId, state, result, namedInputs } = data;
+      // console.log(agentId, nodeId);
       if (state === "executing") {
         currentRunningAgent.value = agentId;
         currentRunningNode.value = nodeId;
