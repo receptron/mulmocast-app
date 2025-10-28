@@ -420,7 +420,7 @@ const lang = {
         modeDescription: "Complete MulmoScript editing",
       },
       media: {
-        tabLabel: "BEAT",
+        tabLabel: "BEAT({beats})",
         mode: "Edit Story",
         modeDescription: "Beat-by-beat media editing and preview",
       },

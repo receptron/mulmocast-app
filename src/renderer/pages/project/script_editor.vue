@@ -5,7 +5,7 @@
         :value="SCRIPT_EDITOR_TABS.MEDIA"
         data-testid="script-editor-tab-media"
         :class="mulmoScriptHistoryStore.hasBeatSchemaError ? 'border-2 border-red-400' : ''"
-        >{{ t("project.scriptEditor.media.tabLabel") }}</TabsTrigger
+        >{{ t("project.scriptEditor.media.tabLabel", { beats: countOfBeats }) }}</TabsTrigger
       >
       <TabsTrigger
         :value="SCRIPT_EDITOR_TABS.REFERENCE"
@@ -35,7 +35,7 @@
 
     <TabsList class="grid w-full grid-cols-3" v-if="!globalStore.userIsPro">
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA" data-testid="script-editor-tab-media">{{
-        t("project.scriptEditor.media.tabLabel")
+        t("project.scriptEditor.media.tabLabel", { beats: countOfBeats })
       }}</TabsTrigger>
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.REFERENCE" data-testid="script-editor-tab-reference">{{
         t("project.scriptEditor.reference.tabLabel")
@@ -458,6 +458,10 @@ const onYamlInput = (value: string) => {
     console.log(err);
   }
 };
+
+const countOfBeats = computed(() => {
+  return props.mulmoScript.beats?.length || 0;
+});
 
 const update = (index: number, path: string, value: unknown) => {
   const set = (obj: Record<string, unknown>, keys: string[], val: unknown): Record<string, unknown> =>
