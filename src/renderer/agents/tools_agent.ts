@@ -7,6 +7,7 @@ const toolWorkFlowStep = {
     passthrough: { value: {} },
     llmAgent: {},
     llmModel: { value: "" },
+    tool_choice: { value: undefined },
     stream: { value: true },
     llmCallWithTools: {
       agent: ":llmAgent",
@@ -21,6 +22,7 @@ const toolWorkFlowStep = {
         params: {
           model: ":llmModel",
           dataStream: ":stream",
+          tool_choice: ":tool_choice",
         },
       },
     },

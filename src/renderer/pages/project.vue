@@ -278,6 +278,7 @@ import {
   PanelRightClose,
   PanelRightOpen,
   Expand,
+  Monitor,
 } from "lucide-vue-next";
 import dayjs from "dayjs";
 import {

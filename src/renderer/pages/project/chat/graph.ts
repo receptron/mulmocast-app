@@ -24,38 +24,58 @@ export const graphChat: GraphData = {
 };
 
 // just chat with tools
-export const graphChatWithSearch: GraphData = {
-  version: graphDataLatestVersion,
-  nodes: {
-    messages: {},
-    prompt: {},
-    llmAgent: {},
-    llmModel: {},
-    tools: {
-      value: [],
-    },
-    passthrough: {
-      value: {},
-    },
-    llm: {
-      isResult: true,
-      agent: "toolsAgent",
-      inputs: {
-        llmAgent: ":llmAgent",
-        llmModel: ":llmModel",
-        tools: ":tools",
-        messages: ":messages",
-        passthrough: ":passthrough",
-        userInput: {
-          text: ":prompt",
-          message: {
-            role: "user",
-            content: ":prompt",
+export const graphChatWithSearch = (isChoice = false, isOpenAI = false): GraphData => {
+  const tool_choice = (() => {
+    if (isChoice) {
+      return {
+        type: "function",
+        function: {
+          name: "mulmoScriptAgent--createBeatsOnMulmoScript",
+        },
+      };
+    } else {
+      return "auto";
+    }
+  })();
+
+  return {
+    version: graphDataLatestVersion,
+    nodes: {
+      messages: {},
+      prompt: {},
+      llmAgent: {},
+      llmModel: {},
+      tools: {
+        value: [],
+      },
+      passthrough: {
+        value: {},
+      },
+      llm: {
+        isResult: true,
+        agent: "toolsAgent",
+        inputs: {
+          llmAgent: ":llmAgent",
+          llmModel: ":llmModel",
+          tools: ":tools",
+          messages: ":messages",
+          passthrough: ":passthrough",
+          userInput: {
+            text: ":prompt",
+            message: {
+              role: "user",
+              content: ":prompt",
+            },
           },
+          ...(isOpenAI
+            ? {
+                tool_choice,
+              }
+            : {}),
         },
       },
     },
-  },
+  };
 };
 
 export const graphGenerateMulmoScriptInternal: GraphData = {
