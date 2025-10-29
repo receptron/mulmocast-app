@@ -57,20 +57,22 @@ const simpleTemplate = promptTemplates.filter((temp) => {
   return ["ani", "ghibli_comic", "image_prompt"].includes(temp.filename);
 });
 
-// console.log(simpleTemplate);
-
 const emit = defineEmits<{
   updateMulmoScript: [value: MulmoScript];
 }>();
 
+const templates = computed(() => {
+  return props.isPro ? promptTemplates : simpleTemplate;
+});
+
 const currentTemplate = computed(() => {
   if (selectedTemplateIndex.value === null) return;
-  return (props.isPro ? promptTemplates : simpleTemplate)[selectedTemplateIndex.value];
+  return templates.value[selectedTemplateIndex.value];
 });
 
 const applyStyle = () => {
   if (selectedTemplateIndex.value === null) return;
-  const style = (props.isPro ? promptTemplates : simpleTemplate)[selectedTemplateIndex.value].presentationStyle;
+  const style = templates.value[selectedTemplateIndex.value].presentationStyle;
   const script = { ...props.mulmoScript, ...style };
   emit("updateMulmoScript", script);
   notifySuccess(t("settings.notifications.createSuccess"));
