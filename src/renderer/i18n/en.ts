@@ -791,6 +791,9 @@ const lang = {
     audio: "Audio:",
   },
   notify: {
+    mulmoScript: {
+      successMessage: "Success to create MulmoScript!!",
+    },
     audio: {
       successMessage: "Audio generated successfully",
       errorMessage: "Failed to generate audio",

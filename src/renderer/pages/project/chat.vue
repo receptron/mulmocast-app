@@ -83,8 +83,22 @@
             class="border-border bg-background focus:border-primary focus:ring-primary/20 field-sizing-content max-h-48 min-h-0 min-w-0 flex-1 rounded-lg border px-3 py-2 text-sm transition-colors outline-none focus:ring-2"
             @keydown="handleKeydown"
           />
-          <Button size="sm" @click="run()" :disabled="isCreatingScript || isRunning || noChatText" class="ml-2">
+          <Button
+            size="sm"
+            @click="run()"
+            :disabled="isCreatingScript || isRunning || noChatText"
+            class="ml-2 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+          >
             <Send :size="16" />
+          </Button>
+          <Button
+            size="sm"
+            @click="run(true)"
+            :disabled="isCreatingScript || isRunning"
+            class="ml-2 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+            v-if="messages.length > 0 && isOpenAI"
+          >
+            <FileCode :size="16" />
           </Button>
         </div>
       </div>
@@ -155,7 +169,7 @@
 <script setup lang="ts">
 // vue
 import { ref, computed, useTemplateRef } from "vue";
-import { Send, Loader2 } from "lucide-vue-next";
+import { Send, Loader2, FileCode } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 
 // graphai
@@ -167,6 +181,7 @@ import puppeteerAgent from "../../agents/puppeteer_agent";
 // import toolsAgent from "../../agents/tools_agent";
 import mulmoCastHelpAgent from "../../agents/help_agent";
 import { toolsAgent } from "@graphai/tools_agent";
+import toolsAgentWithChoice from "../../agents/tools_agent";
 
 // mulmo
 import { validateSchemaAgent } from "mulmocast/browser";
@@ -211,7 +226,7 @@ import {
   llms,
 } from "../../../shared/constants";
 
-import { notifyError } from "@/lib/notification";
+import { notifyError, notifySuccess } from "@/lib/notification";
 
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
@@ -266,22 +281,6 @@ const clearChat = () => {
   emit("update:updateChatMessages", []);
 };
 
-const graphAIAgents = {
-  ...agents,
-  openAIAgent,
-  ollamaAgent: openAIAgent,
-  geminiAgent,
-  anthropicAgent,
-  groqAgent,
-  validateSchemaAgent,
-  exaToolsAgent,
-  puppeteerAgent,
-  mulmoCastHelpAgent,
-  toolsAgent,
-  mulmoScriptValidatorAgent,
-  mulmoVisionAgent,
-  mulmoScriptAgent,
-};
 const filterMessage = (setTime = false) => {
   return (message) => {
     const { role, content, tool_calls, tool_call_id, name, extra } = message;
@@ -330,11 +329,15 @@ const getGraphConfig = async () => {
   };
 };
 
+const isOpenAI = computed(() => {
+  return llmAgent.value === "openAIAgent";
+});
+const isAnthropic = computed(() => {
+  return llmAgent.value === "anthropicAgent";
+});
+
 const hasExa = computed(() => {
-  return (
-    !!globalStore.settings?.APIKEY?.EXA_API_KEY &&
-    (llmAgent.value === "openAIAgent" || llmAgent.value === "anthropicAgent")
-  );
+  return !!globalStore.settings?.APIKEY?.EXA_API_KEY && (isOpenAI.value || isAnthropic.value);
 });
 
 const apiKeyName = computed(() => {
@@ -342,7 +345,7 @@ const apiKeyName = computed(() => {
   return llm.apiKey;
 });
 
-const run = async () => {
+const run = async (isScript: false) => {
   if (isRunning.value) {
     return;
   }
@@ -369,7 +372,7 @@ const run = async () => {
     const systemPrompt = getSystemPrompt(
       scriptLang.value,
       mulmoScriptHistoryStore.currentMulmoScript,
-      llmAgent.value === "anthropicAgent",
+      isAnthropic.value,
     );
     const postMessages = [
       {
@@ -383,7 +386,24 @@ const run = async () => {
           return message.content !== "" || message.tool_calls;
         }),
     ];
-    const graphai = new GraphAI(graphChatWithSearch, graphAIAgents, {
+    const graphAIAgents = {
+      ...agents,
+      openAIAgent,
+      ollamaAgent: openAIAgent,
+      geminiAgent,
+      anthropicAgent,
+      groqAgent,
+      validateSchemaAgent,
+      exaToolsAgent,
+      puppeteerAgent,
+      mulmoCastHelpAgent,
+      toolsAgent: isOpenAI.value ? toolsAgentWithChoice : toolsAgent,
+      mulmoScriptValidatorAgent,
+      mulmoVisionAgent,
+      mulmoScriptAgent,
+    };
+
+    const graphai = new GraphAI(graphChatWithSearch(isScript, isOpenAI.value), graphAIAgents, {
       agentFilters,
       config,
     });
@@ -391,7 +411,6 @@ const run = async () => {
     // graphai.registerCallback(console.log);
     graphai.registerCallback((data) => {
       const { agentId, nodeId, state, result, namedInputs } = data;
-      // console.log(agentId, nodeId);
       if (state === "executing") {
         currentRunningAgent.value = agentId;
         currentRunningNode.value = nodeId;
@@ -421,7 +440,7 @@ const run = async () => {
         if (newScript) {
           emit("updateMulmoScript", newScript);
         }
-
+        notifySuccess(t("notify.mulmoScript.successMessage"));
         // addBeatToMulmoScript -> beat
         // insertAtBeatToMulmoScript -> beat, index
         // deleteBeatOnMulmoScript -> index
@@ -429,7 +448,7 @@ const run = async () => {
       }
     });
     graphai.injectValue("messages", postMessages);
-    graphai.injectValue("prompt", userInput.value);
+    graphai.injectValue("prompt", isOpenAI.value && userInput.value === "" ? "create mulmo script" : userInput.value);
     graphai.injectValue("llmAgent", llmAgent.value);
     graphai.injectValue("llmModel", llmModel);
     if (hasExa.value) {
