@@ -63,14 +63,18 @@ const emit = defineEmits<{
   updateMulmoScript: [value: MulmoScript];
 }>();
 
+const templates = computed(() => {
+  return props.isPro ? promptTemplates : simpleTemplate;
+});
+
 const currentTemplate = computed(() => {
   if (selectedTemplateIndex.value === null) return;
-  return (props.isPro ? promptTemplates : simpleTemplate)[selectedTemplateIndex.value];
+  return templates.value[selectedTemplateIndex.value];
 });
 
 const applyStyle = () => {
   if (selectedTemplateIndex.value === null) return;
-  const style = (props.isPro ? promptTemplates : simpleTemplate)[selectedTemplateIndex.value].presentationStyle;
+  const style = templates.value[selectedTemplateIndex.value].presentationStyle;
   const script = { ...props.mulmoScript, ...style };
   emit("updateMulmoScript", script);
   notifySuccess(t("settings.notifications.createSuccess"));
