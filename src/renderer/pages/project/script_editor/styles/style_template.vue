@@ -57,8 +57,6 @@ const simpleTemplate = promptTemplates.filter((temp) => {
   return ["ani", "ghibli_comic", "image_prompt"].includes(temp.filename);
 });
 
-// console.log(simpleTemplate);
-
 const emit = defineEmits<{
   updateMulmoScript: [value: MulmoScript];
 }>();
