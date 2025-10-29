@@ -58,7 +58,7 @@
         "type": "image",
         "source": {
           "kind": "url",
-          "url": "https://github.com/ystknsh/media/blob/main/guide/guide03/images/ani.png?raw=true"
+          "url": "https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/ani.png?raw=true"
         }
       }
     },
@@ -69,7 +69,7 @@
         "type": "image",
         "source": {
           "kind": "url",
-          "url": "https://github.com/ystknsh/media/blob/main/guide/guide03/images/ani_in_forest.png?raw=true"
+          "url": "https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/ani_in_forest.png?raw=true"
         }
       }
     },
@@ -115,7 +115,7 @@
           "### Create new project and navigate to the Style tab <br> プロジェクトを新規作成し、スタイルタブに移動",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_00_10.png?raw=true\" alt=\"Style Tab\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot_00_10.png?raw=true\" alt=\"Style Tab\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -129,7 +129,7 @@
           "### Click the dropdown menu <br> ドロップダウンメニューをクリック",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_00_12.png?raw=true\" alt=\"Dropdown Menu\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot_00_12.png?raw=true\" alt=\"Dropdown Menu\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -143,7 +143,7 @@
           "### Choose a style from dropdown menu <br> ドロップダウンメニューからスタイルを選択",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_00_12_8.png?raw=true\" alt=\"Select Style\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot_00_12_8.png?raw=true\" alt=\"Select Style\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -157,7 +157,7 @@
           "### Click Apply Style button <br> スタイルを適用ボタンをクリック",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_00_14.png?raw=true\" alt=\"Apply Style\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot_00_14.png?raw=true\" alt=\"Apply Style\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -171,7 +171,7 @@
           "### Click Apply Style button <br> スタイルを適用ボタンをクリック",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_00_18.png?raw=true\" alt=\"Apply Style\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot_00_18.png?raw=true\" alt=\"Apply Style\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -185,7 +185,7 @@
           "### Click Apply Style button <br> スタイルを適用ボタンをクリック",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_00_21.png?raw=true\" alt=\"Apply Style\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot_00_21.png?raw=true\" alt=\"Apply Style\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -199,7 +199,7 @@
           "### Character tab (if included in template) <br> キャラクタータブ（テンプレートに含まれる場合）",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_00_32.png?raw=true\" alt=\"Character Tab\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot_00_32.png?raw=true\" alt=\"Character Tab\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -226,7 +226,7 @@
           "### Confirm \"ani\" is selected in Character Image <br> キャラクター画像で \"ani\" が選択されていることを確認",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_00_42.png?raw=true\" alt=\"BEAT Tab\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot_00_42.png?raw=true\" alt=\"BEAT Tab\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -240,7 +240,7 @@
           "### Enter simple prompt: in the forest <br> シンプルなプロンプトを入力: in the forest (和訳: 森の中)",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_02_31.png?raw=true\" alt=\"Enter Prompt\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot_02_31.png?raw=true\" alt=\"Enter Prompt\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -254,7 +254,7 @@
           "### Generated image with character <br> キャラクター付き生成画像",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_02_33.png?raw=true\" alt=\"Generated Image\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot_02_33.png?raw=true\" alt=\"Generated Image\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -266,7 +266,7 @@
         "type": "image",
         "source": {
           "kind": "url",
-          "url": "https://github.com/ystknsh/media/blob/main/guide/guide03/images/ani_in_forest.png?raw=true"
+          "url": "https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/ani_in_forest.png?raw=true"
         }
       }
     },
@@ -292,7 +292,7 @@
           "### Enter key and add character <br> キーを入力してキャラクターを追加",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot2_00_16.png?raw=true\" alt=\"Add Character\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot2_00_16.png?raw=true\" alt=\"Add Character\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -310,7 +310,7 @@
           "> (和訳) Xの公式キャラクター、Aniと一緒にいそうな動物。アニメ風で出力。",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot2_00_31.png?raw=true\" alt=\"Enter Prompt\" width=\"60%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot2_00_31.png?raw=true\" alt=\"Enter Prompt\" width=\"60%\">",
           "</div>"
         ]
       }
@@ -328,7 +328,7 @@
           "> (和訳) Xの公式キャラクター、Aniと一緒にいそうな動物。アニメ風で出力。",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot2_00_31.png?raw=true\" alt=\"Enter Prompt\" width=\"60%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot2_00_31.png?raw=true\" alt=\"Enter Prompt\" width=\"60%\">",
           "</div>"
         ]
       }
@@ -346,7 +346,7 @@
           "> (和訳) Xの公式キャラクター、Aniと一緒にいそうな動物。アニメ風で出力。",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot2_00_31.png?raw=true\" alt=\"Enter Prompt\" width=\"60%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot2_00_31.png?raw=true\" alt=\"Enter Prompt\" width=\"60%\">",
           "</div>"
         ]
       }
@@ -360,7 +360,7 @@
           "### Generated pet character <br> 生成されたペットキャラクター",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot2_01_10.png?raw=true\" alt=\"Generated Character\" width=\"60%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot2_01_10.png?raw=true\" alt=\"Generated Character\" width=\"60%\">",
           "</div>"
         ]
       }
@@ -378,7 +378,7 @@
           "> (和訳) Aniとペットが森の中で一緒に走り回っている",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot2_01_50.png?raw=true\" alt=\"Select Characters\" width=\"60%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot2_01_50.png?raw=true\" alt=\"Select Characters\" width=\"60%\">",
           "</div>"
         ]
       }
@@ -392,7 +392,7 @@
           "### Generated image with both characters <br> 両方のキャラクターが写った生成画像",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot2_02_00.png?raw=true\" alt=\"Final Image\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/screenshot2_02_00.png?raw=true\" alt=\"Final Image\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -404,7 +404,7 @@
         "type": "image",
         "source": {
           "kind": "url",
-          "url": "https://github.com/ystknsh/media/blob/main/guide/guide03/images/ani_with_pet.png?raw=true"
+          "url": "https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide03/images/ani_with_pet.png?raw=true"
         }
       }
     },

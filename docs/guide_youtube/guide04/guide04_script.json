@@ -58,7 +58,7 @@
         "type": "image",
         "source": {
           "kind": "url",
-          "url": "https://github.com/ystknsh/media/blob/main/guide/guide04/images/ani.png?raw=true"
+          "url": "https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/ani.png?raw=true"
         }
       }
     },
@@ -95,7 +95,7 @@
           "### Apply style template <br> スタイルテンプレートを適用",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide04/images/screenshot_00_08.png?raw=true\" alt=\"Apply Style\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_00_08.png?raw=true\" alt=\"Apply Style\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -109,7 +109,7 @@
           "### Change canvas size to landscape <br> キャンバスサイズを横長に変更",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide04/images/screenshot_00_16.png?raw=true\" alt=\"Canvas Size\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_00_16.png?raw=true\" alt=\"Canvas Size\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -123,7 +123,7 @@
           "### Enter Replicate API Token <br> Replicate API Tokenを入力",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide04/images/screenshot_00_36.png?raw=true\" alt=\"Replicate API Token\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_00_36.png?raw=true\" alt=\"Replicate API Token\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -137,7 +137,7 @@
           "### LipSync option (before) <br> リップシンク設定項目（設定前）",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide04/images/screenshot_00_32.png?raw=true\" alt=\"Settings Saved\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_00_32.png?raw=true\" alt=\"Settings Saved\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -151,7 +151,7 @@
           "### LipSync option (after) <br> リップシンク設定項目（設定後）",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide04/images/screenshot_00_56.png?raw=true\" alt=\"LipSync Option\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_00_56.png?raw=true\" alt=\"LipSync Option\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -178,7 +178,7 @@
           "### Confirm \"ani\" is selected in Character Image <br> キャラクター画像で \"ani\" が選択されていることを確認",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide04/images/screenshot_00_59.png?raw=true\" alt=\"BEAT Tab\" width=\"70%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_00_59.png?raw=true\" alt=\"BEAT Tab\" width=\"70%\">",
           "</div>"
         ]
       }
@@ -192,7 +192,7 @@
           "### Enter narration text <br> 話す内容を入力",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide04/images/screenshot_01_10.png?raw=true\" alt=\"Enter Text\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_01_10.png?raw=true\" alt=\"Enter Text\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -228,7 +228,7 @@
           "### Generated character image <br> 生成されたキャラクター画像",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide04/images/screenshot_06_15.png?raw=true\" alt=\"Generated Image\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_06_15.png?raw=true\" alt=\"Generated Image\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -255,7 +255,7 @@
           "### Check LipSync checkbox <br> リップシンクチェックボックスをチェック",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide04/images/screenshot_06_20.png?raw=true\" alt=\"LipSync Checkbox\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_06_20.png?raw=true\" alt=\"LipSync Checkbox\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -269,7 +269,7 @@
           "### Click generate button <br> 生成ボタンをクリック",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide04/images/screenshot_06_20.png?raw=true\" alt=\"Generate Button\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_06_20.png?raw=true\" alt=\"Generate Button\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -283,7 +283,7 @@
           "### Lip-sync video preview <br> リップシンク動画のプレビュー",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide04/images/screenshot_08_26.png?raw=true\" alt=\"Video Preview\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_08_26.png?raw=true\" alt=\"Video Preview\" width=\"80%\">",
           "</div>"
         ]
       }

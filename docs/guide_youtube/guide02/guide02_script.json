@@ -58,7 +58,7 @@
         "type": "image",
         "source": {
           "kind": "url",
-          "url": "https://github.com/ystknsh/media/blob/main/guide/guide02/images/method_a-b.png?raw=true"
+          "url": "https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide02/images/method_a-b.png?raw=true"
         }
       }
     },
@@ -95,7 +95,7 @@
           "### Set Google API Key <br> Google APIキーを設定",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_00_08.png?raw=true\" alt=\"Set API Key\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide02/images/screenshot_00_08.png?raw=true\" alt=\"Set API Key\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -109,7 +109,7 @@
           "### Select Google as Movie Provider <br> 動画生成設定 AIの種類をGoogleに設定",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_00_18.png?raw=true\" alt=\"Select Google\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide02/images/screenshot_00_18.png?raw=true\" alt=\"Select Google\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -139,7 +139,7 @@
           "> (和訳) 深海で太陽光の下を泳ぐシロナガスクジラ、左向き、映画的な照明",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_00_32.png?raw=true\" alt=\"Image Prompt\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide02/images/screenshot_00_32.png?raw=true\" alt=\"Image Prompt\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -153,7 +153,7 @@
           "### Click generate button to start generation <br> 生成ボタンをクリックして生成開始",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_00_32.png?raw=true\" alt=\"Start Generation\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide02/images/screenshot_00_32.png?raw=true\" alt=\"Start Generation\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -167,7 +167,7 @@
           "### Generated image appears in Image Preview <br> 生成された画像が画像プレビューに表示",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_00_54.png?raw=true\" alt=\"Image Preview\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide02/images/screenshot_00_54.png?raw=true\" alt=\"Image Preview\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -229,7 +229,7 @@
           "###  Movie Prompt is blank space \" \" <br> 動画生成プロンプトは空白スペース \" \"",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_00_58.png?raw=true\" alt=\"Generate Default Video\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide02/images/screenshot_00_58.png?raw=true\" alt=\"Generate Default Video\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -243,7 +243,7 @@
           "### Review video content <br> 動画の内容を確認",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_01_35.png?raw=true\" alt=\"Open Video\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide02/images/screenshot_01_35.png?raw=true\" alt=\"Open Video\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -257,7 +257,7 @@
           "### Review video content <br> 動画の内容を確認",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_01_40.png?raw=true\" alt=\"Open Video\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide02/images/screenshot_01_40.png?raw=true\" alt=\"Open Video\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -298,7 +298,7 @@
           "> (和訳) クジラは下の暗闇へと深く潜る。光は徐々に消えていく。",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_02_05.png?raw=true\" alt=\"Enter Movie Prompt\" width=\"70%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide02/images/screenshot_02_05.png?raw=true\" alt=\"Enter Movie Prompt\" width=\"70%\">",
           "</div>"
         ]
       }
@@ -312,7 +312,7 @@
           "### Click generate button to generate new video <br> 生成ボタンをクリックして動画を生成",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_02_05.png?raw=true\" alt=\"Generate with Prompt\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide02/images/screenshot_02_05.png?raw=true\" alt=\"Generate with Prompt\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -326,7 +326,7 @@
           "### Click to watch the result <br> クリックして結果を確認",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_02_15.png?raw=true\" alt=\"Watch Result\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide02/images/screenshot_02_15.png?raw=true\" alt=\"Watch Result\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -367,7 +367,7 @@
           "> シロナガスクジラがゆっくりと水面に向かって浮上し、太陽光線が水中できらめく、映画的な照明",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_02-02_01_41.png?raw=true\" alt=\"Enter Movie Prompt\" width=\"60%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide02/images/screenshot_02-02_01_41.png?raw=true\" alt=\"Enter Movie Prompt\" width=\"60%\">",
           "</div>"
         ]
       }
@@ -381,7 +381,7 @@
           "### Image and video generated <br> 画像と動画が生成完了",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_02-02_01_46.png?raw=true\" alt=\"Generation Complete\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide02/images/screenshot_02-02_01_46.png?raw=true\" alt=\"Generation Complete\" width=\"80%\">",
           "</div>"
         ]
       }
@@ -395,7 +395,7 @@
           "### Click to watch the result <br> クリックして結果を確認",
           "",
           "<div align=\"center\">",
-          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_02-02_01_48.png?raw=true\" alt=\"Preview Video\" width=\"80%\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide02/images/screenshot_02-02_01_48.png?raw=true\" alt=\"Preview Video\" width=\"80%\">",
           "</div>"
         ]
       }
