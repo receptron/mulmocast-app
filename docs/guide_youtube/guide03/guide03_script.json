@@ -1,0 +1,434 @@
+{
+  "$mulmocast": {
+    "version": "1.1",
+    "credit": "closing"
+  },
+  "canvasSize": {
+    "width": 1280,
+    "height": 720
+  },
+  "lang": "ja",
+  "title": "MulmoCast: キャラクターを設定する方法",
+  "description": "スタイルテンプレートを使用してキャラクター設定を自動的に構成し、プロジェクト全体で一貫したキャラクターの外観を確保する方法を解説するガイド",
+  "speechParams": {
+    "speakers": {
+      "Presenter": {
+        "voiceId": "nova",
+        "displayName": {
+          "ja": "ナレーター"
+        }
+      }
+    }
+  },
+  "movieParams": {
+    "provider": "mock",
+    "model": "",
+    "transition": {
+      "type": "fade",
+      "duration": 1
+    }
+  },
+  "textSlideParams": {
+    "cssStyles": "h3 {margin-left: 20px; margin-top: 20px}"
+  },
+  "beats": [
+    {
+      "id": "title-slide",
+      "speaker": "Presenter",
+      "text": "マルモキャスト、キャラクターを設定する方法へようこそ。このマニュアルでは、スタイルテンプレートを使用してキャラクター設定を自動的に構成する方法を説明します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# MulmoCast: Generating Images and Videos",
+          "# MulmoCast: 画像・動画を生成する方法",
+          "",
+          "## Advanced: Character Setup",
+          "## 応用: キャラクター設定",
+          "",
+          "- Applying a Style Template / スタイルテンプレートの適用",
+          "- Generating Images with Character / キャラクターを使った画像生成",
+          "- Adding Characters Directly / キャラクターを直接追加する"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "この動画を見終わる頃には、このキャラクターを参考にシチュエーションを変えて",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://github.com/ystknsh/media/blob/main/guide/guide03/images/ani.png?raw=true"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "このような画像を生成できるようになります。",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://github.com/ystknsh/media/blob/main/guide/guide03/images/ani_in_forest.png?raw=true"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "キャラクター設定を使うと、複数のビートで同じキャラクターの外観を保ちながら、異なるシーンを作成できます。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Character Consistency Across Beats <br> 複数ビートでの一貫性",
+          "",
+          "English",
+          "- Maintain the same character appearance",
+          "- Freely change backgrounds and outfits",
+          "- Create consistent stories across multiple scenes",
+          "",
+          "日本語",
+          "- 同じキャラクターの外観を維持",
+          "- 背景や服装を自由に変更",
+          "- 複数シーンで統一感のあるストーリーを作成"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "それでは、スタイルテンプレートの適用について説明します。スタイルテンプレートを使用すると、キャラクターデザイン、音声スタイル、画像パラメータを含む事前定義された設定一式を素早く読み込むことができます。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "## 1. Applying a Style Template <br> 1. スタイルテンプレートの適用",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "ダッシュボードから、新規作成をクリックして新しいプロジェクトを開始し、スタイルタブに移動します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Create new project and navigate to the Style tab <br> プロジェクトを新規作成し、スタイルタブに移動",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_00_10.png?raw=true\" alt=\"Style Tab\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "スタイルテンプレートセクションで、ドロップダウンメニューをクリックします。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Click the dropdown menu <br> ドロップダウンメニューをクリック",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_00_12.png?raw=true\" alt=\"Dropdown Menu\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "ドロップダウンメニューからスタイルを選択します。ここでは、「Presentation by Ani」を選択します。なお、上級モードでは選択できるスタイルが増えます。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Choose a style from dropdown menu <br> ドロップダウンメニューからスタイルを選択",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_00_12_8.png?raw=true\" alt=\"Select Style\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "「スタイルを適用」ボタンをクリックして設定を読み込みます。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Click Apply Style button <br> スタイルを適用ボタンをクリック",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_00_14.png?raw=true\" alt=\"Apply Style\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "声の設定",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Click Apply Style button <br> スタイルを適用ボタンをクリック",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_00_18.png?raw=true\" alt=\"Apply Style\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "画像生成設定など、さまざまなフィールドが自動的に入力されていることがわかります。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Click Apply Style button <br> スタイルを適用ボタンをクリック",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_00_21.png?raw=true\" alt=\"Apply Style\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "スタイルテンプレートにキャラクター設定が含まれている場合、キャラクターも自動的に設定されます。これはキャラクタータブで確認できます。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Character tab (if included in template) <br> キャラクタータブ（テンプレートに含まれる場合）",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_00_32.png?raw=true\" alt=\"Character Tab\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "続いて、設定したキャラクターを使って画像を生成してみましょう。ビートタブに戻ります。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "## 2. Generating Images with Character <br> 2. キャラクター設定を使った画像生成",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "キャラクターが設定されると、非常にシンプルなプロンプトで画像を生成できます。「キャラクター画像」で、アニ、がすでに選択されていることに注目してください。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Confirm \"ani\" is selected in Character Image <br> キャラクター画像で \"ani\" が選択されていることを確認",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_00_42.png?raw=true\" alt=\"BEAT Tab\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "話す内容を入力します。画像生成プロンプトには背景や設定の簡単な説明のみを入力します。キャラクターを説明する必要はありません。ここでは、単純に、in the forest として画像生成してみましょう。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Enter simple prompt: in the forest <br> シンプルなプロンプトを入力: in the forest (和訳: 森の中)",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_02_31.png?raw=true\" alt=\"Enter Prompt\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "生成された画像がプレビューボックスに表示されます。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Generated image with character <br> キャラクター付き生成画像",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot_02_33.png?raw=true\" alt=\"Generated Image\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "プロンプトで説明した森の背景に、事前定義された、アニ、キャラクターが正しく配置されています。",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://github.com/ystknsh/media/blob/main/guide/guide03/images/ani_in_forest.png?raw=true"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "最後に、キャラクターを直接追加する方法について説明します。画像生成プロンプトと画像アップロードの2つがあります。ここでは、画像生成プロンプトを使った方法を説明します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "## 3. Adding Characters Directly <br> 3. キャラクターを直接追加する",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "キャラクタータブで、キーを入力し、画像生成プロンプトを選択して、追加ボタンを押します。ここでは、キーを「pet」とします。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Enter key and add character <br> キーを入力してキャラクターを追加",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot2_00_16.png?raw=true\" alt=\"Add Character\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "画像生成プロンプトを入力して、生成ボタンを押します。ここでは、",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Enter image generation prompt <br> 画像生成プロンプトを入力",
+          "",
+          "> An animal that would likely be with X's official character Ani. Output in anime style.",
+          "",
+          "> (和訳) Xの公式キャラクター、Aniと一緒にいそうな動物。アニメ風で出力。",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot2_00_31.png?raw=true\" alt=\"Enter Prompt\" width=\"60%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "An animal that would likely be with X's official character Ani. Output in anime style.",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Enter image generation prompt <br> 画像生成プロンプトを入力",
+          "",
+          "> An animal that would likely be with X's official character Ani. Output in anime style.",
+          "",
+          "> (和訳) Xの公式キャラクター、Aniと一緒にいそうな動物。アニメ風で出力。",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot2_00_31.png?raw=true\" alt=\"Enter Prompt\" width=\"60%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "と入力します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Enter image generation prompt <br> 画像生成プロンプトを入力",
+          "",
+          "> An animal that would likely be with X's official character Ani. Output in anime style.",
+          "",
+          "> (和訳) Xの公式キャラクター、Aniと一緒にいそうな動物。アニメ風で出力。",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot2_00_31.png?raw=true\" alt=\"Enter Prompt\" width=\"60%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "このようなキャラクターが生成されました。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Generated pet character <br> 生成されたペットキャラクター",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot2_01_10.png?raw=true\" alt=\"Generated Character\" width=\"60%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "ビートタブに戻り、キャラクター画像で、「ani」と「pet」の両方にチェックが入っていることを確認します。画像生成プロンプトに、「Ani and a pet running around together in the forest」と入力して、生成ボタンを押します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Select both characters and generate <br> 両方のキャラクターを選択して生成",
+          "",
+          "> Ani and a pet running around together in the forest",
+          "",
+          "> (和訳) Aniとペットが森の中で一緒に走り回っている",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot2_01_50.png?raw=true\" alt=\"Select Characters\" width=\"60%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "生成が完了しました。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Generated image with both characters <br> 両方のキャラクターが写った生成画像",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide03/images/screenshot2_02_00.png?raw=true\" alt=\"Final Image\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "先ほどの「ani」と「pet」の両方が一緒に写っている画像が生成されています。",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://github.com/ystknsh/media/blob/main/guide/guide03/images/ani_with_pet.png?raw=true"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "最後に、重要なポイントをまとめます。キャラクター設定機能を使うことで、複数のシーンで一貫したキャラクターを維持しながら、様々な状況での画像を簡単に生成できます。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Key Points / 重要なポイント",
+          "",
+          "English",
+          "- **Style Templates**: Automatically configure character settings along with other parameters",
+          "- **Direct Character Setup**: Can add characters directly in the Character tab (via image generation prompt or upload)",
+          "- **Character Consistency**: Maintains the same character appearance across multiple scenes",
+          "- **Multiple Characters**: Can select multiple characters to appear together in one scene",
+          "",
+          "日本語",
+          "- **スタイルテンプレート**: キャラクター設定を含む各種パラメータを自動的に構成",
+          "- **直接キャラクター設定**: キャラクタータブから直接追加も可能（画像生成プロンプトまたはアップロード）",
+          "- **一貫性の維持**: 複数シーンで同じキャラクターの外観を維持",
+          "- **複数キャラクター**: 複数のキャラクターを選択して1つのシーンに登場させることが可能"
+        ]
+      }
+    }
+  ]
+}

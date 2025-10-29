@@ -1,0 +1,435 @@
+{
+  "$mulmocast": {
+    "version": "1.1",
+    "credit": "closing"
+  },
+  "canvasSize": {
+    "width": 1280,
+    "height": 720
+  },
+  "lang": "ja",
+  "title": "MulmoCast: 画像・動画を生成する方法",
+  "description": "MulmoCastで画像を生成し、それをベースに動画を作成する手順を解説するガイド",
+  "speechParams": {
+    "speakers": {
+      "Presenter": {
+        "voiceId": "nova",
+        "displayName": {
+          "ja": "ナレーター"
+        }
+      }
+    }
+  },
+  "movieParams": {
+    "provider": "mock",
+    "model": "",
+    "transition": {
+      "type": "fade",
+      "duration": 1
+    }
+  },
+  "textSlideParams": {
+    "cssStyles": "h3 {margin-left: 20px; margin-top: 20px}"
+  },
+  "beats": [
+    {
+      "id": "title-slide",
+      "speaker": "Presenter",
+      "text": "マルモキャスト、画像・動画を生成する方法へようこそ。このマニュアルでは、マルモキャストで画像を生成し、その画像から動画を作成する方法を説明します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# MulmoCast: Generating Images and Videos",
+          "# MulmoCast: 画像・動画を生成する方法",
+          "",
+          "## Basics of Image and Video Generation",
+          "## 画像・動画生成の基礎",
+          "",
+          "- Initial Setup / 初期設定",
+          "- How to Generate Images / 画像の生成方法",
+          "- How to Generate Videos / 動画の生成方法"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "この動画を見終わる頃には、このような画像や、",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://github.com/ystknsh/media/blob/main/guide/guide02/images/method_a-b.png?raw=true"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "このような動画生成ができるようになります。イラストやアニメなど、様々なスタイルでも生成可能です。",
+      "image": {
+        "type": "movie",
+        "source": {
+          "kind": "url",
+          "url": "https://github.com/ystknsh/media/raw/refs/heads/main/guide/guide02/movies/method_b.mp4"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "それでは、初期設定について説明します。この動画では、画像生成にはOpenAIを、動画生成にはGoogleを用いた例で解説します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "## 1. Initial Setup <br> 1. 初期設定",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "設定メニューからグーグルエーピーアイキーを設定します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Set Google API Key <br> Google APIキーを設定",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_00_08.png?raw=true\" alt=\"Set API Key\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "次に新規プロジェクトを作成し、スタイルタブの動画生成設定で、AIの種類をグーグルに設定します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Select Google as Movie Provider <br> 動画生成設定 AIの種類をGoogleに設定",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_00_18.png?raw=true\" alt=\"Select Google\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "続いて、画像の生成方法について説明します。ビートタブに戻ります。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "## 2. How to Generate an Image <br> 2. 画像の生成方法",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "画像生成プロンプトに、作成したい画像の詳細な説明を入力します。ここでは、「Blue whale swimming under sunlight in deep ocean, facing left, cinematic lighting.」と入力します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Enter Image Generation Prompt <br> 画像生成プロンプトを入力",
+          "> Blue whale swimming under sunlight in deep ocean, facing left, cinematic lighting.",
+          "",
+          "> (和訳) 深海で太陽光の下を泳ぐシロナガスクジラ、左向き、映画的な照明",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_00_32.png?raw=true\" alt=\"Image Prompt\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "プロンプトフィールドの横にある生成ボタンをクリックして生成を開始します。「生成中」というステータスが表示されます。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Click generate button to start generation <br> 生成ボタンをクリックして生成開始",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_00_32.png?raw=true\" alt=\"Start Generation\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "画像が表示されたら完了です。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Generated image appears in Image Preview <br> 生成された画像が画像プレビューに表示",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_00_54.png?raw=true\" alt=\"Image Preview\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "次に、動画の生成方法について説明します。3つの方法があります。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "## 3. How to Generate a Video <br> 3. 動画の生成方法",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "方法A、画像生成プロンプトで生成した画像をベースに動画を生成します。動画生成プロンプトは空白スペースにします。方法B、画像生成プロンプトで生成した画像をベースに動画を生成します。動画生成プロンプトでアニメーションを指定します。方法C、動画生成プロンプトのみで画像と動画を同時に生成します。それでは順に説明します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Three Methods for Video Generation <br> 動画生成の3つの方法",
+          "",
+          "**Method A**: Generated Image + Movie Prompt is blank space \" \"",
+          "",
+          "**方法A**: 生成画像 + 動画生成プロンプトは空白スペース \" \"",
+          "",
+          "**Method B**: Generated Image + Specify animation with Movie Prompt",
+          "",
+          "**方法B**: 生成画像 + 動画生成プロンプトでアニメーションを指定",
+          "",
+          "**Method C**: Generate both image and video simultaneously using Movie Prompt only. (Advanced mode only)",
+          "",
+          "**方法C**: 動画生成プロンプトのみで画像と動画を同時に生成（上級モードのみ）"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "方法A について説明します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "### Method A: Simple Video Generation <br> 方法A: シンプルな動画生成",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "画像生成プロンプトで生成した画像をベースに動画を生成します。画像生成プロンプトの下の動画生成プロンプトにスペースを1つ入力します。動画生成プロンプトの横にある生成ボタンをクリックします。「動画プレビュー」ボックスに「生成中」ステータスが表示されます。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "###  Movie Prompt is blank space \" \" <br> 動画生成プロンプトは空白スペース \" \"",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_00_58.png?raw=true\" alt=\"Generate Default Video\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "生成が完了すると、動画が表示されます。動画プレビューをクリックして",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Review video content <br> 動画の内容を確認",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_01_35.png?raw=true\" alt=\"Open Video\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "より大きなウィンドウで開き、確認することができます。なお、3ドットメニューを使用してダウンロード可能です。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Review video content <br> 動画の内容を確認",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_01_40.png?raw=true\" alt=\"Open Video\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "参考に、方法Aで生成した動画を見てみましょう。",
+      "image": {
+        "type": "movie",
+        "source": {
+          "kind": "url",
+          "url": "https://github.com/ystknsh/media/raw/refs/heads/main/guide/guide02/movies/method_a.mp4"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "方法B について説明します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "### Method B: Video Generation with Movie Prompt <br> 方法B: 動画生成プロンプトでアニメーションを指定",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "動画生成プロンプトに、画像をどのようにアニメーション化したいかを記述します。ここでは、「Whale dives deeper into the darkness below. Light fades gradually.」と入力します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Describe desired animation in Movie Prompt <br> 動画生成プロンプトに希望のアニメーションを記述",
+          "> Whale dives deeper into the darkness below. Light fades gradually.",
+          "",
+          "> (和訳) クジラは下の暗闇へと深く潜る。光は徐々に消えていく。",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_02_05.png?raw=true\" alt=\"Enter Movie Prompt\" width=\"70%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "生成ボタンをクリックして、動画の生成を開始します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Click generate button to generate new video <br> 生成ボタンをクリックして動画を生成",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_02_05.png?raw=true\" alt=\"Generate with Prompt\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "生成が完了したら、動画をクリックして結果を確認します。クジラの動きが方法Aと異なるのがわかります。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Click to watch the result <br> クリックして結果を確認",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_02_15.png?raw=true\" alt=\"Watch Result\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "参考に、方法Bで生成した動画を見てみましょう。",
+      "image": {
+        "type": "movie",
+        "source": {
+          "kind": "url",
+          "url": "https://github.com/ystknsh/media/raw/refs/heads/main/guide/guide02/movies/method_b.mp4"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "方法C、動画生成プロンプトのみで動画生成について説明します。この方法を使用するには、上級モードに変更してください。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "### Method C: Video Generation with Movie Prompt Only (Advanced mode only) <br> 方法C: 動画生成プロンプトのみで動画生成（上級モードのみ）",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "画像生成プロンプトは空欄にします。動画生成プロンプトに、シーンの視覚的要素と望ましいアクションの両方を含む詳細な説明を入力します。ここでは、「A blue whale slowly rises toward the surface, sunlight beams shimmer through the water, cinematic lighting.」と入力します。その後、生成ボタンをクリックします。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Enter detailed Movie Prompt <br> 詳細な動画生成プロンプトを入力",
+          "> A blue whale slowly rises toward the surface, sunlight beams shimmer through the water, cinematic lighting.",
+          "",
+          "> シロナガスクジラがゆっくりと水面に向かって浮上し、太陽光線が水中できらめく、映画的な照明",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_02-02_01_41.png?raw=true\" alt=\"Enter Movie Prompt\" width=\"60%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "生成が完了すると、画像と動画の両方がプレビューエリアに表示されます。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Image and video generated <br> 画像と動画が生成完了",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_02-02_01_46.png?raw=true\" alt=\"Generation Complete\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "生成された動画をクリックして内容を確認します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Click to watch the result <br> クリックして結果を確認",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/ystknsh/media/blob/main/guide/guide02/images/screenshot_02-02_01_48.png?raw=true\" alt=\"Preview Video\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "参考に、方法Cで生成した動画を見てみましょう。",
+      "image": {
+        "type": "movie",
+        "source": {
+          "kind": "url",
+          "url": "https://github.com/ystknsh/media/raw/refs/heads/main/guide/guide02/movies/method_c.mp4"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "最後に、重要なポイントについて説明します。方法AとBは、画像生成プロンプトで画像を生成してから、動画生成プロンプトでアニメーションを指定します。方法Cは、動画生成プロンプトのみで画像と動画を同時に生成します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Key Points <br> 重要なポイント",
+          "",
+          "English",
+          "- **Method A & B**: Generate image with Image Generation Prompt first, then specify animation with Movie Prompt (or leave blank)",
+          "- **Method C**: Generate both image and video simultaneously using Movie Prompt only",
+          "- **Provider Configuration**: Ensure proper API keys are set in Settings menu",
+          "",
+          "日本語",
+          "- **方法A・B**: 画像生成プロンプトで画像を生成後、動画生成プロンプトでアニメーションを指定（または空白）",
+          "- **方法C**: 動画生成プロンプトのみで画像と動画を同時に生成",
+          "- **プロバイダー設定**: 設定メニューで適切なAPIキーが設定されていることを確認"
+        ]
+      }
+    }
+  ]
+}
