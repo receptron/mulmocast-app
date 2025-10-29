@@ -1,0 +1,323 @@
+{
+  "$mulmocast": {
+    "version": "1.1",
+    "credit": "closing"
+  },
+  "canvasSize": {
+    "width": 1280,
+    "height": 720
+  },
+  "lang": "ja",
+  "title": "MulmoCast: リップシンク動画を作成する方法",
+  "description": "キャラクターの口の動きが音声ナレーションと同期する動画を生成する方法を解説するガイド。Replicate API Tokenが必要です。",
+  "speechParams": {
+    "speakers": {
+      "Presenter": {
+        "voiceId": "nova",
+        "displayName": {
+          "ja": "ナレーター"
+        }
+      }
+    }
+  },
+  "movieParams": {
+    "provider": "mock",
+    "model": "",
+    "transition": {
+      "type": "fade",
+      "duration": 1
+    }
+  },
+  "textSlideParams": {
+    "cssStyles": "h3 {margin-left: 20px; margin-top: 20px}"
+  },
+  "beats": [
+    {
+      "id": "title-slide",
+      "speaker": "Presenter",
+      "text": "マルモキャスト、リップシンク動画を作成する方法へようこそ。このマニュアルでは、リップシンクと呼ばれる、キャラクターの口の動きが音声ナレーションと同期する動画を生成する方法を説明します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# MulmoCast: Generating Images and Videos",
+          "# MulmoCast: 画像・動画を生成する方法",
+          "",
+          "## Advanced: Lip-Sync Videos",
+          "## 応用: リップシンク動画",
+          "",
+          "- Initial Setup / 初期設定",
+          "- Generating the Character Image / キャラクター画像の生成",
+          "- Generating the Lip-Sync Video / リップシンク動画の生成"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "この動画を見終わる頃には、リップシンク動画を作成できるようになります。それでは、まず完成例を見てみましょう。",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/ani.png?raw=true"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "",
+      "image": {
+        "type": "movie",
+        "source": {
+          "kind": "url",
+          "url": "https://github.com/ystknsh/media/raw/refs/heads/main/guide/guide04/movies/ani.mov"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "それでは、初期設定について説明します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "## 1. Initial Setup <br> 1. 初期設定",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "スタイルタブで、Presentation by Ani、を選択し、「スタイルを適用」をクリックします。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Apply style template <br> スタイルテンプレートを適用",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_00_08.png?raw=true\" alt=\"Apply Style\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "今回はキャンバスサイズを縦から横に変更してみます。ここでは、1792かける1024、を選択します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Change canvas size to landscape <br> キャンバスサイズを横長に変更",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_00_16.png?raw=true\" alt=\"Canvas Size\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "リップシンク機能を使用するには、レプリケート  API トークンの設定が必要です。右上の設定をクリックし、レプリケート から取得した API トークン を入力します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Enter Replicate API Token <br> Replicate API Tokenを入力",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_00_36.png?raw=true\" alt=\"Replicate API Token\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "レプリケート API トークンを設定すると、",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### LipSync option (before) <br> リップシンク設定項目（設定前）",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_00_32.png?raw=true\" alt=\"Settings Saved\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "リップシンクの設定項目が表示されるようになります。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### LipSync option (after) <br> リップシンク設定項目（設定後）",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_00_56.png?raw=true\" alt=\"LipSync Option\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "続いて、リップシンクのベースとなるキャラクター画像の生成について説明します。ビートタブに移動します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "## 2. Generating the Character Image <br> 2. キャラクター画像の生成",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "「キャラクター画像」で、アニ が選択されていることを確認してください。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Confirm \"ani\" is selected in Character Image <br> キャラクター画像で \"ani\" が選択されていることを確認",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_00_59.png?raw=true\" alt=\"BEAT Tab\" width=\"70%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "話す内容、画像生成プロンプトを入力します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Enter narration text <br> 話す内容を入力",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_01_10.png?raw=true\" alt=\"Enter Text\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "今回は、このように入力し、画像生成ボタンをクリックして画像を生成します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Enter narration text and Image Generation Prompt <br> 話す内容と画像生成プロンプトを入力",
+          "",
+          "**Narration text / 話す内容:**",
+          "",
+          "> Now let's talk about lip sync. It means my mouth moves along with my voice — just like this! When we use lip sync, it makes characters feel more alive and expressive.",
+          "",
+          "> (和訳)リップシンクについてお話ししましょう。リップシンクとは、私の口が声に合わせて動くことです――ちょうどこのように！リップシンクを使うと、キャラクターがより生き生きと表情豊かになります。",
+          "",
+          "**Image Generation Prompt / 画像生成プロンプト:**",
+          "",
+          "> in mountain climbing gear, on a rocky trail with green forest behind, daylight.",
+          "",
+          "> (和訳)登山ウェアを着て、背後に緑の森が広がる岩場の多いトレイルにいる、昼間"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "画像が作成され、プレビューエリアに表示されます。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Generated character image <br> 生成されたキャラクター画像",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_06_15.png?raw=true\" alt=\"Generated Image\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "次に、リップシンク動画の生成について説明します。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "## 3. Generating the Lip-Sync Video <br> 3. リップシンク動画の生成",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "話す内容と画像の準備ができたので、リップシンク動画を生成できます。リップシンクのチェックボックスをチェックします。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Check LipSync checkbox <br> リップシンクチェックボックスをチェック",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_06_20.png?raw=true\" alt=\"LipSync Checkbox\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "リップシンクチェックボックスの横に表示される生成ボタンをクリックします。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Click generate button <br> 生成ボタンをクリック",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_06_20.png?raw=true\" alt=\"Generate Button\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "リップシンク付きのアニメーション動画が、プレビューエリアに表示されます。冒頭でお見せしたリップシンク動画をもう一度確認してみましょう。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Lip-sync video preview <br> リップシンク動画のプレビュー",
+          "",
+          "<div align=\"center\">",
+          "<img src=\"https://github.com/receptron/mulmocast-app/blob/main/docs/guide_youtube/guide04/images/screenshot_08_26.png?raw=true\" alt=\"Video Preview\" width=\"80%\">",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "",
+      "image": {
+        "type": "movie",
+        "source": {
+          "kind": "url",
+          "url": "https://github.com/ystknsh/media/raw/refs/heads/main/guide/guide04/movies/ani.mov"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "最後に、重要なポイントをまとめます。リップシンク機能を使うことで、キャラクターが音声ナレーションと完全に同期して話す、プロフェッショナルな動画を作成できます。",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "### Key Points <br> 重要なポイント",
+          "",
+          "English",
+          "- **Replicate API Token Required**: Lip-sync functionality requires a valid Replicate API Token configured in Settings",
+          "- **Two-Step Process**: First generate the character image, then generate the lip-sync animation",
+          "- **Professional Results**: Create dynamic videos where characters speak in perfect sync with audio narration",
+          "",
+          "日本語",
+          "- **Replicate API Tokenが必要**: リップシンク機能を使用するには、設定で有効なReplicate API Tokenの設定が必要",
+          "- **2段階のプロセス**: まずキャラクター画像を生成し、次にリップシンクアニメーションを生成",
+          "- **プロフェッショナルな結果**: 音声ナレーションと完全に同期してキャラクターが話すダイナミックな動画を作成"
+        ]
+      }
+    }
+  ]
+}
