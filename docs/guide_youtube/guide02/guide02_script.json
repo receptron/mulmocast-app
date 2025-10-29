@@ -69,7 +69,7 @@
         "type": "movie",
         "source": {
           "kind": "url",
-          "url": "https://github.com/ystknsh/media/raw/refs/heads/main/guide/guide02/movies/method_b.mp4"
+          "url": "https://github.com/receptron/mulmocast-app/raw/refs/heads/main/docs/guide_youtube/guide02/movies/method_b.mp4"
         }
       }
     },
@@ -269,7 +269,7 @@
         "type": "movie",
         "source": {
           "kind": "url",
-          "url": "https://github.com/ystknsh/media/raw/refs/heads/main/guide/guide02/movies/method_a.mp4"
+          "url": "https://github.com/receptron/mulmocast-app/raw/refs/heads/main/docs/guide_youtube/guide02/movies/method_a.mp4"
         }
       }
     },
@@ -338,7 +338,7 @@
         "type": "movie",
         "source": {
           "kind": "url",
-          "url": "https://github.com/ystknsh/media/raw/refs/heads/main/guide/guide02/movies/method_b.mp4"
+          "url": "https://github.com/receptron/mulmocast-app/raw/refs/heads/main/docs/guide_youtube/guide02/movies/method_b.mp4"
         }
       }
     },
@@ -407,7 +407,7 @@
         "type": "movie",
         "source": {
           "kind": "url",
-          "url": "https://github.com/ystknsh/media/raw/refs/heads/main/guide/guide02/movies/method_c.mp4"
+          "url": "https://github.com/receptron/mulmocast-app/raw/refs/heads/main/docs/guide_youtube/guide02/movies/method_c.mp4"
         }
       }
     },
