@@ -14,6 +14,10 @@
           </SelectContent>
         </Select>
       </div>
+      <StyleTemplate :isPro="globalStore.userIsPro"
+                     v-model="selectedTemplateIndex"
+                     ref="styleTemplate"
+                     />
     </div>
     <!-- Chat history -->
     <div
@@ -207,6 +211,8 @@ import SelectLanguage from "./select_language.vue";
 import BotMessage from "./chat/bot_message.vue";
 import UserMessage from "./chat/user_message.vue";
 import ToolsMessage from "./chat/tools_message.vue";
+import StyleTemplate from "./chat/style_template.vue";
+
 import { graphChatWithSearch } from "./chat/graph";
 import mulmoScriptValidatorAgent from "../../agents/mulmo_script_validator";
 import mulmoVisionAgent from "../../agents/mulmo_vision_agent";
@@ -252,6 +258,7 @@ const emit = defineEmits<{
 
 const selectedTemplateIndex = ref(0);
 const isClearChatDialogOpen = ref(false);
+const styleTemplate = ref();
 
 const streamNodes = ["llm", "toolsResponseLLM", "llmCallWithTools"];
 
