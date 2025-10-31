@@ -60,7 +60,7 @@ export const useSystemPrompt = () => {
       conversationSystemPrompt.value,
       // templateSystemPrompt,
       currentBeats(currentMulmoScript),
-      isAnthropic ? systemPrompts.push(anthropicSystemPrompt) : undefined,
+      isAnthropic ? anthropicSystemPrompt : undefined,
     ];
     return systemPrompts.filter((a) => a).join("\n\n");
   };
