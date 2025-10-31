@@ -41,20 +41,28 @@ export const useSystemPrompt = () => {
 
     return [
       speakerMessage,
-      (beats.length > 0 ? `Current beats: ${JSON.stringify(beats)}. ` : "") +
-        "Update, add, or delete beats as needed, following the instructions.",
+      beats.length > 0 ? `Current beats: ${JSON.stringify(beats)}. ` : "",
+      // "Update, add, or delete beats as needed, following the instructions.",
       "Collect any missing information from the user. Once the information is complete, generate the script.",
       "Proceed as much as possible within a single conversation. You may invoke multiple tools if necessary.",
       "If the task cannot be completed in one pass, tell the user that there will be a continuation.",
     ].join("\n");
   };
 
-  const getSystemPrompt = (scriptLang: string, currentMulmoScript: MulmoScript, isAnthropic: boolean) => {
-    const systemPrompts = [systemMessage(scriptLang), conversationSystemPrompt.value, currentBeats(currentMulmoScript)];
-    if (isAnthropic) {
-      systemPrompts.push(anthropicSystemPrompt);
-    }
-    return systemPrompts.join("\n\n");
+  const getSystemPrompt = (
+    scriptLang: string,
+    currentMulmoScript: MulmoScript,
+    isAnthropic: boolean,
+    templateSystemPrompt?: string,
+  ) => {
+    const systemPrompts = [
+      systemMessage(scriptLang),
+      conversationSystemPrompt.value,
+      // templateSystemPrompt,
+      currentBeats(currentMulmoScript),
+      isAnthropic ? systemPrompts.push(anthropicSystemPrompt) : undefined,
+    ];
+    return systemPrompts.filter((a) => a).join("\n\n");
   };
 
   return {

@@ -1,19 +1,19 @@
 <template>
-<div class="template-dropdown-container flex items-center gap-4">
-  <Select v-model="internalValue">
-    <SelectTrigger class="w-auto">
-      <SelectValue :placeholder="t('presentationStyle.styleTemplate.placeholder')" />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectItem :value="-1">
-        {{ t("project.chat.templates.none") }}
-      </SelectItem>
-      <SelectItem v-for="(template, k) in isPro ? promptTemplates : simpleTemplate" :key="k" :value="k">
-        {{ t("project.chat.templates." + template.filename) }}
-      </SelectItem>
-    </SelectContent>
-  </Select>
-</div>
+  <div class="template-dropdown-container flex items-center gap-4">
+    <Select v-model="internalValue">
+      <SelectTrigger class="w-auto">
+        <SelectValue :placeholder="t('presentationStyle.styleTemplate.placeholder')" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem :value="-1">
+          {{ t("project.chat.templates.none") }}
+        </SelectItem>
+        <SelectItem v-for="(template, k) in isPro ? promptTemplates : simpleTemplate" :key="k" :value="k">
+          {{ t("project.chat.templates." + template.filename) }}
+        </SelectItem>
+      </SelectContent>
+    </Select>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -57,5 +57,4 @@ defineExpose({
   selectedTemplateIndex,
   currentTemplate,
 });
-
 </script>

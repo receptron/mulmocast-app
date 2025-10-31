@@ -14,10 +14,6 @@
           </SelectContent>
         </Select>
       </div>
-      <StyleTemplate :isPro="globalStore.userIsPro"
-                     v-model="selectedTemplateIndex"
-                     ref="styleTemplate"
-                     />
     </div>
     <!-- Chat history -->
     <div
@@ -95,16 +91,20 @@
           >
             <Send :size="16" />
           </Button>
-          <Button
-            size="sm"
-            @click="run(true)"
-            :disabled="isCreatingScript || isRunning"
-            class="ml-2 hover:bg-zinc-200 dark:hover:bg-zinc-700"
-            v-if="messages.length > 0 && isOpenAI"
-          >
-            <FileCode :size="16" />
-          </Button>
         </div>
+      </div>
+
+      <div class="flex" v-if="messages.length > 0">
+        <StyleTemplate :isPro="globalStore.userIsPro" v-model="selectedTemplateIndex" ref="styleTemplate" />
+        <Button
+          size="sm"
+          @click="run(true)"
+          :disabled="isCreatingScript || isRunning"
+          class="ml-2 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+          v-if="messages.length > 0"
+        >
+          <FileCode :size="16" />
+        </Button>
       </div>
 
       <div class="flex flex-wrap">
@@ -376,10 +376,13 @@ const run = async (isScript: false) => {
       ...mulmoScriptAgent.tools,
     ];
 
+    const templateSystemPrompt = styleTemplate.value?.currentTemplate?.systemPrompt;
+
     const systemPrompt = getSystemPrompt(
       scriptLang.value,
       mulmoScriptHistoryStore.currentMulmoScript,
       isAnthropic.value,
+      isScript ? templateSystemPrompt : undefined,
     );
     const postMessages = [
       {
@@ -410,7 +413,7 @@ const run = async (isScript: false) => {
       mulmoScriptAgent,
     };
 
-    const graphai = new GraphAI(graphChatWithSearch(isScript, isOpenAI.value), graphAIAgents, {
+    const graphai = new GraphAI(graphChatWithSearch(isScript && isOpenAI.value, isOpenAI.value), graphAIAgents, {
       agentFilters,
       config,
     });
@@ -455,7 +458,10 @@ const run = async (isScript: false) => {
       }
     });
     graphai.injectValue("messages", postMessages);
-    graphai.injectValue("prompt", isOpenAI.value && userInput.value === "" ? "create mulmo script" : userInput.value);
+    graphai.injectValue(
+      "prompt",
+      isScript ? (templateSystemPrompt ? templateSystemPrompt : "create mulmo script") : userInput.value,
+    );
     graphai.injectValue("llmAgent", llmAgent.value);
     graphai.injectValue("llmModel", llmModel);
     if (hasExa.value) {

@@ -8,11 +8,7 @@
         </Label>
         <!-- Template selection section -->
         <div class="template-section flex items-center gap-2">
-          <StyleTemplateSelect
-            ref="styleTemplateRef"
-            v-model="selectedTemplateIndex"
-            :is-pro="isPro"
-          />
+          <StyleTemplateSelect ref="styleTemplateRef" v-model="selectedTemplateIndex" :is-pro="isPro" />
           <Button size="sm" @click="applyStyle">
             {{ t("project.chat.applyStyle") }}
           </Button>
