@@ -514,6 +514,7 @@ const lang = {
       createScript: "Create Script",
       exampleMessage: "ex) Thank you very much! Please proceed with the creation.",
       templates: {
+        none: "No style",
         akira_comic: "Akira style",
         ani: "Presentation by Ani",
         business: "Business presentation",

@@ -5,6 +5,9 @@
       <SelectValue :placeholder="t('presentationStyle.styleTemplate.placeholder')" />
     </SelectTrigger>
     <SelectContent>
+      <SelectItem :value="-1">
+        {{ t("project.chat.templates.none") }}
+      </SelectItem>
       <SelectItem v-for="(template, k) in isPro ? promptTemplates : simpleTemplate" :key="k" :value="k">
         {{ t("project.chat.templates." + template.filename) }}
       </SelectItem>
@@ -46,7 +49,7 @@ const templates = computed(() => {
 const selectedTemplateIndex = computed(() => props.modelValue);
 
 const currentTemplate = computed(() => {
-  if (selectedTemplateIndex.value === null) return null;
+  if (selectedTemplateIndex.value === null || selectedTemplateIndex.value === -1) return null;
   return templates.value[selectedTemplateIndex.value];
 });
 

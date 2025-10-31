@@ -511,6 +511,7 @@ const lang = {
       createScript: "台本を作成",
       exampleMessage: "例）旅行紹介動画の構成を手伝って。",
       templates: {
+        none: "スタイルなし",
         akira_comic: "アキラ風マンガ",
         ani: "Aniのプレゼン",
         business: "ビジネスプレゼン",
