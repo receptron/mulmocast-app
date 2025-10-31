@@ -53,7 +53,7 @@ export const useSystemPrompt = () => {
     scriptLang: string,
     currentMulmoScript: MulmoScript,
     isAnthropic: boolean,
-    templateSystemPrompt?: string,
+    // templateSystemPrompt?: string,
   ) => {
     const systemPrompts = [
       systemMessage(scriptLang),
