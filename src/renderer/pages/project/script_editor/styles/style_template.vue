@@ -8,23 +8,18 @@
         </Label>
         <!-- Template selection section -->
         <div class="template-section flex items-center gap-2">
-          <Select v-model="selectedTemplateIndex">
-            <SelectTrigger class="w-auto">
-              <SelectValue :placeholder="t('presentationStyle.styleTemplate.placeholder')" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem v-for="(template, k) in isPro ? promptTemplates : simpleTemplate" :key="k" :value="k">
-                {{ t("project.chat.templates." + template.filename) }}
-              </SelectItem>
-            </SelectContent>
-          </Select>
+          <StyleTemplateSelect
+            ref="styleTemplateRef"
+            v-model="selectedTemplateIndex"
+            :is-pro="isPro"
+          />
           <Button size="sm" @click="applyStyle">
             {{ t("project.chat.applyStyle") }}
           </Button>
           <img
             :src="templateImageDataSet[currentTemplate?.filename]"
             class="w-20"
-            v-if="templateImageDataSet[currentTemplate?.filename]"
+            v-if="currentTemplate && templateImageDataSet[currentTemplate.filename]"
           />
         </div>
         <!-- Note after template selection -->
@@ -40,10 +35,11 @@
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { Card, Label, Button } from "@/components/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { MulmoScript } from "mulmocast/browser";
-import { promptTemplates, templateImageDataSet } from "mulmocast/data";
+import { templateImageDataSet } from "mulmocast/data";
 import { notifySuccess } from "@/lib/notification";
+import StyleTemplateSelect from "../../chat/style_template.vue";
+
 const { t } = useI18n();
 
 const props = defineProps<{
@@ -51,28 +47,21 @@ const props = defineProps<{
   isPro: boolean;
 }>();
 
-const selectedTemplateIndex = ref(null);
-
-const simpleTemplate = promptTemplates.filter((temp) => {
-  return ["ani", "ghibli_comic", "image_prompt"].includes(temp.filename);
-});
-
 const emit = defineEmits<{
   updateMulmoScript: [value: MulmoScript];
 }>();
 
-const templates = computed(() => {
-  return props.isPro ? promptTemplates : simpleTemplate;
-});
+const selectedTemplateIndex = ref<number | null>(null);
+const styleTemplateRef = ref<InstanceType<typeof StyleTemplateSelect> | null>(null);
 
 const currentTemplate = computed(() => {
-  if (selectedTemplateIndex.value === null) return;
-  return templates.value[selectedTemplateIndex.value];
+  return styleTemplateRef.value?.currentTemplate;
 });
 
 const applyStyle = () => {
-  if (selectedTemplateIndex.value === null) return;
-  const style = templates.value[selectedTemplateIndex.value].presentationStyle;
+  const template = currentTemplate.value;
+  if (!template) return;
+  const style = template.presentationStyle;
   const script = { ...props.mulmoScript, ...style };
   emit("updateMulmoScript", script);
   notifySuccess(t("settings.notifications.createSuccess"));
