@@ -382,7 +382,7 @@ const run = async (isScript: false) => {
       scriptLang.value,
       mulmoScriptHistoryStore.currentMulmoScript,
       isAnthropic.value,
-      isScript ? templateSystemPrompt : undefined,
+      // isScript ? templateSystemPrompt : undefined,
     );
     const postMessages = [
       {
