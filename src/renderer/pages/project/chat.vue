@@ -219,6 +219,8 @@ import mulmoVisionAgent from "../../agents/mulmo_vision_agent";
 import mulmoScriptAgent from "../../agents/mulmo_script";
 // presentation manuscript
 
+import { insertSpeakers } from "../utils";
+
 import { useSystemPrompt, conversationModes } from "./chat_system_prompt";
 import { mulmoScriptTools } from "./chat_tools";
 
@@ -448,6 +450,7 @@ const run = async (isScript: false) => {
         const script = { ...mulmoScriptHistoryStore.currentMulmoScript };
         const newScript = mulmoScriptTools(data.namedInputs, script);
         if (newScript) {
+          insertSpeakers(newScript);
           emit("updateMulmoScript", newScript);
         }
         notifySuccess(t("notify.mulmoScript.successMessage"));
