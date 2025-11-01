@@ -449,7 +449,6 @@ const mulmoScriptSchemaNoBeats = mulmoScriptSchema.extend({
   beats: z.array(mulmoBeatSchema).min(0),
 });
 
-
 const formatAndPushHistoryMulmoScript = () => {
   const data = mulmoScriptSchemaNoBeats.safeParse(mulmoScriptHistoryStore.currentMulmoScript);
   if (data.success) {

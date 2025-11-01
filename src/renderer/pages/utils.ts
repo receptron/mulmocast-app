@@ -1,3 +1,5 @@
+import { type MulmoScript } from "mulmocast/browser";
+
 export const insertSpeakers = (data: MulmoScript) => {
   const existsSpeakersOnBeats = data.beats.reduce((speakers, beat) => {
     if (beat.speaker && !speakers.has(beat.speaker)) {
@@ -8,7 +10,7 @@ export const insertSpeakers = (data: MulmoScript) => {
   Object.keys(data?.speechParams?.speakers ?? {}).map((speaker) => {
     existsSpeakersOnBeats.delete(speaker);
   });
-  existsSpeakersOnBeats.forEach((speaker) => {
+  existsSpeakersOnBeats.forEach((speaker: string) => {
     data.speechParams.speakers[speaker] = {
       displayName: {
         en: speaker,
