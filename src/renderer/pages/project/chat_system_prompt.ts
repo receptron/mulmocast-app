@@ -41,7 +41,7 @@ export const useSystemPrompt = () => {
 
     return [
       speakerMessage,
-      beats.length > 0 ? `Current beats: ${JSON.stringify(beats)}. ` : "",
+      beats.length > 0 ? `Current beats: ${JSON.stringify(beats)}. If you want to update the same beat, specify beat.id. No need to define it when creating it.` : "",
       // "Update, add, or delete beats as needed, following the instructions.",
       "Collect any missing information from the user. Once the information is complete, generate the script.",
       "Proceed as much as possible within a single conversation. You may invoke multiple tools if necessary.",
