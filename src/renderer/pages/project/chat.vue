@@ -264,7 +264,7 @@ const emit = defineEmits<{
   resetMediaFiles: [];
 }>();
 
-const selectedTemplateIndex = ref<number | null>(null);
+const selectedTemplateIndex = ref(0);
 const isClearChatDialogOpen = ref(false);
 const styleTemplate = ref();
 
