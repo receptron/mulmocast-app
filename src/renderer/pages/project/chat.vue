@@ -104,6 +104,7 @@
           v-if="messages.length > 0"
         >
           <FileCode :size="16" />
+          <span class="ml-1">{{ t("ui.actions.createScript") }}</span>
         </Button>
       </div>
 
@@ -258,7 +259,7 @@ const emit = defineEmits<{
   resetMediaFiles: [];
 }>();
 
-const selectedTemplateIndex = ref(0);
+const selectedTemplateIndex = ref<number | null>(null);
 const isClearChatDialogOpen = ref(false);
 const styleTemplate = ref();
 
