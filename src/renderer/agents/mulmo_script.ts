@@ -27,7 +27,11 @@ export const mulmoScriptAgentInfo: AgentFunctionInfo = {
                 type: "object",
                 required: ["text"],
                 properties: {
-                  id: { type: "string", description: "Unique beat id. It is automatically assigned when creating, so there is no need to specify it." },
+                  id: {
+                    type: "string",
+                    description:
+                      "Unique beat id. It is automatically assigned when creating, so there is no need to specify it.",
+                  },
                   text: { type: "string", description: "talk script for each beat" },
                   speaker: { type: "string", description: "speaker" },
                   imagePrompt: {
