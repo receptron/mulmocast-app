@@ -149,7 +149,7 @@
 
       <!-- Audio Player -->
       <div v-if="audioPreviewUrl" class="mt-3">
-        <audio :src="audioPreviewUrl" controls />
+        <audio :src="audioPreviewUrl" controls volume="0.2" />
       </div>
 
       <MulmoError :mulmoError="mulmoError" />
