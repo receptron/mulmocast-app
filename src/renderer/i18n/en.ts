@@ -548,6 +548,8 @@ const lang = {
         story: "Story",
       },
       continue: "continue",
+      styleTemplateNote:
+        "Select a style and press '{createScriptButton}' to generate a script based on the selected style.",
     },
   },
   beat: {

@@ -108,7 +108,7 @@
           </Button>
         </div>
         <!-- Note about style template -->
-        <div class="text-xs text-muted-foreground ml-2">
+        <div class="text-muted-foreground ml-2 text-xs">
           {{ t("project.chat.styleTemplateNote", { createScriptButton: t("ui.actions.createScript") }) }}
         </div>
       </div>

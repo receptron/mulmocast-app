@@ -545,6 +545,8 @@ const lang = {
         story: "複数人/物語",
       },
       continue: "続けて",
+      styleTemplateNote:
+        "スタイルを選択して「{createScriptButton}」を押すと、選択したスタイルに合わせてスクリプトが生成されます。",
     },
   },
   beat: {
