@@ -5,7 +5,7 @@
     </div>
     <div class="flex-1 text-right">
       <div
-        class="text-foreground inline-block max-w-md rounded-lg bg-blue-500/20 p-3 break-words whitespace-pre-wrap dark:bg-blue-500/30"
+        class="text-foreground inline-block max-w-md rounded-lg bg-blue-500/20 p-3 text-left break-words whitespace-pre-wrap dark:bg-blue-500/30"
       >
         <p class="text-sm">{{ message }}</p>
       </div>

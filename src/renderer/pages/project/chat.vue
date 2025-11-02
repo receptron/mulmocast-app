@@ -94,17 +94,23 @@
         </div>
       </div>
 
-      <div class="flex" v-if="messages.length > 0">
-        <StyleTemplate :isPro="globalStore.userIsPro" v-model="selectedTemplateIndex" ref="styleTemplate" />
-        <Button
-          size="sm"
-          @click="run(true)"
-          :disabled="isCreatingScript || isRunning"
-          class="ml-2 hover:bg-zinc-200 dark:hover:bg-zinc-700"
-          v-if="messages.length > 0"
-        >
-          <FileCode :size="16" />
-        </Button>
+      <div class="flex flex-col gap-2" v-if="messages.length > 0">
+        <div class="flex">
+          <StyleTemplate :isPro="globalStore.userIsPro" v-model="selectedTemplateIndex" ref="styleTemplate" />
+          <Button
+            size="sm"
+            @click="run(true)"
+            :disabled="isCreatingScript || isRunning"
+            class="ml-2 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+          >
+            <FileCode :size="16" />
+            <span class="ml-1">{{ t("ui.actions.createScript") }}</span>
+          </Button>
+        </div>
+        <!-- Note about style template -->
+        <div class="text-muted-foreground ml-2 text-xs">
+          {{ t("project.chat.styleTemplateNote", { createScriptButton: t("ui.actions.createScript") }) }}
+        </div>
       </div>
 
       <div class="flex flex-wrap">
