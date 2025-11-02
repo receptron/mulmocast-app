@@ -447,10 +447,15 @@ const run = async (isScript: false) => {
         console.log(data.result.data);
       }
       if (agentId === "mulmoScriptAgent" && state === "completed") {
-        const script = { ...mulmoScriptHistoryStore.currentMulmoScript };
+        const script = {
+          ...mulmoScriptHistoryStore.currentMulmoScript,
+          ...(styleTemplate.value?.currentTemplate?.presentationStyle ?? {}),
+        };
         const newScript = mulmoScriptTools(data.namedInputs, script);
         if (newScript) {
           insertSpeakers(newScript);
+          // const templateSystemPrompt = styleTemplate.value?.currentTemplate?.systemPrompt;
+
           emit("updateMulmoScript", newScript);
         }
         notifySuccess(t("notify.mulmoScript.successMessage"));
