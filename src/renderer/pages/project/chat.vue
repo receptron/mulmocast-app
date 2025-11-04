@@ -69,10 +69,16 @@
     <div class="space-y-4">
       <!-- Message input field -->
       <div>
-        <Label class="mb-2">
-          {{ t("project.chat.enterMessage") }}
-          <span class="text-muted-foreground">{{ `(${llmAgent}${hasExa ? " with Search" : ""})` }}</span>
-        </Label>
+        <div class="mb-2 flex flex-wrap items-center gap-4">
+          <Label>
+            {{ t("project.chat.enterMessage") }}
+            <span class="text-muted-foreground">{{ `(${llmAgent}${hasExa ? " with Search" : ""})` }}</span>
+          </Label>
+          <!-- LLM behavior note -->
+          <div class="text-muted-foreground flex-1" style="font-size: 0.7rem;">
+            {{ t("project.chat.llmBehaviorNote", { scriptPanel: t("project.menu.script") }) }}
+          </div>
+        </div>
         <div class="chat-input-container flex items-center justify-between">
           <Textarea
             ref="textareaRef"
@@ -113,22 +119,13 @@
         </div>
       </div>
 
-      <div class="flex flex-wrap items-start gap-4">
-        <div class="flex gap-4">
-          <Button @click="undoMessages" variant="outline" size="xs" v-if="messageHistory.length > 0">
-            {{ t("project.chat.undoChat") }}
-          </Button>
-          <Button @click="() => (isClearChatDialogOpen = true)" variant="outline" size="xs">
-            {{ t("project.chat.clearChat") }}
-          </Button>
-        </div>
-        <!-- LLM behavior note -->
-        <div class="text-muted-foreground flex-1 text-xs">
-          <div>
-            {{ t("project.chat.llmBehaviorNote1", { scriptPanel: t("project.menu.script") }) }}
-            {{ t("project.chat.llmBehaviorNote2") }}
-          </div>
-        </div>
+      <div class="flex gap-4">
+        <Button @click="undoMessages" variant="outline" size="xs" v-if="messageHistory.length > 0">
+          {{ t("project.chat.undoChat") }}
+        </Button>
+        <Button @click="() => (isClearChatDialogOpen = true)" variant="outline" size="xs">
+          {{ t("project.chat.clearChat") }}
+        </Button>
       </div>
       <div v-if="isDevelopment">
         <Button variant="outline" size="xs" @click="copyMessageToClipboard">
