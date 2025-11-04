@@ -75,7 +75,7 @@
             <span class="text-muted-foreground">{{ `(${llmAgent}${hasExa ? " with Search" : ""})` }}</span>
           </Label>
           <!-- LLM behavior note -->
-          <div class="text-muted-foreground flex-1" style="font-size: 0.7rem;">
+          <div class="text-muted-foreground flex-1" style="font-size: 0.7rem">
             {{ t("project.chat.llmBehaviorNote", { scriptPanel: t("project.menu.script") }) }}
           </div>
         </div>
@@ -114,7 +114,7 @@
           </Button>
         </div>
         <!-- Note about style template -->
-        <div class="text-muted-foreground text-xs flex-1">
+        <div class="text-muted-foreground flex-1 text-xs">
           {{ t("project.chat.styleTemplateNote", { createScriptButton: t("ui.actions.createScript") }) }}
         </div>
       </div>
