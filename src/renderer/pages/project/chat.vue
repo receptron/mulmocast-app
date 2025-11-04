@@ -113,13 +113,22 @@
         </div>
       </div>
 
-      <div class="flex flex-wrap">
-        <Button @click="undoMessages" variant="outline" size="xs" class="mr-4" v-if="messageHistory.length > 0">
-          {{ t("project.chat.undoChat") }}
-        </Button>
-        <Button @click="() => (isClearChatDialogOpen = true)" variant="outline" size="xs">
-          {{ t("project.chat.clearChat") }}
-        </Button>
+      <div class="flex flex-wrap items-start gap-4">
+        <div class="flex gap-4">
+          <Button @click="undoMessages" variant="outline" size="xs" v-if="messageHistory.length > 0">
+            {{ t("project.chat.undoChat") }}
+          </Button>
+          <Button @click="() => (isClearChatDialogOpen = true)" variant="outline" size="xs">
+            {{ t("project.chat.clearChat") }}
+          </Button>
+        </div>
+        <!-- LLM behavior note -->
+        <div class="text-muted-foreground flex-1 text-xs">
+          <div>
+            {{ t("project.chat.llmBehaviorNote1", { scriptPanel: t("project.menu.script") }) }}
+            {{ t("project.chat.llmBehaviorNote2") }}
+          </div>
+        </div>
       </div>
       <div v-if="isDevelopment">
         <Button variant="outline" size="xs" @click="copyMessageToClipboard">

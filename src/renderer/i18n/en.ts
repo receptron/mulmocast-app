@@ -500,6 +500,9 @@ const lang = {
       title: "Story Creation with AI Chat",
       aiPoweredGuide: "AI-Powered MulmoScript Generation Guide",
       beginnerDescription: "Create stories through consultation with AI.",
+      llmBehaviorNote1:
+        'LLM behavior varies slightly each time. If the result isn\'t as intended, use "Back" in "{scriptPanel}" to revert.',
+      llmBehaviorNote2: "You can also have the LLM regenerate the entire script if needed.",
       advancedDescription: "Use ChatGPT or other AI tools to generate your Script content with these proven prompts",
       enterMessage: "Enter your message:",
       clearChat: "Clear chat",
