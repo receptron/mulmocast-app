@@ -497,6 +497,8 @@ const lang = {
       title: "AIチャットでストーリー作り",
       aiPoweredGuide: "AIで作るMulmoScriptガイド",
       beginnerDescription: "AIに相談しながらストーリーを作成できます。",
+      llmBehaviorNote:
+        "LLMによる生成結果は「{scriptPanel}」の「戻る」で戻せます。スクリプト全体を再生成させることもできます。",
       advancedDescription: "用意されたプロンプトでAIが台本案を仕上げます。",
       enterMessage: "AIへのメッセージ",
       clearChat: "会話をリセット",
