@@ -94,21 +94,21 @@
         </div>
       </div>
 
-      <div class="flex flex-col gap-2" v-if="messages.length > 0">
-        <div class="flex">
+      <div class="flex flex-wrap items-start gap-4" v-if="messages.length > 0">
+        <div class="flex gap-2">
           <StyleTemplate :isPro="globalStore.userIsPro" v-model="selectedTemplateIndex" ref="styleTemplate" />
           <Button
             size="sm"
             @click="run(true)"
             :disabled="isCreatingScript || isRunning"
-            class="ml-2 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+            class="hover:bg-zinc-200 dark:hover:bg-zinc-700"
           >
             <FileCode :size="16" />
             <span class="ml-1">{{ t("ui.actions.createScript") }}</span>
           </Button>
         </div>
         <!-- Note about style template -->
-        <div class="text-muted-foreground ml-2 text-xs">
+        <div class="text-muted-foreground text-xs flex-1">
           {{ t("project.chat.styleTemplateNote", { createScriptButton: t("ui.actions.createScript") }) }}
         </div>
       </div>
