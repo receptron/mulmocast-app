@@ -1,6 +1,7 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { type MulmoScript, mulmoScriptSchema } from "mulmocast/browser";
+import type { SafeParseReturnType } from "zod";
 import cloneDeep from "clone-deep";
 import deepEqual from "deep-equal";
 import { MulmoError } from "@/types";
@@ -75,7 +76,11 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
   });
 
   // internal
-  const zodError = computed(() => {
+  const zodError = computed((): SafeParseReturnType<MulmoScript, MulmoScript> => {
+    // Don't validate until script is actually loaded (histories has data)
+    if (histories.value.length === 0) {
+      return { success: true, data: {} as MulmoScript };
+    }
     return mulmoScriptSchema.safeParse(currentMulmoScript.value ?? {});
   });
 
@@ -91,7 +96,7 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
   });
   const hasBeatSchemaError = computed(() => {
     if (!zodError.value.success) {
-      return zodError?.value?.error.issues.some((error) => {
+      return zodError.value.error.issues.some((error) => {
         return error.path[0] === "beats";
       });
     }
@@ -99,7 +104,7 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
   });
   const hasImageParamsSchemaError = computed(() => {
     if (!zodError.value.success) {
-      return zodError?.value?.error.issues.some((error) => {
+      return zodError.value.error.issues.some((error) => {
         return error.path[0] === "imageParams";
       });
     }
