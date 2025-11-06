@@ -880,6 +880,10 @@ const lang = {
           movieReplicateAgent: "An error occurred with video generation (Replicate).",
           lipSyncReplicateAgent: "An error occurred with lip sync (Replicate).",
           soundEffectReplicateAgent: "An error occurred with sound effect generation (Replicate).",
+          videoDuration:
+            "The specified video duration is not supported by the model. Please adjust to a supported duration and try again.",
+          unsupportedModel:
+            "The selected model is not available for this video generation. Please select a compatible model.",
           openAIError: {
             need_verified_organization:
               "Image generation (OpenAI) error: Please complete organization verification to use the gpt-image-1 model.  https://platform.openai.com/settings/organization/general",
@@ -937,6 +941,8 @@ const lang = {
       translate: {
         apiError: {
           translateBeat: "An error occurred during translation.",
+          multiLingualFile:
+            "Failed to generate translation file. Please check your settings and target data, then try again.",
         },
       },
       apiKeyMissing: {
