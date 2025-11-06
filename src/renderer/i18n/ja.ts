@@ -879,11 +879,15 @@ const lang = {
           movieReplicateAgent: "動画生成（Replicate）でエラーが発生しました。",
           lipSyncReplicateAgent: "リップシンク（Replicate）でエラーが発生しました。",
           soundEffectReplicateAgent: "効果音生成（Replicate）でエラーが発生しました。",
+          videoDuration: "指定した再生時間はモデルがサポートしていません。対応する長さに変更して再度お試しください。",
+          unsupportedModel: "選択したモデルはこの動画生成では利用できません。対応モデルを選び直してください。",
           openAIError: {
             need_verified_organization:
               "画像生成（OpenAI）エラー: gpt-image-1 モデルを利用するためには組織認証行ってください。 https://platform.openai.com/settings/organization/general",
             billing_hard_limit_reached:
               "画像生成（OpenAI）でエラーが発生しました。OpenAI APIのクレジット残高を確認してください",
+            moderation_blocked:
+              "画像生成がブロックされました: コンテンツがOpenAIの利用規約に違反しています。プロンプトを修正してください。",
           },
         },
       },
@@ -938,6 +942,7 @@ const lang = {
       translate: {
         apiError: {
           translateBeat: "翻訳処理でエラーが発生しました。",
+          multiLingualFile: "翻訳結果のファイル生成に失敗しました。設定や対象データを確認してから再実行してください。",
         },
       },
       apiKeyMissing: {
