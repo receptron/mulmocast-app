@@ -76,13 +76,18 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
 
   // internal
   const zodError = computed(() => {
+    // Don't validate until script is actually loaded (histories has data)
+    if (histories.value.length === 0) {
+      return { success: true };
+    }
     return mulmoScriptSchema.safeParse(currentMulmoScript.value ?? {});
   });
 
   const mulmoError = computed<MulmoError>(() => {
-    if (!zodError.value.success) {
-      console.log(zodError.value.error);
-      return zodError2MulmoError(zodError.value.error);
+    const result = zodError.value;
+    if (!result.success && "error" in result) {
+      console.log(result.error);
+      return zodError2MulmoError(result.error);
     }
     return null;
   });
@@ -90,16 +95,18 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
     return zodError.value.success;
   });
   const hasBeatSchemaError = computed(() => {
-    if (!zodError.value.success) {
-      return zodError?.value?.error.issues.some((error) => {
+    const result = zodError.value;
+    if (!result.success && "error" in result) {
+      return result.error.issues.some((error) => {
         return error.path[0] === "beats";
       });
     }
     return false;
   });
   const hasImageParamsSchemaError = computed(() => {
-    if (!zodError.value.success) {
-      return zodError?.value?.error.issues.some((error) => {
+    const result = zodError.value;
+    if (!result.success && "error" in result) {
+      return result.error.issues.some((error) => {
         return error.path[0] === "imageParams";
       });
     }
