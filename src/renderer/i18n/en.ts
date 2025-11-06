@@ -884,6 +884,8 @@ const lang = {
             need_verified_organization:
               "Image generation (OpenAI) error: Please complete organization verification to use the gpt-image-1 model.  https://platform.openai.com/settings/organization/general",
             billing_hard_limit_reached: "Image generation (OpenAI) error: Please check your OpenAI API credit balance",
+            moderation_blocked:
+              "Image generation blocked: Content violates OpenAI's usage policies. Please modify your prompt.",
           },
         },
       },

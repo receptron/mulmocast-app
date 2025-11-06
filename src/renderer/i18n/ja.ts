@@ -884,6 +884,8 @@ const lang = {
               "画像生成（OpenAI）エラー: gpt-image-1 モデルを利用するためには組織認証行ってください。 https://platform.openai.com/settings/organization/general",
             billing_hard_limit_reached:
               "画像生成（OpenAI）でエラーが発生しました。OpenAI APIのクレジット残高を確認してください",
+            moderation_blocked:
+              "画像生成がブロックされました: コンテンツがOpenAIの利用規約に違反しています。プロンプトを修正してください。",
           },
         },
       },
