@@ -1,6 +1,7 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { type MulmoScript, mulmoScriptSchema } from "mulmocast/browser";
+import type { SafeParseReturnType } from "zod";
 import cloneDeep from "clone-deep";
 import deepEqual from "deep-equal";
 import { MulmoError } from "@/types";
@@ -75,19 +76,18 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
   });
 
   // internal
-  const zodError = computed(() => {
+  const zodError = computed((): SafeParseReturnType<MulmoScript, MulmoScript> => {
     // Don't validate until script is actually loaded (histories has data)
     if (histories.value.length === 0) {
-      return { success: true };
+      return { success: true, data: {} as MulmoScript };
     }
     return mulmoScriptSchema.safeParse(currentMulmoScript.value ?? {});
   });
 
   const mulmoError = computed<MulmoError>(() => {
-    const result = zodError.value;
-    if (!result.success && "error" in result) {
-      console.log(result.error);
-      return zodError2MulmoError(result.error);
+    if (!zodError.value.success) {
+      console.log(zodError.value.error);
+      return zodError2MulmoError(zodError.value.error);
     }
     return null;
   });
@@ -95,18 +95,16 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
     return zodError.value.success;
   });
   const hasBeatSchemaError = computed(() => {
-    const result = zodError.value;
-    if (!result.success && "error" in result) {
-      return result.error.issues.some((error) => {
+    if (!zodError.value.success) {
+      return zodError.value.error.issues.some((error) => {
         return error.path[0] === "beats";
       });
     }
     return false;
   });
   const hasImageParamsSchemaError = computed(() => {
-    const result = zodError.value;
-    if (!result.success && "error" in result) {
-      return result.error.issues.some((error) => {
+    if (!zodError.value.success) {
+      return zodError.value.error.issues.some((error) => {
         return error.path[0] === "imageParams";
       });
     }
