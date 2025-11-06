@@ -11,72 +11,83 @@ export const getMenu = async () => {
   const isMac = process.platform === "darwin";
 
   const template: MenuItemConstructorOptions[] = [
-    { role: "fileMenu", submenu: [isMac ? { role: "close" } : { role: "quit" }], label: menuProps["fileMenu"] },
+    {
+      role: "fileMenu",
+      submenu: [isMac ? { role: "close", label: menuProps["close"] } : { role: "quit", label: menuProps["quit"] }],
+      label: menuProps["fileMenu"],
+    },
     {
       role: "editMenu",
       label: menuProps["editMenu"],
       submenu: [
-        { role: "undo" },
-        { role: "redo" },
+        { role: "undo", label: menuProps["undo"] },
+        { role: "redo", label: menuProps["redo"] },
         { type: "separator" },
-        { role: "cut" },
-        { role: "copy" },
-        { role: "paste" },
+        { role: "cut", label: menuProps["cut"] },
+        { role: "copy", label: menuProps["copy"] },
+        { role: "paste", label: menuProps["paste"] },
         ...(isMac
           ? ([
-              { role: "pasteAndMatchStyle" },
-              { role: "delete" },
-              { role: "selectAll" },
+              { role: "pasteAndMatchStyle", label: menuProps["pasteAndMatchStyle"] },
+              { role: "delete", label: menuProps["delete"] },
+              { role: "selectAll", label: menuProps["selectAll"] },
               { type: "separator" },
               {
-                label: "Substitutions",
+                label: menuProps["substitutions"],
                 submenu: [
-                  { role: "showSubstitutions" },
+                  { role: "showSubstitutions", label: menuProps["showSubstitutions"] },
                   { type: "separator" },
-                  { role: "toggleSmartQuotes" },
-                  { role: "toggleSmartDashes" },
-                  { role: "toggleTextReplacement" },
+                  { role: "toggleSmartQuotes", label: menuProps["toggleSmartQuotes"] },
+                  { role: "toggleSmartDashes", label: menuProps["toggleSmartDashes"] },
+                  { role: "toggleTextReplacement", label: menuProps["toggleTextReplacement"] },
                 ],
               },
               {
-                label: "Speech",
-                submenu: [{ role: "startSpeaking" }, { role: "stopSpeaking" }],
+                label: menuProps["speech"],
+                submenu: [
+                  { role: "startSpeaking", label: menuProps["startSpeaking"] },
+                  { role: "stopSpeaking", label: menuProps["stopSpeaking"] },
+                ],
               },
             ] as MenuItemConstructorOptions[])
-          : ([{ role: "delete" }, { type: "separator" }, { role: "selectAll" }] as MenuItemConstructorOptions[])),
+          : ([
+              { role: "delete", label: menuProps["delete"] },
+              { type: "separator" },
+              { role: "selectAll", label: menuProps["selectAll"] },
+            ] as MenuItemConstructorOptions[])),
       ],
     },
     {
       label: menuProps["view"],
       submenu: isDev
         ? [
-            { role: "reload" },
-            { role: "forceReload" },
-            { role: "toggleDevTools" },
+            { role: "reload", label: menuProps["reload"] },
+            { role: "forceReload", label: menuProps["forceReload"] },
+            { role: "toggleDevTools", label: menuProps["toggleDevTools"] },
             { type: "separator" },
             // { role: "resetZoom" },
             // { role: "zoomIn" },
             // { role: "zoomOut" },
             // { type: "separator" },
-            { role: "togglefullscreen" },
+            { role: "togglefullscreen", label: menuProps["togglefullscreen"] },
           ]
         : [
             // { role: "resetZoom" },
             // { role: "zoomIn" },
             // { role: "zoomOut" },
             // { type: "separator" },
-            { role: "togglefullscreen" },
+            { role: "togglefullscreen", label: menuProps["togglefullscreen"] },
           ],
     },
     {
       role: "windowMenu",
       label: menuProps["windowMenu"],
       submenu: [
-        { role: "minimize" },
-        { role: "zoom" },
+        { role: "minimize", label: menuProps["minimize"] },
+        { role: "zoom", label: menuProps["zoom"] },
         ...(isMac
-          ? ([{ type: "separator" }, { role: "front" }] as MenuItemConstructorOptions[])
-          : ([{ role: "close" }] as MenuItemConstructorOptions[])),
+          ? ([{ type: "separator" }, { role: "front", label: menuProps["front"] }] as MenuItemConstructorOptions[])
+          : ([{ role: "close", label: menuProps["close"] }] as MenuItemConstructorOptions[])),
       ],
     },
     {
