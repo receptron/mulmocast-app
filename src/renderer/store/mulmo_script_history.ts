@@ -1,7 +1,7 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { type MulmoScript, mulmoScriptSchema } from "mulmocast/browser";
-import { z } from "zod";
+import { type ZodIssue } from "zod";
 import cloneDeep from "clone-deep";
 import deepEqual from "deep-equal";
 import { MulmoError } from "@/types";
@@ -96,7 +96,7 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
   });
   const hasBeatSchemaError = computed(() => {
     if (!zodError.value.success) {
-      return zodError.value.error.issues.some((error: z.ZodIssue) => {
+      return zodError.value.error.issues.some((error: ZodIssue) => {
         return error.path[0] === "beats";
       });
     }
@@ -104,7 +104,7 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
   });
   const hasImageParamsSchemaError = computed(() => {
     if (!zodError.value.success) {
-      return zodError.value.error.issues.some((error: z.ZodIssue) => {
+      return zodError.value.error.issues.some((error: ZodIssue) => {
         return error.path[0] === "imageParams";
       });
     }
