@@ -46,9 +46,9 @@ import type { MulmoBeat } from "mulmocast/browser";
 import { isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 
 import { notifyError } from "@/lib/notification";
+import { useMediaUrl } from "../../composable/mediaUrl";
 
 import { sleep } from "graphai";
-import { z } from "zod";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
@@ -64,7 +64,6 @@ const props = defineProps<Props>();
 const emit = defineEmits(["update", "save", "updateImageData", "generateImageOnlyImage"]);
 
 const isDragging = ref(false);
-const mediaUrl = ref("");
 
 const update = (path: string, value: unknown) => {
   emit("update", path, value);
@@ -75,14 +74,7 @@ const save = () => {
 };
 
 // image fetch
-const imageFetching = ref(false);
-const validateURL = computed(() => {
-  const urlSchema = z.url();
-  return mediaUrl.value === "" || urlSchema.safeParse(mediaUrl.value).success;
-});
-const fetchEnable = computed(() => {
-  return mediaUrl.value !== "" && validateURL.value && !imageFetching.value;
-});
+const { imageFetching, mediaUrl, validateURL, fetchEnable } = useMediaUrl();
 
 const submitUrlImage = async () => {
   try {
