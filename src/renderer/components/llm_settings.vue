@@ -8,6 +8,7 @@
       <div class="space-y-2">
         <Label for="language">{{ t("settings.llmSettings.llm.label") }}</Label>
         <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.llm.description") }}</p>
+        <!-- LLM -->
         <Select v-model="selectedLLM">
           <SelectTrigger id="llm">
             <SelectValue :placeholder="t('settings.llmSettings.llm.placeholder')" />
@@ -22,6 +23,7 @@
           {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName." + alertLLM) }) }}
         </div>
       </div>
+      <!-- Ollama config -->
       <div class="mt-4 space-y-2" v-if="selectedLLM === 'ollamaAgent'">
         <Label for="language">{{ t("settings.llmSettings.ollama.label") }}</Label>
         {{ t("settings.llmSettings.ollama.url") }}:
@@ -29,7 +31,8 @@
         {{ t("settings.llmSettings.model") }}:
         <Input v-model="llmConfigs['ollama']['model']" type="text" class="flex-1" />
       </div>
-      <div class="mt-4 space-y-2" v-if="selectedLLM === 'openAIAgent'">
+      <!-- OpenAI Model config -->
+      <div class="mt-4 space-y-2" v-if="selectedLLM === 'openAIAgent' && isDevelopment">
         {{ t("settings.llmSettings.model") }}:
         <Select v-model="llmConfigs['openai']['model']">
           <SelectTrigger>
@@ -42,7 +45,8 @@
           </SelectContent>
         </Select>
       </div>
-      <div class="mt-4 space-y-2" v-if="selectedLLM === 'geminiAgent'">
+      <!-- Gemini Model config -->
+      <div class="mt-4 space-y-2" v-if="selectedLLM === 'geminiAgent' && isDevelopment">
         {{ t("settings.llmSettings.model") }}:
         <Select v-model="llmConfigs['gemini']['model']">
           <SelectTrigger>
@@ -55,7 +59,7 @@
           </SelectContent>
         </Select>
       </div>
-      <div class="mt-4 space-y-2" v-if="selectedLLM === 'anthropicAgent'">
+      <div class="mt-4 space-y-2" v-if="selectedLLM === 'anthropicAgent' && isDevelopment">
         {{ t("settings.llmSettings.model") }}:
         <Select v-model="llmConfigs['anthropic']['model']">
           <SelectTrigger>
@@ -68,7 +72,7 @@
           </SelectContent>
         </Select>
       </div>
-      <div class="mt-4 space-y-2" v-if="selectedLLM === 'groqAgent'">
+      <div class="mt-4 space-y-2" v-if="selectedLLM === 'groqAgent' && isDevelopment">
         {{ t("settings.llmSettings.model") }}:
         <Select v-model="llmConfigs['groq']['model']">
           <SelectTrigger>
@@ -96,6 +100,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 import { llms } from "../../shared/constants";
 
+const isDevelopment = import.meta.env.DEV;
 const { t } = useI18n();
 
 type LlmConfigOllama = { url: string; model: string };
