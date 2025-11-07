@@ -172,6 +172,7 @@ export const mulmoGenerateBeatImage = async (
         forceImage,
         forceMovie,
         forceLipSync,
+        withBackup: true,
         callbacks: [graphaiCallbacks],
       },
     });
