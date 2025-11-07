@@ -15,5 +15,7 @@
       "@/*": ["src/renderer/*"],
       "@/types/*": ["src/types/*"]
     }
-  }
+  },
+  "include": ["src/main/**/*"],
+  "exclude": ["node_modules", "dist", "src/renderer", "src/shared", "src/preload", "src/types"]
 }
