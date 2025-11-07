@@ -116,7 +116,7 @@ const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: M
   const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.beats);
 
   const beat = context.studio.script?.beats?.[index];
-  Object.values(data).foreach((d) => {
+  Object.values(data).forEach((d: { cacheKey?: string; text: string; lang: string }) => {
     if (!d.cacheKey) {
       d.cacheKey = hashSHA256(beat?.text ?? "");
     }
@@ -135,62 +135,69 @@ const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: M
   fs.writeFileSync(outputMultilingualFilePath, JSON.stringify(savedData, null, 2), "utf8");
 };
 
-export const mulmoHandler = async (method: string, webContents: WebContents, ...args) => {
+export const mulmoHandler = async (method: string, webContents: WebContents, ...args: unknown[]) => {
   GraphAILogger.log(`handler ${method} run`);
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   try {
     switch (method) {
       case "mulmoActionRunner":
-        return await mulmoActionRunner(args[0], args[1], args[2], webContents);
+        return await mulmoActionRunner(args[0] as string, args[1] as any, args[2] as any, webContents);
       case "mulmoGenerateBeatImage":
-        return await mulmoGenerateBeatImage(args[0], args[1], args[2], webContents);
+        return await mulmoGenerateBeatImage(args[0] as string, args[1] as number, args[2] as any, webContents);
       case "mulmoGenerateBeatAudio":
-        return await mulmoGenerateBeatAudio(args[0], args[1], webContents);
+        return await mulmoGenerateBeatAudio(args[0] as string, args[1] as number, webContents);
       case "mulmoTranslateBeat":
-        return await mulmoTranslateBeat(args[0], args[1], args[2], webContents);
+        return await mulmoTranslateBeat(args[0] as string, args[1] as number, args[2] as any, webContents);
       case "mulmoTranslate":
-        return await mulmoTranslate(args[0], args[1], webContents);
+        return await mulmoTranslate(args[0] as string, args[1] as any, webContents);
       case "downloadFile":
-        return await mulmoDownload(args[0], args[1]);
+        return await mulmoDownload(args[0] as string, args[1] as string);
       case "mediaFilePath":
-        return await mediaFilePath(args[0], args[1]);
+        return await mediaFilePath(args[0] as string, args[1] as string);
       case "mulmoAudioFiles":
-        return await mulmoAudioFiles(args[0], args[1]);
+        return await mulmoAudioFiles(args[0] as string, args[1] as string | undefined);
       case "mulmoAudioFile":
-        return await mulmoAudioFile(args[0], args[1]);
+        return await mulmoAudioFile(args[0] as string, args[1] as number);
       case "mulmoImageFiles":
-        return await mulmoImageFiles(args[0]);
+        return await mulmoImageFiles(args[0] as string);
       case "mulmoImageFile":
-        return await mulmoImageFile(args[0], args[1]);
+        return await mulmoImageFile(args[0] as string, args[1] as number);
       case "mulmoReferenceImagesFiles":
-        return await mulmoReferenceImagesFiles(args[0]);
+        return await mulmoReferenceImagesFiles(args[0] as string);
       case "mulmoReferenceImagesFile":
-        return await mulmoReferenceImagesFile(args[0], args[1]);
+        return await mulmoReferenceImagesFile(args[0] as string, args[1] as string);
       case "createMulmoScript":
-        return await createMulmoScript(args[0], args[1]);
+        return await createMulmoScript(args[0] as string, args[1] as any);
       case "mulmoImageUpload":
-        return await mulmoImageUpload(args[0], args[1], args[2], args[3]);
+        return await mulmoImageUpload(args[0] as string, args[1] as number, args[2] as string, args[3] as any);
       case "mulmoReferenceImageUpload":
-        return await mulmoReferenceImageUpload(args[0], args[1], args[2], args[3]);
+        return await mulmoReferenceImageUpload(args[0] as string, args[1] as string, args[2] as string, args[3] as any);
       case "mulmoImageFetchURL":
-        return await mulmoImageFetchURL(args[0], args[1], args[2], webContents);
+        return await mulmoImageFetchURL(args[0] as string, args[1] as number, args[2] as string, webContents);
       case "mulmoReferenceImageFetchURL":
-        return await mulmoReferenceImageFetchURL(args[0], args[1], args[2], webContents);
+        return await mulmoReferenceImageFetchURL(args[0] as string, args[1] as string, args[2] as string, webContents);
       case "mulmoAudioBgmUpload":
-        return await mulmoAudioBgmUpload(args[0], args[1], args[2]);
+        return await mulmoAudioBgmUpload(args[0] as string, args[1] as string, args[2] as any);
       case "mulmoAudioBgmGet":
-        return await mulmoAudioBgmGet(args[0], args[1]);
+        return await mulmoAudioBgmGet(args[0] as string, args[1] as any);
       case "mulmoReferenceImage":
-        return await mulmoReferenceImage(args[0], args[1], args[2], args[3], webContents);
+        return await mulmoReferenceImage(
+          args[0] as string,
+          args[1] as string,
+          args[2] as string,
+          args[3] as boolean,
+          webContents,
+        );
       case "mulmoReferenceImages":
-        return await mulmoReferenceImages(args[0], webContents);
+        return await mulmoReferenceImages(args[0] as string, webContents);
       case "mulmoMultiLinguals":
-        return mulmoMultiLinguals(args[0], webContents);
+        return mulmoMultiLinguals(args[0] as string, webContents as any);
       case "mulmoBGM":
-        return await mulmoBGM(args[0], webContents);
+        return await mulmoBGM(args[0] as string, webContents as any);
       case "mulmoUpdateMultiLingual":
-        return await mulmoUpdateMultiLingual(args[0], args[1], args[2]);
+        return await mulmoUpdateMultiLingual(args[0] as string, args[1] as number, args[2] as any);
       case "graphaiPuppeteerAgent":
-        return await graphaiPuppeteerAgent(args[0]);
+        return await graphaiPuppeteerAgent(args[0] as any);
       default:
         throw new Error(`Unknown method: ${method}`);
     }
@@ -198,4 +205,5 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
     GraphAILogger.log(error);
     return { error };
   }
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 };
