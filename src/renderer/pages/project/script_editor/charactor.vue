@@ -115,7 +115,8 @@
 import { Trash, Sparkles, FileImage, Loader2 } from "lucide-vue-next";
 import { ref, computed, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
-import { useMediaUrl } from "../composable/mediaUrl";
+import { z } from "zod";
+import { useMediaUrl } from "../composable/media_url";
 
 import {
   type MulmoScript,

@@ -46,7 +46,7 @@ import type { MulmoBeat } from "mulmocast/browser";
 import { isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 
 import { notifyError } from "@/lib/notification";
-import { useMediaUrl } from "../../composable/mediaUrl";
+import { useMediaUrl } from "../../composable/media_url";
 
 import { sleep } from "graphai";
 import { useI18n } from "vue-i18n";
