@@ -99,7 +99,7 @@
     "exa-js": "^1.9.3",
     "ffmpeg-ffprobe-static": "^6.1.2-rc.1",
     "graphai": "^2.0.16",
-    "lucide-vue-next": "^0.552.0",
+    "lucide-vue-next": "^0.553.0",
     "monaco-editor": "^0.54.0",
     "monaco-yaml": "^5.4.0",
     "mulmocast": "^2.0.0-alpha.1",
