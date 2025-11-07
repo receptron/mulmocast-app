@@ -1185,6 +1185,9 @@ const lang = {
     close: "Close",
     quit: "Quit",
     about: "About MulmoCast",
+    hide: "Hide MulmoCast",
+    hideOthers: "Hide Others",
+    unhide: "Show All",
   },
 };
 

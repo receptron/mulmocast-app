@@ -1185,6 +1185,9 @@ const lang = {
     close: "閉じる",
     quit: "終了",
     about: "MulmoCastについて",
+    hide: "MulmoCastを非表示にする",
+    hideOthers: "その他を非表示にする",
+    unhide: "すべてを表示",
   },
 };
 
