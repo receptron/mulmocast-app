@@ -25,7 +25,7 @@
           />
         </div>
         <div class="flex justify-center">
-          <Button variant="secondary" size="sm" @click="handleDownload" class="bg-white/90 hover:bg-white shadow-lg">
+          <Button variant="secondary" size="sm" @click="handleDownload" class="bg-white/90 shadow-lg hover:bg-white">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="mr-2 h-4 w-4"
