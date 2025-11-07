@@ -233,8 +233,8 @@ test("test audioParams nested property error", async () => {
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
-    // Verify that audioParams errors are captured
-    assert.ok(mulmoError.audioParams.length >= 0);
+    // Verify that audioParams is defined
+    assert.ok(mulmoError.audioParams !== undefined);
   }
 });
 
@@ -358,7 +358,7 @@ test("test speechParams deeply nested error", async () => {
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
     // Check that speechParams errors are captured
-    assert.ok(mulmoError.speechParams.length >= 0);
+    assert.ok(mulmoError.speechParams !== undefined);
   }
 });
 
@@ -418,7 +418,7 @@ test("test movieParams unrecognized keys", async () => {
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.movieParams.length >= 0);
+    assert.ok(mulmoError.movieParams !== undefined);
   }
 });
 
@@ -436,7 +436,7 @@ test("test movieParams invalid_type", async () => {
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.movieParams.length >= 0);
+    assert.ok(mulmoError.movieParams !== undefined);
   }
 });
 
@@ -456,7 +456,7 @@ test("test soundEffectParams unrecognized keys", async () => {
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.soundEffectParams.length >= 0);
+    assert.ok(mulmoError.soundEffectParams !== undefined);
   }
 });
 
@@ -474,7 +474,7 @@ test("test soundEffectParams invalid_type", async () => {
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.soundEffectParams.length >= 0);
+    assert.ok(mulmoError.soundEffectParams !== undefined);
   }
 });
 
@@ -494,7 +494,7 @@ test("test lipSyncParams unrecognized keys", async () => {
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.lipSyncParams.length >= 0);
+    assert.ok(mulmoError.lipSyncParams !== undefined);
   }
 });
 
@@ -512,7 +512,7 @@ test("test lipSyncParams invalid_type", async () => {
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.lipSyncParams.length >= 0);
+    assert.ok(mulmoError.lipSyncParams !== undefined);
   }
 });
 
@@ -532,7 +532,7 @@ test("test htmlImageParams unrecognized keys", async () => {
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.htmlImageParams.length >= 0);
+    assert.ok(mulmoError.htmlImageParams !== undefined);
   }
 });
 
@@ -550,7 +550,7 @@ test("test htmlImageParams invalid_type", async () => {
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.htmlImageParams.length >= 0);
+    assert.ok(mulmoError.htmlImageParams !== undefined);
   }
 });
 
@@ -570,7 +570,7 @@ test("test textSlideParams unrecognized keys", async () => {
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.textSlideParams.length >= 0);
+    assert.ok(mulmoError.textSlideParams !== undefined);
   }
 });
 
@@ -588,7 +588,7 @@ test("test textSlideParams invalid_type", async () => {
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.textSlideParams.length >= 0);
+    assert.ok(mulmoError.textSlideParams !== undefined);
   }
 });
 
@@ -608,7 +608,7 @@ test("test captionParams unrecognized keys", async () => {
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.captionParams.length >= 0);
+    assert.ok(mulmoError.captionParams !== undefined);
   }
 });
 
@@ -626,7 +626,7 @@ test("test captionParams invalid_type", async () => {
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.captionParams.length >= 0);
+    assert.ok(mulmoError.captionParams !== undefined);
   }
 });
 
@@ -735,7 +735,9 @@ test("test multiple beats with numeric indices", async () => {
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
     // Should have errors for each beat indexed by number
-    assert.ok(mulmoError.beats[0] !== undefined || mulmoError.beats[1] !== undefined || mulmoError.beats[2] !== undefined);
+    assert.ok(
+      mulmoError.beats[0] !== undefined || mulmoError.beats[1] !== undefined || mulmoError.beats[2] !== undefined,
+    );
   }
 });
 
@@ -756,7 +758,7 @@ test("test audioParams unrecognized keys", async () => {
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.audioParams.length >= 0);
+    assert.ok(mulmoError.audioParams !== undefined);
   }
 });
 
@@ -782,7 +784,7 @@ test("test deeply nested path error", async () => {
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
   if (!zodError.success) {
     const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.speechParams.length >= 0);
+    assert.ok(mulmoError.speechParams !== undefined);
   }
 });
 
