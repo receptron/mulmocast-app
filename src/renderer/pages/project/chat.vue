@@ -326,7 +326,7 @@ const getGraphConfig = async () => {
   return {
     openAIAgent: {
       apiKey: openaiApikey,
-      model: openaiConfig?.model ?? LLM_OPENAI_DEFAULT_CONFIG.model,
+      model: isDevelopment ? (openaiConfig?.model ?? LLM_OPENAI_DEFAULT_CONFIG.model) : LLM_OPENAI_DEFAULT_CONFIG.model, // gpt-5
     },
     groqAgent: {
       apiKey: groqApikey,
@@ -337,7 +337,9 @@ const getGraphConfig = async () => {
     },
     anthropicAgent: {
       apiKey: anthropicApikey,
-      model: anthropicConfig?.model ?? LLM_ANTHROPIC_DEFAULT_CONFIG.model,
+      model: isDevelopment
+        ? (anthropicConfig?.model ?? LLM_ANTHROPIC_DEFAULT_CONFIG.model)
+        : "claude-opus-4-1-20250805",
     },
     ollamaAgent: {
       baseURL: ollamaConfig?.url ?? LLM_OLLAMA_DEFAULT_CONFIG.url,
