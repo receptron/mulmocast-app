@@ -36,12 +36,22 @@ export const zodError2MulmoError = (error: ZodError) => {
         const key = current.path[0] as keyof MulmoError;
         if (current.code === "unrecognized_keys") {
           if (Array.isArray(tmp[key])) {
-            tmp[key].push(unrecognizedKeysError(current.path.filter((p): p is string | number => typeof p !== 'symbol'), current.keys));
+            tmp[key].push(
+              unrecognizedKeysError(
+                current.path.filter((p): p is string | number => typeof p !== "symbol"),
+                current.keys,
+              ),
+            );
           }
         }
         if (current.code === "invalid_type") {
           if (Array.isArray(tmp[key])) {
-            tmp[key].push(invalidKeysError(current.path.filter((p): p is string | number => typeof p !== 'symbol'), current.message));
+            tmp[key].push(
+              invalidKeysError(
+                current.path.filter((p): p is string | number => typeof p !== "symbol"),
+                current.message,
+              ),
+            );
           }
         }
       }
@@ -61,7 +71,7 @@ export const zodError2MulmoError = (error: ZodError) => {
           if (!tmp["beats"][indexStr]) {
             tmp["beats"][indexStr] = [];
           }
-          const filteredPaths = paths.filter((p): p is string | number => typeof p !== 'symbol');
+          const filteredPaths = paths.filter((p): p is string | number => typeof p !== "symbol");
           if (current.code === "unrecognized_keys") {
             tmp["beats"][indexStr].push(unrecognizedKeysError(filteredPaths, current.keys));
           } else if (current.code === "invalid_type") {
@@ -98,7 +108,7 @@ export const zodError2MulmoError = (error: ZodError) => {
         const [__, ...paths] = current.path;
         const key = current.path[0] as keyof MulmoError;
         if (Array.isArray(tmp[key])) {
-          const filteredPaths = paths.filter((p): p is string | number => typeof p !== 'symbol');
+          const filteredPaths = paths.filter((p): p is string | number => typeof p !== "symbol");
           if (current.code === "unrecognized_keys") {
             tmp[key].push(unrecognizedKeysError(filteredPaths, current.keys));
           } else if (current.code === "invalid_type") {
