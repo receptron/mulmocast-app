@@ -26,7 +26,7 @@ export const getContext = async (
   });
   setGraphAILogger(true, {});
 
-  return await initializeContextFromFiles(files, false, false, undefined, targetLang, index);
+  return await initializeContextFromFiles(files, false, false, true, undefined, targetLang, index);
 };
 
 export const mulmoCallbackGenerator = (projectId: string, webContents: WebContents) => {
