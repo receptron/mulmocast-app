@@ -277,7 +277,7 @@ test("test multiple beats with different errors", async () => {
   const mulmoError = zodError2MulmoError(zodError.error);
   assert.deepStrictEqual(mulmoError.beats[0], ["The object at 'htmlPrompt' contains unrecognized key(s): 'extra1'."]);
   assert.deepStrictEqual(mulmoError.beats[1], [
-    "'imagePrompt' contains invalid data: Expected string, received object.",
+    "'imagePrompt' contains invalid data: Invalid input: expected string, received object.",
   ]);
   assert.deepStrictEqual(mulmoError.beats[2], ["invalid string: image.source.url. url must be a valid URL."]);
 });
