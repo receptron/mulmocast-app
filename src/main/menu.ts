@@ -93,7 +93,7 @@ export const getMenu = async () => {
     {
       label: menuProps["help"],
       submenu: [
-        { role: "about" },
+        { role: "about", label: menuProps["about"] },
         {
           label: menuProps["settings"],
           click: () => {
@@ -127,7 +127,22 @@ export const getMenu = async () => {
     },
   ];
 
-  if (isMac) template.unshift({ role: "appMenu" });
+  if (isMac) {
+    template.unshift({
+      role: "appMenu",
+      submenu: [
+        { role: "about", label: menuProps["about"] },
+        { type: "separator" },
+        { role: "services" },
+        { type: "separator" },
+        { role: "hide", label: menuProps["hide"] },
+        { role: "hideOthers", label: menuProps["hideOthers"] },
+        { role: "unhide", label: menuProps["unhide"] },
+        { type: "separator" },
+        { role: "quit", label: menuProps["quit"] },
+      ],
+    });
+  }
 
   const menu = Menu.buildFromTemplate(template);
   return menu;
