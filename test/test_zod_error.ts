@@ -85,7 +85,7 @@ test("test beats invalid data error", async () => {
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
   const mulmoError = zodError2MulmoError(zodError.error);
   assert.deepStrictEqual(mulmoError.beats[0], [
-    "'imagePrompt' contains invalid data: Expected string, received object.",
+    "'imagePrompt' contains invalid data: Invalid input: expected string, received object.",
   ]);
 });
 
@@ -143,7 +143,7 @@ test("test speechParams extra element error", async () => {
   const mulmoError = zodError2MulmoError(zodError.error);
   // console.log(mulmoError);
   assert.deepStrictEqual(mulmoError.speechParams, [
-    "'speakers.bbb' contains invalid data: Expected object, received string.",
+    "'speakers.bbb' contains invalid data: Invalid input: expected object, received string.",
     "The object at 'speakers.Presenter' contains unrecognized key(s): 'ccc'.",
     // "The object at 'speechParams' contains unrecognized key(s): 'aaa'.",
   ]);
@@ -166,5 +166,5 @@ test("test canvasSize extra element error", async () => {
   // console.log(zodError.error.issues);
   const mulmoError = zodError2MulmoError(zodError.error);
   // console.log(mulmoError);
-  assert.deepStrictEqual(mulmoError.canvasSize, ["'height' contains invalid data: Expected number, received string."]);
+  assert.deepStrictEqual(mulmoError.canvasSize, ["'height' contains invalid data: Invalid input: expected number, received string."]);
 });
