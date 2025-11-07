@@ -77,7 +77,7 @@ const save = () => {
 // image fetch
 const imageFetching = ref(false);
 const validateURL = computed(() => {
-  const urlSchema = z.string().url();
+  const urlSchema = z.url();
   return mediaUrl.value === "" || urlSchema.safeParse(mediaUrl.value).success;
 });
 const fetchEnable = computed(() => {
