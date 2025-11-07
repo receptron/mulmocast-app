@@ -20,7 +20,7 @@ import {
   type MulmoStudioContext,
   type MulmoImagePromptMedia,
 } from "mulmocast";
-import { z } from "zod";
+import { type ZodError } from "zod";
 import fs from "fs";
 import { loadSettings } from "../settings_manager";
 
@@ -73,7 +73,7 @@ export const mulmoActionRunner = async (
     };
   } catch (error) {
     GraphAILogger.log(error);
-    if (error instanceof z.ZodError) {
+    if (error instanceof ZodError) {
       if (error.issues) {
         error.issues.each((e) => {
           webContents.send("progress-update", {
