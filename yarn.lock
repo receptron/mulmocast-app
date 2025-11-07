@@ -7978,10 +7978,10 @@ mulmocast-vision@^1.0.4:
     pdfkit "^0.17.2"
     puppeteer "^24.19.0"
 
-mulmocast@^2.0.0-alpha.0:
-  version "2.0.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.0.0-alpha.0.tgz#4b3db0f138dd20308af1f2a3c132d6c4736dbd43"
-  integrity sha512-sFbck5I0BHhsSk/jygx+v3a3VpTm5B4S714UK3tHJ3xEaTZscA+IzOMtY1t8p6cc0CVAs4Z+9kQcMpcjQwoUvA==
+mulmocast@^2.0.0-alpha.1:
+  version "2.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.0.0-alpha.1.tgz#4e8b372f8acd6596211bcc6103e72e2e36619b9d"
+  integrity sha512-onUEdOo+W/Z2Pxo5+SQDAvTnUrxe/d829fmPndO4+PCbVrv0QXzS7I6R7oqywdNDQNlQDYXZI2S/+UgCBIynrQ==
   dependencies:
     "@google-cloud/text-to-speech" "^6.4.0"
     "@google/genai" "^1.29.0"
@@ -8013,7 +8013,6 @@ mulmocast@^2.0.0-alpha.0:
     yaml "^2.8.1"
     yargs "^18.0.0"
     zod "^4.1.12"
-    zod-to-json-schema "^3.24.6"
 
 mute-stream@^1.0.0:
   version "1.0.0"
@@ -10807,7 +10806,7 @@ zip-stream@^6.0.1:
     compress-commons "^6.0.2"
     readable-stream "^4.0.0"
 
-zod-to-json-schema@^3.20.0, zod-to-json-schema@^3.24.1, zod-to-json-schema@^3.24.6:
+zod-to-json-schema@^3.20.0, zod-to-json-schema@^3.24.1:
   version "3.24.6"
   resolved "https://registry.yarnpkg.com/zod-to-json-schema/-/zod-to-json-schema-3.24.6.tgz#5920f020c4d2647edfbb954fa036082b92c9e12d"
   integrity sha512-h/z3PKvcTcTetyjl1fkj79MHNEjm+HpD6NXheWjzOekY7kV+lwDYnHw+ivHkijnCSMz1yJaWBD9vu/Fcmk+vEg==

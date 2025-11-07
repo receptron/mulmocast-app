@@ -324,7 +324,7 @@ import {
   type MulmoImageAsset,
   type MultiLingualTexts,
 } from "mulmocast/browser";
-import { zodToJsonSchema } from "zod-to-json-schema";
+import { z } from "zod";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui";
@@ -394,7 +394,7 @@ const updateMultiLingual = async () => {
   emit("updateMultiLingual");
 };
 
-const mulmoJsonSchema = zodToJsonSchema(mulmoScriptSchema);
+const mulmoJsonSchema = z.toJSONSchema(mulmoScriptSchema);
 
 const jsonText = ref("");
 const yamlText = ref("");

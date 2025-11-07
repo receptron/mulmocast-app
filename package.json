@@ -102,7 +102,7 @@
     "lucide-vue-next": "^0.552.0",
     "monaco-editor": "^0.54.0",
     "monaco-yaml": "^5.4.0",
-    "mulmocast": "^2.0.0-alpha.0",
+    "mulmocast": "^2.0.0-alpha.1",
     "pinia": "^3.0.4",
     "puppeteer": "24.29.1",
     "radix-vue": "^1.9.17",
@@ -114,7 +114,6 @@
     "vue-i18n": "^11.1.12",
     "vue-router": "^4.6.3",
     "vue-sonner": "^2.0.9",
-    "zod": "^4.1.12",
-    "zod-to-json-schema": "^3.24.6"
+    "zod": "^4.1.12"
   }
 }
