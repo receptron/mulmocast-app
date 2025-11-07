@@ -21,7 +21,12 @@ const invalidKeysError = (paths: (string | number)[], message: string) => {
 };
 
 const isRequiredElement = (current: ZodIssue) => {
-  return current.code === "invalid_type" && current.message === "Required";
+  // Zod 3: message === "Required"
+  // Zod 4: message includes "received undefined"
+  return (
+    current.code === "invalid_type" &&
+    (current.message === "Required" || (current.message.includes("received undefined") && "expected" in current))
+  );
 };
 
 export const zodError2MulmoError = (error: ZodError) => {
@@ -78,8 +83,15 @@ export const zodError2MulmoError = (error: ZodError) => {
             tmp["beats"][indexStr].push(invalidKeysError(filteredPaths, current.message));
           } else if (current.code === "invalid_union") {
             tmp["beats"][indexStr].push("invalid_union: something broken.");
+          } else if (current.code === "invalid_format") {
+            // Zod 4: invalid_format with format property
+            if ("format" in current && current.format === "url") {
+              tmp["beats"][indexStr].push("invalid string: " + filteredPaths.join(".") + ". url must be a valid URL.");
+            } else {
+              tmp["beats"][indexStr].push("invalid string: " + filteredPaths.join(".") + ".");
+            }
           } else if ("validation" in current && typeof current.validation === "string") {
-            // Handle string validation errors (like invalid_string with url validation)
+            // Zod 3: invalid_string with validation property (for backward compatibility)
             if (current.validation === "url") {
               tmp["beats"][indexStr].push("invalid string: " + filteredPaths.join(".") + ". url must be a valid URL.");
             } else {
