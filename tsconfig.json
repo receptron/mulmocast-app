@@ -1,21 +1,5 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "commonjs",
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "noImplicitAny": true,
-    "sourceMap": true,
-    "baseUrl": "./",
-    "outDir": "dist",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "paths": {
-      "@/*": ["src/renderer/*"],
-      "@/types/*": ["src/types/*"]
-    }
-  },
+  "extends": "./tsconfig.common.json",
   "include": ["src/main/**/*"],
   "exclude": ["node_modules", "dist", "src/renderer", "src/shared", "src/preload", "src/types"]
 }
