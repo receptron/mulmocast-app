@@ -33,7 +33,10 @@ jobs:
 
       - name: Run ESLint
         run: yarn lint
-
+        
+      - name: Run ESLint Vue
+        run: yarn lint:vue
+        
       - name: Check Prettier formatting
         run: yarn format:check
         
