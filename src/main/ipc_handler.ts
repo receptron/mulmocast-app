@@ -2,6 +2,7 @@ import { ipcMain, dialog, shell, clipboard, autoUpdater, type IpcMainInvokeEvent
 import { mulmoHandler } from "./mulmo/handler";
 import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
+import type { ProjectMetadata } from "../types";
 
 export const registerIPCHandler = () => {
   // In this file you can include the rest of your app's specific main process
@@ -24,8 +25,8 @@ export const registerIPCHandler = () => {
   // Project management handlers
   ipcMain.handle("project:list", () => projectManager.listProjects());
 
-  ipcMain.handle("project:create", (_event: IpcMainInvokeEvent, title: string, lang: string, isFirstProject: boolean) =>
-    projectManager.createProject(title, lang, isFirstProject),
+  ipcMain.handle("project:create", (_event: IpcMainInvokeEvent, title: string, lang: string, onboardProject: number) =>
+    projectManager.createProject(title, lang, onboardProject),
   );
 
   ipcMain.handle("project:getProjectMetadata", (_event: IpcMainInvokeEvent, id: string) =>
@@ -38,8 +39,8 @@ export const registerIPCHandler = () => {
 
   ipcMain.handle("project:delete", (_event: IpcMainInvokeEvent, id: string) => projectManager.deleteProject(id));
 
-  ipcMain.handle("project:saveProjectMetadata", (_event: IpcMainInvokeEvent, id: string, data: unknown) =>
-    projectManager.saveProjectMetadata(id, data),
+  ipcMain.handle("project:saveProjectMetadata", (_event: IpcMainInvokeEvent, id: string, metaData: ProjectMetadata) =>
+    projectManager.saveProjectMetadata(id, metaData),
   );
 
   ipcMain.handle("project:saveProjectScript", (_event: IpcMainInvokeEvent, id: string, data: unknown) =>
