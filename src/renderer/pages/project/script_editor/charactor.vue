@@ -206,11 +206,16 @@ const submitUrlImage = async (imageKey: string) => {
       mediaUrl.value,
     )) as { result: boolean; imageType: string; path: string };
     if (res.result) {
-      emit("updateImagePath", imageKey, "./" + res.path);
-      emit("saveMulmo"); // TODO: not emited.
-      emit("formatAndPushHistoryMulmoScript");
-      mediaUrl.value = "";
-      loadReference();
+      if (res.imageType === "image") {
+        emit("updateImagePath", imageKey, "./" + res.path);
+        emit("saveMulmo"); // TODO: not emited.
+        emit("formatAndPushHistoryMulmoScript");
+        mediaUrl.value = "";
+        loadReference();
+      } else {
+        console.log("error");
+        notifyError(t("notify.error.media.unsupportedMovie"));
+      }
     }
   } catch (error) {
     console.log(error);

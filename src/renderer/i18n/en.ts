@@ -908,6 +908,7 @@ const lang = {
       media: {
         tooLarge: "The maximum file size that can be add is {maxSizeMB}MB.",
         unsupportedType: "Unsupported file type: {fileType}",
+        unsupportedMovie: "Unsupported file type: movie",
       },
       audio: {
         fileNotExist: {
