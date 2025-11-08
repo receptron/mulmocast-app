@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CharaParams :beat="beat" :images="imageParams.images" @updateImageNames="updateImageNames" />
+    <CharaParams :beat="beat" :images="imageParams?.images" @updateImageNames="updateImageNames" />
     <Collapsible :open="!!beat?.imageParams" @update:open="updateBeatImageParams" v-if="isPro">
       <CollapsibleTrigger as-child>
         <div class="mb-3">
