@@ -49,3 +49,5 @@ export type MulmoError = {
 };
 
 export type UserLevel = "beginner" | "semiPro" | "pro";
+
+export type Lang = "ja" | "en";
