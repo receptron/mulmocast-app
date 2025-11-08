@@ -256,8 +256,8 @@ export const mulmoMultiLinguals = async (projectId: string): Promise<MulmoStudio
   const outdir = path.join(projectPath, "output");
   fs.mkdirSync(outdir, { recursive: true });
 
-  const script = (await getProjectMulmoScript(projectId)) ?? {};
-  return getMultiLingual(path.join(outdir, "script_lang.json"), script.beats ?? []);
+  const script = await getProjectMulmoScript(projectId);
+  return getMultiLingual(path.join(outdir, "script_lang.json"), script?.beats ?? []);
 };
 
 export const mulmoBGM = async (projectId: string) => {
