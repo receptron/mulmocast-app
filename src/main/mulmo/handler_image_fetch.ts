@@ -23,7 +23,7 @@ const __mulmoImageFetchURL = async (
         path: path.join(dirPath, dirKey, res.filename),
       };
     }
-    if (res.error) {
+    if ("error" in res && res.error) {
       webContents.send("progress-update", {
         projectId,
         type: "error",

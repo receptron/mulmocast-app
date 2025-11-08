@@ -3,7 +3,6 @@ import fs from "node:fs";
 import path from "node:path";
 import log from "electron-log";
 import { GraphAILogger } from "graphai";
-import type { LogFile } from "electron-log/main";
 
 const LOG_DIR = path.join(app.getPath("userData"), "mulmocastLog");
 const RETENTION_DAYS = 7;
@@ -55,7 +54,7 @@ export const setupLogger = () => {
   log.transports.file.resolvePathFn = () => dailyLogPath();
 
   log.transports.file.maxSize = MAX_SIZE;
-  log.transports.file.archiveLogFn = (file: LogFile) => `${file.path}.old`;
+  log.transports.file.archiveLogFn = (file: { path: string }) => `${file.path}.old`;
 
   log.transports.file.level = process.env.NODE_ENV === "production" ? "info" : "debug";
   log.transports.console.level = process.env.NODE_ENV === "production" ? false : "debug";
@@ -78,7 +77,7 @@ export const setupLogger = () => {
   });
 
   const consoleAndFileLogger = (level: string, ...args: unknown[]) => {
-    ((log as unknown)[level] || log.log)(...args);
+    ((log as unknown as Record<string, (...args: unknown[]) => void>)[level] || log.log)(...args);
   };
   GraphAILogger.setLogger(consoleAndFileLogger);
   return log;
