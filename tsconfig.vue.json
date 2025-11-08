@@ -9,8 +9,17 @@
       "@/*": ["src/renderer/*"],
       "@/types": ["src/types/index"],
       "@/types/*": ["src/types/*"]
-    }
+    },
+    "allowJs": false,
+    "incremental": true,
+    "tsBuildInfoFile": "./.vue-tsc.tsbuildinfo"
   },
-  "include": ["src/renderer/**/*.vue", "src/types/*"],
+  "include": [
+    "src/renderer/**/*.ts",
+    "src/renderer/**/*.tsx",
+    "src/renderer/**/*.vue",
+    "src/renderer/**/*.d.ts",
+    "src/types/**/*.d.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }

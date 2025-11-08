@@ -22,7 +22,7 @@
     "dumpi18n": "npx tsx test/i18n-dump.ts",
     "lint": "yarn run dumpi18n && eslint --ext .js,.ts,.vue src test",
     "lint:fix": "eslint --ext .js,.ts,.vue src --fix",
-    "lint:vue": "vue-tsc --noEmit --project tsconfig.vue.json",
+    "lint:vue": "node --max-old-space-size=4096 ./node_modules/vue-tsc/bin/vue-tsc.js --noEmit --project tsconfig.vue.json --pretty false",
     "test": "NODE_ENV=test npx tsx --test ./test/test_*.ts",
     "type": "yarn run lint && yarn run type-check",
     "type-check": "tsc --noEmit -p ./src/renderer/tsconfig.json",
