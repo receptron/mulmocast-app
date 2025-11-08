@@ -1,5 +1,5 @@
 import { WebContents } from "electron";
-import { GraphAILogger, type CallbackFunction } from "graphai";
+import { NodeState, GraphAILogger, type CallbackFunction } from "graphai";
 
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 import {
@@ -138,7 +138,7 @@ export const mulmoGenerateBeatImage = async (
       beat.audioFile = beatAudioPath(context, beat);
     }
     const graphaiCallbacks: CallbackFunction = ({ nodeId, state }) => {
-      if (nodeId === "preprocessor" && state === "executing") {
+      if (nodeId === "preprocessor" && state === NodeState.Executing) {
         webContents.send("progress-update", {
           projectId,
           type: "mulmo",
@@ -151,7 +151,7 @@ export const mulmoGenerateBeatImage = async (
           },
         });
       }
-      if (nodeId === "output" && state === "completed") {
+      if (nodeId === "output" && state === NodeState.Completed) {
         webContents.send("progress-update", {
           projectId,
           type: "mulmo",
