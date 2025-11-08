@@ -1,5 +1,5 @@
 import { WebContents } from "electron";
-import { GraphAILogger } from "graphai";
+import { NodeState, GraphAILogger, type CallbackFunction } from "graphai";
 
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 import {
@@ -77,7 +77,7 @@ export const mulmoActionRunner = async (
     GraphAILogger.log(error);
     if (error instanceof z.ZodError) {
       if (error.issues) {
-        error.issues.each((e) => {
+        error.issues.forEach((e) => {
           webContents.send("progress-update", {
             projectId,
             type: "zod_error",
@@ -137,8 +137,8 @@ export const mulmoGenerateBeatImage = async (
       beat.moviePrompt = "";
       beat.audioFile = beatAudioPath(context, beat);
     }
-    const graphaiCallbacks = ({ nodeId, state }) => {
-      if (nodeId === "preprocessor" && state === "executing") {
+    const graphaiCallbacks: CallbackFunction = ({ nodeId, state }) => {
+      if (nodeId === "preprocessor" && state === NodeState.Executing) {
         webContents.send("progress-update", {
           projectId,
           type: "mulmo",
@@ -151,7 +151,7 @@ export const mulmoGenerateBeatImage = async (
           },
         });
       }
-      if (nodeId === "output" && state === "completed") {
+      if (nodeId === "output" && state === NodeState.Completed) {
         webContents.send("progress-update", {
           projectId,
           type: "mulmo",
