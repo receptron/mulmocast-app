@@ -6,12 +6,11 @@
         <div class="mb-3">
           <div class="flex items-center gap-2">
             <Checkbox variant="ghost" size="icon" :modelValue="!!beat?.imageParams" />
-            <h4 class="text-sm font-medium" :class="!beat?.imageParams ? 'text-muted-foreground' : ''">
-              {{ t("parameters.imageParams.customTitle") }}
-            </h4>
             <Tooltip>
               <TooltipTrigger as-child>
-                <Info class="h-4 w-4 text-muted-foreground cursor-help" />
+                <h4 class="text-sm font-medium cursor-help" :class="!beat?.imageParams ? 'text-muted-foreground' : ''">
+                  {{ t("parameters.imageParams.customTitle") }}
+                </h4>
               </TooltipTrigger>
               <TooltipContent>
                 <p class="text-xs">{{ t("parameters.imageParams.customDescription") }}</p>
@@ -43,7 +42,6 @@ import { useI18n } from "vue-i18n";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Checkbox } from "@/components/ui";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { Info } from "lucide-vue-next";
 import { type MulmoBeat, type MulmoImageParams } from "mulmocast";
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../shared/constants";
 import ImageParams from "./styles/image_params.vue";
