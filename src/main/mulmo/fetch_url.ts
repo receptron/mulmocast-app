@@ -35,7 +35,10 @@ const getHash = (str: string): string => createHash("sha256").update(str).digest
 export const fetchAndSave = async (
   url: string,
   outDir = "./downloads",
-): Promise<{ result: true; imageType: "image" | "movie"; path: string } | { result: false }> => {
+): Promise<
+  | { result: true; imageType: "image" | "movie"; path: string; filename?: string }
+  | { result: false; error?: { message: string } }
+> => {
   try {
     const res = await fetch(url, { timeout: 15000 });
     if (!res.ok) {
@@ -44,7 +47,7 @@ export const fetchAndSave = async (
       return {
         result: false,
         error: {
-          message: res.state + " " + res.statusText,
+          message: res.status + " " + res.statusText,
         },
       };
     }
@@ -92,11 +95,12 @@ export const fetchAndSave = async (
     return {
       result: true,
       imageType,
+      path,
       filename,
     };
   } catch (error) {
     console.log(error);
-    return { result: false, error };
+    return { result: false, error: { message: String(error) } };
   }
 };
 
