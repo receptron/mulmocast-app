@@ -1,5 +1,5 @@
 import { WebContents } from "electron";
-import { GraphAILogger } from "graphai";
+import { NodeState, GraphAILogger, type CallbackFunction } from "graphai";
 
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 import {
@@ -19,6 +19,7 @@ import {
   MulmoStudioContextMethods,
   type MulmoStudioContext,
   type MulmoImagePromptMedia,
+  type MulmoBeat,
 } from "mulmocast";
 import { type ZodError } from "zod";
 import fs from "fs";
@@ -75,7 +76,7 @@ export const mulmoActionRunner = async (
     GraphAILogger.log(error);
     if (error instanceof ZodError) {
       if (error.issues) {
-        error.issues.each((e) => {
+        error.issues.forEach((e) => {
           webContents.send("progress-update", {
             projectId,
             type: "zod_error",
@@ -97,7 +98,7 @@ export const mulmoActionRunner = async (
   }
 };
 
-const beatAudioPath = (context: MulmoStudioContext, beat) => {
+const beatAudioPath = (context: MulmoStudioContext, beat: MulmoBeat) => {
   const { text } = beat;
   return getBeatAudioPathOrUrl(text, context, beat, context.studio.script?.lang ?? "en");
 };
@@ -117,7 +118,7 @@ export const mulmoGenerateBeatImage = async (
       return { result: false, noContext: true };
     }
 
-    const beat = context.studio.script.beats[0];
+    const beat: MulmoBeat & { audioFile?: string } = context.studio.script.beats[0];
     const { id } = beat;
     const forceImage = target === "image";
     const forceMovie = target === "movie";
@@ -135,8 +136,8 @@ export const mulmoGenerateBeatImage = async (
       beat.moviePrompt = "";
       beat.audioFile = beatAudioPath(context, beat);
     }
-    const graphaiCallbacks = ({ nodeId, state }) => {
-      if (nodeId === "preprocessor" && state === "executing") {
+    const graphaiCallbacks: CallbackFunction = ({ nodeId, state }) => {
+      if (nodeId === "preprocessor" && state === NodeState.Executing) {
         webContents.send("progress-update", {
           projectId,
           type: "mulmo",
@@ -149,7 +150,7 @@ export const mulmoGenerateBeatImage = async (
           },
         });
       }
-      if (nodeId === "output" && state === "completed") {
+      if (nodeId === "output" && state === NodeState.Completed) {
         webContents.send("progress-update", {
           projectId,
           type: "mulmo",
@@ -203,7 +204,7 @@ export const mulmoGenerateBeatAudio = async (projectId: string, index: number, w
       return { result: false, noContext: true };
     }
     //await generateBeatAudio(index, context, { settings: settings.APIKEY ?? {}, langs: ["de", "fr"] });
-    await generateBeatAudio(0, context, { settings: settings.APIKEY ?? {} });
+    await generateBeatAudio(0, context, { settings: settings.APIKEY ?? {}, langs: [context.lang] });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);

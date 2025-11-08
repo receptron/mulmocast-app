@@ -6,9 +6,11 @@ import { randomUUID } from "node:crypto";
 import { MulmoScriptMethods, mulmoScriptSchema, type MulmoScript } from "mulmocast";
 import { GraphAILogger } from "graphai";
 
-import { Project, ProjectMetadata } from "../types";
+import type { Project, ProjectMetadata, Lang } from "../types";
 import { SCRIPT_EDITOR_TABS, MULMO_VIEWER_TABS } from "../shared/constants";
-import { initMulmoScript, onboardProjects } from "../shared/beat_data";
+import { initMulmoScript } from "../shared/beat_data";
+import { onboardProjects } from "../shared/onboard";
+
 // import { onboardMulmoScript }
 
 const PROJECTS_DIR = "projects";
@@ -110,7 +112,7 @@ export const listProjects = async (): Promise<Project[]> => {
             };
           }),
       )
-    ).filter((project): project is Project => project !== null);
+    ).filter((project) => project !== null);
   } catch (error) {
     GraphAILogger.error("Failed to list projects:", error);
     return [];
@@ -118,7 +120,7 @@ export const listProjects = async (): Promise<Project[]> => {
 };
 
 // Create a new project
-export const createProject = async (title: string, lang: string, onboardProject: number): Promise<Project> => {
+export const createProject = async (title: string, lang: Lang, onboardProject: number): Promise<Project> => {
   const id = generateId();
   try {
     await fs.mkdir(getProjectPath(id), { recursive: true });

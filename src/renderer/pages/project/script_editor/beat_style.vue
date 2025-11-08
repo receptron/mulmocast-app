@@ -6,13 +6,20 @@
         <div class="mb-3">
           <div class="flex items-center gap-2">
             <Checkbox variant="ghost" size="icon" :modelValue="!!beat?.imageParams" />
-            <h4 class="text-sm font-medium" :class="!beat?.imageParams ? 'text-muted-foreground' : ''">
-              {{ t("parameters.imageParams.customTitle") }}
-            </h4>
+            <div class="group relative">
+              <h4 class="text-sm font-medium" :class="!beat?.imageParams ? 'text-muted-foreground' : ''">
+                {{ t("parameters.imageParams.customTitle") }}
+              </h4>
+              <span
+                class="bg-popover text-popover-foreground border-border pointer-events-none absolute bottom-full left-0 mb-2 transform rounded border px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+              >
+                <div class="text-muted-foreground">{{ t("parameters.imageParams.customDescription1") }}</div>
+                <div class="text-muted-foreground">
+                  {{ t("parameters.imageParams.customDescription2") }}
+                </div>
+              </span>
+            </div>
           </div>
-          <p class="text-muted-foreground mt-1 ml-6 text-xs" v-if="!!beat?.imageParams">
-            {{ t("parameters.imageParams.customDescription") }}
-          </p>
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent>

@@ -1,11 +1,11 @@
 import { app } from "electron";
 import path from "node:path";
 import fs from "node:fs";
-import { ENV_KEYS, type EnvKey, type AppSettingKey, LANGUAGE_IDS, I18N_SUPPORTED_LANGUAGES } from "../shared/constants";
+import { ENV_KEYS, type AppSettingKey, LANGUAGE_IDS, I18N_SUPPORTED_LANGUAGES } from "../shared/constants";
 
 // Dynamically build the Settings type from ENV_KEYS and APP_SETTINGS
 export type Settings = {
-  [K in EnvKey]?: string;
+  APIKEY?: Record<string, string>;
 } & {
   [K in AppSettingKey]?: string;
 } & {
@@ -77,7 +77,7 @@ export const saveSettings = async (settings: Settings): Promise<void> => {
 
     // Dynamically set environment variables based on constants
     for (const envKey of Object.keys(ENV_KEYS)) {
-      const value = settings[envKey as keyof typeof ENV_KEYS];
+      const value = settings.APIKEY[envKey as keyof typeof ENV_KEYS];
       if (value) {
         process.env[envKey] = value;
       }

@@ -21,7 +21,7 @@ import { getMenu } from "./menu";
 import { makeUserNotifier } from "./update";
 import { setupLogger } from "./logger";
 
-import packageJSON from "../../package.json" with { type: "json" };
+import packageJSON from "../../package.json";
 
 log.initialize();
 setupLogger();
@@ -249,7 +249,7 @@ const createWindow = (splashWindow?: BrowserWindow) => {
       const envData: Record<string, string | undefined> = {};
 
       for (const envKey of Object.keys(ENV_KEYS)) {
-        const value = settings[envKey as keyof settingsManager.Settings];
+        const value = settings.APIKEY[envKey as keyof settingsManager.Settings];
         envData[envKey] = value || process.env[envKey];
       }
 
@@ -317,7 +317,7 @@ app.on("ready", () => {
     const settings = await settingsManager.loadSettings();
 
     for (const envKey of Object.keys(ENV_KEYS)) {
-      const value = settings[envKey as keyof settingsManager.Settings];
+      const value = settings.APIKEY[envKey as keyof settingsManager.Settings];
       if (value) {
         process.env[envKey] = value;
       }

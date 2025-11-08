@@ -23,7 +23,7 @@ export type ProjectMetadata = {
 export type Project = {
   metadata: ProjectMetadata;
   script: Partial<MulmoScript> | null;
-  isValid: boolean;
+  isValid?: boolean;
 };
 
 export type MulmoProgressLog<T = unknown> = {
@@ -49,3 +49,5 @@ export type MulmoError = {
 };
 
 export type UserLevel = "beginner" | "semiPro" | "pro";
+
+export type Lang = "ja" | "en";

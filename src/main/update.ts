@@ -9,7 +9,9 @@ import type { IUpdateDialogStrings, IUpdateInfo } from "update-electron-app";
  *
  * @param dialogProps - Text to display in the dialog.
  */
-export function makeUserNotifier(dialogProps?: IUpdateDialogStrings): (info: IUpdateInfo) => void {
+export function makeUserNotifier(
+  dialogProps?: IUpdateDialogStrings,
+): (info: IUpdateInfo, callback?: (response: number) => void) => void {
   const defaultDialogMessages = {
     title: "Application Update",
     detail: "A new version has been downloaded. Restart the application to apply the updates.",
