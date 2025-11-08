@@ -9,10 +9,15 @@
             <h4 class="text-sm font-medium" :class="!beat?.imageParams ? 'text-muted-foreground' : ''">
               {{ t("parameters.imageParams.customTitle") }}
             </h4>
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Info class="h-4 w-4 text-muted-foreground cursor-help" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p class="text-xs">{{ t("parameters.imageParams.customDescription") }}</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
-          <p class="text-muted-foreground mt-1 ml-6 text-xs" v-if="!!beat?.imageParams">
-            {{ t("parameters.imageParams.customDescription") }}
-          </p>
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent>
@@ -37,6 +42,8 @@ import { nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Checkbox } from "@/components/ui";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { Info } from "lucide-vue-next";
 import { type MulmoBeat, type MulmoImageParams } from "mulmocast";
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../shared/constants";
 import ImageParams from "./styles/image_params.vue";
