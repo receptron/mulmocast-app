@@ -21,7 +21,7 @@ import { getMenu } from "./menu";
 import { makeUserNotifier } from "./update";
 import { setupLogger } from "./logger";
 
-import packageJSON from "../../package.json" with { type: "json" };
+import packageJSON from "../../package.json";
 
 log.initialize();
 setupLogger();
