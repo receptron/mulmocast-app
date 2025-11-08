@@ -89,7 +89,7 @@ export default [
       "*.min.js",
       "coverage/**",
       "src/renderer/components/ui/**",
-      "src/renderer/tsconfig.json",
+      "tsconfig.renderer.json",
     ],
   },
   // Node.js environment configuration (Main & Preload)
