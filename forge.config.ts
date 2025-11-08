@@ -10,7 +10,7 @@ import { FuseV1Options, FuseVersion } from "@electron/fuses";
 
 import { execSync } from "child_process";
 import path from "node:path";
-import packageJSON from "./package.json" with { type: "json" };
+import packageJSON from "./package.json";
 import { resolveTargetAndVersion } from "./src/shared/version";
 
 const gitBranch = process.env.BRANCH_NAME || execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
