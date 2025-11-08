@@ -1,16 +1,15 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "./src/renderer/tsconfig.json",
   "compilerOptions": {
-    "target": "esnext",
     "module": "esnext",
     "moduleResolution": "bundler",
-    "types": ["vite/client"],
-    "paths": {
-      "@/*": ["src/renderer/*"],
-      "@/types": ["src/types/index"],
-      "@/types/*": ["src/types/*"]
-    }
+    "types": ["vite/client"]
   },
-  "include": ["src/renderer/**/*.vue", "src/types/*"],
+  "include": [
+    "src/renderer/**/*.vue",
+    "src/renderer/**/*.ts",
+    "src/renderer/**/*.d.ts",
+    "src/types/**/*.d.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }

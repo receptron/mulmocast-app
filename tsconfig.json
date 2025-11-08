@@ -1,5 +1,13 @@
 {
   "extends": "./tsconfig.common.json",
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "types": ["node", "electron"],
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "moduleDetection": "force",
+    "resolveJsonModule": true
+  },
   "include": ["src/main/**/*", "src/shared/**/*", "src/preload/**/*", "src/types/**/*"],
   "exclude": ["node_modules", "dist", "src/renderer"]
 }

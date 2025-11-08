@@ -4,11 +4,13 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "baseUrl": "./",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "types": ["vite/client"],
     "paths": {
       "@/*": ["*"],
       "@/types": ["../types"],
       "@/types/*": ["../types/*"]
     }
   },
-  "include": ["**/*", "../types/**/*"]
+  "include": ["env.d.ts", "**/*.ts", "**/*.tsx", "**/*.d.ts", "../types/**/*"]
 }

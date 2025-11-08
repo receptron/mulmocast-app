@@ -18,6 +18,8 @@ import vueI18n from '@intlify/eslint-plugin-vue-i18n'
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const tsconfigRootDir = __dirname;
 const mainTsconfig = path.resolve(tsconfigRootDir, "tsconfig.json");
+const rendererTsconfig = path.resolve(tsconfigRootDir, "src/renderer/tsconfig.json");
+const vueTsconfig = path.resolve(tsconfigRootDir, "tsconfig.vue.json");
 
 
 // Common base rules configuration
@@ -138,6 +140,8 @@ export default [
         parser: typescriptParser,
         ecmaVersion: "latest",
         sourceType: "module",
+        project: [vueTsconfig],
+        tsconfigRootDir,
         extraFileExtensions: [".vue"],
       },
       globals: {
@@ -151,7 +155,7 @@ export default [
     },
     rules: {
       ...vue.configs["flat/recommended"].rules,
-      ...typescript.configs.recommended.rules,
+      ...typescript.configs["recommended-type-checked"].rules,
       ...baseRules,
       "vue/multi-word-component-names": "off",
       "vue/html-self-closing": [
@@ -177,9 +181,15 @@ export default [
       "@intlify/vue-i18n/no-raw-text": [
         "error",
         {
-          ignorePattern: "[\\-():<>/.]", 
+          ignorePattern: "[\\-():<>/.]",
         },
       ],
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/require-await": "off",
       ...sonarjsRules,
     },
     settings: {
@@ -197,6 +207,11 @@ export default [
     files: ["src/renderer/**/*.{js,ts}", "src/types/**/*.{js,ts}"],
     languageOptions: {
       ...baseLanguageOptions,
+      parserOptions: {
+        ...baseLanguageOptions.parserOptions,
+        project: [rendererTsconfig],
+        tsconfigRootDir,
+      },
       globals: {
         ...globals.browser,
         Buffer: 'readonly',
@@ -206,8 +221,14 @@ export default [
       ...basePlugins,
     },
     rules: {
-      ...typescript.configs.recommended.rules,
+      ...typescript.configs["recommended-type-checked"].rules,
       ...baseRules,
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/require-await": "off",
       ...sonarjsRules,
     },
     settings: {
