@@ -110,7 +110,7 @@ export const listProjects = async (): Promise<Project[]> => {
             };
           }),
       )
-    ).filter((project): project is Project => project !== null);
+    ).filter((project) => project !== null);
   } catch (error) {
     GraphAILogger.error("Failed to list projects:", error);
     return [];
