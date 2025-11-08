@@ -21,7 +21,7 @@ const invalidKeysError = (paths: (string | number)[], message: string) => {
 };
 
 const isRequiredElement = (current: ZodIssue) => {
-  return current.code === "invalid_type" && current.message === "Required";
+  return current.code === "invalid_type" && current.message.includes("received undefined") && "expected" in current;
 };
 
 export const zodError2MulmoError = (error: ZodError) => {
@@ -36,12 +36,22 @@ export const zodError2MulmoError = (error: ZodError) => {
         const key = current.path[0] as keyof MulmoError;
         if (current.code === "unrecognized_keys") {
           if (Array.isArray(tmp[key])) {
-            tmp[key].push(unrecognizedKeysError(current.path, current.keys));
+            tmp[key].push(
+              unrecognizedKeysError(
+                current.path.filter((p): p is string | number => typeof p !== "symbol"),
+                current.keys,
+              ),
+            );
           }
         }
         if (current.code === "invalid_type") {
           if (Array.isArray(tmp[key])) {
-            tmp[key].push(invalidKeysError(current.path, current.message));
+            tmp[key].push(
+              invalidKeysError(
+                current.path.filter((p): p is string | number => typeof p !== "symbol"),
+                current.message,
+              ),
+            );
           }
         }
       }
@@ -57,20 +67,22 @@ export const zodError2MulmoError = (error: ZodError) => {
           }
         } else {
           const [__, index, ...paths] = current.path;
-          if (!tmp["beats"][String(index)]) {
-            tmp["beats"][String(index)] = [];
+          const indexStr = String(index);
+          if (!tmp["beats"][indexStr]) {
+            tmp["beats"][indexStr] = [];
           }
+          const filteredPaths = paths.filter((p): p is string | number => typeof p !== "symbol");
           if (current.code === "unrecognized_keys") {
-            tmp["beats"][index].push(unrecognizedKeysError(paths, current.keys));
+            tmp["beats"][indexStr].push(unrecognizedKeysError(filteredPaths, current.keys));
           } else if (current.code === "invalid_type") {
-            tmp["beats"][index].push(invalidKeysError(paths, current.message));
+            tmp["beats"][indexStr].push(invalidKeysError(filteredPaths, current.message));
           } else if (current.code === "invalid_union") {
-            tmp["beats"][index].push("invalid_union: something broken.");
-          } else if (current.code === "invalid_string") {
-            if (current.validation === "url") {
-              tmp["beats"][index].push("invalid string: " + paths.join(".") + ". url must be a valid URL.");
+            tmp["beats"][indexStr].push("invalid_union: something broken.");
+          } else if (current.code === "invalid_format") {
+            if ("format" in current && current.format === "url") {
+              tmp["beats"][indexStr].push("invalid string: " + filteredPaths.join(".") + ". url must be a valid URL.");
             } else {
-              tmp["beats"][index].push("invalid string: " + paths.join(".") + ".");
+              tmp["beats"][indexStr].push("invalid string: " + filteredPaths.join(".") + ".");
             }
           } else {
             console.log(current);
@@ -95,10 +107,11 @@ export const zodError2MulmoError = (error: ZodError) => {
         const [__, ...paths] = current.path;
         const key = current.path[0] as keyof MulmoError;
         if (Array.isArray(tmp[key])) {
+          const filteredPaths = paths.filter((p): p is string | number => typeof p !== "symbol");
           if (current.code === "unrecognized_keys") {
-            tmp[key].push(unrecognizedKeysError(paths, current.keys));
+            tmp[key].push(unrecognizedKeysError(filteredPaths, current.keys));
           } else if (current.code === "invalid_type") {
-            tmp[key].push(invalidKeysError(paths, current.message));
+            tmp[key].push(invalidKeysError(filteredPaths, current.message));
           }
         }
       }

@@ -85,7 +85,7 @@ test("test beats invalid data error", async () => {
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
   const mulmoError = zodError2MulmoError(zodError.error);
   assert.deepStrictEqual(mulmoError.beats[0], [
-    "'imagePrompt' contains invalid data: Expected string, received object.",
+    "'imagePrompt' contains invalid data: Invalid input: expected string, received object.",
   ]);
 });
 
@@ -139,13 +139,10 @@ test("test speechParams extra element error", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  // console.log(zodError.error.issues);
   const mulmoError = zodError2MulmoError(zodError.error);
-  // console.log(mulmoError);
   assert.deepStrictEqual(mulmoError.speechParams, [
-    "'speakers.bbb' contains invalid data: Expected object, received string.",
+    "'speakers.bbb' contains invalid data: Invalid input: expected object, received string.",
     "The object at 'speakers.Presenter' contains unrecognized key(s): 'ccc'.",
-    // "The object at 'speechParams' contains unrecognized key(s): 'aaa'.",
   ]);
 });
 
@@ -163,37 +160,15 @@ test("test canvasSize extra element error", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  // console.log(zodError.error.issues);
   const mulmoError = zodError2MulmoError(zodError.error);
-  // console.log(mulmoError);
-  assert.deepStrictEqual(mulmoError.canvasSize, ["'height' contains invalid data: Expected number, received string."]);
+  assert.deepStrictEqual(mulmoError.canvasSize, [
+    "'height' contains invalid data: Invalid input: expected number, received string.",
+  ]);
 });
 
-test("test canvasSize unrecognized keys error", async () => {
-  const mulmoScript = {
-    $mulmocast: {
-      version: "1.1",
-    },
-    canvasSize: {
-      width: 1280,
-      height: 720,
-      extra: "value",
-    },
-    beats: [{}],
-  };
-
-  const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    // With new zod version, it might not always generate errors for extra keys
-    // Just check that the function works without crashing
-    assert.ok(mulmoError !== null);
-    assert.ok(mulmoError.canvasSize !== undefined);
-  } else {
-    // If no error, that's also acceptable with the new schema
-    assert.ok(true);
-  }
-});
+// Note: The mulmoScriptSchema from mulmocast library allows extra keys in canvasSize
+// (uses .passthrough() or similar), so unrecognized_keys errors won't occur in practice.
+// The error handling code exists for robustness, but we can't test it with the real schema.
 
 // imageParams
 test("test imageParams unrecognized keys error", async () => {
@@ -209,11 +184,10 @@ test("test imageParams unrecognized keys error", async () => {
   };
 
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.imageParams.length > 0);
-    assert.ok(mulmoError.imageParams[0].includes("unrecognized key"));
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.imageParams.length > 0);
+  assert.ok(mulmoError.imageParams[0].includes("unrecognized key"));
 });
 
 // audioParams with nested property
@@ -231,11 +205,10 @@ test("test audioParams nested property error", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    // Verify that audioParams is defined
-    assert.ok(mulmoError.audioParams !== undefined);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  // Verify that audioParams is defined
+  assert.ok(mulmoError.audioParams !== undefined);
 });
 
 // Multiple beats errors
@@ -275,7 +248,7 @@ test("test multiple beats with different errors", async () => {
   const mulmoError = zodError2MulmoError(zodError.error);
   assert.deepStrictEqual(mulmoError.beats[0], ["The object at 'htmlPrompt' contains unrecognized key(s): 'extra1'."]);
   assert.deepStrictEqual(mulmoError.beats[1], [
-    "'imagePrompt' contains invalid data: Expected string, received object.",
+    "'imagePrompt' contains invalid data: Invalid input: expected string, received object.",
   ]);
   assert.deepStrictEqual(mulmoError.beats[2], ["invalid string: image.source.url. url must be a valid URL."]);
 });
@@ -301,10 +274,9 @@ test("test beats invalid_union error", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.beats[0]?.length > 0);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.beats[0]?.length > 0);
 });
 
 // beats nested property errors
@@ -325,11 +297,10 @@ test("test beats with nested property errors", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    // Verify beats errors are captured
-    assert.ok(mulmoError.beats[0]?.length >= 0);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  // Verify beats errors are captured
+  assert.ok(mulmoError.beats[0]?.length >= 0);
 });
 
 // speechParams with deeply nested errors
@@ -355,11 +326,10 @@ test("test speechParams deeply nested error", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    // Check that speechParams errors are captured
-    assert.ok(mulmoError.speechParams !== undefined);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  // Check that speechParams errors are captured
+  assert.ok(mulmoError.speechParams !== undefined);
 });
 
 // Test path length edge cases
@@ -377,11 +347,10 @@ test("test error at various path depths", async () => {
   };
 
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    // Errors should be captured in the appropriate section
-    assert.ok(mulmoError !== null);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  // Errors should be captured in the appropriate section
+  assert.ok(mulmoError !== null);
 });
 
 // Test path.length === 1 with invalid_type for top-level field
@@ -395,10 +364,9 @@ test("test top-level field invalid_type (lang)", async () => {
   };
 
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.lang?.length > 0 || mulmoError.script !== null);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.lang?.length > 0 || mulmoError.script !== null);
 });
 
 // Test movieParams with both unrecognized_keys and invalid_type
@@ -416,10 +384,9 @@ test("test movieParams unrecognized keys", async () => {
   };
 
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.movieParams !== undefined);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.movieParams !== undefined);
 });
 
 test("test movieParams invalid_type", async () => {
@@ -434,10 +401,9 @@ test("test movieParams invalid_type", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.movieParams !== undefined);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.movieParams !== undefined);
 });
 
 // Test soundEffectParams
@@ -454,10 +420,9 @@ test("test soundEffectParams unrecognized keys", async () => {
   };
 
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.soundEffectParams !== undefined);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.soundEffectParams !== undefined);
 });
 
 test("test soundEffectParams invalid_type", async () => {
@@ -472,10 +437,9 @@ test("test soundEffectParams invalid_type", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.soundEffectParams !== undefined);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.soundEffectParams !== undefined);
 });
 
 // Test lipSyncParams
@@ -492,10 +456,9 @@ test("test lipSyncParams unrecognized keys", async () => {
   };
 
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.lipSyncParams !== undefined);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.lipSyncParams !== undefined);
 });
 
 test("test lipSyncParams invalid_type", async () => {
@@ -510,10 +473,9 @@ test("test lipSyncParams invalid_type", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.lipSyncParams !== undefined);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.lipSyncParams !== undefined);
 });
 
 // Test htmlImageParams
@@ -530,10 +492,9 @@ test("test htmlImageParams unrecognized keys", async () => {
   };
 
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.htmlImageParams !== undefined);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.htmlImageParams !== undefined);
 });
 
 test("test htmlImageParams invalid_type", async () => {
@@ -548,10 +509,9 @@ test("test htmlImageParams invalid_type", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.htmlImageParams !== undefined);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.htmlImageParams !== undefined);
 });
 
 // Test textSlideParams
@@ -568,10 +528,9 @@ test("test textSlideParams unrecognized keys", async () => {
   };
 
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.textSlideParams !== undefined);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.textSlideParams !== undefined);
 });
 
 test("test textSlideParams invalid_type", async () => {
@@ -586,10 +545,9 @@ test("test textSlideParams invalid_type", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.textSlideParams !== undefined);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.textSlideParams !== undefined);
 });
 
 // Test captionParams
@@ -606,10 +564,9 @@ test("test captionParams unrecognized keys", async () => {
   };
 
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.captionParams !== undefined);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.captionParams !== undefined);
 });
 
 test("test captionParams invalid_type", async () => {
@@ -624,10 +581,9 @@ test("test captionParams invalid_type", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.captionParams !== undefined);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.captionParams !== undefined);
 });
 
 // Test multiple unrecognized keys at once
@@ -647,13 +603,12 @@ test("test multiple unrecognized keys", async () => {
   };
 
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    // Should capture multiple unrecognized keys in one error message
-    if (mulmoError.canvasSize.length > 0) {
-      const errorMsg = mulmoError.canvasSize[0];
-      assert.ok(errorMsg.includes("unrecognized key"));
-    }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  // Should capture multiple unrecognized keys in one error message
+  if (mulmoError.canvasSize.length > 0) {
+    const errorMsg = mulmoError.canvasSize[0];
+    assert.ok(errorMsg.includes("unrecognized key"));
   }
 });
 
@@ -674,10 +629,9 @@ test("test beats invalid_string non-url validation", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.beats[0]?.length >= 0);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.beats[0]?.length >= 0);
 });
 
 // Test beats with multiple errors in same beat
@@ -699,11 +653,10 @@ test("test single beat with multiple errors", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    // Should have multiple errors for the same beat
-    assert.ok(mulmoError.beats[0]?.length >= 1);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  // Should have multiple errors for the same beat
+  assert.ok(mulmoError.beats[0]?.length >= 1);
 });
 
 // Test numeric path indices
@@ -732,13 +685,12 @@ test("test multiple beats with numeric indices", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    // Should have errors for each beat indexed by number
-    assert.ok(
-      mulmoError.beats[0] !== undefined || mulmoError.beats[1] !== undefined || mulmoError.beats[2] !== undefined,
-    );
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  // Should have errors for each beat indexed by number
+  assert.ok(
+    mulmoError.beats[0] !== undefined || mulmoError.beats[1] !== undefined || mulmoError.beats[2] !== undefined,
+  );
 });
 
 // Test audioParams with unrecognized keys
@@ -756,10 +708,9 @@ test("test audioParams unrecognized keys", async () => {
   };
 
   const zodError = mulmoScriptSchema.safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.audioParams !== undefined);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.audioParams !== undefined);
 });
 
 // Test deeply nested path with multiple segments
@@ -782,10 +733,9 @@ test("test deeply nested path error", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    assert.ok(mulmoError.speechParams !== undefined);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  assert.ok(mulmoError.speechParams !== undefined);
 });
 
 // Test all param types together
@@ -815,15 +765,14 @@ test("test errors in multiple param types simultaneously", async () => {
   };
 
   const zodError = mulmoScriptSchema.strip().safeParse(mulmoScript);
-  if (!zodError.success) {
-    const mulmoError = zodError2MulmoError(zodError.error);
-    // Should capture errors across multiple sections
-    const hasErrors =
-      mulmoError.canvasSize.length > 0 ||
-      mulmoError.imageParams.length > 0 ||
-      mulmoError.movieParams.length > 0 ||
-      mulmoError.audioParams.length > 0 ||
-      Object.keys(mulmoError.beats).length > 0;
-    assert.ok(hasErrors);
-  }
+  assert.strictEqual(zodError.success, false);
+  const mulmoError = zodError2MulmoError(zodError.error);
+  // Should capture errors across multiple sections
+  const hasErrors =
+    mulmoError.canvasSize.length > 0 ||
+    mulmoError.imageParams.length > 0 ||
+    mulmoError.movieParams.length > 0 ||
+    mulmoError.audioParams.length > 0 ||
+    Object.keys(mulmoError.beats).length > 0;
+  assert.ok(hasErrors);
 });

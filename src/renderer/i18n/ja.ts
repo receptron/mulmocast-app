@@ -906,6 +906,7 @@ const lang = {
       media: {
         tooLarge: "登録できるファイルサイズは{maxSizeMB}MBまでです",
         unsupportedType: "{fileType}ファイルはサポートされていません",
+        unsupportedMovie: "動画ファイルはサポートされていません",
         // Unsupported file type: ${fileType}
       },
       audio: {

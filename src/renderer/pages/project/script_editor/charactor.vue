@@ -115,6 +115,8 @@
 import { Trash, Sparkles, FileImage, Loader2 } from "lucide-vue-next";
 import { ref, computed, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
+import { z } from "zod";
+import { useMediaUrl } from "../composable/media_url";
 
 import {
   type MulmoScript,
@@ -125,7 +127,6 @@ import {
   mulmoImageMediaSchema,
   mulmoImagePromptMediaSchema,
 } from "mulmocast/browser";
-import { z } from "zod";
 
 import MediaModal from "@/components/media_modal.vue";
 import { Card } from "@/components/ui/card";
@@ -179,13 +180,6 @@ const openImage = (imageKey: string) => {
   modalSrc.value = imageRefs.value[imageKey];
 };
 
-/*
-const reference = async () => {
-  await window.electronAPI.mulmoHandler("mulmoReferenceImages", props.projectId);
-  await loadReference();
-};
-*/
-
 const isValidData = computed(() => {
   const schema = z.union([mulmoImageMediaSchema, mulmoImagePromptMediaSchema]);
   return Object.keys(props.images).reduce((tmp: Record<string, boolean>, key) => {
@@ -199,16 +193,9 @@ const update = (target: string, imageKey: string, prompt: string) => {
   emit("updateImage", imageKey, prompt);
 };
 
-const mediaUrl = ref("");
 // image fetch
-const imageFetching = ref(false);
-const validateURL = computed(() => {
-  const urlSchema = z.string().url();
-  return mediaUrl.value === "" || urlSchema.safeParse(mediaUrl.value).success;
-});
-const fetchEnable = computed(() => {
-  return mediaUrl.value !== "" && validateURL.value && !imageFetching.value;
-});
+const { imageFetching, mediaUrl, validateURL, fetchEnable } = useMediaUrl();
+
 const submitUrlImage = async (imageKey: string) => {
   try {
     imageFetching.value = true;
@@ -219,11 +206,16 @@ const submitUrlImage = async (imageKey: string) => {
       mediaUrl.value,
     )) as { result: boolean; imageType: string; path: string };
     if (res.result) {
-      emit("updateImagePath", imageKey, "./" + res.path);
-      emit("saveMulmo"); // TODO: not emited.
-      emit("formatAndPushHistoryMulmoScript");
-      mediaUrl.value = "";
-      loadReference();
+      if (res.imageType === "image") {
+        emit("updateImagePath", imageKey, "./" + res.path);
+        emit("saveMulmo"); // TODO: not emited.
+        emit("formatAndPushHistoryMulmoScript");
+        mediaUrl.value = "";
+        loadReference();
+      } else {
+        console.log("error");
+        notifyError(t("notify.error.media.unsupportedMovie"));
+      }
     }
   } catch (error) {
     console.log(error);

@@ -21,8 +21,7 @@ import {
   type MulmoImagePromptMedia,
   type MulmoBeat,
 } from "mulmocast";
-
-import { z } from "zod";
+import z from "zod";
 import fs from "fs";
 import { loadSettings } from "../settings_manager";
 

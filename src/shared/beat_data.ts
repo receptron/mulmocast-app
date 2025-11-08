@@ -74,6 +74,7 @@ export const beatTemplates: { key: string; beat: MulmoBeat }[] = [
       text: "",
       htmlPrompt: {
         prompt: "",
+        systemPrompt: "",
       },
     },
   },
