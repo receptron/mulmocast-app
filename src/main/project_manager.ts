@@ -8,7 +8,9 @@ import { GraphAILogger } from "graphai";
 
 import { Project, ProjectMetadata } from "../types";
 import { SCRIPT_EDITOR_TABS, MULMO_VIEWER_TABS } from "../shared/constants";
-import { initMulmoScript, onboardProjects } from "../shared/beat_data";
+import { initMulmoScript } from "../shared/beat_data";
+import { onboardProjects } from "../shared/onboard";
+
 // import { onboardMulmoScript }
 
 const PROJECTS_DIR = "projects";
