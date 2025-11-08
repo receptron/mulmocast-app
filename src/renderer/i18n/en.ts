@@ -742,7 +742,8 @@ const lang = {
       imagesDescription: "Select the character for this beat",
       imagesEmptyHint: "No images found. Please set references in the Ref tab.",
       customTitle: "Override image generation settings for this Beat",
-      customDescription: "Settings here apply only to this Beat. If not set, the shared style settings will be used.",
+      customDescription1: "Settings here apply only to this Beat.",
+      customDescription2: "If not set, the shared style settings will be used.",
     },
     audioParams: {
       title: "Audio Parameters",

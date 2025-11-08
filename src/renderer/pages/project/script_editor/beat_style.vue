@@ -6,16 +6,19 @@
         <div class="mb-3">
           <div class="flex items-center gap-2">
             <Checkbox variant="ghost" size="icon" :modelValue="!!beat?.imageParams" />
-            <Tooltip>
-              <TooltipTrigger as-child>
-                <h4 class="text-sm font-medium cursor-help" :class="!beat?.imageParams ? 'text-muted-foreground' : ''">
-                  {{ t("parameters.imageParams.customTitle") }}
-                </h4>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p class="text-xs">{{ t("parameters.imageParams.customDescription") }}</p>
-              </TooltipContent>
-            </Tooltip>
+            <div class="group relative">
+              <h4 class="text-sm font-medium" :class="!beat?.imageParams ? 'text-muted-foreground' : ''">
+                {{ t("parameters.imageParams.customTitle") }}
+              </h4>
+              <span
+                class="bg-popover text-popover-foreground border-border pointer-events-none absolute bottom-full left-0 mb-2 transform rounded border px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+              >
+                <div class="text-muted-foreground">{{ t("parameters.imageParams.customDescription1") }}</div>
+                <div class="text-muted-foreground">
+                  {{ t("parameters.imageParams.customDescription2") }}
+                </div>
+              </span>
+            </div>
           </div>
         </div>
       </CollapsibleTrigger>
@@ -41,7 +44,6 @@ import { nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Checkbox } from "@/components/ui";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { type MulmoBeat, type MulmoImageParams } from "mulmocast";
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../shared/constants";
 import ImageParams from "./styles/image_params.vue";
