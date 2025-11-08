@@ -1,7 +1,7 @@
 import { app } from "electron";
 import path from "node:path";
 import fs from "node:fs";
-import { ENV_KEYS, type EnvKey, type AppSettingKey, LANGUAGE_IDS, I18N_SUPPORTED_LANGUAGES } from "../shared/constants";
+import { ENV_KEYS, type AppSettingKey, LANGUAGE_IDS, I18N_SUPPORTED_LANGUAGES } from "../shared/constants";
 
 // Dynamically build the Settings type from ENV_KEYS and APP_SETTINGS
 export type Settings = {
