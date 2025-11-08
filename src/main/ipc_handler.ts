@@ -2,7 +2,7 @@ import { ipcMain, dialog, shell, clipboard, autoUpdater, type IpcMainInvokeEvent
 import { mulmoHandler } from "./mulmo/handler";
 import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
-import type { ProjectMetadata } from "../types";
+import type { ProjectMetadata, Lang } from "../types";
 
 export const registerIPCHandler = () => {
   // In this file you can include the rest of your app's specific main process
@@ -25,7 +25,7 @@ export const registerIPCHandler = () => {
   // Project management handlers
   ipcMain.handle("project:list", () => projectManager.listProjects());
 
-  ipcMain.handle("project:create", (_event: IpcMainInvokeEvent, title: string, lang: string, onboardProject: number) =>
+  ipcMain.handle("project:create", (_event: IpcMainInvokeEvent, title: string, lang: Lang, onboardProject: number) =>
     projectManager.createProject(title, lang, onboardProject),
   );
 
