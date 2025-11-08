@@ -119,7 +119,7 @@ export const mulmoGenerateBeatImage = async (
       return { result: false, noContext: true };
     }
 
-    const beat = context.studio.script.beats[0];
+    const beat: MulmoBeat & { audioFile?: string } = context.studio.script.beats[0];
     const { id } = beat;
     const forceImage = target === "image";
     const forceMovie = target === "movie";
@@ -205,7 +205,7 @@ export const mulmoGenerateBeatAudio = async (projectId: string, index: number, w
       return { result: false, noContext: true };
     }
     //await generateBeatAudio(index, context, { settings: settings.APIKEY ?? {}, langs: ["de", "fr"] });
-    await generateBeatAudio(0, context, { settings: settings.APIKEY ?? {} });
+    await generateBeatAudio(0, context, { settings: settings.APIKEY ?? {}, langs: [context.lang] });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
