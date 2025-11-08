@@ -5,7 +5,7 @@ import { ENV_KEYS, type EnvKey, type AppSettingKey, LANGUAGE_IDS, I18N_SUPPORTED
 
 // Dynamically build the Settings type from ENV_KEYS and APP_SETTINGS
 export type Settings = {
-  [K in EnvKey]?: string;
+  APIKEY: Record<string, string>
 } & {
   [K in AppSettingKey]?: string;
 } & {
