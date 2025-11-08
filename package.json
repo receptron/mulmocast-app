@@ -104,7 +104,7 @@
     "lucide-vue-next": "^0.553.0",
     "monaco-editor": "^0.54.0",
     "monaco-yaml": "^5.4.0",
-    "mulmocast": "^2.0.0-alpha.1",
+    "mulmocast": "^2.0.0",
     "pinia": "^3.0.4",
     "puppeteer": "24.29.1",
     "radix-vue": "^1.9.17",
