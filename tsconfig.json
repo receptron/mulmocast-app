@@ -1,5 +1,5 @@
 {
   "extends": "./tsconfig.common.json",
-  "include": ["src/main/**/*", "src/shared/**/*", "src/preload/**/*", "src/types/**/*"],
-  "exclude": ["node_modules", "dist", "src/renderer"]
+  "include": ["src/main/**/*", "src/preload/**/*", "src/types/**/*"],
+  "exclude": ["node_modules", "dist", "src/renderer", "src/shared"]
 }

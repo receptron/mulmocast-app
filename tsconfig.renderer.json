@@ -10,5 +10,5 @@
       "@/types/*": ["src/types/*"]
     }
   },
-  "include": ["src/renderer/**/*", "src/types/**/*"]
+  "include": ["src/renderer/**/*", "src/types/**/*", "src/shared/**/*"]
 }

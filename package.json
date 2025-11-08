@@ -25,8 +25,8 @@
     "lint:vue": "vue-tsc --noEmit --project tsconfig.vue.json",
     "test": "NODE_ENV=test npx tsx --test ./test/test_*.ts",
     "type": "yarn run lint && yarn run type-check",
-    "type-check": "tsc --noEmit -p ./tsconfig.renderer.json",
-    "type-check:main": "tsc --noEmit -p ./tsconfig.json",
+    "type-check": "tsc --noEmit -p ./tsconfig.main.json && tsc --noEmit -p ./tsconfig.renderer.json",
+    "type-check:main": "tsc --noEmit -p ./tsconfig.main.json",
     "type-check:renderer": "tsc --noEmit -p ./tsconfig.renderer.json"
   },
   "keywords": [],
