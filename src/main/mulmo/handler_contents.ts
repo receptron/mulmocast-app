@@ -13,6 +13,7 @@ import {
   resolveAssetPath,
   type MulmoStudioContext,
   type MulmoStudioMultiLingual,
+  type MulmoBeat,
 } from "mulmocast";
 import { GraphAILogger } from "graphai";
 
@@ -23,10 +24,11 @@ import { getProjectPath, getProjectMulmoScript } from "../project_manager";
 
 // audio
 const beatAudio = (context: MulmoStudioContext) => {
-  return (beat, option?: { lang: string; multiLingual: MulmoStudioMultiLingual }) => {
+  return (beat: MulmoBeat, option?: { lang: string; multiLingual: MulmoStudioMultiLingual }) => {
     try {
       const { lang, multiLingual } = option ?? {};
-      const text = lang && multiLingual ? localizedText(beat, multiLingual, lang) : beat.text;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const text = lang && multiLingual ? localizedText(beat, multiLingual as any, lang) : beat.text;
 
       const fileName = getBeatAudioPathOrUrl(text, context, beat, lang ?? context.studio.script?.lang ?? "en");
       if (fileExstsSync(fileName)) {
@@ -41,22 +43,28 @@ const beatAudio = (context: MulmoStudioContext) => {
   };
 };
 
-export const mulmoAudioFiles = async (projectId: string, lang?: string) => {
+export const mulmoAudioFiles = async (
+  projectId: string,
+  lang?: string,
+): Promise<Record<string, ArrayBuffer> | { result: boolean; noContext: boolean } | unknown[]> => {
   try {
     const context = await getContext(projectId, lang);
     if (!context) {
       return { result: false, noContext: true };
     }
     const audios = listLocalizedAudioPaths(context);
-    return context.studio.script.beats.reduce((tmp, beat, index) => {
-      const fileName = audios[index];
-      // GraphAILogger.log(fileName);
-      if (fileExstsSync(fileName)) {
-        const buffer = fs.readFileSync(fileName);
-        tmp[beatId(beat?.id, index)] = buffer.buffer;
-      }
-      return tmp;
-    }, {});
+    return context.studio.script.beats.reduce(
+      (tmp, beat, index) => {
+        const fileName = audios[index];
+        // GraphAILogger.log(fileName);
+        if (fileExstsSync(fileName)) {
+          const buffer = fs.readFileSync(fileName);
+          tmp[beatId(beat?.id, index)] = buffer.buffer;
+        }
+        return tmp;
+      },
+      {} as Record<string, ArrayBuffer>,
+    );
   } catch (error) {
     GraphAILogger.log(error);
     return [];
@@ -77,19 +85,24 @@ export const mulmoAudioFile = async (projectId: string, index: number) => {
 
 // images
 
-export const mulmoImageFiles = async (projectId: string) => {
+export const mulmoImageFiles = async (
+  projectId: string,
+): Promise<Record<string, unknown> | { result: boolean; noContext: boolean } | unknown[]> => {
   try {
     const context = await getContext(projectId);
     if (!context) {
       return { result: false, noContext: true };
     }
     const dataSet = await Promise.all(context.studio.script.beats.map(beatImage(context)));
-    return context.studio.script.beats.reduce((tmp, beat, index) => {
-      if (beat.id) {
-        tmp[beat.id] = dataSet[index];
-      }
-      return tmp;
-    }, {});
+    return context.studio.script.beats.reduce(
+      (tmp, beat, index) => {
+        if (beat.id) {
+          tmp[beat.id] = dataSet[index];
+        }
+        return tmp;
+      },
+      {} as Record<string, unknown>,
+    );
   } catch (error) {
     GraphAILogger.log(error);
     return [];
@@ -118,10 +131,11 @@ const fileExstsSync = (filePath: string) => {
 };
 
 const beatImage = (context: MulmoStudioContext) => {
-  return async (beat, index) => {
+  return async (beat: MulmoBeat, index: number) => {
     try {
       const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle, beat);
-      const res = await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs: {} });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const res = (await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs: {} } as any)) as any;
       if (res.htmlImageFile && fileExstsSync(res.htmlImageFile)) {
         const buffer = fs.readFileSync(res.htmlImageFile);
         res.imageData = buffer.buffer;
@@ -226,7 +240,7 @@ export const mulmoReferenceImagesFile = async (projectId: string, key: string) =
   return null;
 };
 
-export const mulmoMultiLinguals = async (projectId: string): MulmoStudioMultiLingual => {
+export const mulmoMultiLinguals = async (projectId: string): Promise<MulmoStudioMultiLingual> => {
   const context = await getContext(projectId);
   /*
   if (!context) {
