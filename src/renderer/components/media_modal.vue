@@ -7,7 +7,7 @@
         <DialogDescription>{{ t("viewer.mediaPreview.modal.dialogDescription") }}</DialogDescription>
       </div>
       <div class="flex flex-col gap-4">
-        <div class="flex items-center justify-center" @click="isOpen = false">
+        <div class="relative flex items-center justify-center" @click="isOpen = false">
           <img
             v-if="type === 'image'"
             :src="src"
@@ -23,6 +23,27 @@
             class="max-h-[80vh] max-w-full cursor-pointer"
             @click.stop
           />
+          <!-- 閉じるボタン -->
+          <button
+            @click.stop="isOpen = false"
+            class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-lg transition-all hover:bg-white hover:scale-110"
+            :aria-label="t('ui.actions.close')"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-gray-700"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </div>
         <div class="flex justify-center">
           <Button variant="secondary" size="sm" @click="handleDownload" class="bg-white/90 shadow-lg hover:bg-white">
