@@ -1,6 +1,7 @@
-import { type MulmoImageParams, provider2LLMAgent } from "mulmocast/browser";
-import { bgmAssets } from "mulmocast/data";
-export { pdf_modes, languages } from "mulmocast/browser";
+import type { MulmoImageParams } from "mulmocast/lib/types/index.js";
+import { provider2LLMAgent } from "mulmocast/lib/utils/provider2agent.js";
+import { bgmAssets } from "mulmocast/lib/data/index.js";
+export { pdf_modes, languages } from "mulmocast/lib/utils/const.js";
 
 // Define all valid feature keys as a readonly tuple
 export const FEATURE_KEYS = [
