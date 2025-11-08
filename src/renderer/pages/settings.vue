@@ -266,7 +266,7 @@ const saveSettings = async () => {
     const settings = await window.electronAPI.settings.get();
     const data = {
       ...settings,
-      ...apiKeys,
+      // ...apiKeys,
       APIKEY: toRaw(apiKeys),
       APP_LANGUAGE: selectedLanguage.value,
       USE_LANGUAGES: { ...useLanguage },
