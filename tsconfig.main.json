@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.common.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
+  },
+  "include": ["src/main/**/*", "src/shared/**/*", "src/preload/**/*", "src/types/**/*"],
+  "exclude": ["node_modules", "dist", "src/renderer"]
+}
