@@ -1,5 +1,5 @@
 import { mulmoScriptSchema } from "mulmocast";
-import { zodError2MulmoError } from "../src/renderer/lib/error";
+import { convCauseToErrorMessage, zodError2MulmoError } from "../src/renderer/lib/error";
 import test from "node:test";
 import assert from "node:assert";
 
@@ -775,4 +775,57 @@ test("test errors in multiple param types simultaneously", async () => {
     mulmoError.audioParams.length > 0 ||
     Object.keys(mulmoError.beats).length > 0;
   assert.ok(hasErrors);
+});
+
+test("convCauseToErrorMessage prioritizes apiError videoDuration target", () => {
+  const [messageKey, params] = convCauseToErrorMessage({
+    action: "images",
+    type: "apiError",
+    target: "videoDuration",
+    agentName: "openaiImage",
+    beatIndex: 0,
+  });
+
+  assert.strictEqual(messageKey, "notify.error.images.apiError.videoDuration");
+  assert.deepStrictEqual(params, { url: undefined, key: undefined, beatIndex: 1 });
+});
+
+test("convCauseToErrorMessage prioritizes apiError unsupportedModel target even with errorCode", () => {
+  const [messageKey, params] = convCauseToErrorMessage({
+    action: "images",
+    type: "apiError",
+    target: "unsupportedModel",
+    agentName: "someAgent",
+    errorCode: "model_not_supported",
+    errorType: "invalid_request_error",
+  });
+
+  assert.strictEqual(messageKey, "notify.error.images.apiError.unsupportedModel");
+  assert.deepStrictEqual(params, { url: undefined, key: undefined, beatIndex: null });
+});
+
+test("convCauseToErrorMessage falls back to agent name for non-prioritized apiError target", () => {
+  const [messageKey, params] = convCauseToErrorMessage({
+    action: "translate",
+    type: "apiError",
+    target: "general",
+    agentName: "translator",
+    url: "https://example.com",
+  });
+
+  assert.strictEqual(messageKey, "notify.error.translate.apiError.translator");
+  assert.deepStrictEqual(params, undefined);
+});
+
+test("convCauseToErrorMessage prioritizes multiLingualFile target", () => {
+  const [messageKey, params] = convCauseToErrorMessage({
+    action: "translate",
+    type: "apiError",
+    target: "multiLingualFile",
+    agentName: "translator",
+    key: "fileKey",
+  });
+
+  assert.strictEqual(messageKey, "notify.error.translate.apiError.multiLingualFile");
+  assert.deepStrictEqual(params, { url: undefined, key: "fileKey", beatIndex: null });
 });

@@ -2,6 +2,8 @@ import type { ZodError, ZodIssue } from "zod";
 import type { MulmoError } from "../../types/index.js";
 import { unknownMediaType, apiKeyInvalidType, apiRateLimitErrorType, apiKeyMissingType } from "mulmocast/browser";
 
+const prioritizedApiErrorTargets = new Set(["videoDuration", "unsupportedModel", "multiLingualFile"]);
+
 const unrecognizedKeysError = (paths: (string | number)[], keys: string[]) => {
   const pathStr = paths
     .map((segment) => (typeof segment === "number" ? `[${segment}]` : `.${segment}`))
@@ -168,7 +170,19 @@ export const convCauseToErrorMessage = (cause: {
   if (cause?.target) {
     const { beatIndex, url, key } = cause;
     // beatIndex, url
-    if (cause.type === "invalidResponse" || cause.type === "apiError") {
+    if (cause.type === "invalidResponse") {
+      return [["notify.error", cause.action, cause.type, cause.agentName].join(".")];
+    }
+    if (cause.type === "apiError") {
+      if (prioritizedApiErrorTargets.has(cause.target)) {
+        return [
+          ["notify.error", cause.action, cause.type, cause.target].join("."),
+          { url, key, beatIndex: beatIndex !== undefined ? beatIndex + 1 : null },
+        ];
+      }
+      if (cause.errorCode && cause.errorType) {
+        return [["notify.error", cause.action, cause.type, "openAIError", cause.errorCode].join("."), {}];
+      }
       return [["notify.error", cause.action, cause.type, cause.agentName].join(".")];
     }
 
