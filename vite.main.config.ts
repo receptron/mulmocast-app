@@ -6,6 +6,9 @@ import ffmpegFfprobeStatic from "ffmpeg-ffprobe-static";
 // Packages to exclude from bundle and load directly from node_modules
 const external_packages = ["jsdom", "mulmocast-vision", "puppeteer", "puppeteer-core"];
 
+// Additional packages to copy (e.g., nested dependencies not auto-detected)
+const additional_packages = ["punycode"];
+
 const isDev = process.env.NODE_ENV === "development";
 
 // https://vitejs.dev/config
@@ -112,6 +115,7 @@ export default defineConfig({
         };
 
         roots.forEach(walk);
+        additional_packages.forEach(walk);
       },
     },
   ],
