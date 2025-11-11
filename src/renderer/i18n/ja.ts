@@ -80,6 +80,7 @@ const lang = {
       generating: "生成中",
       generateThing: "{thing}を生成",
       fetch: "取得",
+      selectFile: "ファイルを選択",
       cancel: "キャンセル",
       ok: "OK",
       runningThing: "{thing}を実行中",

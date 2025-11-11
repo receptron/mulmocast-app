@@ -80,6 +80,7 @@ const lang = {
       generating: "Generating",
       generateThing: "Generate {thing}",
       fetch: "Fetch",
+      selectFile: "Select File",
       cancel: "Cancel",
       ok: "OK",
       runningThing: "{thing} is running",

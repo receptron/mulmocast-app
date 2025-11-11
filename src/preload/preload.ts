@@ -14,6 +14,7 @@ export interface ElectronAPI {
     getProjectMetadata: (name: string) => Promise<unknown>;
     getProjectMulmoScript: (name: string) => Promise<unknown>;
     delete: (name: string) => Promise<unknown>;
+    getPath: (name: string) => Promise<unknown>;
     saveProjectMetadata: (id: string, data: unknown) => Promise<unknown>;
     saveProjectScript: (id: string, data: unknown) => Promise<unknown>;
     openProjectFolder: (id: string) => Promise<unknown>;
@@ -43,6 +44,7 @@ const api: ElectronAPI = {
     getProjectMetadata: (name: string) => ipcRenderer.invoke("project:getProjectMetadata", name),
     getProjectMulmoScript: (name: string) => ipcRenderer.invoke("project:getProjectMulmoScript", name),
     delete: (name: string) => ipcRenderer.invoke("project:delete", name),
+    getPath: (name: string) => ipcRenderer.invoke("project:getPath", name),
     saveProjectMetadata: (id: string, data: unknown) => ipcRenderer.invoke("project:saveProjectMetadata", id, data),
     saveProjectScript: (id: string, data: unknown) => ipcRenderer.invoke("project:saveProjectScript", id, data),
     openProjectFolder: (id: string) => ipcRenderer.invoke("project:openProjectFolder", id),

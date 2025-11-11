@@ -37,6 +37,8 @@ export const registerIPCHandler = () => {
     projectManager.getProjectMulmoScript(id),
   );
 
+  ipcMain.handle("project:getPath", (_event: IpcMainInvokeEvent, id: string) => projectManager.getProjectPath(id));
+
   ipcMain.handle("project:delete", (_event: IpcMainInvokeEvent, id: string) => projectManager.deleteProject(id));
 
   ipcMain.handle("project:saveProjectMetadata", (_event: IpcMainInvokeEvent, id: string, metaData: ProjectMetadata) =>

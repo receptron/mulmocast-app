@@ -25,14 +25,19 @@
       {{ t("ui.common.drophere", { maxSizeMB }) }}
     </div>
     {{ t("ui.common.or") }}
-    <div class="flex">
+    <div class="flex gap-2">
       <Input
         :placeholder="t('beat.mediaFile.placeholder')"
         v-model="mediaUrl"
         :invalid="!validateURL"
         @blur="save"
-      /><Button @click="submitUrlImage" :disabled="!fetchEnable">
+        class="flex-1"
+      />
+      <Button @click="submitUrlImage" :disabled="!fetchEnable" class="shrink-0">
         {{ t("ui.actions.fetch") }}
+      </Button>
+      <Button @click="openLocalFile" type="button" class="shrink-0">
+        {{ t("ui.actions.selectFile") }}
       </Button>
     </div>
   </div>
@@ -171,6 +176,32 @@ const handleDrop = (event: DragEvent) => {
       });
     };
     reader.readAsArrayBuffer(file);
+  }
+};
+
+const openLocalFile = async () => {
+  const fullPath = await window.electronAPI.openFile();
+  if (!fullPath) {
+    return;
+  }
+
+  const projectPath = await window.electronAPI.project.getPath(projectId.value);
+
+  const normalizedFullPath = fullPath.replace(/\\/g, "/");
+  const normalizedProjectPath = projectPath.replace(/\\/g, "/");
+
+  let projectRelativePath: string | null = null;
+  if (normalizedFullPath.startsWith(normalizedProjectPath)) {
+    const relativePath = normalizedFullPath.slice(normalizedProjectPath.length);
+    const trimmedRelativePath = relativePath.startsWith("/") ? relativePath : `/${relativePath}`;
+    projectRelativePath = `.${trimmedRelativePath}`;
+  }
+
+  console.log("Selected file full path:", fullPath);
+  if (projectRelativePath) {
+    console.log("Selected file project path:", projectRelativePath);
+  } else {
+    console.log("Selected file project path: (outside project directory)");
   }
 };
 </script>
