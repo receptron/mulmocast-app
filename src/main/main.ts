@@ -249,7 +249,7 @@ const createWindow = (splashWindow?: BrowserWindow) => {
       const envData: Record<string, string | undefined> = {};
 
       for (const envKey of Object.keys(ENV_KEYS)) {
-        const value = settings.APIKEY[envKey as keyof settingsManager.Settings];
+        const value = settings?.APIKEY?.[envKey as keyof typeof ENV_KEYS];
         envData[envKey] = value || process.env[envKey];
       }
 
@@ -317,7 +317,7 @@ app.on("ready", () => {
     const settings = await settingsManager.loadSettings();
 
     for (const envKey of Object.keys(ENV_KEYS)) {
-      const value = settings.APIKEY[envKey as keyof settingsManager.Settings];
+      const value = settings?.APIKEY?.[envKey as keyof typeof ENV_KEYS];
       if (value) {
         process.env[envKey] = value;
       }

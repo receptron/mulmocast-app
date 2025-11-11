@@ -77,7 +77,7 @@ export const saveSettings = async (settings: Settings): Promise<void> => {
 
     // Dynamically set environment variables based on constants
     for (const envKey of Object.keys(ENV_KEYS)) {
-      const value = settings.APIKEY[envKey as keyof typeof ENV_KEYS];
+      const value = settings?.APIKEY?.[envKey as keyof typeof ENV_KEYS];
       if (value) {
         process.env[envKey] = value;
       }
