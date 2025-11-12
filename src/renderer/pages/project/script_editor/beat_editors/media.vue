@@ -221,7 +221,7 @@ const handleDrop = async (eventOrFileData: DragEvent | BinaryFileData) => {
 
 const selectLocalMedia = async () => {
   try {
-    const filePath = await window.electronAPI.dialog.openFile();
+    const filePath = await window.electronAPI.dialog.openFile("media");
     if (!filePath) {
       return;
     }

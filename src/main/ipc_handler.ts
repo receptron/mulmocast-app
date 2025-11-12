@@ -5,6 +5,7 @@ import { mulmoHandler } from "./mulmo/handler";
 import * as projectManager from "./project_manager";
 import { saveSettings, loadSettings } from "./settings_manager";
 import type { ProjectMetadata, Lang, Settings } from "../types";
+import { MEDIA_FILE_EXTENSIONS } from "../shared/constants";
 
 export const registerIPCHandler = () => {
   // In this file you can include the rest of your app's specific main process
@@ -65,9 +66,18 @@ export const registerIPCHandler = () => {
     autoUpdater.quitAndInstall();
   });
 
-  ipcMain.handle("dialog:openFile", async () => {
+  ipcMain.handle("dialog:openFile", async (_event: IpcMainInvokeEvent, fileType?: "image" | "video" | "media") => {
+    const filterMap = {
+      image: [{ name: "Images", extensions: [...MEDIA_FILE_EXTENSIONS.image] }],
+      video: [{ name: "Videos", extensions: [...MEDIA_FILE_EXTENSIONS.video] }],
+      media: [
+        { name: "Media Files", extensions: [...MEDIA_FILE_EXTENSIONS.image, ...MEDIA_FILE_EXTENSIONS.video] },
+      ],
+    };
+
     const { canceled, filePaths } = await dialog.showOpenDialog({
       properties: ["openFile"],
+      filters: fileType ? filterMap[fileType] : undefined,
     });
     if (canceled || filePaths.length === 0) return null;
     return filePaths[0];

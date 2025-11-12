@@ -349,7 +349,7 @@ const handleDrop = async (eventOrFileData: DragEvent | BinaryFileData, imageKey:
 
 const selectLocalImage = async (imageKey: string) => {
   try {
-    const filePath = await window.electronAPI.dialog.openFile();
+    const filePath = await window.electronAPI.dialog.openFile("image");
     if (!filePath) {
       return;
     }
