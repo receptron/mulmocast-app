@@ -1,4 +1,6 @@
-import { ipcMain, shell, clipboard, autoUpdater, type IpcMainInvokeEvent } from "electron";
+import { ipcMain, shell, clipboard, autoUpdater, dialog, type IpcMainInvokeEvent } from "electron";
+import fs from "node:fs/promises";
+import path from "node:path";
 import { mulmoHandler } from "./mulmo/handler";
 import * as projectManager from "./project_manager";
 import { saveSettings, loadSettings } from "./settings_manager";
@@ -61,5 +63,43 @@ export const registerIPCHandler = () => {
 
   ipcMain.handle("updateInstall", (__event: IpcMainInvokeEvent) => {
     autoUpdater.quitAndInstall();
+  });
+
+  ipcMain.handle("dialog:openFile", async () => {
+    const { canceled, filePaths } = await dialog.showOpenDialog({
+      properties: ["openFile"],
+    });
+    if (canceled || filePaths.length === 0) return null;
+    return filePaths[0];
+  });
+
+  ipcMain.handle("file:readBinary", async (_event: IpcMainInvokeEvent, filePath: string) => {
+    if (!filePath) {
+      return null;
+    }
+
+    const [fileBuffer, stats] = await Promise.all([fs.readFile(filePath), fs.stat(filePath)]);
+    const extension = path.extname(filePath).slice(1).toLowerCase();
+    const mimeTypes: Record<string, string> = {
+      jpg: "image/jpeg",
+      jpeg: "image/jpeg",
+      png: "image/png",
+      mp4: "video/mp4",
+      mov: "video/quicktime",
+      webm: "video/webm",
+      ogg: "video/ogg",
+      ogv: "video/ogg",
+      mpeg: "video/mpeg",
+      mp2t: "video/mp2t",
+      mpg: "video/mpeg",
+    };
+    const arrayBuffer = fileBuffer.buffer.slice(fileBuffer.byteOffset, fileBuffer.byteOffset + fileBuffer.byteLength);
+
+    return {
+      name: path.basename(filePath),
+      size: stats.size,
+      type: mimeTypes[extension] ?? "",
+      buffer: arrayBuffer,
+    };
   });
 };
