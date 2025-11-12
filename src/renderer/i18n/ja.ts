@@ -123,7 +123,7 @@ const lang = {
       // Template actions
       insert: "追加",
       change: "変更",
-      reference: "画像をセット",
+      reference: "素材をセット",
 
       // Project actions
       createNew: "新規作成",
@@ -433,10 +433,10 @@ const lang = {
       reference: {
         tabLabel: "素材設定",
         tabLabelShort: "素材",
-        mode: "参照素材設定",
-        modeDescription: "参照素材を管理します",
+        mode: "素材設定",
+        modeDescription: "素材を管理します",
         description:
-          "生成AIで作る画像の見た目を参照素材で安定させます。参照素材は「画像生成プロンプト」で作成するか、「画像ファイル」で追加して設定します。その後、各BEATの「{imageParamsImages}」で「{key}」を指定してください。",
+          "生成AIで作る画像の見た目を素材で安定させます。素材は「画像生成プロンプト」で作成するか、「画像ファイル」で追加して設定します。その後、各BEATの「{imageParamsImages}」で「{key}」を指定してください。",
         imageGenerationDisabled: {
           needPrompt: "「{imagePromptLabel}」を入力してください",
           needValidScript: "「{beatTabLabel}」タブの内容が正しく設定されると、画像生成ボタンが押せるようになります。",
@@ -640,7 +640,7 @@ const lang = {
     },
     beat: {
       badge: "Beat",
-      label: "参照画像",
+      label: "素材",
       idField: "ビートID",
       referenceField: "ビート参照",
       placeholder: "参照するビートIDを入力してください（例: beat_1）",
@@ -659,7 +659,7 @@ const lang = {
       placeholder: "空白では動作しません。スペースを入力してください。",
     },
     imageReference: {
-      badge: "Image Reference",
+      badge: "素材",
       keyField: "素材キー",
       placeholder: "素材のキーを登録(英数字のみ)",
       imagePromptPlaceholder: "素材を生成するためのプロンプトを入力してください。",
@@ -744,10 +744,10 @@ const lang = {
       stylePlaceholder: "例) 鮮やか、自然",
       moderation: "モデレーション",
       moderationPlaceholder: "例) 低、自動",
-      images: "参照素材",
-      imagesDescription: "このビートで使う参照素材を選んでください",
+      images: "素材",
+      imagesDescription: "このビートで使う素材を選んでください",
       imagesEmptyHint:
-        "参照素材は設定されていません。生成画像で素材を指定する場合は、「素材生成」タブで素材を設定してください。",
+        "素材は設定されていません。生成画像で素材を指定する場合は、「素材生成」タブで素材を設定してください。",
       customTitle: "このビートの画像生成設定を上書きする",
       customDescription1: "ここで設定した内容は、このビートでのみ使われます。",
       customDescription2: "設定していない場合は、スタイルで指定した共通設定が使われます。",
@@ -827,7 +827,7 @@ const lang = {
     },
     // BeatSessionType
     beat: {
-      imageReference: "参照素材",
+      imageReference: "素材",
       audio: "音声",
       image: "画像",
       multiLingual: "多言語テキスト",
@@ -901,7 +901,7 @@ const lang = {
       },
       imageReference: {
         urlFileNotFound: {
-          imageFile: "参照素材が存在しない、もしくは正しくないようです",
+          imageFile: "素材が存在しない、もしくは正しくないようです",
         },
         apiError: {
           imageOpenaiAgent: "OpenAIのAPI Keyが正しくありません",

@@ -123,7 +123,7 @@ const lang = {
       // Template actions
       insert: "Insert",
       change: "Change",
-      reference: "Set Reference",
+      reference: "Set Material",
 
       // Project actions
       createNew: "Create New",
@@ -435,10 +435,10 @@ const lang = {
       reference: {
         tabLabel: "Materials",
         tabLabelShort: "Materials",
-        mode: "Reference Materials",
-        modeDescription: "Manage reference materials used in the presentation",
+        mode: "Materials",
+        modeDescription: "Manage materials used in the presentation",
         description:
-          'Use reference materials to keep AI-generated visuals consistent. Create materials with an "image generation prompt" or add your own files. Then, in each BEAT, specify "{key}" in "{imageParamsImages}".',
+          'Use materials to keep AI-generated visuals consistent. Create materials with an "image generation prompt" or add your own files. Then, in each BEAT, specify "{key}" in "{imageParamsImages}".',
         imageGenerationDisabled: {
           needPrompt: 'Please enter "{imagePromptLabel}"',
           needValidScript:
@@ -641,7 +641,7 @@ const lang = {
     },
     beat: {
       badge: "Beat",
-      label: "Reference Image",
+      label: "Material",
       idField: "Beat ID",
       referenceField: "Beat Reference",
       placeholder: "Enter beat ID to reference (e.g., beat_1)",
@@ -660,10 +660,10 @@ const lang = {
       placeholder: "Blank won't work, space will.",
     },
     imageReference: {
-      badge: "Image Reference",
+      badge: "Material",
       keyField: "Material Key",
       placeholder: "Material key (a-z0-9)",
-      imagePromptPlaceholder: "Enter prompt to generate reference material.",
+      imagePromptPlaceholder: "Enter a prompt to generate material.",
     },
     image: {
       badge: "Image",
@@ -744,8 +744,8 @@ const lang = {
       stylePlaceholder: "ex) vivid, natural",
       moderation: "Moderation",
       moderationPlaceholder: "ex) low, auto",
-      images: "Reference Materials",
-      imagesDescription: "Select the reference materials for this beat",
+      images: "Materials",
+      imagesDescription: "Select the materials for this beat",
       imagesEmptyHint: "No materials found. Please add materials in the Materials tab.",
       customTitle: "Override image generation settings for this Beat",
       customDescription1: "Settings here apply only to this Beat.",
@@ -815,8 +815,8 @@ const lang = {
       errorMessage: "Failed to generate image",
     },
     imageReference: {
-      successMessage: "Reference material generated successfully",
-      errorMessage: "Failed to generate reference material",
+      successMessage: "Material generated successfully",
+      errorMessage: "Failed to generate material",
     },
     translate: {
       successMessage: "Translate successfully",
@@ -827,7 +827,7 @@ const lang = {
       errorMessage: "Failed to generate contents",
     },
     beat: {
-      imageReference: "Reference Material",
+      imageReference: "Material",
       audio: "Audio",
       image: "Image",
       multiLingual: "Multilingual Text",
@@ -902,7 +902,7 @@ const lang = {
       },
       imageReference: {
         urlFileNotFound: {
-          imageFile: "Reference material does not exist or is invalid",
+          imageFile: "Material does not exist or is invalid",
         },
         apiError: {
           imageOpenaiAgent: "The OpenAI API Key is invalid",
