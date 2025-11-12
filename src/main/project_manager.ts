@@ -87,6 +87,58 @@ export const saveProjectScript = async (projectId: string, data: Partial<MulmoSc
   return await writeJsonFile(getProjectScriptPath(projectId), data);
 };
 
+export interface ProjectScriptImage {
+  fileName: string;
+  fullPath: string;
+  projectRelativePath: string;
+  imageData: ArrayBuffer;
+}
+
+export const listProjectScriptImages = async (projectId: string): Promise<ProjectScriptImage[]> => {
+  const imagesDirectory = path.join(getProjectPath(projectId), "output", "images", "script");
+  const scriptImageNamePattern = /^[A-Z0-9]+(?:-[A-Z0-9]+){5}\.png$/i;
+
+  try {
+    const entries = await fs.readdir(imagesDirectory, { withFileTypes: true });
+
+    const images = await Promise.all(
+      entries
+        .filter((entry) => entry.isFile() && scriptImageNamePattern.test(entry.name))
+        .map(async (entry) => {
+          const fileName = entry.name;
+          const fullPath = path.join(imagesDirectory, fileName);
+
+          try {
+            const fileBuffer = await fs.readFile(fullPath);
+            const imageData = fileBuffer.buffer.slice(
+              fileBuffer.byteOffset,
+              fileBuffer.byteOffset + fileBuffer.byteLength,
+            );
+
+            return {
+              fileName,
+              fullPath,
+              projectRelativePath: `./output/images/script/${fileName}`,
+              imageData,
+            } satisfies ProjectScriptImage;
+          } catch (readError) {
+            GraphAILogger.error(`Failed to load script image: ${fullPath}`, readError);
+            return null;
+          }
+        }),
+    );
+
+    return images
+      .filter((image): image is ProjectScriptImage => image !== null)
+      .sort((a, b) => b.fileName.localeCompare(a.fileName));
+  } catch (error) {
+    if ("code" in error && error.code !== "ENOENT") {
+      GraphAILogger.error("Failed to list project script images:", error);
+    }
+    return [];
+  }
+};
+
 const generateId = (): string => {
   const dateStr = dayjs().format("YYYYMMDD");
   const uuid = crypto.randomUUID().replace(/-/g, "").substring(0, 8);

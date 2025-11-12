@@ -25,16 +25,25 @@
       {{ t("ui.common.drophere", { maxSizeMB }) }}
     </div>
     {{ t("ui.common.or") }}
-    <div class="flex">
+    <div class="flex gap-2">
       <Input
         :placeholder="t('beat.mediaFile.placeholder')"
         v-model="mediaUrl"
         :invalid="!validateURL"
         @blur="save"
-      /><Button @click="submitUrlImage" :disabled="!fetchEnable">
+        class="flex-1"
+      />
+      <Button @click="submitUrlImage" :disabled="!fetchEnable" class="shrink-0">
         {{ t("ui.actions.fetch") }}
       </Button>
     </div>
+    <div class="mt-2">
+      <Button @click="openMediaLibrary" type="button" class="shrink-0">
+        {{ t("ui.actions.openMediaLibrary") }}
+      </Button>
+    </div>
+
+    <MediaLibraryDialog ref="mediaLibraryRef" :project-id="projectId" @select="selectScriptImage" />
   </div>
 </template>
 
@@ -42,11 +51,15 @@
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { Label, Input, Button } from "@/components/ui";
-import type { MulmoBeat } from "mulmocast/browser";
+import type { MulmoBeat, MulmoImageAsset } from "mulmocast/browser";
 import { isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 
 import { notifyError } from "@/lib/notification";
 import { useMediaUrl } from "../../composable/media_url";
+import MediaLibraryDialog, {
+  type MediaLibraryDialogExposed,
+  type ProjectScriptImage,
+} from "./media_library_dialog.vue";
 
 import { sleep } from "graphai";
 import { useI18n } from "vue-i18n";
@@ -64,6 +77,7 @@ const props = defineProps<Props>();
 const emit = defineEmits(["update", "save", "updateImageData", "generateImageOnlyImage"]);
 
 const isDragging = ref(false);
+const mediaLibraryRef = ref<MediaLibraryDialogExposed | null>(null);
 
 const update = (path: string, value: unknown) => {
   emit("update", path, value);
@@ -172,5 +186,29 @@ const handleDrop = (event: DragEvent) => {
     };
     reader.readAsArrayBuffer(file);
   }
+};
+
+const openMediaLibrary = async () => {
+  if (mediaLibraryRef.value) {
+    await mediaLibraryRef.value.open();
+  }
+};
+
+const selectScriptImage = (image: ProjectScriptImage) => {
+  const projectRelativePath = image.projectRelativePath.startsWith("./")
+    ? image.projectRelativePath
+    : `./${image.projectRelativePath.replace(/^\/+/u, "")}`;
+
+  const imageData: MulmoImageAsset = {
+    type: "image",
+    source: {
+      kind: "path",
+      path: projectRelativePath,
+    },
+  };
+
+  emit("updateImageData", imageData, () => {
+    emit("generateImageOnlyImage");
+  });
 };
 </script>
