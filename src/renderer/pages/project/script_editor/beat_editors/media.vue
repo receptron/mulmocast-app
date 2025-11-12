@@ -58,6 +58,7 @@ import type { MulmoBeat, MulmoImageAsset } from "mulmocast/browser";
 import { isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 
 import { notifyError } from "@/lib/notification";
+import { readFileAsArrayBuffer, type BinaryFileData } from "@/lib/file";
 import { useMediaUrl } from "../../composable/media_url";
 import MediaLibraryDialog, {
   type MediaLibraryDialogExposed,
@@ -133,21 +134,6 @@ const videoSubtypeToExtensions = {
 };
 
 const maxSizeMB = 50;
-
-interface BinaryFileData {
-  name: string;
-  size: number;
-  type: string;
-  buffer: ArrayBuffer | Uint8Array;
-}
-
-const readFileAsArrayBuffer = (file: File) =>
-  new Promise<ArrayBuffer>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as ArrayBuffer);
-    reader.onerror = () => reject(reader.error ?? new Error("Failed to read file"));
-    reader.readAsArrayBuffer(file);
-  });
 
 const processMediaFile = async (fileData: BinaryFileData) => {
   const maxSize = maxSizeMB * 1024 * 1024;

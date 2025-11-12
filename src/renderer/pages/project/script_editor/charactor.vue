@@ -148,6 +148,7 @@ import MediaModal from "@/components/media_modal.vue";
 import { Card } from "@/components/ui/card";
 import { Button, Label, Textarea, Input } from "@/components/ui";
 import { bufferToUrl } from "@/lib/utils";
+import { readFileAsArrayBuffer, type BinaryFileData } from "@/lib/file";
 
 import CharactorSelector from "./charactor_selector.vue";
 import MediaLibraryDialog, {
@@ -183,21 +184,6 @@ const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 
 const imageRefs = ref<Record<string, string>>({});
 const maxSizeMB = 50;
-
-interface BinaryFileData {
-  name: string;
-  size: number;
-  type: string;
-  buffer: ArrayBuffer | Uint8Array;
-}
-
-const readFileAsArrayBuffer = (file: File) =>
-  new Promise<ArrayBuffer>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as ArrayBuffer);
-    reader.onerror = () => reject(reader.error ?? new Error("Failed to read file"));
-    reader.readAsArrayBuffer(file);
-  });
 
 const mediaLibraryRef = ref<MediaLibraryDialogExposed | null>(null);
 const activeImageKey = ref<string | null>(null);
