@@ -436,9 +436,9 @@ const lang = {
         tabLabel: "Materials",
         tabLabelShort: "Materials",
         mode: "Materials",
-        modeDescription: "Manage materials used in the presentation",
+        modeDescription: "Manage materials used in your presentation",
         description:
-          'Use materials to keep AI-generated visuals consistent. Create materials with an "image generation prompt" or add your own files. Then, in each BEAT, specify "{key}" in "{imageParamsImages}".',
+          'Use materials to keep the appearance of AI-generated images consistent. Materials can include not only characters but also backgrounds and props. Create materials with an "image generation prompt" or add your own image files. Then, in each BEAT, specify the "{key}" in the "{imageParamsImages}" section.',
         imageGenerationDisabled: {
           needPrompt: 'Please enter "{imagePromptLabel}"',
           needValidScript:
