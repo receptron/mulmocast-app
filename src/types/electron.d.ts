@@ -8,6 +8,14 @@ export interface ElectronAPI {
   mulmoTest: (option: unknown) => Promise<void>;
   mulmoHandler: (method: string, ...args: unknown[]) => Promise<unknown>;
   onProgress: (callback: (event: IpcRendererEvent, data: MulmoProgressLog) => void) => void;
+  dialog: {
+    openFile: () => Promise<string | null>;
+  };
+  file: {
+    readBinary: (
+      filePath: string,
+    ) => Promise<{ name: string; size: number; type: string; buffer: ArrayBuffer } | null>;
+  };
   project: {
     list: () => Promise<Project[]>;
     create: (title: string, lang: string, onboardProject: number) => Promise<Project>;

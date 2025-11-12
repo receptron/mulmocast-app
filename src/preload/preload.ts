@@ -6,6 +6,14 @@ import { contextBridge, ipcRenderer } from "electron";
 export interface ElectronAPI {
   mulmoHandler: (method: string, ...args: unknown[]) => Promise<unknown>;
   onProgress: (callback: (...args: unknown[]) => void) => void;
+  dialog: {
+    openFile: () => Promise<string | null>;
+  };
+  file: {
+    readBinary: (
+      filePath: string,
+    ) => Promise<{ name: string; size: number; type: string; buffer: ArrayBuffer } | null>;
+  };
   project: {
     list: () => Promise<unknown>;
     create: (title: string, lang: string, onboardProject: number) => Promise<unknown>;
@@ -30,6 +38,12 @@ export interface ElectronAPI {
 const api: ElectronAPI = {
   mulmoHandler: (method: string, ...args: unknown[]) => ipcRenderer.invoke("mulmoHandler", method, ...args),
   onProgress: (callback: (...args: unknown[]) => void) => ipcRenderer.on("progress-update", callback),
+  dialog: {
+    openFile: () => ipcRenderer.invoke("dialog:openFile"),
+  },
+  file: {
+    readBinary: (filePath: string) => ipcRenderer.invoke("file:readBinary", filePath),
+  },
   project: {
     list: () => ipcRenderer.invoke("project:list"),
     create: (title: string, lang: string, onboardProject: number) =>
