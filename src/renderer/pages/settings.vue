@@ -144,6 +144,7 @@ import LlmSettings from "@/components/llm_settings.vue";
 import ApiKeyInput from "@/components/api_key_input.vue";
 
 import { notifySuccess, notifyError } from "@/lib/notification";
+import { LlmConfigs } from "../../types/index";
 import {
   ENV_KEYS,
   languages,
@@ -174,20 +175,6 @@ const isInitialLoad = ref(true);
 const selectedUserLevel = ref("beginner");
 
 const selectedLLM = ref("openAIAgent");
-
-type LlmConfigOllama = { url: string; model: string };
-type LlmConfigOpenAI = { model: string };
-type LlmConfigGemini = { model: string };
-type LlmConfigAnthropic = { model: string };
-type LlmConfigGroq = { model: string };
-
-type LlmConfigs = {
-  ollama: LlmConfigOllama;
-  openai: LlmConfigOpenAI;
-  gemini: LlmConfigGemini;
-  anthropic: LlmConfigAnthropic;
-  groq: LlmConfigGroq;
-};
 
 const llmConfigs = ref<LlmConfigs>({
   ollama: { ...LLM_OLLAMA_DEFAULT_CONFIG },
