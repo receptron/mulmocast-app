@@ -87,6 +87,76 @@ export const saveProjectScript = async (projectId: string, data: Partial<MulmoSc
   return await writeJsonFile(getProjectScriptPath(projectId), data);
 };
 
+export type ProjectScriptMediaType = "image" | "movie";
+
+export interface ProjectScriptMedia {
+  fileName: string;
+  fullPath: string;
+  projectRelativePath: string;
+  type: ProjectScriptMediaType;
+  mimeType: string;
+  binaryData: ArrayBuffer;
+}
+
+const scriptMediaNamePattern = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+){5}\.(png|mov)$/i;
+
+const scriptMediaExtensionMap: Record<string, { type: ProjectScriptMediaType; mimeType: string }> = {
+  ".png": { type: "image", mimeType: "image/png" },
+  ".mov": { type: "movie", mimeType: "video/quicktime" },
+};
+
+export const listProjectScriptMedia = async (projectId: string): Promise<ProjectScriptMedia[]> => {
+  const mediaDirectory = path.join(getProjectPath(projectId), "output", "images", "script");
+
+  try {
+    const entries = await fs.readdir(mediaDirectory, { withFileTypes: true });
+
+    const mediaItems = await Promise.all(
+      entries
+        .filter((entry) => entry.isFile() && scriptMediaNamePattern.test(entry.name))
+        .map(async (entry) => {
+          const fileName = entry.name;
+          const fullPath = path.join(mediaDirectory, fileName);
+          const extension = path.extname(fileName).toLowerCase();
+          const metadata = scriptMediaExtensionMap[extension];
+
+          if (metadata === undefined) {
+            return null;
+          }
+
+          try {
+            const fileBuffer = await fs.readFile(fullPath);
+            const binaryData = fileBuffer.buffer.slice(
+              fileBuffer.byteOffset,
+              fileBuffer.byteOffset + fileBuffer.byteLength,
+            );
+
+            return {
+              fileName,
+              fullPath,
+              projectRelativePath: `./output/images/script/${fileName}`,
+              type: metadata.type,
+              mimeType: metadata.mimeType,
+              binaryData,
+            } satisfies ProjectScriptMedia;
+          } catch (readError) {
+            GraphAILogger.error(`Failed to load script media: ${fullPath}`, readError);
+            return null;
+          }
+        }),
+    );
+
+    return mediaItems
+      .filter((media): media is ProjectScriptMedia => media !== null)
+      .sort((a, b) => b.fileName.localeCompare(a.fileName));
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+      GraphAILogger.error("Failed to list project script media:", error);
+    }
+    return [];
+  }
+};
+
 const generateId = (): string => {
   const dateStr = dayjs().format("YYYYMMDD");
   const uuid = crypto.randomUUID().replace(/-/g, "").substring(0, 8);
