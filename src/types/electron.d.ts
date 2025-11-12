@@ -1,7 +1,7 @@
 import type { Project, ProjectMetadata, MulmoProgressLog } from "./index";
 import type { MulmoScript } from "mulmocast";
 import type { IpcRendererEvent } from "electron";
-import type { Settings } from "../main/settings_manager";
+import type { Settings } from "../types/index";
 
 export interface ElectronAPI {
   openFile: () => Promise<string | null>;
