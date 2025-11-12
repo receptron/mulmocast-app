@@ -119,7 +119,6 @@ export const listProjectScriptImages = async (projectId: string): Promise<Projec
 
             return {
               fileName,
-              fullPath,
               projectRelativePath: `./output/images/script/${fileName}`,
               data,
               mediaType: mediaConfig.mediaType,

@@ -18,7 +18,7 @@
             <template v-else-if="mediaItems.length">
               <button
                 v-for="media in mediaItems"
-                :key="media.fullPath"
+                :key="media.fileName"
                 type="button"
                 @click="handleSelect(media)"
                 class="border-border hover:bg-accent/50 focus-visible:ring-ring group flex flex-col gap-2 rounded-lg border p-3 text-left transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -67,7 +67,6 @@ const { t } = useI18n();
 
 export interface ProjectScriptMedia {
   fileName: string;
-  fullPath: string;
   projectRelativePath: string;
   data: ArrayBuffer;
   mediaType: "image" | "movie";
@@ -153,7 +152,7 @@ const fetchScriptMedia = async () => {
         .map((media) => {
           const arrayBuffer = toArrayBuffer(media.data);
           if (!arrayBuffer) {
-            console.warn("Received invalid media data for", media.fullPath);
+            console.warn("Received invalid media data for", media.fileName);
             return null;
           }
           const blob = new Blob([arrayBuffer], { type: media.mimeType });

@@ -82,7 +82,6 @@ export type MediaType = "image" | "movie";
 
 export type ProjectScriptMedia = {
   fileName: string;
-  fullPath: string;
   projectRelativePath: string;
   data: ArrayBuffer;
   mediaType: MediaType;
