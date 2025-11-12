@@ -464,13 +464,19 @@ const countOfBeats = computed(() => {
 });
 
 const update = (index: number, path: string, value: unknown) => {
-  const set = (obj: Record<string, unknown>, keys: string[], val: unknown): Record<string, unknown> =>
-    keys.length === 1
-      ? { ...obj, [keys[0]]: val }
-      : {
-          ...obj,
-          [keys[0]]: set(obj[keys[0]] as Record<string, unknown>, keys.slice(1), val),
-        };
+  const set = (obj: Record<string, unknown>, keys: string[], val: unknown): Record<string, unknown> => {
+    if (keys.length === 1) {
+      if (val === undefined) {
+        const { [keys[0]]: __, ...rest } = obj;
+        return rest;
+      }
+      return { ...obj, [keys[0]]: val };
+    }
+    return {
+      ...obj,
+      [keys[0]]: set(obj[keys[0]] as Record<string, unknown>, keys.slice(1), val),
+    };
+  };
   const newBeat = set(props.mulmoScript.beats[index], path.split("."), value);
   const newBeats = [...props.mulmoScript.beats.slice(0, index), newBeat, ...props.mulmoScript.beats.slice(index + 1)];
 
