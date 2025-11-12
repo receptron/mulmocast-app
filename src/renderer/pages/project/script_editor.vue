@@ -467,7 +467,7 @@ const update = (index: number, path: string, value: unknown) => {
   const set = (obj: Record<string, unknown>, keys: string[], val: unknown): Record<string, unknown> => {
     if (keys.length === 1) {
       if (val === undefined) {
-        const { [keys[0]]: _, ...rest } = obj;
+        const { [keys[0]]: __, ...rest } = obj;
         return rest;
       }
       return { ...obj, [keys[0]]: val };
