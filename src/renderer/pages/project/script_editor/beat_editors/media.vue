@@ -44,18 +44,15 @@
     </div>
 
     <MediaLibraryDialog
-      :open="isLibraryOpen"
-      :images="scriptImages"
-      :is-loading="isLoadingImages"
-      :load-error="imagesLoadError"
-      @update:open="handleLibraryOpenChange"
+      ref="mediaLibraryRef"
+      :project-id="projectId"
       @select="selectScriptImage"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from "vue";
+import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { Label, Input, Button } from "@/components/ui";
 import type { MulmoBeat, MulmoImageAsset } from "mulmocast/browser";
@@ -63,7 +60,10 @@ import { isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 
 import { notifyError } from "@/lib/notification";
 import { useMediaUrl } from "../../composable/media_url";
-import MediaLibraryDialog from "./media_library_dialog.vue";
+import MediaLibraryDialog, {
+  type MediaLibraryDialogExposed,
+  type ProjectScriptImage,
+} from "./media_library_dialog.vue";
 
 import { sleep } from "graphai";
 import { useI18n } from "vue-i18n";
@@ -81,44 +81,7 @@ const props = defineProps<Props>();
 const emit = defineEmits(["update", "save", "updateImageData", "generateImageOnlyImage"]);
 
 const isDragging = ref(false);
-
-export interface ProjectScriptImage {
-  fileName: string;
-  fullPath: string;
-  projectRelativePath: string;
-  imageData: ArrayBuffer;
-}
-
-export interface ScriptImageWithPreview extends ProjectScriptImage {
-  previewUrl: string;
-}
-
-const scriptImages = ref<ScriptImageWithPreview[]>([]);
-const isLibraryOpen = ref(false);
-const isLoadingImages = ref(false);
-const imagesLoadError = ref<string | null>(null);
-
-const previewMimeType = "image/png";
-
-const clearScriptImages = () => {
-  scriptImages.value.forEach((image) => {
-    URL.revokeObjectURL(image.previewUrl);
-  });
-  scriptImages.value = [];
-};
-
-const toArrayBuffer = (data: unknown): ArrayBuffer | null => {
-  if (data instanceof ArrayBuffer) {
-    return data;
-  }
-  if (ArrayBuffer.isView(data)) {
-    return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
-  }
-  if (Array.isArray(data)) {
-    return Uint8Array.from(data).buffer;
-  }
-  return null;
-};
+const mediaLibraryRef = ref<MediaLibraryDialogExposed | null>(null);
 
 const update = (path: string, value: unknown) => {
   emit("update", path, value);
@@ -229,62 +192,10 @@ const handleDrop = (event: DragEvent) => {
   }
 };
 
-const fetchScriptImages = async () => {
-  const id = projectId.value;
-  if (!id) {
-    clearScriptImages();
-    return;
-  }
-
-  isLoadingImages.value = true;
-  imagesLoadError.value = null;
-
-  try {
-    const response = (await window.electronAPI.project.listScriptImages(id)) as
-      | ProjectScriptImage[]
-      | null
-      | undefined;
-    if (Array.isArray(response)) {
-      clearScriptImages();
-      const mapped = response
-        .map((image) => {
-          const arrayBuffer = toArrayBuffer(image.imageData);
-          if (!arrayBuffer) {
-            console.warn("Received invalid image data for", image.fullPath);
-            return null;
-          }
-          const blob = new Blob([arrayBuffer], { type: previewMimeType });
-          const previewUrl = URL.createObjectURL(blob);
-          return {
-            ...image,
-            imageData: arrayBuffer,
-            previewUrl,
-          } satisfies ScriptImageWithPreview;
-        })
-        .filter((image): image is ScriptImageWithPreview => image !== null);
-
-      scriptImages.value = mapped;
-    } else {
-      clearScriptImages();
-    }
-  } catch (error) {
-    console.error("Failed to load project script images", error);
-    imagesLoadError.value = t("beat.mediaFile.libraryLoadError");
-    clearScriptImages();
-  } finally {
-    isLoadingImages.value = false;
-  }
-};
-
-const handleLibraryOpenChange = async (open: boolean) => {
-  isLibraryOpen.value = open;
-  if (open) {
-    await fetchScriptImages();
-  }
-};
-
 const openMediaLibrary = async () => {
-  await handleLibraryOpenChange(true);
+  if (mediaLibraryRef.value) {
+    await mediaLibraryRef.value.open();
+  }
 };
 
 const selectScriptImage = (image: ProjectScriptImage) => {
@@ -300,14 +211,8 @@ const selectScriptImage = (image: ProjectScriptImage) => {
     },
   };
 
-  isLibraryOpen.value = false;
-
   emit("updateImageData", imageData, () => {
     emit("generateImageOnlyImage");
   });
 };
-
-onBeforeUnmount(() => {
-  clearScriptImages();
-});
 </script>

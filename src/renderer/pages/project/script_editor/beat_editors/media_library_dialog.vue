@@ -1,5 +1,5 @@
 <template>
-  <Dialog :open="open" @update:open="handleOpenChange">
+  <Dialog :open="isOpen" @update:open="handleDialogOpenChange">
     <DialogContent class="sm:max-w-xl">
       <DialogHeader>
         <DialogTitle>{{ t("beat.mediaFile.libraryTitle") }}</DialogTitle>
@@ -47,31 +47,179 @@
 </template>
 
 <script setup lang="ts">
+import { onBeforeUnmount, ref, watch } from "vue";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui";
 import { useI18n } from "vue-i18n";
 
-import type { ScriptImageWithPreview } from "./media.vue";
-
 const { t } = useI18n();
 
-defineProps<{
-  open: boolean;
-  images: ScriptImageWithPreview[];
-  isLoading: boolean;
-  loadError: string | null;
+export interface ProjectScriptImage {
+  fileName: string;
+  fullPath: string;
+  projectRelativePath: string;
+  imageData: ArrayBuffer;
+}
+
+interface ScriptImageWithPreview extends ProjectScriptImage {
+  previewUrl: string;
+}
+
+const props = defineProps<{
+  projectId: string | null | undefined;
 }>();
 
 const emit = defineEmits<{
-  (event: "update:open", open: boolean): void;
-  (event: "select", image: ScriptImageWithPreview): void;
+  (event: "select", image: ProjectScriptImage): void;
 }>();
 
-const handleOpenChange = (open: boolean) => {
-  emit("update:open", open);
+const isOpen = ref(false);
+const isLoading = ref(false);
+const loadError = ref<string | null>(null);
+const images = ref<ScriptImageWithPreview[]>([]);
+let fetchRequestId = 0;
+
+const previewMimeType = "image/png";
+
+const toArrayBuffer = (data: unknown): ArrayBuffer | null => {
+  if (data instanceof ArrayBuffer) {
+    return data;
+  }
+  if (ArrayBuffer.isView(data)) {
+    return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
+  }
+  if (Array.isArray(data)) {
+    return Uint8Array.from(data).buffer;
+  }
+  return null;
+};
+
+const clearImages = () => {
+  images.value.forEach((image) => {
+    URL.revokeObjectURL(image.previewUrl);
+  });
+  images.value = [];
+};
+
+const fetchScriptImages = async () => {
+  const requestId = ++fetchRequestId;
+
+  if (!props.projectId) {
+    clearImages();
+    loadError.value = null;
+    if (requestId === fetchRequestId) {
+      isLoading.value = false;
+    }
+    return;
+  }
+
+  isLoading.value = true;
+  loadError.value = null;
+
+  try {
+    const response = (await window.electronAPI.project.listScriptImages(props.projectId)) as
+      | ProjectScriptImage[]
+      | null
+      | undefined;
+
+    if (requestId !== fetchRequestId) {
+      return;
+    }
+
+    if (Array.isArray(response)) {
+      clearImages();
+      const mapped = response
+        .map((image) => {
+          const arrayBuffer = toArrayBuffer(image.imageData);
+          if (!arrayBuffer) {
+            console.warn("Received invalid image data for", image.fullPath);
+            return null;
+          }
+          const blob = new Blob([arrayBuffer], { type: previewMimeType });
+          const previewUrl = URL.createObjectURL(blob);
+          return {
+            ...image,
+            imageData: arrayBuffer,
+            previewUrl,
+          } satisfies ScriptImageWithPreview;
+        })
+        .filter((image): image is ScriptImageWithPreview => image !== null);
+
+      images.value = mapped;
+    } else {
+      clearImages();
+    }
+  } catch (error) {
+    console.error("Failed to load project script images", error);
+    if (requestId === fetchRequestId) {
+      loadError.value = t("beat.mediaFile.libraryLoadError");
+      clearImages();
+    }
+  } finally {
+    if (requestId === fetchRequestId) {
+      isLoading.value = false;
+    }
+  }
+};
+
+const closeDialog = () => {
+  if (!isOpen.value) {
+    return;
+  }
+  fetchRequestId += 1;
+  isOpen.value = false;
+  isLoading.value = false;
+  loadError.value = null;
+  clearImages();
+};
+
+const openDialog = async () => {
+  if (!isOpen.value) {
+    isOpen.value = true;
+  }
+  await fetchScriptImages();
+};
+
+const handleDialogOpenChange = (open: boolean) => {
+  if (!open) {
+    closeDialog();
+  }
 };
 
 const handleSelect = (image: ScriptImageWithPreview) => {
-  emit("select", image);
+  emit("select", {
+    fileName: image.fileName,
+    fullPath: image.fullPath,
+    projectRelativePath: image.projectRelativePath,
+    imageData: image.imageData,
+  });
+  closeDialog();
 };
+
+watch(
+  () => props.projectId,
+  () => {
+    if (isOpen.value) {
+      void fetchScriptImages();
+    } else {
+      fetchRequestId += 1;
+      clearImages();
+      loadError.value = null;
+    }
+  },
+);
+
+onBeforeUnmount(() => {
+  clearImages();
+});
+
+export interface MediaLibraryDialogExposed {
+  open: () => Promise<void>;
+  close: () => void;
+}
+
+defineExpose<MediaLibraryDialogExposed>({
+  open: openDialog,
+  close: closeDialog,
+});
 </script>
