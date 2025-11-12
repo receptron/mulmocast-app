@@ -36,69 +36,34 @@
       <Button @click="submitUrlImage" :disabled="!fetchEnable" class="shrink-0">
         {{ t("ui.actions.fetch") }}
       </Button>
+    </div>
+    <div class="mt-2">
       <Button @click="openMediaLibrary" type="button" class="shrink-0">
         {{ t("ui.actions.openMediaLibrary") }}
       </Button>
     </div>
 
-    <Dialog :open="isLibraryOpen" @update:open="handleLibraryOpenChange">
-      <DialogContent class="sm:max-w-xl">
-        <DialogHeader>
-          <DialogTitle>{{ t("beat.mediaFile.libraryTitle") }}</DialogTitle>
-          <DialogDescription>
-            {{ t("beat.mediaFile.libraryDescription") }}
-          </DialogDescription>
-        </DialogHeader>
-        <div class="flex h-[360px] flex-col gap-4">
-          <ScrollArea class="h-full rounded-md border">
-            <div class="grid gap-4 p-4 sm:grid-cols-2">
-              <template v-if="isLoadingImages">
-                <div class="col-span-full flex items-center justify-center py-8 text-sm text-muted-foreground">
-                  {{ t("ui.status.loading") }}
-                </div>
-              </template>
-              <template v-else-if="scriptImages.length">
-                <button
-                  v-for="image in scriptImages"
-                  :key="image.fullPath"
-                  type="button"
-                  @click="selectScriptImage(image)"
-                  class="border-border hover:bg-accent/50 focus-visible:ring-ring group flex flex-col gap-2 rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-                >
-                  <div class="aspect-video w-full overflow-hidden rounded-md bg-muted">
-                    <img
-                      :src="image.previewUrl"
-                      :alt="image.fileName"
-                      class="h-full w-full object-cover transition-transform group-hover:scale-[1.02]"
-                    />
-                  </div>
-                  <p class="truncate text-sm font-medium">{{ image.fileName }}</p>
-                  <p class="text-xs text-muted-foreground">{{ image.projectRelativePath }}</p>
-                </button>
-              </template>
-              <template v-else>
-                <div class="col-span-full flex items-center justify-center py-8 text-sm text-muted-foreground">
-                  {{ imagesLoadError || t("beat.mediaFile.libraryEmpty") }}
-                </div>
-              </template>
-            </div>
-          </ScrollArea>
-        </div>
-      </DialogContent>
-    </Dialog>
+    <MediaLibraryDialog
+      :open="isLibraryOpen"
+      :images="scriptImages"
+      :is-loading="isLoadingImages"
+      :load-error="imagesLoadError"
+      @update:open="handleLibraryOpenChange"
+      @select="selectScriptImage"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from "vue";
 import { useRoute } from "vue-router";
-import { Label, Input, Button, ScrollArea } from "@/components/ui";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Label, Input, Button } from "@/components/ui";
 import type { MulmoBeat, MulmoImageAsset } from "mulmocast/browser";
 import { isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 
 import { notifyError } from "@/lib/notification";
 import { useMediaUrl } from "../../composable/media_url";
+import MediaLibraryDialog from "./media_library_dialog.vue";
 
 import { sleep } from "graphai";
 import { useI18n } from "vue-i18n";
@@ -117,14 +82,14 @@ const emit = defineEmits(["update", "save", "updateImageData", "generateImageOnl
 
 const isDragging = ref(false);
 
-interface ProjectScriptImage {
+export interface ProjectScriptImage {
   fileName: string;
   fullPath: string;
   projectRelativePath: string;
   imageData: ArrayBuffer;
 }
 
-interface ScriptImageWithPreview extends ProjectScriptImage {
+export interface ScriptImageWithPreview extends ProjectScriptImage {
   previewUrl: string;
 }
 

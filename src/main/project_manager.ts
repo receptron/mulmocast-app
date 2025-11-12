@@ -96,7 +96,7 @@ export interface ProjectScriptImage {
 
 export const listProjectScriptImages = async (projectId: string): Promise<ProjectScriptImage[]> => {
   const imagesDirectory = path.join(getProjectPath(projectId), "output", "images", "script");
-  const scriptImageNamePattern = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+){4}\.png$/i;
+  const scriptImageNamePattern = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+){5}\.png$/i;
 
   try {
     const entries = await fs.readdir(imagesDirectory, { withFileTypes: true });
