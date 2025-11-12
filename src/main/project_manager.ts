@@ -96,7 +96,7 @@ export interface ProjectScriptImage {
 
 export const listProjectScriptImages = async (projectId: string): Promise<ProjectScriptImage[]> => {
   const imagesDirectory = path.join(getProjectPath(projectId), "output", "images", "script");
-  const scriptImageNamePattern = /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+){5}\.png$/i;
+  const scriptImageNamePattern = /^[A-Z0-9]+(?:-[A-Z0-9]+){5}\.png$/i;
 
   try {
     const entries = await fs.readdir(imagesDirectory, { withFileTypes: true });
@@ -132,7 +132,7 @@ export const listProjectScriptImages = async (projectId: string): Promise<Projec
       .filter((image): image is ProjectScriptImage => image !== null)
       .sort((a, b) => b.fileName.localeCompare(a.fileName));
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+    if ("code" in error && error.code !== "ENOENT") {
       GraphAILogger.error("Failed to list project script images:", error);
     }
     return [];

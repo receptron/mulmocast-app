@@ -43,11 +43,7 @@
       </Button>
     </div>
 
-    <MediaLibraryDialog
-      ref="mediaLibraryRef"
-      :project-id="projectId"
-      @select="selectScriptImage"
-    />
+    <MediaLibraryDialog ref="mediaLibraryRef" :project-id="projectId" @select="selectScriptImage" />
   </div>
 </template>
 

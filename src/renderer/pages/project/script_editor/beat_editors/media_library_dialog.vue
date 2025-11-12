@@ -11,7 +11,7 @@
         <ScrollArea class="h-full rounded-md border">
           <div class="grid gap-4 p-4 sm:grid-cols-2">
             <template v-if="isLoading">
-              <div class="col-span-full flex items-center justify-center py-8 text-sm text-muted-foreground">
+              <div class="text-muted-foreground col-span-full flex items-center justify-center py-8 text-sm">
                 {{ t("ui.status.loading") }}
               </div>
             </template>
@@ -21,9 +21,9 @@
                 :key="image.fullPath"
                 type="button"
                 @click="handleSelect(image)"
-                class="border-border hover:bg-accent/50 focus-visible:ring-ring group flex flex-col gap-2 rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                class="border-border hover:bg-accent/50 focus-visible:ring-ring group flex flex-col gap-2 rounded-lg border p-3 text-left transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
-                <div class="aspect-video w-full overflow-hidden rounded-md bg-muted">
+                <div class="bg-muted aspect-video w-full overflow-hidden rounded-md">
                   <img
                     :src="image.previewUrl"
                     :alt="image.fileName"
@@ -31,11 +31,11 @@
                   />
                 </div>
                 <p class="truncate text-sm font-medium">{{ image.fileName }}</p>
-                <p class="text-xs text-muted-foreground">{{ image.projectRelativePath }}</p>
+                <p class="text-muted-foreground text-xs">{{ image.projectRelativePath }}</p>
               </button>
             </template>
             <template v-else>
-              <div class="col-span-full flex items-center justify-center py-8 text-sm text-muted-foreground">
+              <div class="text-muted-foreground col-span-full flex items-center justify-center py-8 text-sm">
                 {{ loadError || t("beat.mediaFile.libraryEmpty") }}
               </div>
             </template>
