@@ -300,8 +300,7 @@ const processReferenceImage = async (fileData: BinaryFileData, imageKey: string)
   }
 
   const extension = fileType === "jpeg" ? "jpg" : fileType;
-  const uint8Array =
-    fileData.buffer instanceof Uint8Array ? fileData.buffer : new Uint8Array(fileData.buffer);
+  const uint8Array = fileData.buffer instanceof Uint8Array ? fileData.buffer : new Uint8Array(fileData.buffer);
   const path = await window.electronAPI.mulmoHandler(
     "mulmoReferenceImageUpload",
     props.projectId,

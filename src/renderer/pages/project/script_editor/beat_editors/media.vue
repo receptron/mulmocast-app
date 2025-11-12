@@ -161,9 +161,7 @@ const processMediaFile = async (fileData: BinaryFileData) => {
   }
 
   const extension =
-    imageType === "image"
-      ? fileType
-      : videoSubtypeToExtensions[fileType as keyof typeof videoSubtypeToExtensions];
+    imageType === "image" ? fileType : videoSubtypeToExtensions[fileType as keyof typeof videoSubtypeToExtensions];
   if (!extension) {
     notifyError(t("notify.error.media.unsupportedType", { fileType }));
     return;
@@ -171,8 +169,7 @@ const processMediaFile = async (fileData: BinaryFileData) => {
 
   update("image.type", imageType);
 
-  const uint8Array =
-    fileData.buffer instanceof Uint8Array ? fileData.buffer : new Uint8Array(fileData.buffer);
+  const uint8Array = fileData.buffer instanceof Uint8Array ? fileData.buffer : new Uint8Array(fileData.buffer);
   const path = await window.electronAPI.mulmoHandler(
     "mulmoImageUpload",
     projectId.value,
