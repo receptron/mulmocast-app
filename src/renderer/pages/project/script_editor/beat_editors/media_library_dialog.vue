@@ -62,16 +62,9 @@ import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui";
 import { useI18n } from "vue-i18n";
+import { ProjectScriptMedia } from "../../../../../types/index";
 
 const { t } = useI18n();
-
-export interface ProjectScriptMedia {
-  fileName: string;
-  projectRelativePath: string;
-  data: ArrayBuffer;
-  mediaType: "image" | "movie";
-  mimeType: string;
-}
 
 interface ScriptMediaWithPreview extends ProjectScriptMedia {
   previewUrl: string;
