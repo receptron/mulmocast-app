@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, ref, watch } from "vue";
+import { computed, onBeforeUnmount, ref, watch } from "vue";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui";
 import { useI18n } from "vue-i18n";
@@ -80,6 +80,7 @@ interface ScriptMediaWithPreview extends ProjectScriptMedia {
 
 const props = defineProps<{
   projectId: string | null | undefined;
+  allowedMediaTypes?: ("image" | "movie")[];
 }>();
 
 const emit = defineEmits<{
@@ -91,6 +92,14 @@ const isLoading = ref(false);
 const loadError = ref<string | null>(null);
 const mediaItems = ref<ScriptMediaWithPreview[]>([]);
 let fetchRequestId = 0;
+
+const allowedMediaTypes = computed<("image" | "movie")[]>(() => {
+  const types = props.allowedMediaTypes;
+  if (!types || types.length === 0) {
+    return ["image", "movie"];
+  }
+  return types;
+});
 
 const toArrayBuffer = (data: unknown): ArrayBuffer | null => {
   if (data instanceof ArrayBuffer) {
@@ -140,6 +149,7 @@ const fetchScriptMedia = async () => {
     if (Array.isArray(response)) {
       clearMediaItems();
       const mapped = response
+        .filter((media) => allowedMediaTypes.value.includes(media.mediaType))
         .map((media) => {
           const arrayBuffer = toArrayBuffer(media.data);
           if (!arrayBuffer) {

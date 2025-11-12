@@ -114,7 +114,12 @@
     </div>
   </div>
   <MediaModal v-model:open="modalOpen" type="image" :src="modalSrc" />
-  <MediaLibraryDialog ref="mediaLibraryRef" :project-id="props.projectId" @select="selectScriptImage" />
+  <MediaLibraryDialog
+    ref="mediaLibraryRef"
+    :project-id="props.projectId"
+    :allowed-media-types="['image']"
+    @select="selectScriptImage"
+  />
 </template>
 
 <script setup lang="ts">
