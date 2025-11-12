@@ -89,6 +89,18 @@
       </div>
     </div>
 
+    <div class="mb-4 flex items-center gap-2" v-if="beatType === 'imagePrompt' && isPro">
+      <Label class="mb-1 block">{{ t("ui.common.duration") }}</Label>
+
+      <Input
+        class="w-28"
+        :placeholder="t('ui.common.duration')"
+        :model-value="beat?.duration"
+        @update:model-value="(value) => update('duration', value === '' ? undefined : Number(value))"
+        @blur="justSaveAndPushToHistory"
+      />
+    </div>
+
     <div class="grid grid-cols-2 gap-4">
       <!-- left: Edit area -->
       <div class="flex flex-col gap-4">

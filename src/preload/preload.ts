@@ -6,7 +6,6 @@ import { contextBridge, ipcRenderer } from "electron";
 export interface ElectronAPI {
   mulmoHandler: (method: string, ...args: unknown[]) => Promise<unknown>;
   onProgress: (callback: (...args: unknown[]) => void) => void;
-  getEnv: () => Promise<unknown>;
   project: {
     list: () => Promise<unknown>;
     create: (title: string, lang: string, onboardProject: number) => Promise<unknown>;
@@ -31,11 +30,6 @@ export interface ElectronAPI {
 const api: ElectronAPI = {
   mulmoHandler: (method: string, ...args: unknown[]) => ipcRenderer.invoke("mulmoHandler", method, ...args),
   onProgress: (callback: (...args: unknown[]) => void) => ipcRenderer.on("progress-update", callback),
-  getEnv: () =>
-    new Promise((resolve) => {
-      ipcRenderer.once("response-env", (_event, data) => resolve(data));
-      ipcRenderer.send("request-env");
-    }),
   project: {
     list: () => ipcRenderer.invoke("project:list"),
     create: (title: string, lang: string, onboardProject: number) =>

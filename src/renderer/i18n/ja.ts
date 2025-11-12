@@ -679,6 +679,7 @@ const lang = {
       placeholder: "スライドに合わせたjsonデータ",
       stylePlaceholder: "スタイルを選択してください",
     },
+    duration: "再生時間",
   },
 
   // Parameters structure (extracted from project.scriptEditor.*)

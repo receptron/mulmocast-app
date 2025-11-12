@@ -1,14 +1,13 @@
 import type { Project, ProjectMetadata, MulmoProgressLog } from "./index";
 import type { MulmoScript } from "mulmocast";
 import type { IpcRendererEvent } from "electron";
-import type { Settings } from "../main/settings_manager";
+import type { Settings } from "../types/index";
 import type { ProjectScriptImage } from "../main/project_manager";
 
 export interface ElectronAPI {
   mulmoTest: (option: unknown) => Promise<void>;
   mulmoHandler: (method: string, ...args: unknown[]) => Promise<unknown>;
   onProgress: (callback: (event: IpcRendererEvent, data: MulmoProgressLog) => void) => void;
-  getEnv: () => Promise<Record<string, string | undefined>>;
   project: {
     list: () => Promise<Project[]>;
     create: (title: string, lang: string, onboardProject: number) => Promise<Project>;

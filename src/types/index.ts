@@ -51,3 +51,29 @@ export type MulmoError = {
 export type UserLevel = "beginner" | "semiPro" | "pro";
 
 export type Lang = "ja" | "en";
+
+type LlmConfigOllama = { url: string; model: string };
+type LlmConfigOpenAI = { model: string };
+type LlmConfigGemini = { model: string };
+type LlmConfigAnthropic = { model: string };
+type LlmConfigGroq = { model: string };
+
+export type LlmConfigs = {
+  ollama?: LlmConfigOllama;
+  openai?: LlmConfigOpenAI;
+  gemini?: LlmConfigGemini;
+  anthropic?: LlmConfigAnthropic;
+  groq?: LlmConfigGroq;
+};
+
+export type Settings = {
+  APIKEY: Record<string, string>;
+  USE_LANGUAGES: Record<string, boolean>;
+  APP_LANGUAGE?: string;
+  MAIN_LANGUAGE?: string;
+  CHAT_LLM?: string;
+  llmConfigs: LlmConfigs;
+  USER_LEVEL: string;
+  onboardProject: number;
+  DARK_MODE?: string; // Backward compatible
+};
