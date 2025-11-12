@@ -61,9 +61,7 @@ if (!app.isPackaged) {
         (dir) =>
           dir.startsWith("win64-") ||
           dir.startsWith("mac-") ||
-          dir.startsWith("mac_") ||
-          dir.startsWith("mac-arm") ||
-          dir.startsWith("mac_arm"),
+          dir.startsWith("mac_"),
       );
     GraphAILogger.log(`[PUPPETEER] Found version directories: ${versionDirs.join(", ")}`);
 
