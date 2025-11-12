@@ -777,8 +777,7 @@ const lang = {
   presentationStyle: {
     styleTemplate: {
       title: "Style template",
-      description:
-        "Overwrite the style. Be careful as the existing style settings and material settings will be lost.",
+      description: "Overwrite the style. Be careful as the existing style settings and material settings will be lost.",
       note: "Select a style and press '{applyButton}' to reflect changes. The dropdown selection will reset, but the settings will be applied.",
       placeholder: "Please select a style",
     },
