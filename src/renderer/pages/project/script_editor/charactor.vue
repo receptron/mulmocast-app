@@ -37,6 +37,11 @@
                 {{ t("ui.actions.fetch") }}
               </Button>
             </div>
+            <div class="mt-2">
+              <Button @click="() => openMediaLibrary(imageKey)" type="button">
+                {{ t("ui.actions.openMediaLibrary") }}
+              </Button>
+            </div>
           </template>
           <div
             v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'url'"
@@ -107,8 +112,9 @@
         @click="deleteReference(imageKey)"
       />
     </div>
-    <MediaModal v-model:open="modalOpen" type="image" :src="modalSrc" />
   </div>
+  <MediaModal v-model:open="modalOpen" type="image" :src="modalSrc" />
+  <MediaLibraryDialog ref="mediaLibraryRef" :project-id="props.projectId" @select="selectScriptImage" />
 </template>
 
 <script setup lang="ts">
@@ -134,6 +140,10 @@ import { Button, Label, Textarea, Input } from "@/components/ui";
 import { bufferToUrl } from "@/lib/utils";
 
 import CharactorSelector from "./charactor_selector.vue";
+import MediaLibraryDialog, {
+  type MediaLibraryDialogExposed,
+  type ProjectScriptMedia,
+} from "./beat_editors/media_library_dialog.vue";
 
 import { notifyProgress, notifyError } from "@/lib/notification";
 import { useApiErrorNotify } from "@/composables/notify";
@@ -163,6 +173,9 @@ const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 
 const imageRefs = ref<Record<string, string>>({});
 const maxSizeMB = 50;
+
+const mediaLibraryRef = ref<MediaLibraryDialogExposed | null>(null);
+const activeImageKey = ref<string | null>(null);
 
 const loadReference = async () => {
   imageRefs.value = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFiles", props.projectId);
@@ -228,6 +241,35 @@ const addReferenceImage = (key: string, data: MulmoImageMedia | MulmoImagePrompt
 };
 const deleteReference = (key: string) => {
   emit("deleteReferenceImage", key);
+};
+
+const openMediaLibrary = async (imageKey: string) => {
+  activeImageKey.value = imageKey;
+  if (mediaLibraryRef.value) {
+    await mediaLibraryRef.value.open();
+  }
+};
+
+const selectScriptImage = async (media: ProjectScriptMedia) => {
+  if (!activeImageKey.value) {
+    return;
+  }
+  if (media.mediaType !== "image") {
+    notifyError(t("notify.error.media.unsupportedMovie"));
+    activeImageKey.value = null;
+    return;
+  }
+
+  const projectRelativePath = media.projectRelativePath.startsWith("./")
+    ? media.projectRelativePath
+    : `./${media.projectRelativePath.replace(/^\/+/u, "")}`;
+
+  emit("updateImagePath", activeImageKey.value, projectRelativePath);
+  emit("saveMulmo");
+  emit("formatAndPushHistoryMulmoScript");
+  await nextTick();
+  await loadReference();
+  activeImageKey.value = null;
 };
 
 const handleDrop = (event: DragEvent, imageKey: string) => {
