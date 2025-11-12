@@ -57,14 +57,7 @@ if (!app.isPackaged) {
   try {
     const versionDirs = fs
       .readdirSync(chromiumDir)
-      .filter(
-        (dir) =>
-          dir.startsWith("win64-") ||
-          dir.startsWith("mac-") ||
-          dir.startsWith("mac_") ||
-          dir.startsWith("mac-arm") ||
-          dir.startsWith("mac_arm"),
-      );
+      .filter((dir) => dir.startsWith("win64-") || dir.startsWith("mac-") || dir.startsWith("mac_"));
     GraphAILogger.log(`[PUPPETEER] Found version directories: ${versionDirs.join(", ")}`);
 
     if (versionDirs.length < 1) {
