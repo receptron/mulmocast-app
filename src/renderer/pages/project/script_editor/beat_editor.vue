@@ -3,7 +3,7 @@
     <div class="mb-2 flex items-center justify-between">
       <div class="flex items-center gap-3 font-medium">
         <span class="text-base">{{ t("ui.common.beat") }} {{ index + 1 }}</span>
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-1" v-if="false">
           <CircleUserRound class="size-4 opacity-50" />
           <div v-if="beat.speaker && !toggleSpeakerMode" class="group relative">
             <Badge variant="outline" @click="showSpeakerSelector" class="cursor-pointer">
@@ -22,7 +22,7 @@
             </span>
           </div>
         </div>
-        <div v-if="toggleSpeakerMode">
+        <div>
           <SpeakerSelector
             @emitSpeaker="(speaker) => changeSpeaker(speaker)"
             :currentSpeaker="beat.speaker"

@@ -10,13 +10,15 @@
         </SelectItem>
       </SelectContent>
     </Select>
-    <Button size="sm" @click="emitSpeaker" :disabled="disableChange"> {{ t("ui.actions.change") }} </Button>
-    <Button size="sm" @click="cancel"> {{ t("ui.actions.cancel") }} </Button>
+    <div v-if="false">
+      <Button size="sm" @click="emitSpeaker" :disabled="disableChange"> {{ t("ui.actions.change") }} </Button>
+      <Button size="sm" @click="cancel"> {{ t("ui.actions.cancel") }} </Button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ref } from "vue";
@@ -35,6 +37,10 @@ const selectedSpeaker = ref(props.currentSpeaker);
 
 const disableChange = computed(() => {
   return props.currentSpeaker && props.currentSpeaker === selectedSpeaker.value;
+});
+
+watch(selectedSpeaker, () => {
+  emitSpeaker();
 });
 
 const emitSpeaker = () => {
