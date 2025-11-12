@@ -5,14 +5,14 @@ import { ENV_KEYS, LANGUAGE_IDS, I18N_SUPPORTED_LANGUAGES } from "../shared/cons
 
 // Dynamically build the Settings type from ENV_KEYS and APP_SETTINGS
 export type Settings = {
-  APIKEY?: Record<string, string>;
+  APIKEY: Record<string, string>;
   USE_LANGUAGES: Record<string, boolean>;
   APP_LANGUAGE?: string;
   MAIN_LANGUAGE?: string;
   CHAT_LLM?: string;
-  llmConfigs?: Record<string, Record<string, string>>;
-  USER_LEVEL?: string;
-  onboardProject?: number;
+  llmConfigs: Record<string, Record<string, string>>;
+  USER_LEVEL: string;
+  onboardProject: number;
   DARK_MODE?: string; // Backward compatible
 };
 
@@ -25,6 +25,7 @@ export const loadSettings = async (): Promise<Settings> => {
   const settingsPath = getSettingsPath();
   const defaultUseLanguageSet = new Set(I18N_SUPPORTED_LANGUAGES.map((l) => l.id));
   const defaultSettings: Settings = {
+    APIKEY: {},
     USE_LANGUAGES: LANGUAGE_IDS.reduce(
       (acc, lang) => {
         if (defaultUseLanguageSet.has(lang as (typeof I18N_SUPPORTED_LANGUAGES)[number]["id"])) {
@@ -36,6 +37,9 @@ export const loadSettings = async (): Promise<Settings> => {
       },
       {} as Record<string, boolean>,
     ),
+    USER_LEVEL: "beginner",
+    onboardProject: 0,
+    llmConfigs: {},
   };
 
   try {
