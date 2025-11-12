@@ -16,7 +16,7 @@
       @keydown.enter.prevent="selectLocalMedia"
       @keydown.space.prevent="selectLocalMedia"
       draggable="true"
-      class="border-border bg-card text-muted-foreground mt-4 cursor-pointer rounded-md border-2 border-dashed p-6 text-center shadow-sm"
+      class="border-border bg-card text-muted-foreground mt-4 cursor-pointer rounded-md border-2 border-dashed p-6 text-center shadow-sm  whitespace-pre-line"
       :class="
         isDragging
           ? 'border-primary bg-primary/5 text-primary shadow-lg'

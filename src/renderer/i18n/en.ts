@@ -14,7 +14,7 @@ const lang = {
       next: "Next",
 
       // File operations
-      drophere: "Drop file here(Upto {maxSizeMB}MB)",
+      drophere: "Drop file here\nor click to select\n(Up to {maxSizeMB}MB)",
       or: "or",
 
       // Common labels and nouns
