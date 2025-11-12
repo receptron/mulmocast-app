@@ -243,20 +243,6 @@ const createWindow = (splashWindow?: BrowserWindow) => {
     }
   });
 
-  ipcMain.on("request-env", (event) => {
-    void (async () => {
-      const settings = await settingsManager.loadSettings();
-      const envData: Record<string, string | undefined> = {};
-
-      for (const envKey of Object.keys(ENV_KEYS)) {
-        const value = settings?.APIKEY?.[envKey as keyof typeof ENV_KEYS];
-        envData[envKey] = value || process.env[envKey];
-      }
-
-      event.reply("response-env", envData);
-    })();
-  });
-
   const updateCallBack = (response: number) => {
     if (response === 1) {
       GraphAILogger.log("[AutoUpdate] Later selected; navigating to /updateInstall");
