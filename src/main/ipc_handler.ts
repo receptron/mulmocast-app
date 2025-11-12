@@ -1,7 +1,7 @@
 import { ipcMain, dialog, shell, clipboard, autoUpdater, type IpcMainInvokeEvent } from "electron";
 import { mulmoHandler } from "./mulmo/handler";
 import * as projectManager from "./project_manager";
-import * as settingsManager from "./settings_manager";
+import { saveSettings, loadSettings } from "./settings_manager";
 import type { ProjectMetadata, Lang, Settings } from "../types";
 
 export const registerIPCHandler = () => {
@@ -47,10 +47,10 @@ export const registerIPCHandler = () => {
     projectManager.saveProjectScript(id, data),
   );
 
-  ipcMain.handle("settings:get", () => settingsManager.loadSettings());
+  ipcMain.handle("settings:get", () => loadSettings());
 
   ipcMain.handle("settings:set", async (_event: IpcMainInvokeEvent, settings: Settings) => {
-    await settingsManager.saveSettings(settings);
+    await saveSettings(settings);
   });
 
   ipcMain.handle("project:openProjectFolder", async (_event: IpcMainInvokeEvent, id: string) => {
