@@ -94,7 +94,7 @@ import { computed, onBeforeUnmount, ref } from "vue";
 import { useRoute } from "vue-router";
 import { Label, Input, Button, ScrollArea } from "@/components/ui";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import type { MulmoBeat } from "mulmocast/browser";
+import type { MulmoBeat, MulmoImageAsset } from "mulmocast/browser";
 import { isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 
 import { notifyError } from "@/lib/notification";
@@ -323,9 +323,23 @@ const openMediaLibrary = async () => {
 };
 
 const selectScriptImage = (image: ProjectScriptImage) => {
-  console.log("Selected project script image full path:", image.fullPath);
-  console.log("Selected project script image project path:", image.projectRelativePath);
+  const projectRelativePath = image.projectRelativePath.startsWith("./")
+    ? image.projectRelativePath
+    : `./${image.projectRelativePath.replace(/^\/+/u, "")}`;
+
+  const imageData: MulmoImageAsset = {
+    type: "image",
+    source: {
+      kind: "path",
+      path: projectRelativePath,
+    },
+  };
+
   isLibraryOpen.value = false;
+
+  emit("updateImageData", imageData, () => {
+    emit("generateImageOnlyImage");
+  });
 };
 
 onBeforeUnmount(() => {
