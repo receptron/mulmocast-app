@@ -1,15 +1,19 @@
 import { app } from "electron";
 import path from "node:path";
 import fs from "node:fs";
-import { ENV_KEYS, type AppSettingKey, LANGUAGE_IDS, I18N_SUPPORTED_LANGUAGES } from "../shared/constants";
+import { ENV_KEYS, LANGUAGE_IDS, I18N_SUPPORTED_LANGUAGES } from "../shared/constants";
 
 // Dynamically build the Settings type from ENV_KEYS and APP_SETTINGS
 export type Settings = {
   APIKEY?: Record<string, string>;
-} & {
-  [K in AppSettingKey]?: string;
-} & {
   USE_LANGUAGES: Record<string, boolean>;
+  APP_LANGUAGE?: string;
+  MAIN_LANGUAGE?: string;
+  CHAT_LLM?: string;
+  llmConfigs?: Record<string, Record<string, string>>;
+  USER_LEVEL?: string;
+  onboardProject?: number;
+  DARK_MODE?: string; // Backward compatible
 };
 
 const getSettingsPath = (): string => {

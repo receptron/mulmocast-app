@@ -261,7 +261,7 @@ onMounted(async () => {
 const saveSettings = async () => {
   try {
     const settings = await window.electronAPI.settings.get();
-    const { APP_LANGUAGE, MAIN_LANGUAGE, CHAT_LLM, USER_LEVEL, onboardProject } = settings ?? {};
+    const { APP_LANGUAGE, MAIN_LANGUAGE, CHAT_LLM, USER_LEVEL, onboardProject, DARK_MODE } = settings ?? {};
     const data = {
       APIKEY: toRaw(apiKeys),
       USE_LANGUAGES: { ...useLanguage },
@@ -270,7 +270,8 @@ const saveSettings = async () => {
       CHAT_LLM: selectedLLM.value ?? CHAT_LLM,
       llmConfigs: toRaw(llmConfigs.value),
       USER_LEVEL: selectedUserLevel.value ?? USER_LEVEL ?? "beginner",
-      onboardProject: onboardProject,
+      onboardProject,
+      DARK_MODE,
     };
     await window.electronAPI.settings.set(data);
     console.log(data);
