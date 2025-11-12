@@ -144,6 +144,7 @@ import LlmSettings from "@/components/llm_settings.vue";
 import ApiKeyInput from "@/components/api_key_input.vue";
 
 import { notifySuccess, notifyError } from "@/lib/notification";
+import { LlmConfigs } from "../../types/index";
 import {
   ENV_KEYS,
   languages,
@@ -175,20 +176,6 @@ const selectedUserLevel = ref("beginner");
 
 const selectedLLM = ref("openAIAgent");
 
-type LlmConfigOllama = { url: string; model: string };
-type LlmConfigOpenAI = { model: string };
-type LlmConfigGemini = { model: string };
-type LlmConfigAnthropic = { model: string };
-type LlmConfigGroq = { model: string };
-
-type LlmConfigs = {
-  ollama: LlmConfigOllama;
-  openai: LlmConfigOpenAI;
-  gemini: LlmConfigGemini;
-  anthropic: LlmConfigAnthropic;
-  groq: LlmConfigGroq;
-};
-
 const llmConfigs = ref<LlmConfigs>({
   ollama: { ...LLM_OLLAMA_DEFAULT_CONFIG },
   openai: { ...LLM_OPENAI_DEFAULT_CONFIG },
@@ -213,9 +200,6 @@ onMounted(async () => {
     Object.keys(ENV_KEYS).forEach((envKey) => {
       if (settings.APIKEY && settings.APIKEY[envKey]) {
         apiKeys[envKey] = settings.APIKEY[envKey as keyof typeof settings] || "";
-      } else if (envKey in settings) {
-        // backward compatibility
-        apiKeys[envKey] = settings[envKey as keyof typeof settings] || "";
       }
     });
     if (settings.USE_LANGUAGES) {
@@ -264,16 +248,17 @@ onMounted(async () => {
 const saveSettings = async () => {
   try {
     const settings = await window.electronAPI.settings.get();
+    const { APP_LANGUAGE, MAIN_LANGUAGE, CHAT_LLM, USER_LEVEL, onboardProject, DARK_MODE } = settings ?? {};
     const data = {
-      ...settings,
-      // ...apiKeys,
       APIKEY: toRaw(apiKeys),
-      APP_LANGUAGE: selectedLanguage.value,
       USE_LANGUAGES: { ...useLanguage },
-      MAIN_LANGUAGE: mainLanguage.value,
-      CHAT_LLM: selectedLLM.value,
+      APP_LANGUAGE: selectedLanguage.value ?? APP_LANGUAGE,
+      MAIN_LANGUAGE: mainLanguage.value ?? MAIN_LANGUAGE,
+      CHAT_LLM: selectedLLM.value ?? CHAT_LLM,
       llmConfigs: toRaw(llmConfigs.value),
-      USER_LEVEL: selectedUserLevel.value ?? "beginner",
+      USER_LEVEL: selectedUserLevel.value ?? USER_LEVEL ?? "beginner",
+      onboardProject,
+      DARK_MODE,
     };
     await window.electronAPI.settings.set(data);
     console.log(data);

@@ -1,16 +1,8 @@
 import { app } from "electron";
 import path from "node:path";
 import fs from "node:fs";
-import { ENV_KEYS, type AppSettingKey, LANGUAGE_IDS, I18N_SUPPORTED_LANGUAGES } from "../shared/constants";
-
-// Dynamically build the Settings type from ENV_KEYS and APP_SETTINGS
-export type Settings = {
-  APIKEY?: Record<string, string>;
-} & {
-  [K in AppSettingKey]?: string;
-} & {
-  USE_LANGUAGES: Record<string, boolean>;
-};
+import { ENV_KEYS, LANGUAGE_IDS, I18N_SUPPORTED_LANGUAGES } from "../shared/constants";
+import { Settings } from "../types/index";
 
 const getSettingsPath = (): string => {
   const userDataPath = app.getPath("userData");
@@ -21,6 +13,7 @@ export const loadSettings = async (): Promise<Settings> => {
   const settingsPath = getSettingsPath();
   const defaultUseLanguageSet = new Set(I18N_SUPPORTED_LANGUAGES.map((l) => l.id));
   const defaultSettings: Settings = {
+    APIKEY: {},
     USE_LANGUAGES: LANGUAGE_IDS.reduce(
       (acc, lang) => {
         if (defaultUseLanguageSet.has(lang as (typeof I18N_SUPPORTED_LANGUAGES)[number]["id"])) {
@@ -32,6 +25,9 @@ export const loadSettings = async (): Promise<Settings> => {
       },
       {} as Record<string, boolean>,
     ),
+    USER_LEVEL: "beginner",
+    onboardProject: 0,
+    llmConfigs: {},
   };
 
   try {
@@ -77,7 +73,7 @@ export const saveSettings = async (settings: Settings): Promise<void> => {
 
     // Dynamically set environment variables based on constants
     for (const envKey of Object.keys(ENV_KEYS)) {
-      const value = settings.APIKEY[envKey as keyof typeof ENV_KEYS];
+      const value = settings?.APIKEY?.[envKey as keyof typeof ENV_KEYS];
       if (value) {
         process.env[envKey] = value;
       }
