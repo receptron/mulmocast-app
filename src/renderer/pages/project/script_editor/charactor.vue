@@ -28,12 +28,17 @@
               {{ t("ui.common.drophere", { maxSizeMB }) }}
             </div>
             {{ t("ui.common.or") }}
-            <div class="flex">
-              <Input :placeholder="t('beat.beat.placeholderUrl')" v-model="mediaUrl" :invalid="!validateURL" /><Button
-                @click="() => submitUrlImage(imageKey)"
-                :disabled="!fetchEnable"
-                class="ml-2"
-              >
+            <div class="mt-2 flex flex-wrap gap-2">
+              <Button @click="() => selectLocalImage(imageKey)" type="button">
+                {{ t("ui.actions.selectFile") }}
+              </Button>
+              <Input
+                :placeholder="t('beat.beat.placeholderUrl')"
+                v-model="mediaUrl"
+                :invalid="!validateURL"
+                class="min-w-0 flex-1"
+              />
+              <Button @click="() => submitUrlImage(imageKey)" :disabled="!fetchEnable" class="shrink-0">
                 {{ t("ui.actions.fetch") }}
               </Button>
             </div>
@@ -179,6 +184,21 @@ const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 const imageRefs = ref<Record<string, string>>({});
 const maxSizeMB = 50;
 
+interface BinaryFileData {
+  name: string;
+  size: number;
+  type: string;
+  buffer: ArrayBuffer | Uint8Array;
+}
+
+const readFileAsArrayBuffer = (file: File) =>
+  new Promise<ArrayBuffer>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as ArrayBuffer);
+    reader.onerror = () => reject(reader.error ?? new Error("Failed to read file"));
+    reader.readAsArrayBuffer(file);
+  });
+
 const mediaLibraryRef = ref<MediaLibraryDialogExposed | null>(null);
 const activeImageKey = ref<string | null>(null);
 
@@ -277,49 +297,73 @@ const selectScriptImage = async (media: ProjectScriptMedia) => {
   activeImageKey.value = null;
 };
 
-const handleDrop = (event: DragEvent, imageKey: string) => {
+const processReferenceImage = async (fileData: BinaryFileData, imageKey: string) => {
+  const maxSize = maxSizeMB * 1024 * 1024;
+  if (fileData.size > maxSize) {
+    notifyError(t("notify.error.media.tooLarge", { maxSizeMB }));
+    return;
+  }
+
+  const fileExtension = fileData.name.split(".").pop()?.toLowerCase() ?? "";
+  const mimeType = fileData.type.split("/")[1] ?? "";
+  const fileType = mimeType || fileExtension;
+
+  if (!["jpg", "jpeg", "png"].includes(fileType)) {
+    notifyError(t("notify.error.media.unsupportedType", { fileType }));
+    return;
+  }
+
+  const extension = fileType === "jpeg" ? "jpg" : fileType;
+  const uint8Array =
+    fileData.buffer instanceof Uint8Array ? fileData.buffer : new Uint8Array(fileData.buffer);
+  const path = await window.electronAPI.mulmoHandler(
+    "mulmoReferenceImageUpload",
+    props.projectId,
+    imageKey,
+    [...uint8Array],
+    extension,
+  );
+  emit("updateImagePath", imageKey, "./" + path);
+  // Workaround: wait for the script change
+  await nextTick();
+  const res = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
+  imageRefs.value[imageKey] = res ? bufferToUrl(res, "image/png") : null;
+};
+
+const handleDrop = async (event: DragEvent, imageKey: string) => {
   const files = event.dataTransfer.files;
   if (files.length > 0) {
     const file = files[0];
-
-    const maxSize = maxSizeMB * 1024 * 1024;
-    if (file.size > maxSize) {
-      notifyError(t("notify.error.media.tooLarge", { maxSizeMB }));
-      return;
-    }
-
-    const fileExtension = file.name.split(".").pop()?.toLowerCase() ?? "";
-    const mimeType = file.type.split("/")[1] ?? "";
-    const fileType = mimeType || fileExtension;
-
-    const imageType = (() => {
-      if (["jpg", "jpeg", "png"].includes(fileType)) {
-        return "image";
-      }
-    })();
-    if (!imageType) {
-      notifyError(t("notify.error.media.unsupportedType", { fileType }));
-      return;
-    }
-    const extension = fileType === "jpeg" ? "jpg" : fileType;
-
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const uint8Array = new Uint8Array(reader.result as ArrayBuffer);
-      const path = await window.electronAPI.mulmoHandler(
-        "mulmoReferenceImageUpload",
-        props.projectId,
+    try {
+      const buffer = await readFileAsArrayBuffer(file);
+      await processReferenceImage(
+        {
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          buffer,
+        },
         imageKey,
-        [...uint8Array],
-        extension,
       );
-      emit("updateImagePath", imageKey, "./" + path);
-      // Workaround: wait for the script change
-      await nextTick();
-      const res = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
-      imageRefs.value[imageKey] = res ? bufferToUrl(res, "image/png") : null;
-    };
-    reader.readAsArrayBuffer(file);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+};
+
+const selectLocalImage = async (imageKey: string) => {
+  try {
+    const filePath = await window.electronAPI.dialog.openFile();
+    if (!filePath) {
+      return;
+    }
+    const fileData = await window.electronAPI.file.readBinary(filePath);
+    if (!fileData) {
+      return;
+    }
+    await processReferenceImage(fileData, imageKey);
+  } catch (error) {
+    console.error(error);
   }
 };
 

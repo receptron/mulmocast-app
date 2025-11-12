@@ -25,13 +25,16 @@
       {{ t("ui.common.drophere", { maxSizeMB }) }}
     </div>
     {{ t("ui.common.or") }}
-    <div class="flex gap-2">
+    <div class="mt-2 flex flex-wrap gap-2">
+      <Button @click="selectLocalMedia" type="button" class="shrink-0">
+        {{ t("ui.actions.selectFile") }}
+      </Button>
       <Input
         :placeholder="t('beat.mediaFile.placeholder')"
         v-model="mediaUrl"
         :invalid="!validateURL"
         @blur="save"
-        class="flex-1"
+        class="min-w-0 flex-1"
       />
       <Button @click="submitUrlImage" :disabled="!fetchEnable" class="shrink-0">
         {{ t("ui.actions.fetch") }}
@@ -131,60 +134,110 @@ const videoSubtypeToExtensions = {
 
 const maxSizeMB = 50;
 
-const handleDrop = (event: DragEvent) => {
+interface BinaryFileData {
+  name: string;
+  size: number;
+  type: string;
+  buffer: ArrayBuffer | Uint8Array;
+}
+
+const readFileAsArrayBuffer = (file: File) =>
+  new Promise<ArrayBuffer>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as ArrayBuffer);
+    reader.onerror = () => reject(reader.error ?? new Error("Failed to read file"));
+    reader.readAsArrayBuffer(file);
+  });
+
+const processMediaFile = async (fileData: BinaryFileData) => {
+  const maxSize = maxSizeMB * 1024 * 1024;
+  if (fileData.size > maxSize) {
+    notifyError(t("notify.error.media.tooLarge", { maxSizeMB }));
+    return;
+  }
+
+  const fileExtension = fileData.name.split(".").pop()?.toLowerCase() ?? "";
+  const mimeType = fileData.type.split("/")[1] ?? "";
+  const fileType = mimeType || fileExtension;
+
+  const imageType = (() => {
+    if (["jpg", "jpeg", "png"].includes(fileType)) {
+      return "image";
+    }
+    if (["mp4", "quicktime", "webm", "ogg", "mpeg", "mp2t", "mov", "mpg"].includes(fileType)) {
+      return "movie";
+    }
+    return undefined;
+  })();
+  if (!imageType) {
+    notifyError(t("notify.error.media.unsupportedType", { fileType }));
+    return;
+  }
+
+  const extension =
+    imageType === "image"
+      ? fileType
+      : videoSubtypeToExtensions[fileType as keyof typeof videoSubtypeToExtensions];
+  if (!extension) {
+    notifyError(t("notify.error.media.unsupportedType", { fileType }));
+    return;
+  }
+
+  update("image.type", imageType);
+
+  const uint8Array =
+    fileData.buffer instanceof Uint8Array ? fileData.buffer : new Uint8Array(fileData.buffer);
+  const path = await window.electronAPI.mulmoHandler(
+    "mulmoImageUpload",
+    projectId.value,
+    props.index,
+    [...uint8Array],
+    extension,
+  );
+  const imageData = {
+    type: imageType,
+    source: {
+      kind: "path",
+      path: "./" + path,
+    },
+  };
+  await sleep(50);
+  emit("updateImageData", imageData, () => {
+    emit("generateImageOnlyImage");
+  });
+};
+
+const handleDrop = async (event: DragEvent) => {
   const files = event.dataTransfer.files;
   if (files.length > 0) {
     const file = files[0];
-
-    const maxSize = maxSizeMB * 1024 * 1024;
-    if (file.size > maxSize) {
-      notifyError(t("notify.error.media.tooLarge", { maxSizeMB }));
-      return;
-    }
-
-    const fileExtension = file.name.split(".").pop()?.toLowerCase() ?? "";
-    const mimeType = file.type.split("/")[1] ?? "";
-    console.log(file.type, mimeType);
-    const fileType = mimeType || fileExtension;
-
-    const imageType = (() => {
-      if (["jpg", "jpeg", "png"].includes(fileType)) {
-        return "image";
-      }
-      if (["mp4", "quicktime", "webm", "ogg", "mpeg", "mp2t", "mov", "mpg"].includes(fileType)) {
-        return "movie";
-      }
-    })();
-    if (!imageType) {
-      notifyError(t("notify.error.media.unsupportedType", { fileType }));
-      return;
-    }
-    update("image.type", imageType);
-    const extension = imageType === "image" ? fileType : videoSubtypeToExtensions[fileType];
-
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const uint8Array = new Uint8Array(reader.result as ArrayBuffer);
-      const path = await window.electronAPI.mulmoHandler(
-        "mulmoImageUpload",
-        projectId.value,
-        props.index,
-        [...uint8Array],
-        extension,
-      );
-      const imageData = {
-        type: imageType,
-        source: {
-          kind: "path",
-          path: "./" + path,
-        },
-      };
-      await sleep(50);
-      emit("updateImageData", imageData, () => {
-        emit("generateImageOnlyImage");
+    try {
+      const buffer = await readFileAsArrayBuffer(file);
+      await processMediaFile({
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        buffer,
       });
-    };
-    reader.readAsArrayBuffer(file);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+};
+
+const selectLocalMedia = async () => {
+  try {
+    const filePath = await window.electronAPI.dialog.openFile();
+    if (!filePath) {
+      return;
+    }
+    const fileData = await window.electronAPI.file.readBinary(filePath);
+    if (!fileData) {
+      return;
+    }
+    await processMediaFile(fileData);
+  } catch (error) {
+    console.error(error);
   }
 };
 
