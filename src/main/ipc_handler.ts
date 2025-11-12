@@ -70,9 +70,7 @@ export const registerIPCHandler = () => {
     const filterMap = {
       image: [{ name: "Images", extensions: [...MEDIA_FILE_EXTENSIONS.image] }],
       video: [{ name: "Videos", extensions: [...MEDIA_FILE_EXTENSIONS.video] }],
-      media: [
-        { name: "Media Files", extensions: [...MEDIA_FILE_EXTENSIONS.image, ...MEDIA_FILE_EXTENSIONS.video] },
-      ],
+      media: [{ name: "Media Files", extensions: [...MEDIA_FILE_EXTENSIONS.image, ...MEDIA_FILE_EXTENSIONS.video] }],
     };
 
     const { canceled, filePaths } = await dialog.showOpenDialog({
