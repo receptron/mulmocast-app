@@ -243,6 +243,7 @@
             :disabled="beat.enableLipSync"
           />
         </div>
+        {{ expectDuration }}
       </div>
       <!-- right: movie preview -->
       <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableMovie">
@@ -321,6 +322,8 @@ import {
   MulmoPresentationStyleMethods,
   MulmoStudioContextMethods,
   provider2TTSAgent,
+  // getModelDuration,
+  provider2MovieAgent,
 } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 import { ChevronDown, CircleUserRound } from "lucide-vue-next";
@@ -414,6 +417,12 @@ const enableLipSyncGenerate = computed(() => {
 });
 const beatId = computed(() => {
   return props.beat.id;
+});
+
+const expectDuration = computed(() => {
+  const model = provider2MovieAgent.google.defaultModel;
+  return provider2MovieAgent["google"]?.modelParams[model].durations
+  // return getModelDuration("google", model, 21);
 });
 
 const isImageGenerating = computed(() => {
