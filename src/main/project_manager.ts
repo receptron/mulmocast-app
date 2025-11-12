@@ -87,16 +87,23 @@ export const saveProjectScript = async (projectId: string, data: Partial<MulmoSc
   return await writeJsonFile(getProjectScriptPath(projectId), data);
 };
 
-export interface ProjectScriptImage {
+export interface ProjectScriptMedia {
   fileName: string;
   fullPath: string;
   projectRelativePath: string;
-  imageData: ArrayBuffer;
+  data: ArrayBuffer;
+  mediaType: "image" | "movie";
+  mimeType: string;
 }
 
-export const listProjectScriptImages = async (projectId: string): Promise<ProjectScriptImage[]> => {
+const scriptMediaExtensions: Record<string, { mediaType: ProjectScriptMedia["mediaType"]; mimeType: string }> = {
+  png: { mediaType: "image", mimeType: "image/png" },
+  mov: { mediaType: "movie", mimeType: "video/quicktime" },
+};
+
+export const listProjectScriptImages = async (projectId: string): Promise<ProjectScriptMedia[]> => {
   const imagesDirectory = path.join(getProjectPath(projectId), "output", "images", "script");
-  const scriptImageNamePattern = /^[A-Z0-9]+(?:-[A-Z0-9]+){5}\.png$/i;
+  const scriptImageNamePattern = /^[A-Z0-9]+(?:-[A-Z0-9]+){5}\.(png|mov)$/i;
 
   try {
     const entries = await fs.readdir(imagesDirectory, { withFileTypes: true });
@@ -107,20 +114,26 @@ export const listProjectScriptImages = async (projectId: string): Promise<Projec
         .map(async (entry) => {
           const fileName = entry.name;
           const fullPath = path.join(imagesDirectory, fileName);
+          const extension = fileName.split(".").pop()?.toLowerCase() ?? "";
+          const mediaConfig = scriptMediaExtensions[extension];
+
+          if (!mediaConfig) {
+            GraphAILogger.warn(`Unsupported script media extension detected: ${fileName}`);
+            return null;
+          }
 
           try {
             const fileBuffer = await fs.readFile(fullPath);
-            const imageData = fileBuffer.buffer.slice(
-              fileBuffer.byteOffset,
-              fileBuffer.byteOffset + fileBuffer.byteLength,
-            );
+            const data = fileBuffer.buffer.slice(fileBuffer.byteOffset, fileBuffer.byteOffset + fileBuffer.byteLength);
 
             return {
               fileName,
               fullPath,
               projectRelativePath: `./output/images/script/${fileName}`,
-              imageData,
-            } satisfies ProjectScriptImage;
+              data,
+              mediaType: mediaConfig.mediaType,
+              mimeType: mediaConfig.mimeType,
+            } satisfies ProjectScriptMedia;
           } catch (readError) {
             GraphAILogger.error(`Failed to load script image: ${fullPath}`, readError);
             return null;
@@ -129,7 +142,7 @@ export const listProjectScriptImages = async (projectId: string): Promise<Projec
     );
 
     return images
-      .filter((image): image is ProjectScriptImage => image !== null)
+      .filter((image): image is ProjectScriptMedia => image !== null)
       .sort((a, b) => b.fileName.localeCompare(a.fileName));
   } catch (error) {
     if ("code" in error && error.code !== "ENOENT") {
