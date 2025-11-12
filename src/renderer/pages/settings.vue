@@ -264,16 +264,16 @@ onMounted(async () => {
 const saveSettings = async () => {
   try {
     const settings = await window.electronAPI.settings.get();
+    const { APIKEY, APP_LANGUAGE, MAIN_LANGUAGE, CHAT_LLM, USER_LEVEL, onboardProject } = settings ?? {};
     const data = {
-      ...settings,
-      // ...apiKeys,
-      APIKEY: toRaw(apiKeys),
-      APP_LANGUAGE: selectedLanguage.value,
+      APIKEY: toRaw(apiKeys) ?? APIKEY,
       USE_LANGUAGES: { ...useLanguage },
-      MAIN_LANGUAGE: mainLanguage.value,
-      CHAT_LLM: selectedLLM.value,
+      APP_LANGUAGE: selectedLanguage.value ?? APP_LANGUAGE,
+      MAIN_LANGUAGE: mainLanguage.value ?? MAIN_LANGUAGE,
+      CHAT_LLM: selectedLLM.value ?? CHAT_LLM,
       llmConfigs: toRaw(llmConfigs.value),
-      USER_LEVEL: selectedUserLevel.value ?? "beginner",
+      USER_LEVEL: selectedUserLevel.value ?? USER_LEVEL ?? "beginner",
+      onboardProject: onboardProject,
     };
     await window.electronAPI.settings.set(data);
     console.log(data);
