@@ -6,7 +6,7 @@ import { randomUUID } from "node:crypto";
 import { MulmoScriptMethods, mulmoScriptSchema, type MulmoScript } from "mulmocast";
 import { GraphAILogger } from "graphai";
 
-import type { Project, ProjectMetadata, Lang, ProjectScriptMedia } from "../types";
+import type { Project, ProjectMetadata, Lang, ProjectScriptMedia, MediaType } from "../types";
 import { SCRIPT_EDITOR_TABS, MULMO_VIEWER_TABS } from "../shared/constants";
 import { initMulmoScript } from "../shared/beat_data";
 import { onboardProjects } from "../shared/onboard";
@@ -87,7 +87,7 @@ export const saveProjectScript = async (projectId: string, data: Partial<MulmoSc
   return await writeJsonFile(getProjectScriptPath(projectId), data);
 };
 
-const scriptMediaExtensions: Record<string, { mediaType: ProjectScriptMedia["mediaType"]; mimeType: string }> = {
+const scriptMediaExtensions: Record<string, { mediaType: MediaType; mimeType: string }> = {
   png: { mediaType: "image", mimeType: "image/png" },
   mov: { mediaType: "movie", mimeType: "video/quicktime" },
 };

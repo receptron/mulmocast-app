@@ -78,11 +78,13 @@ export type Settings = {
   DARK_MODE?: string; // Backward compatible
 };
 
+export type MediaType = "image" | "movie";
+
 export type ProjectScriptMedia = {
   fileName: string;
   fullPath: string;
   projectRelativePath: string;
   data: ArrayBuffer;
-  mediaType: "image" | "movie";
+  mediaType: MediaType;
   mimeType: string;
 };
