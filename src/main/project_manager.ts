@@ -96,10 +96,7 @@ export interface ProjectScriptMedia {
   mimeType: string;
 }
 
-const scriptMediaExtensions: Record<
-  string,
-  { mediaType: ProjectScriptMedia["mediaType"]; mimeType: string }
-> = {
+const scriptMediaExtensions: Record<string, { mediaType: ProjectScriptMedia["mediaType"]; mimeType: string }> = {
   png: { mediaType: "image", mimeType: "image/png" },
   mov: { mediaType: "movie", mimeType: "video/quicktime" },
 };
@@ -127,10 +124,7 @@ export const listProjectScriptImages = async (projectId: string): Promise<Projec
 
           try {
             const fileBuffer = await fs.readFile(fullPath);
-            const data = fileBuffer.buffer.slice(
-              fileBuffer.byteOffset,
-              fileBuffer.byteOffset + fileBuffer.byteLength,
-            );
+            const data = fileBuffer.buffer.slice(fileBuffer.byteOffset, fileBuffer.byteOffset + fileBuffer.byteLength);
 
             return {
               fileName,
