@@ -99,6 +99,7 @@
         @update:model-value="(value) => update('duration', value === '' ? undefined : Number(value))"
         @blur="justSaveAndPushToHistory"
       />
+      {{ expectDuration }}
     </div>
 
     <div class="grid grid-cols-2 gap-4">
@@ -255,7 +256,6 @@
             :disabled="beat.enableLipSync"
           />
         </div>
-        {{ expectDuration }}
       </div>
       <!-- right: movie preview -->
       <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableMovie">
