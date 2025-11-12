@@ -15,23 +15,34 @@
                 {{ t("ui.status.loading") }}
               </div>
             </template>
-            <template v-else-if="images.length">
+            <template v-else-if="mediaItems.length">
               <button
-                v-for="image in images"
-                :key="image.fullPath"
+                v-for="media in mediaItems"
+                :key="media.fullPath"
                 type="button"
-                @click="handleSelect(image)"
+                @click="handleSelect(media)"
                 class="border-border hover:bg-accent/50 focus-visible:ring-ring group flex flex-col gap-2 rounded-lg border p-3 text-left transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 <div class="bg-muted aspect-video w-full overflow-hidden rounded-md">
                   <img
-                    :src="image.previewUrl"
-                    :alt="image.fileName"
+                    v-if="media.mediaType === 'image'"
+                    :src="media.previewUrl"
+                    :alt="media.fileName"
                     class="h-full w-full object-cover transition-transform group-hover:scale-[1.02]"
                   />
+                  <video
+                    v-else
+                    :src="media.previewUrl"
+                    :title="media.fileName"
+                    class="h-full w-full object-cover"
+                    muted
+                    playsinline
+                    loop
+                    controls
+                  />
                 </div>
-                <p class="truncate text-sm font-medium">{{ image.fileName }}</p>
-                <p class="text-muted-foreground text-xs">{{ image.projectRelativePath }}</p>
+                <p class="truncate text-sm font-medium">{{ media.fileName }}</p>
+                <p class="text-muted-foreground text-xs">{{ media.projectRelativePath }}</p>
               </button>
             </template>
             <template v-else>
@@ -54,14 +65,16 @@ import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
 
-export interface ProjectScriptImage {
+export interface ProjectScriptMedia {
   fileName: string;
   fullPath: string;
   projectRelativePath: string;
-  imageData: ArrayBuffer;
+  data: ArrayBuffer;
+  mediaType: "image" | "movie";
+  mimeType: string;
 }
 
-interface ScriptImageWithPreview extends ProjectScriptImage {
+interface ScriptMediaWithPreview extends ProjectScriptMedia {
   previewUrl: string;
 }
 
@@ -70,16 +83,14 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (event: "select", image: ProjectScriptImage): void;
+  (event: "select", media: ProjectScriptMedia): void;
 }>();
 
 const isOpen = ref(false);
 const isLoading = ref(false);
 const loadError = ref<string | null>(null);
-const images = ref<ScriptImageWithPreview[]>([]);
+const mediaItems = ref<ScriptMediaWithPreview[]>([]);
 let fetchRequestId = 0;
-
-const previewMimeType = "image/png";
 
 const toArrayBuffer = (data: unknown): ArrayBuffer | null => {
   if (data instanceof ArrayBuffer) {
@@ -94,18 +105,18 @@ const toArrayBuffer = (data: unknown): ArrayBuffer | null => {
   return null;
 };
 
-const clearImages = () => {
-  images.value.forEach((image) => {
-    URL.revokeObjectURL(image.previewUrl);
+const clearMediaItems = () => {
+  mediaItems.value.forEach((media) => {
+    URL.revokeObjectURL(media.previewUrl);
   });
-  images.value = [];
+  mediaItems.value = [];
 };
 
-const fetchScriptImages = async () => {
+const fetchScriptMedia = async () => {
   const requestId = ++fetchRequestId;
 
   if (!props.projectId) {
-    clearImages();
+    clearMediaItems();
     loadError.value = null;
     if (requestId === fetchRequestId) {
       isLoading.value = false;
@@ -118,7 +129,7 @@ const fetchScriptImages = async () => {
 
   try {
     const response = (await window.electronAPI.project.listScriptImages(props.projectId)) as
-      | ProjectScriptImage[]
+      | ProjectScriptMedia[]
       | null
       | undefined;
 
@@ -127,33 +138,33 @@ const fetchScriptImages = async () => {
     }
 
     if (Array.isArray(response)) {
-      clearImages();
+      clearMediaItems();
       const mapped = response
-        .map((image) => {
-          const arrayBuffer = toArrayBuffer(image.imageData);
+        .map((media) => {
+          const arrayBuffer = toArrayBuffer(media.data);
           if (!arrayBuffer) {
-            console.warn("Received invalid image data for", image.fullPath);
+            console.warn("Received invalid media data for", media.fullPath);
             return null;
           }
-          const blob = new Blob([arrayBuffer], { type: previewMimeType });
+          const blob = new Blob([arrayBuffer], { type: media.mimeType });
           const previewUrl = URL.createObjectURL(blob);
           return {
-            ...image,
-            imageData: arrayBuffer,
+            ...media,
+            data: arrayBuffer,
             previewUrl,
-          } satisfies ScriptImageWithPreview;
+          } satisfies ScriptMediaWithPreview;
         })
-        .filter((image): image is ScriptImageWithPreview => image !== null);
+        .filter((media): media is ScriptMediaWithPreview => media !== null);
 
-      images.value = mapped;
+      mediaItems.value = mapped;
     } else {
-      clearImages();
+      clearMediaItems();
     }
   } catch (error) {
-    console.error("Failed to load project script images", error);
+    console.error("Failed to load project script media", error);
     if (requestId === fetchRequestId) {
       loadError.value = t("beat.mediaFile.libraryLoadError");
-      clearImages();
+      clearMediaItems();
     }
   } finally {
     if (requestId === fetchRequestId) {
@@ -170,14 +181,14 @@ const closeDialog = () => {
   isOpen.value = false;
   isLoading.value = false;
   loadError.value = null;
-  clearImages();
+  clearMediaItems();
 };
 
 const openDialog = async () => {
   if (!isOpen.value) {
     isOpen.value = true;
   }
-  await fetchScriptImages();
+  await fetchScriptMedia();
 };
 
 const handleDialogOpenChange = (open: boolean) => {
@@ -186,12 +197,14 @@ const handleDialogOpenChange = (open: boolean) => {
   }
 };
 
-const handleSelect = (image: ScriptImageWithPreview) => {
+const handleSelect = (media: ScriptMediaWithPreview) => {
   emit("select", {
-    fileName: image.fileName,
-    fullPath: image.fullPath,
-    projectRelativePath: image.projectRelativePath,
-    imageData: image.imageData,
+    fileName: media.fileName,
+    fullPath: media.fullPath,
+    projectRelativePath: media.projectRelativePath,
+    data: media.data,
+    mediaType: media.mediaType,
+    mimeType: media.mimeType,
   });
   closeDialog();
 };
@@ -200,17 +213,17 @@ watch(
   () => props.projectId,
   () => {
     if (isOpen.value) {
-      void fetchScriptImages();
+      void fetchScriptMedia();
     } else {
       fetchRequestId += 1;
-      clearImages();
+      clearMediaItems();
       loadError.value = null;
     }
   },
 );
 
 onBeforeUnmount(() => {
-  clearImages();
+  clearMediaItems();
 });
 
 export interface MediaLibraryDialogExposed {

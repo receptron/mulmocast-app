@@ -58,7 +58,7 @@ import { notifyError } from "@/lib/notification";
 import { useMediaUrl } from "../../composable/media_url";
 import MediaLibraryDialog, {
   type MediaLibraryDialogExposed,
-  type ProjectScriptImage,
+  type ProjectScriptMedia,
 } from "./media_library_dialog.vue";
 
 import { sleep } from "graphai";
@@ -194,13 +194,13 @@ const openMediaLibrary = async () => {
   }
 };
 
-const selectScriptImage = (image: ProjectScriptImage) => {
-  const projectRelativePath = image.projectRelativePath.startsWith("./")
-    ? image.projectRelativePath
-    : `./${image.projectRelativePath.replace(/^\/+/u, "")}`;
+const selectScriptImage = (media: ProjectScriptMedia) => {
+  const projectRelativePath = media.projectRelativePath.startsWith("./")
+    ? media.projectRelativePath
+    : `./${media.projectRelativePath.replace(/^\/+/u, "")}`;
 
   const imageData: MulmoImageAsset = {
-    type: "image",
+    type: media.mediaType,
     source: {
       kind: "path",
       path: projectRelativePath,
