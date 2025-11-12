@@ -81,6 +81,7 @@ const lang = {
       generateThing: "Generate {thing}",
       fetch: "Fetch",
       selectFile: "Select File",
+      openMediaLibrary: "Open Media Library",
       cancel: "Cancel",
       ok: "OK",
       runningThing: "{thing} is running",
@@ -579,6 +580,10 @@ const lang = {
       remoteLabel: "Remote Media",
       urlField: "URL",
       placeholder: "Enter image URL",
+      libraryTitle: "Select Project Image",
+      libraryDescription: "Choose an image generated for this project.",
+      libraryEmpty: "No generated images were found for this project.",
+      libraryLoadError: "Failed to load the project images.",
     },
     mediaImageFile: {
       label: "Image file",

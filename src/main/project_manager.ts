@@ -1,6 +1,7 @@
 import { app } from "electron";
 import path from "node:path";
 import fs from "node:fs/promises";
+import { pathToFileURL } from "node:url";
 import dayjs from "dayjs";
 import { randomUUID } from "node:crypto";
 import { MulmoScriptMethods, mulmoScriptSchema, type MulmoScript } from "mulmocast";
@@ -85,6 +86,41 @@ export const saveProjectMetadata = async (projectId: string, data: ProjectMetada
 };
 export const saveProjectScript = async (projectId: string, data: Partial<MulmoScript>): Promise<boolean> => {
   return await writeJsonFile(getProjectScriptPath(projectId), data);
+};
+
+export interface ProjectScriptImage {
+  fileName: string;
+  fullPath: string;
+  projectRelativePath: string;
+  fileUrl: string;
+}
+
+export const listProjectScriptImages = async (projectId: string): Promise<ProjectScriptImage[]> => {
+  const imagesDirectory = path.join(getProjectPath(projectId), "output", "images", "script");
+
+  try {
+    const entries = await fs.readdir(imagesDirectory, { withFileTypes: true });
+
+    return entries
+      .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith(".png"))
+      .map((entry) => {
+        const fileName = entry.name;
+        const fullPath = path.join(imagesDirectory, fileName);
+
+        return {
+          fileName,
+          fullPath,
+          projectRelativePath: `./output/images/script/${fileName}`,
+          fileUrl: pathToFileURL(fullPath).toString(),
+        } satisfies ProjectScriptImage;
+      })
+      .sort((a, b) => b.fileName.localeCompare(a.fileName));
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
+      GraphAILogger.error("Failed to list project script images:", error);
+    }
+    return [];
+  }
 };
 
 const generateId = (): string => {

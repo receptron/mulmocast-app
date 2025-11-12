@@ -81,6 +81,7 @@ const lang = {
       generateThing: "{thing}を生成",
       fetch: "取得",
       selectFile: "ファイルを選択",
+      openMediaLibrary: "メディアライブラリを開く",
       cancel: "キャンセル",
       ok: "OK",
       runningThing: "{thing}を実行中",
@@ -577,6 +578,10 @@ const lang = {
       remoteLabel: "リモートメディア",
       urlField: "URL",
       placeholder: "画像URLを入力",
+      libraryTitle: "プロジェクト画像を選択",
+      libraryDescription: "このプロジェクトで生成された画像から選択してください。",
+      libraryEmpty: "このプロジェクトで生成された画像が見つかりませんでした。",
+      libraryLoadError: "プロジェクトの画像を読み込めませんでした。",
     },
     mediaImageFile: {
       label: "画像ファイル",
