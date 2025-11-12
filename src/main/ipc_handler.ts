@@ -1,11 +1,4 @@
-import {
-  ipcMain,
-  shell,
-  clipboard,
-  autoUpdater,
-  dialog,
-  type IpcMainInvokeEvent,
-} from "electron";
+import { ipcMain, shell, clipboard, autoUpdater, dialog, type IpcMainInvokeEvent } from "electron";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { mulmoHandler } from "./mulmo/handler";
@@ -100,10 +93,7 @@ export const registerIPCHandler = () => {
       mp2t: "video/mp2t",
       mpg: "video/mpeg",
     };
-    const arrayBuffer = fileBuffer.buffer.slice(
-      fileBuffer.byteOffset,
-      fileBuffer.byteOffset + fileBuffer.byteLength,
-    );
+    const arrayBuffer = fileBuffer.buffer.slice(fileBuffer.byteOffset, fileBuffer.byteOffset + fileBuffer.byteLength);
 
     return {
       name: path.basename(filePath),

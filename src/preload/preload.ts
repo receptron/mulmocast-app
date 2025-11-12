@@ -10,9 +10,7 @@ export interface ElectronAPI {
     openFile: () => Promise<string | null>;
   };
   file: {
-    readBinary: (
-      filePath: string,
-    ) => Promise<{ name: string; size: number; type: string; buffer: ArrayBuffer } | null>;
+    readBinary: (filePath: string) => Promise<{ name: string; size: number; type: string; buffer: ArrayBuffer } | null>;
   };
   project: {
     list: () => Promise<unknown>;
