@@ -213,9 +213,6 @@ onMounted(async () => {
     Object.keys(ENV_KEYS).forEach((envKey) => {
       if (settings.APIKEY && settings.APIKEY[envKey]) {
         apiKeys[envKey] = settings.APIKEY[envKey as keyof typeof settings] || "";
-      } else if (envKey in settings) {
-        // backward compatibility
-        apiKeys[envKey] = settings[envKey as keyof typeof settings] || "";
       }
     });
     if (settings.USE_LANGUAGES) {
@@ -266,7 +263,7 @@ const saveSettings = async () => {
     const settings = await window.electronAPI.settings.get();
     const { APIKEY, APP_LANGUAGE, MAIN_LANGUAGE, CHAT_LLM, USER_LEVEL, onboardProject } = settings ?? {};
     const data = {
-      APIKEY: toRaw(apiKeys) ?? APIKEY,
+      APIKEY: toRaw(apiKeys),
       USE_LANGUAGES: { ...useLanguage },
       APP_LANGUAGE: selectedLanguage.value ?? APP_LANGUAGE,
       MAIN_LANGUAGE: mainLanguage.value ?? MAIN_LANGUAGE,
