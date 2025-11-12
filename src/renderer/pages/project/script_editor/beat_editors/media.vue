@@ -25,23 +25,75 @@
       {{ t("ui.common.drophere", { maxSizeMB }) }}
     </div>
     {{ t("ui.common.or") }}
-    <div class="flex">
+    <div class="flex gap-2">
       <Input
         :placeholder="t('beat.mediaFile.placeholder')"
         v-model="mediaUrl"
         :invalid="!validateURL"
         @blur="save"
-      /><Button @click="submitUrlImage" :disabled="!fetchEnable">
+        class="flex-1"
+      />
+      <Button @click="submitUrlImage" :disabled="!fetchEnable" class="shrink-0">
         {{ t("ui.actions.fetch") }}
       </Button>
+      <Button @click="openMediaLibrary" type="button" class="shrink-0">
+        {{ t("ui.actions.openMediaLibrary") }}
+      </Button>
     </div>
+
+    <Dialog :open="isLibraryOpen" @update:open="handleLibraryOpenChange">
+      <DialogContent class="sm:max-w-xl">
+        <DialogHeader>
+          <DialogTitle>{{ t("beat.mediaFile.libraryTitle") }}</DialogTitle>
+          <DialogDescription>
+            {{ t("beat.mediaFile.libraryDescription") }}
+          </DialogDescription>
+        </DialogHeader>
+        <div class="flex h-[360px] flex-col gap-4">
+          <ScrollArea class="h-full rounded-md border">
+            <div class="grid gap-4 p-4 sm:grid-cols-2">
+              <template v-if="isLoadingImages">
+                <div class="col-span-full flex items-center justify-center py-8 text-sm text-muted-foreground">
+                  {{ t("ui.status.loading") }}
+                </div>
+              </template>
+              <template v-else-if="scriptImages.length">
+                <button
+                  v-for="image in scriptImages"
+                  :key="image.fullPath"
+                  type="button"
+                  @click="selectScriptImage(image)"
+                  class="border-border hover:bg-accent/50 focus-visible:ring-ring group flex flex-col gap-2 rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                >
+                  <div class="aspect-video w-full overflow-hidden rounded-md bg-muted">
+                    <img
+                      :src="image.previewUrl"
+                      :alt="image.fileName"
+                      class="h-full w-full object-cover transition-transform group-hover:scale-[1.02]"
+                    />
+                  </div>
+                  <p class="truncate text-sm font-medium">{{ image.fileName }}</p>
+                  <p class="text-xs text-muted-foreground">{{ image.projectRelativePath }}</p>
+                </button>
+              </template>
+              <template v-else>
+                <div class="col-span-full flex items-center justify-center py-8 text-sm text-muted-foreground">
+                  {{ imagesLoadError || t("beat.mediaFile.libraryEmpty") }}
+                </div>
+              </template>
+            </div>
+          </ScrollArea>
+        </div>
+      </DialogContent>
+    </Dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onBeforeUnmount, ref } from "vue";
 import { useRoute } from "vue-router";
-import { Label, Input, Button } from "@/components/ui";
+import { Label, Input, Button, ScrollArea } from "@/components/ui";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { MulmoBeat } from "mulmocast/browser";
 import { isLocalSourceMediaBeat } from "@/lib/beat_util.js";
 
@@ -64,6 +116,44 @@ const props = defineProps<Props>();
 const emit = defineEmits(["update", "save", "updateImageData", "generateImageOnlyImage"]);
 
 const isDragging = ref(false);
+
+interface ProjectScriptImage {
+  fileName: string;
+  fullPath: string;
+  projectRelativePath: string;
+  imageData: ArrayBuffer;
+}
+
+interface ScriptImageWithPreview extends ProjectScriptImage {
+  previewUrl: string;
+}
+
+const scriptImages = ref<ScriptImageWithPreview[]>([]);
+const isLibraryOpen = ref(false);
+const isLoadingImages = ref(false);
+const imagesLoadError = ref<string | null>(null);
+
+const previewMimeType = "image/png";
+
+const clearScriptImages = () => {
+  scriptImages.value.forEach((image) => {
+    URL.revokeObjectURL(image.previewUrl);
+  });
+  scriptImages.value = [];
+};
+
+const toArrayBuffer = (data: unknown): ArrayBuffer | null => {
+  if (data instanceof ArrayBuffer) {
+    return data;
+  }
+  if (ArrayBuffer.isView(data)) {
+    return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
+  }
+  if (Array.isArray(data)) {
+    return Uint8Array.from(data).buffer;
+  }
+  return null;
+};
 
 const update = (path: string, value: unknown) => {
   emit("update", path, value);
@@ -173,4 +263,72 @@ const handleDrop = (event: DragEvent) => {
     reader.readAsArrayBuffer(file);
   }
 };
+
+const fetchScriptImages = async () => {
+  const id = projectId.value;
+  if (!id) {
+    clearScriptImages();
+    return;
+  }
+
+  isLoadingImages.value = true;
+  imagesLoadError.value = null;
+
+  try {
+    const response = (await window.electronAPI.project.listScriptImages(id)) as
+      | ProjectScriptImage[]
+      | null
+      | undefined;
+    if (Array.isArray(response)) {
+      clearScriptImages();
+      const mapped = response
+        .map((image) => {
+          const arrayBuffer = toArrayBuffer(image.imageData);
+          if (!arrayBuffer) {
+            console.warn("Received invalid image data for", image.fullPath);
+            return null;
+          }
+          const blob = new Blob([arrayBuffer], { type: previewMimeType });
+          const previewUrl = URL.createObjectURL(blob);
+          return {
+            ...image,
+            imageData: arrayBuffer,
+            previewUrl,
+          } satisfies ScriptImageWithPreview;
+        })
+        .filter((image): image is ScriptImageWithPreview => image !== null);
+
+      scriptImages.value = mapped;
+    } else {
+      clearScriptImages();
+    }
+  } catch (error) {
+    console.error("Failed to load project script images", error);
+    imagesLoadError.value = t("beat.mediaFile.libraryLoadError");
+    clearScriptImages();
+  } finally {
+    isLoadingImages.value = false;
+  }
+};
+
+const handleLibraryOpenChange = async (open: boolean) => {
+  isLibraryOpen.value = open;
+  if (open) {
+    await fetchScriptImages();
+  }
+};
+
+const openMediaLibrary = async () => {
+  await handleLibraryOpenChange(true);
+};
+
+const selectScriptImage = (image: ProjectScriptImage) => {
+  console.log("Selected project script image full path:", image.fullPath);
+  console.log("Selected project script image project path:", image.projectRelativePath);
+  isLibraryOpen.value = false;
+};
+
+onBeforeUnmount(() => {
+  clearScriptImages();
+});
 </script>

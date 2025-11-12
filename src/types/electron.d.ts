@@ -2,9 +2,9 @@ import type { Project, ProjectMetadata, MulmoProgressLog } from "./index";
 import type { MulmoScript } from "mulmocast";
 import type { IpcRendererEvent } from "electron";
 import type { Settings } from "../main/settings_manager";
+import type { ProjectScriptImage } from "../main/project_manager";
 
 export interface ElectronAPI {
-  openFile: () => Promise<string | null>;
   mulmoTest: (option: unknown) => Promise<void>;
   mulmoHandler: (method: string, ...args: unknown[]) => Promise<unknown>;
   onProgress: (callback: (event: IpcRendererEvent, data: MulmoProgressLog) => void) => void;
@@ -16,6 +16,7 @@ export interface ElectronAPI {
     getProjectMulmoScript: (name: string) => Promise<MulmoScript | null>;
     delete: (name: string) => Promise<boolean>;
     getPath: (name: string) => Promise<string>;
+    listScriptImages: (name: string) => Promise<ProjectScriptImage[]>;
     saveProjectMetadata: (id: string, data: unknown) => Promise<boolean>;
     saveProjectScript: (id: string, data: unknown) => Promise<boolean>;
     openProjectFolder: (id: string) => Promise<void>;

@@ -1,4 +1,4 @@
-import { ipcMain, dialog, shell, clipboard, autoUpdater, type IpcMainInvokeEvent } from "electron";
+import { ipcMain, shell, clipboard, autoUpdater, type IpcMainInvokeEvent } from "electron";
 import { mulmoHandler } from "./mulmo/handler";
 import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
@@ -7,15 +7,6 @@ import type { ProjectMetadata, Lang } from "../types";
 export const registerIPCHandler = () => {
   // In this file you can include the rest of your app's specific main process
   // code. You can also put them in separate files and import them here.
-
-  ipcMain.handle("dialog:openFile", async () => {
-    // console.log(app.getPath('userData'));
-    const { canceled, filePaths } = await dialog.showOpenDialog({
-      properties: ["openFile"],
-    });
-    if (canceled) return null;
-    return filePaths[0];
-  });
 
   ipcMain.handle("mulmoHandler", async (event: IpcMainInvokeEvent, method, ...args) => {
     const webContents = event.sender;
@@ -35,6 +26,12 @@ export const registerIPCHandler = () => {
 
   ipcMain.handle("project:getProjectMulmoScript", (_event: IpcMainInvokeEvent, id: string) =>
     projectManager.getProjectMulmoScript(id),
+  );
+
+  ipcMain.handle("project:getPath", (_event: IpcMainInvokeEvent, id: string) => projectManager.getProjectPath(id));
+
+  ipcMain.handle("project:listScriptImages", (_event: IpcMainInvokeEvent, id: string) =>
+    projectManager.listProjectScriptImages(id),
   );
 
   ipcMain.handle("project:delete", (_event: IpcMainInvokeEvent, id: string) => projectManager.deleteProject(id));
