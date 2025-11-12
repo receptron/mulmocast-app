@@ -26,7 +26,7 @@
               @keydown.enter.prevent="selectLocalImage(imageKey)"
               @keydown.space.prevent="selectLocalImage(imageKey)"
               draggable="true"
-              class="border-border bg-card text-muted-foreground mt-4 cursor-pointer rounded-md border-2 border-dashed p-6 text-center shadow-sm"
+              class="border-border bg-card text-muted-foreground mt-4 cursor-pointer rounded-md border-2 border-dashed p-6 text-center whitespace-pre-line shadow-sm"
               role="button"
               tabindex="0"
             >
@@ -349,7 +349,7 @@ const handleDrop = async (eventOrFileData: DragEvent | BinaryFileData, imageKey:
 
 const selectLocalImage = async (imageKey: string) => {
   try {
-    const filePath = await window.electronAPI.dialog.openFile();
+    const filePath = await window.electronAPI.dialog.openFile("image");
     if (!filePath) {
       return;
     }

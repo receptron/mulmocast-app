@@ -37,7 +37,7 @@ const api: ElectronAPI = {
   mulmoHandler: (method: string, ...args: unknown[]) => ipcRenderer.invoke("mulmoHandler", method, ...args),
   onProgress: (callback: (...args: unknown[]) => void) => ipcRenderer.on("progress-update", callback),
   dialog: {
-    openFile: () => ipcRenderer.invoke("dialog:openFile"),
+    openFile: (fileType?: "image" | "video" | "media") => ipcRenderer.invoke("dialog:openFile", fileType),
   },
   file: {
     readBinary: (filePath: string) => ipcRenderer.invoke("file:readBinary", filePath),

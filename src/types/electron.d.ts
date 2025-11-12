@@ -9,7 +9,7 @@ export interface ElectronAPI {
   mulmoHandler: (method: string, ...args: unknown[]) => Promise<unknown>;
   onProgress: (callback: (event: IpcRendererEvent, data: MulmoProgressLog) => void) => void;
   dialog: {
-    openFile: () => Promise<string | null>;
+    openFile: (fileType?: "image" | "video" | "media") => Promise<string | null>;
   };
   file: {
     readBinary: (filePath: string) => Promise<{ name: string; size: number; type: string; buffer: ArrayBuffer } | null>;
