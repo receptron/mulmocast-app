@@ -8,7 +8,6 @@ export interface ElectronAPI {
   mulmoTest: (option: unknown) => Promise<void>;
   mulmoHandler: (method: string, ...args: unknown[]) => Promise<unknown>;
   onProgress: (callback: (event: IpcRendererEvent, data: MulmoProgressLog) => void) => void;
-  getEnv: () => Promise<Record<string, string | undefined>>;
   project: {
     list: () => Promise<Project[]>;
     create: (title: string, lang: string, onboardProject: number) => Promise<Project>;

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell, Menu } from "electron";
+import { app, BrowserWindow, shell, Menu } from "electron";
 import path from "node:path";
 import os from "node:os";
 import fs from "node:fs";
@@ -241,20 +241,6 @@ const createWindow = (splashWindow?: BrowserWindow) => {
       event.preventDefault();
       GraphAILogger.error("Failed to parse URL for navigation:", error);
     }
-  });
-
-  ipcMain.on("request-env", (event) => {
-    void (async () => {
-      const settings = await settingsManager.loadSettings();
-      const envData: Record<string, string | undefined> = {};
-
-      for (const envKey of Object.keys(ENV_KEYS)) {
-        const value = settings?.APIKEY?.[envKey as keyof typeof ENV_KEYS];
-        envData[envKey] = value || process.env[envKey];
-      }
-
-      event.reply("response-env", envData);
-    })();
   });
 
   const updateCallBack = (response: number) => {
