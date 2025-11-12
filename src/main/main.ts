@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell, Menu } from "electron";
+import { app, BrowserWindow, shell, Menu } from "electron";
 import path from "node:path";
 import os from "node:os";
 import fs from "node:fs";
