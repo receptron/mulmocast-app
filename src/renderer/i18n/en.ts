@@ -573,6 +573,11 @@ const lang = {
       tooltipDescription: "Manage speakers and voices in the {tab} tab.",
       tooltipNote: "Regenerate audio after changing speaker.",
     },
+    visibility: {
+      label: "Hide this beat from the final video",
+      description:
+        "Hidden beats stay in your script for reference but are skipped from previews and exported videos. Uncheck to show it again.",
+    },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
       badge: "Media File",

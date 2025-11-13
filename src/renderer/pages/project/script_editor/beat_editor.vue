@@ -89,6 +89,21 @@
       </div>
     </div>
 
+    <div class="mb-6 rounded-md border border-border/40 bg-muted/10 p-3">
+      <div class="flex items-start gap-3">
+        <Checkbox
+          :modelValue="Boolean(beat.hidden)"
+          @update:model-value="(value) => update('hidden', value)"
+        />
+        <div>
+          <Label class="mb-1 block">{{ t("beat.visibility.label") }}</Label>
+          <p class="text-muted-foreground text-xs leading-relaxed">
+            {{ t("beat.visibility.description") }}
+          </p>
+        </div>
+      </div>
+    </div>
+
     <div class="mb-4 flex items-center gap-2" v-if="beatType === 'imagePrompt' && isPro">
       <Label class="mb-1 block">{{ t("ui.common.duration") }}</Label>
 
