@@ -632,6 +632,15 @@ const lang = {
       titleField: "Title",
       codeField: "Code",
       placeholder: "Enter Mermaid diagram code.",
+      selectDiagramType: "Select a dazzling Mermaid preset",
+      preset: {
+        flowchart: "Flowchart - Creative Flow",
+        sequence: "Sequence - Collaboration Saga",
+        class: "Class - Visionary Blueprint",
+        state: "State - Production Journey",
+        gantt: "Gantt - Creative Voyage",
+        journey: "Journey - Hero's Showcase",
+      },
     },
     html_tailwind: {
       badge: "Tailwind Html",

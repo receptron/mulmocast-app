@@ -631,6 +631,15 @@ const lang = {
       titleField: "タイトル",
       codeField: "コード",
       placeholder: "Mermaidダイアグラムコードを入力してください。",
+      selectDiagramType: "Mermaidのプリセットを選択",
+      preset: {
+        flowchart: "フローチャート - ひらめきの流れ",
+        sequence: "シーケンス - 協奏ドラマ",
+        class: "クラス - ビジョン設計図",
+        state: "ステート - 制作の旅路",
+        gantt: "ガント - クリエイティブ航海",
+        journey: "ジャーニー - 英雄のショーケース",
+      },
     },
     html_tailwind: {
       badge: "Tailwind HTML",
