@@ -10,7 +10,7 @@
             @update:modelValue="(val) => updateImageNames(imageKey, val)"
             class="mr-2"
           />
-          <span class="text-sm flex-1">{{ imageKey }}</span>
+          <span class="flex-1 text-sm">{{ imageKey }}</span>
           <img
             v-if="imageRefs[imageKey]"
             :src="imageRefs[imageKey]"
@@ -60,10 +60,9 @@ const loadReference = async () => {
     return;
   }
 
-  const refs = (await window.electronAPI.mulmoHandler(
-    "mulmoReferenceImagesFiles",
-    projectId.value,
-  )) as Record<string, ArrayBuffer | null> | undefined;
+  const refs = (await window.electronAPI.mulmoHandler("mulmoReferenceImagesFiles", projectId.value)) as
+    | Record<string, ArrayBuffer | null>
+    | undefined;
 
   const nextRefs: Record<string, string | null> = {};
   Object.keys(props.images ?? {}).forEach((key) => {
