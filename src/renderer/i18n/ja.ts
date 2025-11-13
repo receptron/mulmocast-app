@@ -81,7 +81,7 @@ const lang = {
       generateThing: "{thing}を生成",
       fetch: "取得",
       selectFile: "ファイルを選択",
-      openMediaLibrary: "メディアライブラリを開く",
+      openMediaLibrary: "生成済みの画像/動画を選択",
       cancel: "キャンセル",
       ok: "OK",
       runningThing: "{thing}を実行中",
