@@ -1,7 +1,7 @@
 <template>
   <Label class="mb-1 block">{{ t("beat.mermaid.label") }}</Label>
-  <div class="mb-2">
-    <Select v-model="selectedPreset">
+  <div class="mb-2 flex items-end gap-2">
+    <Select v-model="selectedPreset" class="flex-1">
       <SelectTrigger class="w-full">
         <SelectValue :placeholder="t('beat.mermaid.selectDiagramType')" />
       </SelectTrigger>
@@ -11,8 +11,6 @@
         </SelectItem>
       </SelectContent>
     </Select>
-  </div>
-  <div class="mb-2 flex justify-end">
     <Button size="sm" @click="updatePreset" :disabled="selectedPreset === null">
       {{ t("ui.actions.set") }}
     </Button>
