@@ -82,6 +82,7 @@ const lang = {
       fetch: "Fetch",
       selectFile: "Select File",
       openMediaLibrary: "Select Generated Images/Videos",
+      openImageLibrary: "Select Generated Images",
       cancel: "Cancel",
       ok: "OK",
       runningThing: "{thing} is running",

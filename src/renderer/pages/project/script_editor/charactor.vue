@@ -47,7 +47,7 @@
             <div class="text-muted-foreground ml-2 mt-2 text-sm">{{ t("ui.common.or") }}</div>
             <div class="mt-2">
               <Button @click="() => openMediaLibrary(imageKey)" type="button">
-                {{ t("ui.actions.openMediaLibrary") }}
+                {{ t("ui.actions.openImageLibrary") }}
               </Button>
             </div>
           </template>

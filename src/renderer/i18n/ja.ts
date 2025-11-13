@@ -82,6 +82,7 @@ const lang = {
       fetch: "取得",
       selectFile: "ファイルを選択",
       openMediaLibrary: "生成済みの画像/動画を選択",
+      openImageLibrary: "生成済みの画像を選択",
       cancel: "キャンセル",
       ok: "OK",
       runningThing: "{thing}を実行中",
