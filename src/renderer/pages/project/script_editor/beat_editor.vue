@@ -99,7 +99,9 @@
         @update:model-value="(value) => update('duration', value === '' ? undefined : Number(value))"
         @blur="justSaveAndPushToHistory"
       />
-      {{ expectDuration }}
+      <span class="text-muted-foreground text-sm">
+        {{ t("beat.duration.supportedDurations", { durations: expectDuration?.join(", ") || "" }) }}
+      </span>
     </div>
 
     <div class="grid grid-cols-2 gap-4">
@@ -445,7 +447,7 @@ const beatId = computed(() => {
 
 const expectDuration = computed(() => {
   const model = provider2MovieAgent.google.defaultModel;
-  return provider2MovieAgent["google"]?.modelParams[model].durations
+  return provider2MovieAgent["google"]?.modelParams[model].durations;
   // return getModelDuration("google", model, 21);
 });
 

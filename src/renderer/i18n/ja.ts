@@ -577,6 +577,10 @@ const lang = {
       description:
         "非表示にしたビートは台本には残りますが、プレビューや書き出しの動画には使われません。再表示したいときはチェックを外してください。",
     },
+    duration: {
+      label: "再生時間",
+      supportedDurations: "生成可能な動画長: [{durations}]秒",
+    },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
       badge: "Media File",
@@ -694,7 +698,6 @@ const lang = {
       placeholder: "スライドに合わせたjsonデータ",
       stylePlaceholder: "スタイルを選択してください",
     },
-    duration: "再生時間",
   },
 
   // Parameters structure (extracted from project.scriptEditor.*)

@@ -579,6 +579,10 @@ const lang = {
       description:
         "Hidden beats stay in your script for reference but are skipped from previews and exported videos. Uncheck to show it again.",
     },
+    duration: {
+      label: "Duration",
+      supportedDurations: "Supported durations: [{durations}]s",
+    },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
       badge: "Media File",
