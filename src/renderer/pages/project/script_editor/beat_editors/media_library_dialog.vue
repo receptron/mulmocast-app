@@ -1,15 +1,15 @@
 <template>
   <Dialog :open="isOpen" @update:open="handleDialogOpenChange">
-    <DialogContent class="sm:max-w-xl">
+    <DialogContent class="sm:max-w-4xl">
       <DialogHeader>
         <DialogTitle>{{ t("beat.mediaFile.libraryTitle") }}</DialogTitle>
         <DialogDescription>
           {{ t("beat.mediaFile.libraryDescription") }}
         </DialogDescription>
       </DialogHeader>
-      <div class="flex h-[360px] flex-col gap-4">
+      <div class="flex h-[600px] flex-col gap-4">
         <ScrollArea class="h-full rounded-md border">
-          <div class="grid gap-4 p-4 sm:grid-cols-2">
+          <div class="grid gap-4 p-4 sm:grid-cols-4">
             <template v-if="isLoading">
               <div class="text-muted-foreground col-span-full flex items-center justify-center py-8 text-sm">
                 {{ t("ui.status.loading") }}
@@ -41,8 +41,7 @@
                     controls
                   />
                 </div>
-                <p class="truncate text-sm font-medium">{{ media.fileName }}</p>
-                <p class="text-muted-foreground text-xs">{{ media.projectRelativePath }}</p>
+                <p class="break-all text-sm font-medium line-clamp-3">{{ media.fileName }}</p>
               </button>
             </template>
             <template v-else>
