@@ -4,15 +4,22 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 export interface ElectronAPI {
-  openFile: () => Promise<string | null>;
   mulmoHandler: (method: string, ...args: unknown[]) => Promise<unknown>;
   onProgress: (callback: (...args: unknown[]) => void) => void;
+  dialog: {
+    openFile: () => Promise<string | null>;
+  };
+  file: {
+    readBinary: (filePath: string) => Promise<{ name: string; size: number; type: string; buffer: ArrayBuffer } | null>;
+  };
   project: {
     list: () => Promise<unknown>;
     create: (title: string, lang: string, onboardProject: number) => Promise<unknown>;
     getProjectMetadata: (name: string) => Promise<unknown>;
     getProjectMulmoScript: (name: string) => Promise<unknown>;
     delete: (name: string) => Promise<unknown>;
+    getPath: (name: string) => Promise<unknown>;
+    listScriptImages: (name: string) => Promise<unknown>;
     saveProjectMetadata: (id: string, data: unknown) => Promise<unknown>;
     saveProjectScript: (id: string, data: unknown) => Promise<unknown>;
     openProjectFolder: (id: string) => Promise<unknown>;
@@ -27,9 +34,14 @@ export interface ElectronAPI {
 }
 
 const api: ElectronAPI = {
-  openFile: () => ipcRenderer.invoke("dialog:openFile"),
   mulmoHandler: (method: string, ...args: unknown[]) => ipcRenderer.invoke("mulmoHandler", method, ...args),
   onProgress: (callback: (...args: unknown[]) => void) => ipcRenderer.on("progress-update", callback),
+  dialog: {
+    openFile: (fileType?: "image" | "video" | "media") => ipcRenderer.invoke("dialog:openFile", fileType),
+  },
+  file: {
+    readBinary: (filePath: string) => ipcRenderer.invoke("file:readBinary", filePath),
+  },
   project: {
     list: () => ipcRenderer.invoke("project:list"),
     create: (title: string, lang: string, onboardProject: number) =>
@@ -37,6 +49,8 @@ const api: ElectronAPI = {
     getProjectMetadata: (name: string) => ipcRenderer.invoke("project:getProjectMetadata", name),
     getProjectMulmoScript: (name: string) => ipcRenderer.invoke("project:getProjectMulmoScript", name),
     delete: (name: string) => ipcRenderer.invoke("project:delete", name),
+    getPath: (name: string) => ipcRenderer.invoke("project:getPath", name),
+    listScriptImages: (name: string) => ipcRenderer.invoke("project:listScriptImages", name),
     saveProjectMetadata: (id: string, data: unknown) => ipcRenderer.invoke("project:saveProjectMetadata", id, data),
     saveProjectScript: (id: string, data: unknown) => ipcRenderer.invoke("project:saveProjectScript", id, data),
     openProjectFolder: (id: string) => ipcRenderer.invoke("project:openProjectFolder", id),

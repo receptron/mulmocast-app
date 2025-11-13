@@ -77,3 +77,13 @@ export type Settings = {
   onboardProject: number;
   DARK_MODE?: string; // Backward compatible
 };
+
+export type MediaType = "image" | "movie";
+
+export type ProjectScriptMedia = {
+  fileName: string;
+  projectRelativePath: string;
+  data: ArrayBuffer;
+  mediaType: MediaType;
+  mimeType: string;
+};

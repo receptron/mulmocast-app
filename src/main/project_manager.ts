@@ -6,7 +6,7 @@ import { randomUUID } from "node:crypto";
 import { MulmoScriptMethods, mulmoScriptSchema, type MulmoScript } from "mulmocast";
 import { GraphAILogger } from "graphai";
 
-import type { Project, ProjectMetadata, Lang } from "../types";
+import type { Project, ProjectMetadata, Lang, ProjectScriptMedia, MediaType } from "../types";
 import { SCRIPT_EDITOR_TABS, MULMO_VIEWER_TABS } from "../shared/constants";
 import { initMulmoScript } from "../shared/beat_data";
 import { onboardProjects } from "../shared/onboard";
@@ -85,6 +85,61 @@ export const saveProjectMetadata = async (projectId: string, data: ProjectMetada
 };
 export const saveProjectScript = async (projectId: string, data: Partial<MulmoScript>): Promise<boolean> => {
   return await writeJsonFile(getProjectScriptPath(projectId), data);
+};
+
+const scriptMediaExtensions: Record<string, { mediaType: MediaType; mimeType: string }> = {
+  png: { mediaType: "image", mimeType: "image/png" },
+  mov: { mediaType: "movie", mimeType: "video/quicktime" },
+};
+
+export const listProjectScriptImages = async (projectId: string): Promise<ProjectScriptMedia[]> => {
+  const imagesDirectory = path.join(getProjectPath(projectId), "output", "images", "script");
+  const scriptImageNamePattern = /^[a-f0-9]+(?:-[a-f0-9]+){4,}\.(png|mov)$/i;
+
+  try {
+    const entries = await fs.readdir(imagesDirectory, { withFileTypes: true });
+
+    const images = await Promise.all(
+      entries
+        .filter((entry) => entry.isFile() && scriptImageNamePattern.test(entry.name))
+        .map(async (entry) => {
+          const fileName = entry.name;
+          const fullPath = path.join(imagesDirectory, fileName);
+          const extension = fileName.split(".").pop()?.toLowerCase() ?? "";
+          const mediaConfig = scriptMediaExtensions[extension];
+
+          if (!mediaConfig) {
+            GraphAILogger.warn(`Unsupported script media extension detected: ${fileName}`);
+            return null;
+          }
+
+          try {
+            const fileBuffer = await fs.readFile(fullPath);
+            const data = fileBuffer.buffer.slice(fileBuffer.byteOffset, fileBuffer.byteOffset + fileBuffer.byteLength);
+
+            return {
+              fileName,
+              projectRelativePath: `./output/images/script/${fileName}`,
+              data,
+              mediaType: mediaConfig.mediaType,
+              mimeType: mediaConfig.mimeType,
+            } satisfies ProjectScriptMedia;
+          } catch (readError) {
+            GraphAILogger.error(`Failed to load script image: ${fullPath}`, readError);
+            return null;
+          }
+        }),
+    );
+
+    return images
+      .filter((image): image is ProjectScriptMedia => image !== null)
+      .sort((a, b) => b.fileName.localeCompare(a.fileName));
+  } catch (error) {
+    if ("code" in error && error.code !== "ENOENT") {
+      GraphAILogger.error("Failed to list project script images:", error);
+    }
+    return [];
+  }
 };
 
 const generateId = (): string => {

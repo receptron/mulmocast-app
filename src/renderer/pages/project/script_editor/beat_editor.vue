@@ -3,7 +3,7 @@
     <div class="mb-2 flex items-center justify-between">
       <div class="flex items-center gap-3 font-medium">
         <span class="text-base">{{ t("ui.common.beat") }} {{ index + 1 }}</span>
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-1" v-if="false">
           <CircleUserRound class="size-4 opacity-50" />
           <div v-if="beat.speaker && !toggleSpeakerMode" class="group relative">
             <Badge variant="outline" @click="showSpeakerSelector" class="cursor-pointer">
@@ -22,7 +22,7 @@
             </span>
           </div>
         </div>
-        <div v-if="toggleSpeakerMode">
+        <div>
           <SpeakerSelector
             @emitSpeaker="(speaker) => changeSpeaker(speaker)"
             :currentSpeaker="beat.speaker"
@@ -310,6 +310,18 @@
       @justSaveAndPushToHistory="justSaveAndPushToHistory"
       v-if="beatType === 'imagePrompt'"
     />
+
+    <div class="border-border/40 bg-muted/10 mt-4 rounded-md border p-3" v-if="false">
+      <div class="flex items-start gap-3">
+        <Checkbox :modelValue="Boolean(beat.hidden)" @update:model-value="(value) => update('hidden', value)" />
+        <div>
+          <Label class="mb-1 block">{{ t("beat.visibility.label") }}</Label>
+          <p class="text-muted-foreground text-xs leading-relaxed">
+            {{ t("beat.visibility.description") }}
+          </p>
+        </div>
+      </div>
+    </div>
 
     <div
       v-if="mulmoError && mulmoError.length > 0"

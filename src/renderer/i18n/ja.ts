@@ -14,7 +14,7 @@ const lang = {
       next: "次へ",
 
       // File operations
-      drophere: "画像をここにドロップ({maxSizeMB}MBまで)",
+      drophere: "ファイルをドロップ\nまたはクリックして選択\n({maxSizeMB}MBまで)",
       or: "または",
 
       // Common labels and nouns
@@ -80,6 +80,9 @@ const lang = {
       generating: "生成中",
       generateThing: "{thing}を生成",
       fetch: "取得",
+      selectFile: "ファイルを選択",
+      openMediaLibrary: "生成済みの画像/動画を選択",
+      openImageLibrary: "生成済みの画像を選択",
       cancel: "キャンセル",
       ok: "OK",
       runningThing: "{thing}を実行中",
@@ -98,7 +101,7 @@ const lang = {
       generateImage: "画像生成",
       generateMovie: "動画生成",
       changeBeatTypeFirst: "まずビートタイプを変更してください",
-      generateReference: "キャラ生成",
+      generateReference: "素材生成",
       generateAudio: "音声生成",
       translateBeat: "翻訳",
 
@@ -121,7 +124,7 @@ const lang = {
       // Template actions
       insert: "追加",
       change: "変更",
-      reference: "画像をセット",
+      reference: "素材をセット",
 
       // Project actions
       createNew: "新規作成",
@@ -429,12 +432,12 @@ const lang = {
         modeDescription: "音声/動画/画像/字幕などのスタイルを設定します",
       },
       reference: {
-        tabLabel: "キャラ設定",
-        tabLabelShort: "キャラ",
-        mode: "キャラクター設定",
-        modeDescription: "登場するキャラクターの管理をします",
+        tabLabel: "素材設定",
+        tabLabelShort: "素材",
+        mode: "素材設定",
+        modeDescription: "素材を管理します",
         description:
-          "生成AIで作るキャラクターの見た目を安定させます。キャラクター画像は「画像生成プロンプト」で作るか、「画像ファイル」で追加して設定します。その後、各BEATの「{imageParamsImages}」で「{key}」を指定してください。",
+          "生成AIで作る画像の見た目を安定させるために、素材を使用します。キャラクターだけでなく、背景や小物なども素材として登録できます。素材は「画像生成プロンプト」で作成するか、「画像ファイル」で追加して設定します。その後、各BEATの「{imageParamsImages}」欄で「{key}」を指定してください。",
         imageGenerationDisabled: {
           needPrompt: "「{imagePromptLabel}」を入力してください",
           needValidScript: "「{beatTabLabel}」タブの内容が正しく設定されると、画像生成ボタンが押せるようになります。",
@@ -569,6 +572,11 @@ const lang = {
       tooltipDescription: "登場人物と声は{tab}タブで追加・編集できます",
       tooltipNote: "変更後は音声を再生成してください",
     },
+    visibility: {
+      label: "このビートを最終動画に含めない",
+      description:
+        "非表示にしたビートは台本には残りますが、プレビューや書き出しの動画には使われません。再表示したいときはチェックを外してください。",
+    },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
       badge: "Media File",
@@ -576,6 +584,10 @@ const lang = {
       remoteLabel: "リモートメディア",
       urlField: "URL",
       placeholder: "画像URLを入力",
+      libraryTitle: "プロジェクト画像を選択",
+      libraryDescription: "このプロジェクトで生成された画像から選択してください。",
+      libraryEmpty: "このプロジェクトで生成された画像が見つかりませんでした。",
+      libraryLoadError: "プロジェクトの画像を読み込めませんでした。",
     },
     mediaImageFile: {
       label: "画像ファイル",
@@ -625,6 +637,15 @@ const lang = {
       titleField: "タイトル",
       codeField: "コード",
       placeholder: "Mermaidダイアグラムコードを入力してください。",
+      selectDiagramType: "Mermaidのプリセットを選択",
+      preset: {
+        flowchart: "フローチャート - ひらめきの流れ",
+        sequence: "シーケンス - 協奏ドラマ",
+        class: "クラス - ビジョン設計図",
+        state: "ステート - 制作の旅路",
+        gantt: "ガント - クリエイティブ航海",
+        journey: "ジャーニー - 英雄のショーケース",
+      },
     },
     html_tailwind: {
       badge: "Tailwind HTML",
@@ -634,7 +655,7 @@ const lang = {
     },
     beat: {
       badge: "Beat",
-      label: "参照画像",
+      label: "素材",
       idField: "ビートID",
       referenceField: "ビート参照",
       placeholder: "参照するビートIDを入力してください（例: beat_1）",
@@ -653,10 +674,10 @@ const lang = {
       placeholder: "空白では動作しません。スペースを入力してください。",
     },
     imageReference: {
-      badge: "Image Reference",
-      keyField: "キャラのキー",
-      placeholder: "キャラクターのキーを登録(英数字のみ)",
-      imagePromptPlaceholder: "キャラ画像を生成するためのプロンプトを入力してください。",
+      badge: "素材",
+      keyField: "素材キー",
+      placeholder: "素材のキーを登録(英数字のみ)",
+      imagePromptPlaceholder: "素材を生成するためのプロンプトを入力してください。",
     },
     image: {
       badge: "Image",
@@ -738,10 +759,10 @@ const lang = {
       stylePlaceholder: "例) 鮮やか、自然",
       moderation: "モデレーション",
       moderationPlaceholder: "例) 低、自動",
-      images: "キャラクター画像",
-      imagesDescription: "このビートで使うキャラクターを選んでください",
+      images: "素材",
+      imagesDescription: "このビートで使う素材を選んでください",
       imagesEmptyHint:
-        "キャラ画像は設定されていません。生成画像でキャラクターを指定する場合は、「キャラ生成」タブでキャラ画像を設定してください。",
+        "素材は設定されていません。生成画像で素材を指定する場合は、「素材生成」タブで素材を設定してください。",
       customTitle: "このビートの画像生成設定を上書きする",
       customDescription1: "ここで設定した内容は、このビートでのみ使われます。",
       customDescription2: "設定していない場合は、スタイルで指定した共通設定が使われます。",
@@ -772,7 +793,7 @@ const lang = {
   presentationStyle: {
     styleTemplate: {
       title: "スタイル テンプレート",
-      description: "スタイルを上書きします。既存のスタイル設定やキャラクター設定は失われますのでご注意ください。",
+      description: "スタイルを上書きします。既存のスタイル設定や素材設定は失われますのでご注意ください。",
       note: "スタイルを選んで「{applyButton}」を押すと反映されます。プルダウンの選択は元に戻りますが、設定内容は反映されています。",
       placeholder: "スタイルを選択してください",
     },
@@ -808,8 +829,8 @@ const lang = {
       errorMessage: "画像生成失敗",
     },
     imageReference: {
-      successMessage: "キャラ画像生成成功!!",
-      errorMessage: "キャラ画像生成失敗",
+      successMessage: "素材生成成功!!",
+      errorMessage: "素材生成失敗",
     },
     translate: {
       successMessage: "翻訳成功!!",
@@ -821,7 +842,7 @@ const lang = {
     },
     // BeatSessionType
     beat: {
-      imageReference: "キャラ画像",
+      imageReference: "素材",
       audio: "音声",
       image: "画像",
       multiLingual: "多言語テキスト",
@@ -895,7 +916,7 @@ const lang = {
       },
       imageReference: {
         urlFileNotFound: {
-          imageFile: "キャラ画像が存在しない、もしくは正しくないようです",
+          imageFile: "素材が存在しない、もしくは正しくないようです",
         },
         apiError: {
           imageOpenaiAgent: "OpenAIのAPI Keyが正しくありません",

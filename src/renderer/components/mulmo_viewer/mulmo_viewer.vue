@@ -196,7 +196,7 @@ const { audioFiles, downloadAudioFiles, downloadAudioFile } = useAudioFiles();
 const bgmFile = ref("");
 
 const beats = computed(() => {
-  return props.project?.script?.beats ?? [];
+  return (props.project?.script?.beats ?? []).filter((beat) => !beat.hidden);
 });
 
 const currentBeat = computed(() => {

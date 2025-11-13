@@ -22,19 +22,32 @@
             <div
               @dragover.prevent
               @drop.prevent="(e) => handleDrop(e, imageKey)"
+              @click="() => selectLocalImage(imageKey)"
+              @keydown.enter.prevent="selectLocalImage(imageKey)"
+              @keydown.space.prevent="selectLocalImage(imageKey)"
               draggable="true"
-              class="border-border bg-card text-muted-foreground mt-4 cursor-pointer rounded-md border-2 border-dashed p-6 text-center shadow-sm"
+              class="border-border bg-card text-muted-foreground mt-4 cursor-pointer rounded-md border-2 border-dashed p-6 text-center whitespace-pre-line shadow-sm"
+              role="button"
+              tabindex="0"
             >
               {{ t("ui.common.drophere", { maxSizeMB }) }}
             </div>
-            {{ t("ui.common.or") }}
-            <div class="flex">
-              <Input :placeholder="t('beat.beat.placeholderUrl')" v-model="mediaUrl" :invalid="!validateURL" /><Button
-                @click="() => submitUrlImage(imageKey)"
-                :disabled="!fetchEnable"
-                class="ml-2"
-              >
+            <div class="text-muted-foreground mt-2 ml-2 text-sm">{{ t("ui.common.or") }}</div>
+            <div class="mt-2 flex flex-wrap gap-2">
+              <Input
+                :placeholder="t('beat.beat.placeholderUrl')"
+                v-model="mediaUrl"
+                :invalid="!validateURL"
+                class="min-w-0 flex-1"
+              />
+              <Button @click="() => submitUrlImage(imageKey)" :disabled="!fetchEnable" class="shrink-0">
                 {{ t("ui.actions.fetch") }}
+              </Button>
+            </div>
+            <div class="text-muted-foreground mt-2 ml-2 text-sm">{{ t("ui.common.or") }}</div>
+            <div class="mt-2">
+              <Button @click="() => openMediaLibrary(imageKey)" type="button">
+                {{ t("ui.actions.openImageLibrary") }}
               </Button>
             </div>
           </template>
@@ -107,8 +120,14 @@
         @click="deleteReference(imageKey)"
       />
     </div>
-    <MediaModal v-model:open="modalOpen" type="image" :src="modalSrc" />
   </div>
+  <MediaModal v-model:open="modalOpen" type="image" :src="modalSrc" />
+  <MediaLibraryDialog
+    ref="mediaLibraryRef"
+    :project-id="props.projectId"
+    :allowed-media-types="['image']"
+    @select="selectScriptImage"
+  />
 </template>
 
 <script setup lang="ts">
@@ -132,8 +151,13 @@ import MediaModal from "@/components/media_modal.vue";
 import { Card } from "@/components/ui/card";
 import { Button, Label, Textarea, Input } from "@/components/ui";
 import { bufferToUrl } from "@/lib/utils";
+import { readFileAsArrayBuffer, type BinaryFileData } from "@/lib/file";
 
 import CharactorSelector from "./charactor_selector.vue";
+import MediaLibraryDialog, {
+  type MediaLibraryDialogExposed,
+  type ProjectScriptMedia,
+} from "./beat_editors/media_library_dialog.vue";
 
 import { notifyProgress, notifyError } from "@/lib/notification";
 import { useApiErrorNotify } from "@/composables/notify";
@@ -163,6 +187,9 @@ const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 
 const imageRefs = ref<Record<string, string>>({});
 const maxSizeMB = 50;
+
+const mediaLibraryRef = ref<MediaLibraryDialogExposed | null>(null);
+const activeImageKey = ref<string | null>(null);
 
 const loadReference = async () => {
   imageRefs.value = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFiles", props.projectId);
@@ -230,49 +257,110 @@ const deleteReference = (key: string) => {
   emit("deleteReferenceImage", key);
 };
 
-const handleDrop = (event: DragEvent, imageKey: string) => {
-  const files = event.dataTransfer.files;
-  if (files.length > 0) {
-    const file = files[0];
+const openMediaLibrary = async (imageKey: string) => {
+  activeImageKey.value = imageKey;
+  if (mediaLibraryRef.value) {
+    await mediaLibraryRef.value.open();
+  }
+};
 
-    const maxSize = maxSizeMB * 1024 * 1024;
-    if (file.size > maxSize) {
-      notifyError(t("notify.error.media.tooLarge", { maxSizeMB }));
-      return;
-    }
+const selectScriptImage = async (media: ProjectScriptMedia) => {
+  if (!activeImageKey.value) {
+    return;
+  }
+  if (media.mediaType !== "image") {
+    notifyError(t("notify.error.media.unsupportedMovie"));
+    activeImageKey.value = null;
+    return;
+  }
 
-    const fileExtension = file.name.split(".").pop()?.toLowerCase() ?? "";
-    const mimeType = file.type.split("/")[1] ?? "";
-    const fileType = mimeType || fileExtension;
+  const projectRelativePath = media.projectRelativePath.startsWith("./")
+    ? media.projectRelativePath
+    : `./${media.projectRelativePath.replace(/^\/+/u, "")}`;
 
-    const imageType = (() => {
-      if (["jpg", "jpeg", "png"].includes(fileType)) {
-        return "image";
+  emit("updateImagePath", activeImageKey.value, projectRelativePath);
+  emit("saveMulmo");
+  emit("formatAndPushHistoryMulmoScript");
+  await nextTick();
+  await loadReference();
+  activeImageKey.value = null;
+};
+
+const processReferenceImage = async (fileData: BinaryFileData, imageKey: string) => {
+  const maxSize = maxSizeMB * 1024 * 1024;
+  if (fileData.size > maxSize) {
+    notifyError(t("notify.error.media.tooLarge", { maxSizeMB }));
+    return;
+  }
+
+  const fileExtension = fileData.name.split(".").pop()?.toLowerCase() ?? "";
+  const mimeType = fileData.type.split("/")[1] ?? "";
+  const fileType = mimeType || fileExtension;
+
+  if (!["jpg", "jpeg", "png"].includes(fileType)) {
+    notifyError(t("notify.error.media.unsupportedType", { fileType }));
+    return;
+  }
+
+  const extension = fileType === "jpeg" ? "jpg" : fileType;
+  const uint8Array = fileData.buffer instanceof Uint8Array ? fileData.buffer : new Uint8Array(fileData.buffer);
+  const path = await window.electronAPI.mulmoHandler(
+    "mulmoReferenceImageUpload",
+    props.projectId,
+    imageKey,
+    [...uint8Array],
+    extension,
+  );
+  emit("updateImagePath", imageKey, "./" + path);
+  // Workaround: wait for the script change
+  await nextTick();
+  const res = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
+  imageRefs.value[imageKey] = res ? bufferToUrl(res, "image/png") : null;
+};
+
+const handleDrop = async (eventOrFileData: DragEvent | BinaryFileData, imageKey: string) => {
+  if ("dataTransfer" in eventOrFileData) {
+    const files = eventOrFileData.dataTransfer?.files;
+    if (files?.length) {
+      const file = files[0];
+      try {
+        const buffer = await readFileAsArrayBuffer(file);
+        await processReferenceImage(
+          {
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            buffer,
+          },
+          imageKey,
+        );
+      } catch (error) {
+        console.error(error);
       }
-    })();
-    if (!imageType) {
-      notifyError(t("notify.error.media.unsupportedType", { fileType }));
+    }
+    return;
+  }
+
+  try {
+    await processReferenceImage(eventOrFileData, imageKey);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const selectLocalImage = async (imageKey: string) => {
+  try {
+    const filePath = await window.electronAPI.dialog.openFile("image");
+    if (!filePath) {
       return;
     }
-    const extension = fileType === "jpeg" ? "jpg" : fileType;
-
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const uint8Array = new Uint8Array(reader.result as ArrayBuffer);
-      const path = await window.electronAPI.mulmoHandler(
-        "mulmoReferenceImageUpload",
-        props.projectId,
-        imageKey,
-        [...uint8Array],
-        extension,
-      );
-      emit("updateImagePath", imageKey, "./" + path);
-      // Workaround: wait for the script change
-      await nextTick();
-      const res = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
-      imageRefs.value[imageKey] = res ? bufferToUrl(res, "image/png") : null;
-    };
-    reader.readAsArrayBuffer(file);
+    const fileData = await window.electronAPI.file.readBinary(filePath);
+    if (!fileData) {
+      return;
+    }
+    await handleDrop(fileData, imageKey);
+  } catch (error) {
+    console.error(error);
   }
 };
 

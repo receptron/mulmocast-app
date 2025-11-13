@@ -1,5 +1,23 @@
 <template>
   <Label class="mb-1 block">{{ t("beat.mermaid.label") }}</Label>
+  <div class="mb-2">
+    <Select v-model="selectedPreset">
+      <SelectTrigger class="w-full">
+        <SelectValue :placeholder="t('beat.mermaid.selectDiagramType')" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem v-for="(preset, key) in mermaid_presets" :value="key" :key="preset.name">
+          {{ t("beat.mermaid.preset." + preset.name) }}
+        </SelectItem>
+      </SelectContent>
+    </Select>
+  </div>
+  <div class="mb-2 flex justify-end">
+    <Button size="sm" @click="updatePreset" :disabled="selectedPreset === null">
+      {{ t("ui.actions.set") }}
+    </Button>
+  </div>
+
   <Input
     :placeholder="t('beat.mermaid.titleField')"
     :model-value="beat?.image?.title"
@@ -13,14 +31,19 @@
     @update:model-value="(value) => update('image.code.text', String(value))"
     @blur="save"
     class="font-mono"
-    rows="6"
+    rows="8"
   />
 </template>
 
 <script setup lang="ts">
-import { Label, Input, Textarea } from "@/components/ui";
+import { ref } from "vue";
+import { Label, Input, Textarea, Button } from "@/components/ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { MulmoBeat } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
+
+import { mermaid_presets } from "./mermaid_data";
+
 const { t } = useI18n();
 
 interface Props {
@@ -35,5 +58,13 @@ const update = (path: string, value: unknown) => {
 
 const save = () => {
   emit("save");
+};
+
+const selectedPreset = ref<number | null>(null);
+
+const updatePreset = () => {
+  if (selectedPreset.value === null) return;
+  const data = mermaid_presets[selectedPreset.value].code.trim();
+  update("image.code.text", data);
 };
 </script>
