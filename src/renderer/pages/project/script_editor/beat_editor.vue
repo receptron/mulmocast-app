@@ -310,7 +310,7 @@
       v-if="beatType === 'imagePrompt'"
     />
 
-    <div class="border-border/40 bg-muted/10 mt-4 rounded-md border p-3">
+    <div class="border-border/40 bg-muted/10 mt-4 rounded-md border p-3" v-if="false">
       <div class="flex items-start gap-3">
         <Checkbox :modelValue="Boolean(beat.hidden)" @update:model-value="(value) => update('hidden', value)" />
         <div>
