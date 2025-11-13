@@ -584,6 +584,20 @@ const lang = {
       unit: "s",
       placeholder: "auto",
       supportedDurations: "Supported durations: [{durations}]s",
+      tooltipStillImage: {
+        line1: "Use this to specify how long you want the image to display.",
+        line2: "However, it cannot end before the audio finishes.",
+      },
+      tooltipUploadedVideo: {
+        line1: "Use this to cut the video shorter if needed.",
+        line2: "However, it cannot end before the audio finishes.",
+      },
+      tooltipGeneratedVideo: {
+        line1: "1. Use this to specify the generated video length.",
+        line2: "   Note that each model can only generate videos of specific durations",
+        line3: "   shown next to this field (e.g., 5 / 6 / 7 / 8).",
+        line4: "2. If the generated video doesn't play to the end, adjust this value.",
+      },
     },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {

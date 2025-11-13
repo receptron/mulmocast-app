@@ -89,7 +89,7 @@
       </div>
     </div>
 
-    <div class="mb-4 flex items-center gap-2" v-if="beatType === 'imagePrompt' && isPro">
+    <div class="group relative mb-4 flex items-center gap-2" v-if="beatType === 'imagePrompt' && isPro">
       <Label class="mb-1 block">{{ t("beat.duration.label") }}</Label>
 
       <Input
@@ -102,6 +102,20 @@
       <span class="text-muted-foreground text-sm">{{ t("beat.duration.unit") }}</span>
       <span class="text-muted-foreground text-sm">
         {{ t("beat.duration.supportedDurations", { durations: expectDuration?.join(", ") || "" }) }}
+      </span>
+      <span
+        class="bg-popover text-popover-foreground border-border pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform rounded border px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+      >
+        <div>{{ t(durationTooltipKey + ".line1") }}</div>
+        <div :class="durationTooltipKey === 'beat.duration.tooltipGeneratedVideo' ? 'ml-2' : ''">
+          {{ t(durationTooltipKey + ".line2") }}
+        </div>
+        <div v-if="durationTooltipKey === 'beat.duration.tooltipGeneratedVideo'" class="ml-2">
+          {{ t(durationTooltipKey + ".line3") }}
+        </div>
+        <div v-if="durationTooltipKey === 'beat.duration.tooltipGeneratedVideo'">
+          {{ t(durationTooltipKey + ".line4") }}
+        </div>
       </span>
     </div>
 
@@ -455,6 +469,19 @@ const expectDuration = computed(() => {
   const model = movieParams.model as string;
   const modelParams = provider2MovieAgent[provider]?.modelParams as Record<string, { durations?: number[] }>;
   return modelParams?.[model]?.durations;
+});
+
+const durationTooltipKey = computed(() => {
+  // moviePromptがある場合 → 生成動画
+  if (props.beat.moviePrompt) {
+    return "beat.duration.tooltipGeneratedVideo";
+  }
+  // image.typeが"movie"の場合 → アップロードした動画
+  if (props.beat.image?.type === "movie") {
+    return "beat.duration.tooltipUploadedVideo";
+  }
+  // それ以外 → 静止画
+  return "beat.duration.tooltipStillImage";
 });
 
 const isImageGenerating = computed(() => {
