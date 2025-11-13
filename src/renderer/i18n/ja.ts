@@ -571,6 +571,11 @@ const lang = {
       tooltipDescription: "登場人物と声は{tab}タブで追加・編集できます",
       tooltipNote: "変更後は音声を再生成してください",
     },
+    visibility: {
+      label: "このビートを最終動画に含めない",
+      description:
+        "非表示にしたビートは台本には残りますが、プレビューや書き出しの動画には使われません。再表示したいときはチェックを外してください。",
+    },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
       badge: "Media File",

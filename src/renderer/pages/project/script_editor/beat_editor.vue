@@ -310,6 +310,18 @@
       v-if="beatType === 'imagePrompt'"
     />
 
+    <div class="border-border/40 bg-muted/10 mt-4 rounded-md border p-3">
+      <div class="flex items-start gap-3">
+        <Checkbox :modelValue="Boolean(beat.hidden)" @update:model-value="(value) => update('hidden', value)" />
+        <div>
+          <Label class="mb-1 block">{{ t("beat.visibility.label") }}</Label>
+          <p class="text-muted-foreground text-xs leading-relaxed">
+            {{ t("beat.visibility.description") }}
+          </p>
+        </div>
+      </div>
+    </div>
+
     <div
       v-if="mulmoError && mulmoError.length > 0"
       class="border-destructive bg-destructive/10 text-destructive mt-2 w-full rounded border p-2 text-sm"
