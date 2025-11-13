@@ -94,7 +94,7 @@ const scriptMediaExtensions: Record<string, { mediaType: MediaType; mimeType: st
 
 export const listProjectScriptImages = async (projectId: string): Promise<ProjectScriptMedia[]> => {
   const imagesDirectory = path.join(getProjectPath(projectId), "output", "images", "script");
-  const scriptImageNamePattern = /^[A-Z0-9]+(?:-[A-Z0-9]+){5}\.(png|mov)$/i;
+  const scriptImageNamePattern = /^[a-f0-9]+(?:-[a-f0-9]+){4,}\.(png|mov)$/i;
 
   try {
     const entries = await fs.readdir(imagesDirectory, { withFileTypes: true });
