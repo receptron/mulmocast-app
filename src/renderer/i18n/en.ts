@@ -632,7 +632,7 @@ const lang = {
       titleField: "Title",
       codeField: "Code",
       placeholder: "Enter Mermaid diagram code.",
-      selectDiagramType: "Select a dazzling Mermaid preset",
+      selectDiagramType: "Select Mermaid diagram preset",
       preset: {
         flowchart: "Flowchart - Creative Flow",
         sequence: "Sequence - Collaboration Saga",
