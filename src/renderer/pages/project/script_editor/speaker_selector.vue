@@ -1,6 +1,6 @@
 <template>
   <div class="template-dropdown-container flex items-center gap-4">
-    <div class="group relative">
+    <div class="group relative ml-5">
       <Select v-model="selectedSpeaker">
         <SelectTrigger class="w-auto">
           <SelectValue :placeholder="t('beat.speaker.selectSpeaker')" />
