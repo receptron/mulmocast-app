@@ -48,21 +48,6 @@ export const mermaid_presets = [
     Editing --> Dreaming : reboot`,
   },
   {
-    name: "gantt",
-    code: `gantt
-    dateFormat  YYYY-MM-DD
-    title  Creative Voyage
-    section Inspire
-    Moodboard        :done,    a1, 2024-05-01, 3d
-    Story Research   :active,  a2, 2024-05-04, 5d
-    section Craft
-    Script Draft     :        a3, 2024-05-09, 4d
-    Visual Design    :        a4, after a3, 5d
-    section Launch
-    Final Cut        :crit,   a5, after a4, 3d
-    Premiere Party   :milestone, 2024-05-25, 1d`,
-  },
-  {
     name: "journey",
     code: `journey
     title Hero's Journey
