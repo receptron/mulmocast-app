@@ -29,7 +29,7 @@
     >
       {{ t("ui.common.drophere", { maxSizeMB }) }}
     </div>
-    <div class="text-muted-foreground ml-2 mt-2 text-sm">{{ t("ui.common.or") }}</div>
+    <div class="text-muted-foreground mt-2 ml-2 text-sm">{{ t("ui.common.or") }}</div>
     <div class="mt-2 flex flex-wrap gap-2">
       <Input
         :placeholder="t('beat.mediaFile.placeholder')"
@@ -42,7 +42,7 @@
         {{ t("ui.actions.fetch") }}
       </Button>
     </div>
-    <div class="text-muted-foreground ml-2 mt-2 text-sm">{{ t("ui.common.or") }}</div>
+    <div class="text-muted-foreground mt-2 ml-2 text-sm">{{ t("ui.common.or") }}</div>
     <div class="mt-2">
       <Button @click="openMediaLibrary" type="button" class="shrink-0">
         {{ t("ui.actions.openMediaLibrary") }}

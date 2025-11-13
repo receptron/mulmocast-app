@@ -41,7 +41,7 @@
                     controls
                   />
                 </div>
-                <p class="break-all text-sm font-medium line-clamp-3">{{ media.fileName }}</p>
+                <p class="line-clamp-3 text-sm font-medium break-all">{{ media.fileName }}</p>
               </button>
             </template>
             <template v-else>
