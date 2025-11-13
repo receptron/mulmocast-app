@@ -581,6 +581,8 @@ const lang = {
     },
     duration: {
       label: "Duration",
+      unit: "s",
+      placeholder: "auto",
       supportedDurations: "Supported durations: [{durations}]s",
     },
     // Beat type structures (moved from beat.form.*)

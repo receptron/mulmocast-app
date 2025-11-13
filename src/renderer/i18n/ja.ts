@@ -579,6 +579,8 @@ const lang = {
     },
     duration: {
       label: "再生時間",
+      unit: "秒",
+      placeholder: "自動",
       supportedDurations: "生成可能な動画長: [{durations}]秒",
     },
     // Beat type structures (moved from beat.form.*)

@@ -93,12 +93,13 @@
       <Label class="mb-1 block">{{ t("beat.duration.label") }}</Label>
 
       <Input
-        class="w-28"
-        :placeholder="t('ui.common.duration')"
+        class="w-16"
+        :placeholder="t('beat.duration.placeholder')"
         :model-value="beat?.duration"
         @update:model-value="(value) => update('duration', value === '' ? undefined : Number(value))"
         @blur="justSaveAndPushToHistory"
       />
+      <span class="text-muted-foreground text-sm">{{ t("beat.duration.unit") }}</span>
       <span class="text-muted-foreground text-sm">
         {{ t("beat.duration.supportedDurations", { durations: expectDuration?.join(", ") || "" }) }}
       </span>
