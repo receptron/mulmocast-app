@@ -90,7 +90,7 @@
     </div>
 
     <div class="mb-4 flex items-center gap-2" v-if="beatType === 'imagePrompt' && isPro">
-      <Label class="mb-1 block">{{ t("ui.common.duration") }}</Label>
+      <Label class="mb-1 block">{{ t("beat.duration.label") }}</Label>
 
       <Input
         class="w-28"
@@ -446,9 +446,14 @@ const beatId = computed(() => {
 });
 
 const expectDuration = computed(() => {
-  const model = provider2MovieAgent.google.defaultModel;
-  return provider2MovieAgent["google"]?.modelParams[model].durations;
-  // return getModelDuration("google", model, 21);
+  const movieParams = props.mulmoScript?.movieParams;
+  if (!movieParams?.provider || !movieParams?.model) {
+    return undefined;
+  }
+  const provider = movieParams.provider as keyof typeof provider2MovieAgent;
+  const model = movieParams.model as string;
+  const modelParams = provider2MovieAgent[provider]?.modelParams as Record<string, { durations?: number[] }>;
+  return modelParams?.[model]?.durations;
 });
 
 const isImageGenerating = computed(() => {
