@@ -111,7 +111,7 @@
           {{ t(durationTooltipKey + ".line2") }}
         </div>
         <div v-if="durationTooltipKey === 'beat.duration.tooltipGeneratedVideo'" class="ml-2">
-          {{ t(durationTooltipKey + ".line3") }}
+          {{ t(durationTooltipKey + ".line3", { label: t("beat.duration.label") }) }}
         </div>
         <div v-if="durationTooltipKey === 'beat.duration.tooltipGeneratedVideo'">
           {{ t(durationTooltipKey + ".line4") }}

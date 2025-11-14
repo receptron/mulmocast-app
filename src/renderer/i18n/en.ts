@@ -594,8 +594,8 @@ const lang = {
       },
       tooltipGeneratedVideo: {
         line1: "1. Use this to specify the generated video length.",
-        line2: "   Note that each model can only generate videos of specific durations",
-        line3: "   shown next to this field (e.g., [5, 6, 7, 8].",
+        line2: "Note that each model can only generate videos of specific durations",
+        line3: 'shown next to the "{label}" field (e.g., [5, 6, 7, 8]).',
         line4: "2. If the generated video doesn't play to the end, adjust this value.",
       },
     },
