@@ -100,8 +100,8 @@
         @blur="justSaveAndPushToHistory"
       />
       <span class="text-muted-foreground text-sm">{{ t("beat.duration.unit") }}</span>
-      <span class="text-muted-foreground text-sm">
-        {{ t("beat.duration.supportedDurations", { durations: expectDuration?.join(", ") || "" }) }}
+      <span v-if="expectDuration" class="text-muted-foreground text-sm">
+        {{ t("beat.duration.supportedDurations", { durations: expectDuration.join(", ") }) }}
       </span>
       <span
         class="bg-popover text-muted-foreground border-border pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform rounded border px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100"
