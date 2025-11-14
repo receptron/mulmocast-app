@@ -22,6 +22,10 @@ export const chart_bar = {
       },
     ],
   },
+  options: {
+    responsive: true,
+    animation: false,
+  },
 };
 
 export const chart_line = {
@@ -41,6 +45,7 @@ export const chart_line = {
   },
   options: {
     responsive: true,
+    animation: false,
     plugins: { legend: { position: "top" } },
   },
 };
@@ -62,6 +67,10 @@ export const chart_pie = {
         borderWidth: 1,
       },
     ],
+  },
+  options: {
+    responsive: true,
+    animation: false,
   },
 };
 
@@ -88,6 +97,10 @@ export const chart_radar = {
       },
     ],
   },
+  options: {
+    responsive: true,
+    animation: false,
+  },
 };
 
 export const chart_scatter = {
@@ -108,6 +121,8 @@ export const chart_scatter = {
     ],
   },
   options: {
+    responsive: true,
+    animation: false,
     scales: {
       x: { type: "linear", position: "bottom" },
     },
@@ -132,6 +147,8 @@ export const chart_stacked_bar = {
     ],
   },
   options: {
+    responsive: true,
+    animation: false,
     scales: {
       x: { stacked: true },
       y: { stacked: true },
@@ -159,6 +176,8 @@ export const chart_doughnut = {
     ],
   },
   options: {
+    responsive: true,
+    animation: false,
     cutout: "60%",
     plugins: {
       legend: { position: "right" },
@@ -189,6 +208,7 @@ export const chart_mixed = {
   },
   options: {
     responsive: true,
+    animation: false,
     interaction: { mode: "index", intersect: false },
     stacked: false,
     scales: {
@@ -207,16 +227,11 @@ export const chart_mixed = {
 export const chart_time_series = {
   type: "line",
   data: {
+    labels: ["Jan 2025", "Feb 2025", "Mar 2025", "Apr 2025", "May 2025"],
     datasets: [
       {
         label: "Temperature (°C)",
-        data: [
-          { x: "2025-01-01", y: 5 },
-          { x: "2025-02-01", y: 8 },
-          { x: "2025-03-01", y: 12 },
-          { x: "2025-04-01", y: 18 },
-          { x: "2025-05-01", y: 22 },
-        ],
+        data: [5, 8, 12, 18, 22],
         borderColor: "rgba(255, 159, 64, 1)",
         backgroundColor: "rgba(255, 159, 64, 0.2)",
         tension: 0.3,
@@ -224,13 +239,10 @@ export const chart_time_series = {
     ],
   },
   options: {
+    responsive: true,
+    animation: false,
     scales: {
       x: {
-        type: "time",
-        time: {
-          unit: "month",
-          displayFormats: { month: "MMM" },
-        },
         title: { display: true, text: "Month" },
       },
       y: {
