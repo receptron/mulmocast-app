@@ -579,6 +579,26 @@ const lang = {
       description:
         "Hidden beats stay in your script for reference but are skipped from previews and exported videos. Uncheck to show it again.",
     },
+    duration: {
+      label: "BEAT Duration",
+      unit: "s",
+      placeholder: "auto",
+      supportedDurations: "Recommended durations: [{durations}]s",
+      tooltipStillImage: {
+        line1: "Use this to specify how long you want the image to display.",
+        line2: "However, it cannot end before the audio finishes.",
+      },
+      tooltipUploadedVideo: {
+        line1: "Use this to cut the video shorter if needed.",
+        line2: "However, it cannot end before the audio finishes.",
+      },
+      tooltipGeneratedVideo: {
+        line1: "1. Use this to specify the generated video length.",
+        line2: "Note that each model can only generate videos of specific durations",
+        line3: 'shown next to the "{label}" field (e.g., [5, 6, 7, 8]).',
+        line4: "2. If the generated video doesn't play to the end, adjust this value.",
+      },
+    },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
       badge: "Media File",
