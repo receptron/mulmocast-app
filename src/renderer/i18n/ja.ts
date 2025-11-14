@@ -578,10 +578,10 @@ const lang = {
         "非表示にしたビートは台本には残りますが、プレビューや書き出しの動画には使われません。再表示したいときはチェックを外してください。",
     },
     duration: {
-      label: "再生時間",
+      label: "BEATの時間",
       unit: "秒",
       placeholder: "自動",
-      supportedDurations: "生成可能な動画長: [{durations}]秒",
+      supportedDurations: "推奨される動画長: [{durations}]秒",
       tooltipStillImage: {
         line1: "表示したい時間を指定したいときに使います。",
         line2: "ただし、音声の長さより短く終わらせることはできません。",
@@ -593,7 +593,7 @@ const lang = {
       tooltipGeneratedVideo: {
         line1: "1. 生成される動画の長さを指定したいときに使います。",
         line2: "   ただし、モデルごとに生成できる動画の長さは、",
-        line3: "   duration 欄の横に表示されている値に制限されます（例：5 / 6 / 7 / 8 など）。",
+        line3: "   欄の横に表示されている値に制限されます（例：[5, 6, 7, 8] など）。",
         line4: "2. 生成動画が最後まで再生されない場合、この値を調整してください。",
       },
     },
