@@ -100,7 +100,7 @@
         @blur="justSaveAndPushToHistory"
       />
       <span class="text-muted-foreground text-sm">{{ t("beat.duration.unit") }}</span>
-      <span v-if="expectDuration" class="text-muted-foreground text-sm">
+      <span v-if="expectDuration && beat.moviePrompt" class="text-muted-foreground text-sm">
         {{ t("beat.duration.supportedDurations", { durations: expectDuration.join(", ") }) }}
       </span>
       <span
