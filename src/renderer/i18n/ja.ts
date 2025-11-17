@@ -726,7 +726,6 @@ const lang = {
     lipSyncParams: {
       title: "リップシンク設定",
       providerNone: "なし",
-      modelAuto: "自動",
       targetVideo: "動画に対してリップシンクします",
       targetImage: "画像に対してリップシンクします",
       targetSeparator: " / ",

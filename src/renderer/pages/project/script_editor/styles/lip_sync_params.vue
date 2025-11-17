@@ -20,15 +20,14 @@
       <div v-if="lipSyncParams?.provider">
         <Label>{{ t("ui.common.model") }}</Label>
         <Select
-          :model-value="lipSyncParams?.model || DEFAULT_VALUES.model"
+          :model-value="currentParams.model"
           @update:model-value="handleModelChange"
           :disabled="!lipSyncParams?.provider"
         >
           <SelectTrigger>
-            <SelectValue :placeholder="t('parameters.lipSyncParams.modelAuto')" />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__undefined__">{{ t("parameters.lipSyncParams.modelAuto") }}</SelectItem>
             <SelectItem
               v-for="model in PROVIDERS.find((p) => p.value === lipSyncParams?.provider)?.models || []"
               :key="model"
@@ -38,8 +37,8 @@
             </SelectItem>
           </SelectContent>
         </Select>
-        <div v-if="lipSyncParams?.model" class="text-muted-foreground mt-2 text-sm">
-          {{ getModelDescription(lipSyncParams.model) }}
+        <div v-if="modelDescription" class="text-muted-foreground mt-2 text-sm">
+          {{ modelDescription }}
         </div>
       </div>
       <MulmoError :mulmoError="mulmoError" />
@@ -83,21 +82,27 @@ const emit = defineEmits<{
   update: [lipSyncParams: LipSyncParams];
 }>();
 
-const DEFAULT_VALUES: LipSyncParams = {
-  provider: defaultProviders.lipSync,
-  model: undefined,
-};
-
-const currentParams = computed((): LipSyncParams => {
+const DEFAULT_VALUES = computed((): LipSyncParams => {
+  const defaultProvider = defaultProviders.lipSync as keyof typeof provider2LipSyncAgent;
+  const agentInfo = provider2LipSyncAgent[defaultProvider];
   return {
-    provider: props.lipSyncParams?.provider || DEFAULT_VALUES.provider,
-    model: props.lipSyncParams?.model || DEFAULT_VALUES.model,
+    provider: defaultProvider,
+    model: agentInfo?.defaultModel,
   };
 });
 
-const getModelDescription = (model: string): string => {
-  return getLipSyncModelDescription(props.lipSyncParams?.provider, model, t);
-};
+const currentParams = computed((): LipSyncParams => {
+  const provider = (props.lipSyncParams?.provider || DEFAULT_VALUES.value.provider) as keyof typeof provider2LipSyncAgent;
+  const agentInfo = provider2LipSyncAgent[provider];
+  return {
+    provider,
+    model: props.lipSyncParams?.model || agentInfo?.defaultModel,
+  };
+});
+
+const modelDescription = computed(() => {
+  return getLipSyncModelDescription(currentParams.value.provider, currentParams.value.model, t);
+});
 
 const updateParams = (partial: Partial<LipSyncParams>) => {
   const params = {
@@ -112,6 +117,6 @@ const handleProviderChange = (value: LipSyncParams["provider"]) => {
 };
 
 const handleModelChange = (value: LipSyncParams["model"]) => {
-  updateParams({ model: value == "__undefined__" ? undefined : value });
+  updateParams({ model: value });
 };
 </script>

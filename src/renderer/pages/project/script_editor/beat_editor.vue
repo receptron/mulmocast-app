@@ -290,16 +290,16 @@
       </div>
 
       <!-- left: lipSync edit -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableLipSync">
+      <div class="flex flex-col gap-2" v-if="beatType === 'imagePrompt' && enableLipSync">
         <!-- movie edit -->
-        <div class="mb-2 flex gap-2">
+        <div class="flex items-center gap-2">
           <Checkbox
             variant="ghost"
             size="icon"
             :modelValue="beat.enableLipSync"
             @update:model-value="(value) => update('enableLipSync', value)"
           />
-          <Label class="mb-2 block">{{ t("beat.lipSync.label") }} </Label>
+          <Label class="block">{{ t("beat.lipSync.label") }} </Label>
         </div>
         <div v-if="lipSyncModelDescription" class="text-muted-foreground text-sm">
           {{ lipSyncModelDescription }}
