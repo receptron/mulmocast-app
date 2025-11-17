@@ -1207,6 +1207,7 @@ const lang = {
     help: "Help",
     settings: "Settings",
     FAQ: "FAQ",
+    discord: "Discord Community",
     ASK: "ASK/Request",
     undo: "Undo",
     redo: "Redo",

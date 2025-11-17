@@ -112,6 +112,14 @@ export const getMenu = async () => {
           },
         },
         {
+          label: menuProps["discord"],
+          click: () => {
+            shell.openExternal("https://discord.gg/XqmAYxm2Xf").catch((error) => {
+              console.error("Failed to open external URL:", error);
+            });
+          },
+        },
+        {
           label: menuProps["ASK"],
           click: () => {
             shell
