@@ -20,15 +20,14 @@
       <div v-if="lipSyncParams?.provider">
         <Label>{{ t("ui.common.model") }}</Label>
         <Select
-          :model-value="lipSyncParams?.model || DEFAULT_VALUES.model"
+          :model-value="currentParams.model"
           @update:model-value="handleModelChange"
           :disabled="!lipSyncParams?.provider"
         >
           <SelectTrigger>
-            <SelectValue :placeholder="t('parameters.lipSyncParams.modelAuto')" />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__undefined__">{{ t("parameters.lipSyncParams.modelAuto") }}</SelectItem>
             <SelectItem
               v-for="model in PROVIDERS.find((p) => p.value === lipSyncParams?.provider)?.models || []"
               :key="model"
@@ -38,8 +37,8 @@
             </SelectItem>
           </SelectContent>
         </Select>
-        <div v-if="lipSyncParams?.model" class="text-muted-foreground mt-2 text-sm">
-          {{ getModelDescription(lipSyncParams.model) }}
+        <div v-if="modelDescription" class="text-muted-foreground mt-2 text-sm">
+          {{ modelDescription }}
         </div>
       </div>
       <MulmoError :mulmoError="mulmoError" />
@@ -55,16 +54,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import MulmoError from "./mulmo_error.vue";
 import SettingsAlert from "../settings_alert.vue";
 import { provider2LipSyncAgent, defaultProviders, type MulmoPresentationStyle } from "mulmocast/browser";
+import { getLipSyncModelDescription } from "../lip_sync_utils";
 
 type LipSyncParams = MulmoPresentationStyle["lipSyncParams"];
 
-const PROVIDERS = Object.entries(provider2LipSyncAgent).map(([provider, agent]) => {
-  return {
-    name: provider,
-    value: provider,
-    models: agent.models,
-  };
-});
+const PROVIDERS = Object.entries(provider2LipSyncAgent)
+  .filter(([provider, __]) => {
+    return provider !== "mock";
+  })
+  .map(([provider, agent]) => {
+    return {
+      name: provider,
+      value: provider,
+      models: agent.models,
+    };
+  });
 
 const { t } = useI18n();
 
@@ -78,38 +82,28 @@ const emit = defineEmits<{
   update: [lipSyncParams: LipSyncParams];
 }>();
 
-const DEFAULT_VALUES: LipSyncParams = {
-  provider: defaultProviders.lipSync,
-  model: undefined,
-};
-
-const currentParams = computed((): LipSyncParams => {
+const DEFAULT_VALUES = computed((): LipSyncParams => {
+  const defaultProvider = defaultProviders.lipSync as keyof typeof provider2LipSyncAgent;
+  const agentInfo = provider2LipSyncAgent[defaultProvider];
   return {
-    provider: props.lipSyncParams?.provider || DEFAULT_VALUES.provider,
-    model: props.lipSyncParams?.model || DEFAULT_VALUES.model,
+    provider: defaultProvider,
+    model: agentInfo?.defaultModel,
   };
 });
 
-const getModelDescription = (model: string): string => {
-  const provider = props.lipSyncParams?.provider;
-  if (!provider) return "";
+const currentParams = computed((): LipSyncParams => {
+  const provider = (props.lipSyncParams?.provider ||
+    DEFAULT_VALUES.value.provider) as keyof typeof provider2LipSyncAgent;
+  const agentInfo = provider2LipSyncAgent[provider];
+  return {
+    provider,
+    model: props.lipSyncParams?.model || agentInfo?.defaultModel,
+  };
+});
 
-  const agentInfo = provider2LipSyncAgent[provider as keyof typeof provider2LipSyncAgent];
-  if (!agentInfo) return "";
-
-  const modelParams = agentInfo.modelParams[model as keyof typeof agentInfo.modelParams];
-  if (!modelParams) return "";
-
-  const targets: string[] = [];
-  if (modelParams.video) {
-    targets.push(t("parameters.lipSyncParams.targetVideo"));
-  }
-  if (modelParams.image) {
-    targets.push(t("parameters.lipSyncParams.targetImage"));
-  }
-
-  return targets.length > 0 ? targets.join(t("parameters.lipSyncParams.targetSeparator")) : "";
-};
+const modelDescription = computed(() => {
+  return getLipSyncModelDescription(currentParams.value.provider, currentParams.value.model, t);
+});
 
 const updateParams = (partial: Partial<LipSyncParams>) => {
   const params = {
@@ -124,6 +118,6 @@ const handleProviderChange = (value: LipSyncParams["provider"]) => {
 };
 
 const handleModelChange = (value: LipSyncParams["model"]) => {
-  updateParams({ model: value == "__undefined__" ? undefined : value });
+  updateParams({ model: value });
 };
 </script>

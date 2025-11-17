@@ -727,7 +727,6 @@ const lang = {
     lipSyncParams: {
       title: "Lip Sync Parameters",
       providerNone: "None",
-      modelAuto: "Auto",
       targetVideo: "Applies lip sync to videos",
       targetImage: "Applies lip sync to images",
       targetSeparator: " / ",
