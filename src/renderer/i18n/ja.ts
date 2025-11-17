@@ -1209,6 +1209,7 @@ const lang = {
     help: "ヘルプ",
     settings: "設定",
     FAQ: "よくある質問",
+    discord: "Discordコミュニティ",
     ASK: "問い合わせ",
     undo: "取り消す",
     redo: "やり直す",
