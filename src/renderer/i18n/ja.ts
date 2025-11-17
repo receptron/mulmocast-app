@@ -707,6 +707,7 @@ const lang = {
     },
     lipSync: {
       label: "リップシンク(声に合わせて口を動かす)",
+      requiresMedia: "このモデルにはリップシンクを適用する画像または動画が必要です",
     },
     vision: {
       badge: "Vision",
