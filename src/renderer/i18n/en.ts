@@ -703,6 +703,11 @@ const lang = {
       providerNone: "None",
       modelAuto: "Auto",
     },
+    lipSyncParams: {
+      title: "Lip Sync Parameters",
+      providerNone: "None",
+      modelAuto: "Auto",
+    },
     transitionParams: {
       title: "Transition Effect",
       description:

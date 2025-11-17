@@ -24,6 +24,12 @@
       :mulmoError="mulmoError?.movieParams ?? []"
       :settingPresence="settingPresence"
     />
+    <LipSyncParams
+      :lip-sync-params="presentationStyle?.lipSyncParams"
+      @update="(value) => updateParam('lipSyncParams', value)"
+      :mulmoError="mulmoError?.lipSyncParams ?? []"
+      :settingPresence="settingPresence"
+    />
     <TextSlideParams
       v-if="globalStore.userIsPro"
       :text-slide-params="presentationStyle?.textSlideParams"
@@ -58,6 +64,7 @@ import ImageParams from "./styles/image_params.vue";
 import SpeechParams from "./styles/speech_params.vue";
 import AudioParams from "./styles/audio_params.vue";
 import MovieParams from "./styles/movie_params.vue";
+import LipSyncParams from "./styles/lip_sync_params.vue";
 import TextSlideParams from "./styles/text_slide_params.vue";
 import CaptionParams from "./styles/caption_params.vue";
 

@@ -703,6 +703,11 @@ const lang = {
       providerNone: "なし",
       modelAuto: "自動",
     },
+    lipSyncParams: {
+      title: "リップシンク設定",
+      providerNone: "なし",
+      modelAuto: "自動",
+    },
     transitionParams: {
       title: "切り替え効果",
       description:
