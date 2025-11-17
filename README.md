@@ -1,7 +1,10 @@
 
 # Mulmo app
 
+## 💬 Community
 
+Join our Discord to share knowledge, tips, and questions about MulmoCast:
+https://discord.gg/XqmAYxm2Xf
 
 ## 🚀 Assets
 
