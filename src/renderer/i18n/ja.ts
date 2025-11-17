@@ -723,6 +723,14 @@ const lang = {
       providerNone: "なし",
       modelAuto: "自動",
     },
+    lipSyncParams: {
+      title: "リップシンク設定",
+      providerNone: "なし",
+      modelAuto: "自動",
+      targetVideo: "動画に対してリップシンクします",
+      targetImage: "画像に対してリップシンクします",
+      targetSeparator: " / ",
+    },
     transitionParams: {
       title: "切り替え効果",
       description:

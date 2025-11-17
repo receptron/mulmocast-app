@@ -724,6 +724,14 @@ const lang = {
       providerNone: "None",
       modelAuto: "Auto",
     },
+    lipSyncParams: {
+      title: "Lip Sync Parameters",
+      providerNone: "None",
+      modelAuto: "Auto",
+      targetVideo: "Applies lip sync to videos",
+      targetImage: "Applies lip sync to images",
+      targetSeparator: " / ",
+    },
     transitionParams: {
       title: "Transition Effect",
       description:
