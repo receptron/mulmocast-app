@@ -58,14 +58,13 @@ import { provider2LipSyncAgent, defaultProviders, type MulmoPresentationStyle } 
 
 type LipSyncParams = MulmoPresentationStyle["lipSyncParams"];
 
-const PROVIDERS = Object.entries(provider2LipSyncAgent)
-  .map(([provider, agent]) => {
-    return {
-      name: provider,
-      value: provider,
-      models: agent.models,
-    };
-  });
+const PROVIDERS = Object.entries(provider2LipSyncAgent).map(([provider, agent]) => {
+  return {
+    name: provider,
+    value: provider,
+    models: agent.models,
+  };
+});
 
 const { t } = useI18n();
 
