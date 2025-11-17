@@ -92,7 +92,8 @@ const DEFAULT_VALUES = computed((): LipSyncParams => {
 });
 
 const currentParams = computed((): LipSyncParams => {
-  const provider = (props.lipSyncParams?.provider || DEFAULT_VALUES.value.provider) as keyof typeof provider2LipSyncAgent;
+  const provider = (props.lipSyncParams?.provider ||
+    DEFAULT_VALUES.value.provider) as keyof typeof provider2LipSyncAgent;
   const agentInfo = provider2LipSyncAgent[provider];
   return {
     provider,
