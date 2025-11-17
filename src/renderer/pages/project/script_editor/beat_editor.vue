@@ -270,7 +270,6 @@
             @update:model-value="(value) => update('moviePrompt', String(value))"
             @blur="justSaveAndPushToHistory"
             class="mb-2 h-20 overflow-y-auto"
-            :disabled="beat.enableLipSync"
           />
         </div>
       </div>
@@ -285,7 +284,7 @@
           :toggleTypeMode="toggleTypeMode"
           @openModal="openModal"
           @generateMovie="generateImageOnlyMovie"
-          :disabled="!isValidBeat || isArtifactGenerating || beat.enableLipSync"
+          :disabled="!isValidBeat || isArtifactGenerating"
         />
       </div>
 
@@ -459,7 +458,7 @@ const beatType = computed(() => {
 });
 
 const enableMovieGenerate = computed(() => {
-  return !!props.beat.moviePrompt && !props.beat.enableLipSync;
+  return !!props.beat.moviePrompt;
 });
 const enableLipSyncGenerate = computed(() => {
   return !!props.beat.enableLipSync;
