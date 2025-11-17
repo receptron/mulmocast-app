@@ -301,6 +301,9 @@
           />
           <Label class="mb-2 block">{{ t("beat.lipSync.label") }} </Label>
         </div>
+        <div v-if="lipSyncModelDescription" class="text-muted-foreground text-sm">
+          {{ lipSyncModelDescription }}
+        </div>
       </div>
       <!-- right: lipSync preview -->
       <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableLipSync">
@@ -368,6 +371,7 @@ import {
 } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 import { ChevronDown, CircleUserRound } from "lucide-vue-next";
+import { getLipSyncModelDescription } from "./lip_sync_utils";
 
 // components
 import MediaModal from "@/components/media_modal.vue";
@@ -482,6 +486,11 @@ const durationTooltipKey = computed(() => {
   }
   // それ以外 → 静止画
   return "beat.duration.tooltipStillImage";
+});
+
+const lipSyncModelDescription = computed(() => {
+  const lipSyncParams = props.mulmoScript?.lipSyncParams;
+  return getLipSyncModelDescription(lipSyncParams?.provider, lipSyncParams?.model, t);
 });
 
 const isImageGenerating = computed(() => {

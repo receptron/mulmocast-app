@@ -55,16 +55,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import MulmoError from "./mulmo_error.vue";
 import SettingsAlert from "../settings_alert.vue";
 import { provider2LipSyncAgent, defaultProviders, type MulmoPresentationStyle } from "mulmocast/browser";
+import { getLipSyncModelDescription } from "../lip_sync_utils";
 
 type LipSyncParams = MulmoPresentationStyle["lipSyncParams"];
 
-const PROVIDERS = Object.entries(provider2LipSyncAgent).map(([provider, agent]) => {
-  return {
-    name: provider,
-    value: provider,
-    models: agent.models,
-  };
-});
+const PROVIDERS = Object.entries(provider2LipSyncAgent)
+  .filter(([provider, __]) => {
+    return provider !== "mock";
+  })
+  .map(([provider, agent]) => {
+    return {
+      name: provider,
+      value: provider,
+      models: agent.models,
+    };
+  });
 
 const { t } = useI18n();
 
@@ -91,24 +96,7 @@ const currentParams = computed((): LipSyncParams => {
 });
 
 const getModelDescription = (model: string): string => {
-  const provider = props.lipSyncParams?.provider;
-  if (!provider) return "";
-
-  const agentInfo = provider2LipSyncAgent[provider as keyof typeof provider2LipSyncAgent];
-  if (!agentInfo) return "";
-
-  const modelParams = agentInfo.modelParams[model as keyof typeof agentInfo.modelParams];
-  if (!modelParams) return "";
-
-  const targets: string[] = [];
-  if (modelParams.video) {
-    targets.push(t("parameters.lipSyncParams.targetVideo"));
-  }
-  if (modelParams.image) {
-    targets.push(t("parameters.lipSyncParams.targetImage"));
-  }
-
-  return targets.length > 0 ? targets.join(t("parameters.lipSyncParams.targetSeparator")) : "";
+  return getLipSyncModelDescription(props.lipSyncParams?.provider, model, t);
 };
 
 const updateParams = (partial: Partial<LipSyncParams>) => {
