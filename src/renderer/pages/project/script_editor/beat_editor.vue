@@ -270,6 +270,7 @@
             @update:model-value="(value) => update('moviePrompt', String(value))"
             @blur="justSaveAndPushToHistory"
             class="mb-2 h-20 overflow-y-auto"
+            :disabled="lipSyncTargetInfo.supportsImage && beat.enableLipSync"
           />
         </div>
       </div>
