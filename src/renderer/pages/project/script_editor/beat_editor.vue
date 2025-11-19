@@ -306,7 +306,7 @@
           {{ lipSyncModelDescription }}
         </div>
         <div v-if="!canEnableLipSync" class="text-muted-foreground ml-6 text-sm">
-          {{ t("beat.lipSync.requiresMedia") }}
+          {{ lipSyncRequiresMediaMessage }}
         </div>
       </div>
       <!-- right: lipSync preview -->
@@ -507,6 +507,18 @@ const canEnableLipSync = computed(() => {
   const hasImage = props.beat.imagePrompt || (props.beat.image?.type && props.beat.image.type !== "movie");
 
   return (lipSyncTargetInfo.value.supportsVideo && hasVideo) || (lipSyncTargetInfo.value.supportsImage && hasImage);
+});
+
+const lipSyncRequiresMediaMessage = computed(() => {
+  const { supportsVideo, supportsImage } = lipSyncTargetInfo.value;
+
+  if (supportsImage && !supportsVideo) {
+    return t("beat.lipSync.requiresImage");
+  }
+  if (supportsVideo && !supportsImage) {
+    return t("beat.lipSync.requiresVideo");
+  }
+  return t("beat.lipSync.requiresImageOrVideo");
 });
 
 const isImageGenerating = computed(() => {

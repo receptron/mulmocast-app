@@ -709,6 +709,9 @@ const lang = {
     lipSync: {
       label: "LipSync",
       requiresMedia: "This model requires an image or video to apply lip sync",
+      requiresImage: "To use lip sync, please enter an image generation prompt",
+      requiresVideo: "To use lip sync, please enter a video generation prompt",
+      requiresImageOrVideo: "To use lip sync, please enter an image or video generation prompt",
     },
     vision: {
       badge: "Vision",
