@@ -302,10 +302,10 @@
           />
           <Label class="block" :class="{ 'opacity-50': !canEnableLipSync }">{{ t("beat.lipSync.label") }} </Label>
         </div>
-        <div v-if="lipSyncModelDescription" class="text-muted-foreground text-sm">
+        <div v-if="lipSyncModelDescription" class="text-muted-foreground ml-6 text-sm">
           {{ lipSyncModelDescription }}
         </div>
-        <div v-if="!canEnableLipSync" class="text-muted-foreground text-sm">
+        <div v-if="!canEnableLipSync" class="text-muted-foreground ml-6 text-sm">
           {{ t("beat.lipSync.requiresMedia") }}
         </div>
       </div>
