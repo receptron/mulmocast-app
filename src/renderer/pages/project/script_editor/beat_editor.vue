@@ -270,6 +270,7 @@
             @update:model-value="(value) => update('moviePrompt', String(value))"
             @blur="justSaveAndPushToHistory"
             class="mb-2 h-20 overflow-y-auto"
+            :disabled="lipSyncTargetInfo.supportsImage && beat.enableLipSync"
           />
         </div>
       </div>
@@ -289,7 +290,7 @@
       </div>
 
       <!-- left: lipSync edit -->
-      <div class="flex flex-col gap-2" v-if="beatType === 'imagePrompt' && enableLipSync">
+      <div class="flex flex-col gap-1" v-if="beatType === 'imagePrompt' && enableLipSync">
         <!-- movie edit -->
         <div class="flex items-center gap-2">
           <Checkbox
@@ -301,11 +302,11 @@
           />
           <Label class="block" :class="{ 'opacity-50': !canEnableLipSync }">{{ t("beat.lipSync.label") }} </Label>
         </div>
-        <div v-if="lipSyncModelDescription" class="text-muted-foreground text-sm">
+        <div v-if="lipSyncModelDescription" class="text-muted-foreground ml-6 text-sm">
           {{ lipSyncModelDescription }}
         </div>
-        <div v-if="!canEnableLipSync" class="text-muted-foreground text-sm">
-          {{ t("beat.lipSync.requiresMedia") }}
+        <div v-if="!canEnableLipSync" class="text-muted-foreground ml-6 text-sm">
+          {{ lipSyncRequiresMediaMessage }}
         </div>
       </div>
       <!-- right: lipSync preview -->
@@ -506,6 +507,20 @@ const canEnableLipSync = computed(() => {
   const hasImage = props.beat.imagePrompt || (props.beat.image?.type && props.beat.image.type !== "movie");
 
   return (lipSyncTargetInfo.value.supportsVideo && hasVideo) || (lipSyncTargetInfo.value.supportsImage && hasImage);
+});
+
+const lipSyncRequiresMediaMessage = computed(() => {
+  const { supportsVideo, supportsImage } = lipSyncTargetInfo.value;
+  const imagePromptLabel = t("beat.imagePrompt.label");
+  const moviePromptLabel = t("beat.moviePrompt.label");
+
+  if (supportsImage && !supportsVideo) {
+    return t("beat.lipSync.requiresImage", { imagePromptLabel });
+  }
+  if (supportsVideo && !supportsImage) {
+    return t("beat.lipSync.requiresVideo", { moviePromptLabel });
+  }
+  return t("beat.lipSync.requiresImageOrVideo", { imagePromptLabel, moviePromptLabel });
 });
 
 const isImageGenerating = computed(() => {
