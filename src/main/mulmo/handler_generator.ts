@@ -133,7 +133,7 @@ export const mulmoGenerateBeatImage = async (
       beat.moviePrompt = " ";
     }
     if (target === "lipSync") {
-      beat.moviePrompt = "";
+      // beat.moviePrompt = "";
       beat.audioFile = beatAudioPath(context, beat);
     }
     const graphaiCallbacks: CallbackFunction = ({ nodeId, state }) => {
