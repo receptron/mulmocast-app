@@ -290,7 +290,7 @@
       </div>
 
       <!-- left: lipSync edit -->
-      <div class="flex flex-col gap-2" v-if="beatType === 'imagePrompt' && enableLipSync">
+      <div class="flex flex-col gap-1" v-if="beatType === 'imagePrompt' && enableLipSync">
         <!-- movie edit -->
         <div class="flex items-center gap-2">
           <Checkbox
@@ -511,14 +511,16 @@ const canEnableLipSync = computed(() => {
 
 const lipSyncRequiresMediaMessage = computed(() => {
   const { supportsVideo, supportsImage } = lipSyncTargetInfo.value;
+  const imagePromptLabel = t("beat.imagePrompt.label");
+  const moviePromptLabel = t("beat.moviePrompt.label");
 
   if (supportsImage && !supportsVideo) {
-    return t("beat.lipSync.requiresImage");
+    return t("beat.lipSync.requiresImage", { imagePromptLabel });
   }
   if (supportsVideo && !supportsImage) {
-    return t("beat.lipSync.requiresVideo");
+    return t("beat.lipSync.requiresVideo", { moviePromptLabel });
   }
-  return t("beat.lipSync.requiresImageOrVideo");
+  return t("beat.lipSync.requiresImageOrVideo", { imagePromptLabel, moviePromptLabel });
 });
 
 const isImageGenerating = computed(() => {

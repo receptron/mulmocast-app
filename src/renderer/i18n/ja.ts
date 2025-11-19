@@ -708,9 +708,9 @@ const lang = {
     lipSync: {
       label: "リップシンク(声に合わせて口を動かす)",
       requiresMedia: "このモデルにはリップシンクを適用する画像または動画が必要です",
-      requiresImage: "リップシンクを使用する場合は、画像生成プロンプトを入力してください",
-      requiresVideo: "リップシンクを使用する場合は、動画生成プロンプトを入力してください",
-      requiresImageOrVideo: "リップシンクを使用する場合は、画像または動画生成プロンプトを入力してください",
+      requiresImage: "リップシンクを使用する場合は、{imagePromptLabel}を入力してください",
+      requiresVideo: "リップシンクを使用する場合は、{moviePromptLabel}を入力してください",
+      requiresImageOrVideo: "リップシンクを使用する場合は、{imagePromptLabel}または{moviePromptLabel}を入力してください",
     },
     vision: {
       badge: "Vision",
