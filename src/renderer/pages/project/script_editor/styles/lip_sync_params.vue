@@ -37,7 +37,7 @@
             </SelectItem>
           </SelectContent>
         </Select>
-        <div v-if="modelDescription" class="text-muted-foreground mt-2 text-sm">
+        <div v-if="modelDescription" class="text-muted-foreground mt-2 ml-2 text-sm">
           {{ modelDescription }}
         </div>
       </div>
