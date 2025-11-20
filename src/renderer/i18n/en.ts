@@ -792,7 +792,8 @@ const lang = {
       moderationPlaceholder: "ex) low, auto",
       images: "Materials",
       imagesDescription: "Select the materials for this beat",
-      imagesDescriptionNote: "Materials apply only to image generation. If you want consistent visuals in videos as well, add an image generation prompt to this BEAT (the image will be generated first, then used to create the video).",
+      imagesDescriptionNote:
+        "Materials apply only to image generation. If you want consistent visuals in videos as well, add an image generation prompt to this BEAT (the image will be generated first, then used to create the video).",
       imagesEmptyHint: "No materials found. Please add materials in the Materials tab.",
       customTitle: "Override image generation settings for this Beat",
       customDescription1: "Settings here apply only to this Beat.",

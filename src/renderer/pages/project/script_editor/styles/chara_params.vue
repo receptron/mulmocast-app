@@ -4,7 +4,7 @@
       <h4 class="mb-1 block text-sm">{{ t("parameters.imageParams.images") }}</h4>
       <p class="text-muted-foreground mb-2 text-xs">{{ t("parameters.imageParams.imagesDescription") }}</p>
       <span
-        class="bg-popover text-popover-foreground border-border pointer-events-none absolute bottom-full left-0 mb-2 transform rounded border px-2 py-1 text-xs whitespace-pre-wrap max-w-md opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+        class="bg-popover text-popover-foreground border-border pointer-events-none absolute bottom-full left-0 mb-2 max-w-md transform rounded border px-2 py-1 text-xs whitespace-pre-wrap opacity-0 transition-opacity duration-200 group-hover:opacity-100"
       >
         <div class="text-muted-foreground">{{ t("parameters.imageParams.imagesDescriptionNote") }}</div>
       </span>
