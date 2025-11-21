@@ -42,7 +42,7 @@ const setDiagnosticsOptions = (monaco: Monaco, language: "json" | "yaml") => {
 
   switch (language) {
     case "json":
-      monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+      monaco.json.jsonDefaults.setDiagnosticsOptions({
         validate: true,
         schemas: [schema],
       });
