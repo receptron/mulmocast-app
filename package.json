@@ -102,7 +102,7 @@
     "ffmpeg-ffprobe-static": "^6.1.2-rc.1",
     "graphai": "^2.0.16",
     "lucide-vue-next": "^0.554.0",
-    "monaco-editor": "^0.54.0",
+    "monaco-editor": "^0.55.1",
     "monaco-yaml": "^5.4.0",
     "mulmocast": "^2.0.3",
     "pinia": "^3.0.4",
