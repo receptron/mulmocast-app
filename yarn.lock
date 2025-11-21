@@ -5008,10 +5008,12 @@ doctrine@^2.1.0:
   dependencies:
     esutils "^2.0.2"
 
-dompurify@3.1.7:
-  version "3.1.7"
-  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.1.7.tgz#711a8c96479fb6ced93453732c160c3c72418a6a"
-  integrity sha512-VaTstWtsneJY8xzy7DekmYWEOZcmzIe3Qb3zPd4STve1OBTa+e+WmS1ITQec1fZYXI3HCsOZZiSMpG6oxoWMWQ==
+dompurify@3.2.7:
+  version "3.2.7"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.2.7.tgz#721d63913db5111dd6dfda8d3a748cfd7982d44a"
+  integrity sha512-WhL/YuveyGXJaerVlMYGWhvQswa7myDG17P7Vu65EWC05o8vfeNbvNf4d/BOvH99+ZW+LlQsc1GDKMa1vNK6dw==
+  optionalDependencies:
+    "@types/trusted-types" "^2.0.7"
 
 dompurify@^3.3.0:
   version "3.3.0"
@@ -7796,12 +7798,12 @@ mkdirp@^1.0.3, mkdirp@^1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-monaco-editor@^0.54.0:
-  version "0.54.0"
-  resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.54.0.tgz#c0d6ebb46b83f1bef6f67f6aa471e38ba7ef8231"
-  integrity sha512-hx45SEUoLatgWxHKCmlLJH81xBo0uXP4sRkESUpmDQevfi+e7K1VuiSprK6UpQ8u4zOcKNiH0pMvHvlMWA/4cw==
+monaco-editor@^0.55.1:
+  version "0.55.1"
+  resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.55.1.tgz#e74c6fe5a6bf985b817d2de3eb88d56afc494a1b"
+  integrity sha512-jz4x+TJNFHwHtwuV9vA9rMujcZRb0CEilTEwG2rRSpe/A7Jdkuj8xPKttCgOh+v/lkHy7HsZ64oj+q3xoAFl9A==
   dependencies:
-    dompurify "3.1.7"
+    dompurify "3.2.7"
     marked "14.0.0"
 
 monaco-languageserver-types@^0.4.0:
