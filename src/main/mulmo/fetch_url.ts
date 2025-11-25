@@ -4,6 +4,8 @@ import { createHash } from "crypto";
 import { extname } from "path";
 import fetch from "node-fetch";
 
+import { MEDIA_FILE_EXTENSIONS } from "../../shared/constants";
+
 const IMAGE_MIME = ["image/jpeg", "image/png"];
 const MOVIE_MIME = ["video/mp4", "video/quicktime", "video/mpeg"];
 
