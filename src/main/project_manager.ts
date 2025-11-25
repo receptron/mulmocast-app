@@ -213,6 +213,42 @@ export const createProject = async (title: string, lang: Lang, onboardProject: n
   }
 };
 
+// Copy an existing project
+export const copyProject = async (sourceId: string): Promise<Project> => {
+  const newId = generateId();
+  try {
+    const sourcePath = getProjectPath(sourceId);
+    const destPath = getProjectPath(newId);
+
+    // Copy entire project directory
+    await fs.cp(sourcePath, destPath, { recursive: true });
+
+    // Update metadata with new ID and timestamps
+    const sourceMetadata = await getProjectMetadata(sourceId);
+    const sourceScript = await getProjectMulmoScript(sourceId);
+
+    const newMetadata: ProjectMetadata = {
+      ...sourceMetadata,
+      id: newId,
+      createdAt: dayjs().toISOString(),
+      updatedAt: dayjs().toISOString(),
+      sessionActive: false,
+    };
+
+    await saveProjectMetadata(newId, newMetadata);
+
+    return {
+      metadata: newMetadata,
+      script: sourceScript,
+    };
+  } catch (error) {
+    // Cleanup on failure
+    await deleteProject(newId).catch(() => {});
+    GraphAILogger.error("Failed to copy project:", error);
+    throw error;
+  }
+};
+
 export const deleteProject = async (id: string): Promise<boolean> => {
   try {
     await fs.rm(getProjectPath(id), { recursive: true, force: true });

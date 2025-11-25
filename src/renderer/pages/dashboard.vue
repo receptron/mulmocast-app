@@ -85,6 +85,7 @@
             :thumbnails-loading="thumbnailsLoading"
             :view-mode="viewMode"
             @delete="handleDeleteProject"
+            @copy="handleCopyProject"
             @view="handleViewProject"
           />
         </div>
@@ -222,6 +223,17 @@ const handleCreateProject = async () => {
     alert(t("dashboard.errors.createProjectFailed"));
   } finally {
     creating.value = false;
+  }
+};
+
+const handleCopyProject = async (project: Project) => {
+  try {
+    const copiedProject = await projectApi.copy(project.metadata.id);
+    // Navigate to the copied project
+    router.push(`/project/${copiedProject.metadata.id}`);
+  } catch (error) {
+    console.error("Failed to copy project:", error);
+    alert(t("dashboard.errors.copyProjectFailed"));
   }
 };
 
