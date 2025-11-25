@@ -220,6 +220,9 @@ const lang = {
       google: {
         name: "Google",
       },
+      gemini: {
+        name: "Gemini",
+      },
       elevenlabs: {
         name: "ElevenLabs",
       },
