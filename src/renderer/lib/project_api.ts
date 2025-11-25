@@ -23,6 +23,10 @@ export const projectApi = {
     return await window.electronAPI.project.delete(id);
   },
 
+  async copy(id: string): Promise<Project> {
+    return await window.electronAPI.project.copy(id);
+  },
+
   async saveProjectMetadata(id: string, data: unknown): Promise<boolean> {
     return await window.electronAPI.project.saveProjectMetadata(id, JSON.parse(JSON.stringify(data)));
   },

@@ -88,6 +88,14 @@
             <Eye class="h-4 w-4" />
           </Button>
           <Button
+            @click="copyProject($event, project)"
+            variant="ghost"
+            size="icon"
+            class="text-muted-foreground hover:text-primary"
+          >
+            <Copy class="h-4 w-4" />
+          </Button>
+          <Button
             @click="deleteProject($event, project)"
             variant="ghost"
             size="icon"
@@ -103,7 +111,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { Calendar, FileText, Trash2, Loader2, Eye } from "lucide-vue-next";
+import { Calendar, FileText, Trash2, Loader2, Eye, Copy } from "lucide-vue-next";
 import type { Project } from "@/lib/project_api";
 import { formatDate, mediaUri } from "@/lib/utils";
 import { Button, Skeleton } from "@/components/ui";
@@ -115,6 +123,7 @@ const { t } = useI18n();
 const emit = defineEmits<{
   delete: [project: Project];
   view: [project: Project];
+  copy: [project: Project];
 }>();
 
 const props = defineProps<{
@@ -141,6 +150,12 @@ const deleteProject = (event: Event, project: Project) => {
   event.preventDefault();
   event.stopPropagation();
   emit("delete", project);
+};
+
+const copyProject = (event: Event, project: Project) => {
+  event.preventDefault();
+  event.stopPropagation();
+  emit("copy", project);
 };
 
 const viewProject = (event: Event, project: Project) => {

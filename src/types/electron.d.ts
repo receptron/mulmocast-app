@@ -20,6 +20,7 @@ export interface ElectronAPI {
     getProjectMetadata: (name: string) => Promise<ProjectMetadata>;
     getProjectMulmoScript: (name: string) => Promise<MulmoScript | null>;
     delete: (name: string) => Promise<boolean>;
+    copy: (id: string) => Promise<Project>;
     getPath: (name: string) => Promise<string>;
     listScriptImages: (name: string) => Promise<ProjectScriptMedia[]>;
     saveProjectMetadata: (id: string, data: unknown) => Promise<boolean>;
