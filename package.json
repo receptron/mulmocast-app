@@ -27,7 +27,8 @@
     "type": "yarn run lint && yarn run type-check",
     "type-check": "tsc --noEmit -p ./tsconfig.main.json && tsc --noEmit -p ./tsconfig.renderer.json",
     "type-check:main": "tsc --noEmit -p ./tsconfig.main.json",
-    "type-check:renderer": "tsc --noEmit -p ./tsconfig.renderer.json"
+    "type-check:renderer": "tsc --noEmit -p ./tsconfig.renderer.json",
+    "i18n:check": "npx tsx scripts/check-i18n.ts"
   },
   "keywords": [],
   "author": {
