@@ -38,6 +38,7 @@ const baseRules = {
   "linebreak-style": ["error", "unix"],
   quotes: "off",
   semi: ["error", "always"],
+  "@typescript-eslint/no-redundant-type-constituents": "off",
   "sonarjs/no-alphabetical-sort": "off",
   "check-file/filename-naming-convention": [
     "error",
