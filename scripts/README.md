@@ -35,3 +35,29 @@ npx tsx scripts/export-onboard.ts
 - TypeScriptで型安全にオンボーディングスクリプトを管理できる
 - ドキュメントとして閲覧可能なJSONフォーマットで出力される
 - アプリケーション外でもチュートリアル内容を確認できる
+
+## check-i18n.ts
+
+i18nメッセージのキー構造を `en` と `ja` で比較し、片方に欠けているキーを検出するスクリプトです。
+
+### 処理内容
+
+1. `src/renderer/i18n/en.ts` と `ja.ts` を読み込み
+2. ネストしたオブジェクトのキーをドット区切りでフラット化
+3. それぞれに存在しないキーを一覧出力し、差分があれば終了コード1で終了
+
+### 実行方法
+
+```bash
+npx tsx scripts/check-i18n.ts
+```
+
+### 出力例
+
+```
+Missing in ja (2):
+  - ui.common.title
+  - ui.actions.create
+Missing in en (1):
+  - ui.common.description
+```
