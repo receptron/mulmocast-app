@@ -73,8 +73,17 @@ jobs:
       # 5. ビルド、署名、公証の実行
       # forge.config.tsの設定に基づいて全ての処理を行う
       - name: Publish
-        run: yarn run publish:ci:mac
+        run: |
+          set -e  # エラー時に即座に終了
+          yarn run publish:ci:mac
+          exit_code=$?
+          if [ $exit_code -ne 0 ]; then
+            echo "::error::Build failed with exit code $exit_code"
+            exit $exit_code
+          fi
         env:
+          # Node.jsのメモリ上限を4GBに設定（Electron Forgeのビルドに必要）
+          NODE_OPTIONS: --max-old-space-size=4096
           # forge.config.tsが期待する環境変数名
           BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
           AC_APPLE_ID: ${{ secrets.APPLE_ID }}
