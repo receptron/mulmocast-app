@@ -452,9 +452,13 @@ export const userLevels = [
 
 // Media file extensions for file dialogs and validation
 export const MEDIA_FILE_EXTENSIONS = {
-  image: ["jpg", "jpeg", "png"],
-  video: ["mp4", "mov", "webm", "ogg", "ogv", "mpeg", "mpg", "mp2t"],
-} as const;
+  image: ["jpg", "jpeg", "png"] as const,
+  video: ["mp4", "mov", "webm", "ogg", "ogv", "mpeg", "mpg", "mp2t"] as const,
+};
+
+export type ImageExtension = (typeof MEDIA_FILE_EXTENSIONS.image)[number];
+export type VideoExtension = (typeof MEDIA_FILE_EXTENSIONS.video)[number];
+export type MediaExtension = ImageExtension | VideoExtension;
 
 // MIME type mappings for file extensions
 export const MIME_TYPES: Record<string, string> = {
@@ -470,3 +474,14 @@ export const MIME_TYPES: Record<string, string> = {
   mpg: "video/mpeg",
   mp2t: "video/mp2t",
 } as const;
+
+export const IMAGE_MIME = ["image/jpeg", "image/png"];
+export const MOVIE_MIME = ["video/mp4", "video/quicktime", "video/mpeg"];
+
+export const MIME_EXT_MAP: Record<string, string> = {
+  "image/jpeg": ".jpg",
+  "image/png": ".png",
+  "video/mp4": ".mp4",
+  "video/quicktime": ".mov",
+  "video/mpeg": ".mpg",
+};
