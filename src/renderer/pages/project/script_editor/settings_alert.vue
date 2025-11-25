@@ -1,18 +1,20 @@
 <template>
-  <div v-if="providerWarning" class="text-destructive">
-    {{ t("ai.provider." + props.provider + ".warning") }}
-    <a
-      v-if="t('ai.provider.' + props.provider + '.warningLink', '')"
-      :href="t('ai.provider.' + props.provider + '.warningLink')"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="ml-1 inline-flex items-center gap-0.5"
-    >
-      <ExternalLink class="h-3 w-3" />
-    </a>
-  </div>
-  <div v-if="providerAlert" class="text-destructive">
-    {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName." + providerAlert) }) }}
+  <div>
+    <div v-if="providerWarning" class="text-destructive">
+      {{ t("ai.provider." + props.provider + ".warning") }}
+      <a
+        v-if="t('ai.provider.' + props.provider + '.warningLink', '')"
+        :href="t('ai.provider.' + props.provider + '.warningLink')"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="ml-1 inline-flex items-center gap-0.5"
+      >
+        <ExternalLink class="h-3 w-3" />
+      </a>
+    </div>
+    <div v-if="providerAlert" class="text-destructive">
+      {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName." + providerAlert) }) }}
+    </div>
   </div>
 </template>
 
