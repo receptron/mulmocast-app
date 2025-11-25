@@ -216,6 +216,8 @@ const lang = {
       },
       nijivoice: {
         name: "Nijivoice",
+        warning: "Nijivoice service will end on February 4, 2026",
+        warningLink: "https://algomatic.jp/news/notice_nijivoice_20251121",
       },
       google: {
         name: "Google",

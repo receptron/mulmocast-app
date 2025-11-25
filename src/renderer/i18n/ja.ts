@@ -216,6 +216,8 @@ const lang = {
       },
       nijivoice: {
         name: "Nijivoice",
+        warning: "にじボイスは2026年2月4日にサービス終了予定です",
+        warningLink: "https://algomatic.jp/news/notice_nijivoice_20251121",
       },
       google: {
         name: "Google",
