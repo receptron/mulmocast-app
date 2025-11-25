@@ -226,9 +226,6 @@ const lang = {
       gemini: {
         name: "Gemini",
       },
-      gemini: {
-        name: "Gemini",
-      },
       elevenlabs: {
         name: "ElevenLabs",
       },
