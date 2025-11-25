@@ -219,6 +219,10 @@ const lang = {
       },
       google: {
         name: "Google",
+        speechName: "Google (GCP required)",
+      },
+      gemini: {
+        name: "Gemini",
       },
       elevenlabs: {
         name: "ElevenLabs",

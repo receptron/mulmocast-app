@@ -219,6 +219,7 @@ const lang = {
       },
       google: {
         name: "Google",
+        speechName: "Google（要GCP設定）",
       },
       gemini: {
         name: "Gemini",
