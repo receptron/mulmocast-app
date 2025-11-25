@@ -10,7 +10,7 @@
       </SelectTrigger>
       <SelectContent>
         <SelectItem v-for="provider in providers" :value="provider" :key="provider">{{
-          t("ai.provider." + provider + ".speechName", t("ai.provider." + provider + ".name"))
+          t("ai.provider." + provider + ".name", t("ai.provider." + provider + ".name"))
         }}</SelectItem>
       </SelectContent>
     </Select>
