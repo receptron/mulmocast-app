@@ -6,8 +6,6 @@ import fetch from "node-fetch";
 
 const IMAGE_MIME = ["image/jpeg", "image/png"];
 const MOVIE_MIME = ["video/mp4", "video/quicktime", "video/mpeg"];
-const IMAGE_EXT = [".jpg", ".jpeg", ".png"];
-const MOVIE_EXT = [".mp4", ".mov", ".mpg"];
 
 const guessTypeByMime = (mime: string): "image" | "movie" | undefined => {
   if (IMAGE_MIME.includes(mime)) {
@@ -21,10 +19,10 @@ const guessTypeByMime = (mime: string): "image" | "movie" | undefined => {
 
 const guessTypeByExt = (ext: string): "image" | "movie" | undefined => {
   const lowered = ext.toLowerCase();
-  if (IMAGE_EXT.includes(lowered)) {
+  if (MEDIA_FILE_EXTENSIONS.image.includes(lowered)) {
     return "image";
   }
-  if (MOVIE_EXT.includes(lowered)) {
+  if (MEDIA_FILE_EXTENSIONS.video.includes(lowered)) {
     return "movie";
   }
   return undefined;
