@@ -19,6 +19,7 @@ const provider2ApiKey = {
   openai: "OPENAI_API_KEY",
   nijivoice: "NIJIVOICE_API_KEY",
   google: "GEMINI_API_KEY",
+  gemini: "GEMINI_API_KEY",
   replicate: "REPLICATE_API_TOKEN",
   elevenlabs: "ELEVENLABS_API_KEY",
 };
