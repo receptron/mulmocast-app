@@ -6,7 +6,7 @@
       :href="t('ai.provider.' + props.provider + '.warningLink')"
       target="_blank"
       rel="noopener noreferrer"
-      class="inline-flex items-center gap-0.5 ml-1"
+      class="ml-1 inline-flex items-center gap-0.5"
     >
       <ExternalLink class="h-3 w-3" />
     </a>
