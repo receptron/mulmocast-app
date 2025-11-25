@@ -217,6 +217,29 @@ export default [
       },
     },
   },
+  // Utility scripts (Node.js)
+  {
+    files: ["scripts/**/*.{js,ts}"],
+    languageOptions: {
+      ...baseLanguageOptions,
+      globals: {
+        ...globals.node,
+      },
+    },
+    plugins: {
+      ...basePlugins,
+    },
+    rules: {
+      ...typescript.configs.recommended.rules,
+      ...baseRules,
+      ...sonarjsRules,
+    },
+    settings: {
+      "import/resolver": {
+        typescript: true,
+      },
+    },
+  },
   // Build configuration files
   {
     files: ["*.config.{js,ts,mjs}", "forge.config.ts"],
