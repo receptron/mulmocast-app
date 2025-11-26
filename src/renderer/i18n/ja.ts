@@ -417,6 +417,8 @@ const lang = {
       pdfHandout: "PDF (資料)",
     },
     scriptEditor: {
+      beatCopied: "Beatをコピーしました",
+      beatDeleted: "Beatを削除しました",
       text: {
         tabLabel: "翻訳",
         mode: "翻訳モード",

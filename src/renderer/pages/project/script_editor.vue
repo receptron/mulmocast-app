@@ -353,6 +353,7 @@ import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/consta
 import { setRandomBeatId } from "@/lib/beat_util";
 import { projectApi } from "@/lib/project_api";
 import { useMulmoGlobalStore, useMulmoScriptHistoryStore } from "@/store";
+import { notifySuccess } from "@/lib/notification";
 
 const { t } = useI18n();
 
@@ -528,6 +529,7 @@ const deleteBeat = (index: number) => {
       ...props.mulmoScript,
       beats: newBeats,
     });
+    notifySuccess(t("project.scriptEditor.beatDeleted"));
   }
 };
 
@@ -539,6 +541,7 @@ const copyBeat = (index: number) => {
       ...props.mulmoScript,
       beats: newBeats,
     });
+    notifySuccess(t("project.scriptEditor.beatCopied"));
   }
 };
 
