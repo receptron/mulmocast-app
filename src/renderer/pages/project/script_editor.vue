@@ -114,6 +114,11 @@
                   @click="() => positionUp(index + 1)"
                   class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
                 />
+                <Copy
+                  @click="copyBeat(index)"
+                  class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
+                  :data-testid="`script-editor-text-tab-copy-beat-${index}`"
+                />
                 <Trash
                   @click="deleteBeat(index)"
                   class="text-muted-foreground hover:text-destructive h-5 w-5 cursor-pointer transition"
@@ -237,6 +242,11 @@
                   @click="() => positionUp(index + 1)"
                   class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
                 />
+                <Copy
+                  @click="copyBeat(index)"
+                  class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
+                  :data-testid="`script-editor-media-tab-copy-beat-${index}`"
+                />
                 <Trash
                   @click="deleteBeat(index)"
                   class="text-muted-foreground hover:text-destructive h-5 w-5 cursor-pointer transition"
@@ -308,7 +318,7 @@
 import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
-import { ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
+import { ArrowUp, ArrowDown, Trash, Copy } from "lucide-vue-next";
 import YAML from "yaml";
 import {
   MulmoPresentationStyleMethods,
@@ -520,6 +530,18 @@ const deleteBeat = (index: number) => {
     });
   }
 };
+
+const copyBeat = (index: number) => {
+  if (index >= 0 && index < props.mulmoScript.beats.length) {
+    const beatToCopy = { ...props.mulmoScript.beats[index] };
+    const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, setRandomBeatId(beatToCopy));
+    emit("updateMulmoScriptAndPushToHistory", {
+      ...props.mulmoScript,
+      beats: newBeats,
+    });
+  }
+};
+
 const positionUp = (index: number) => {
   if (index <= 0 || index >= props.mulmoScript.beats.length) return;
   const newBeats = arrayPositionUp<MulmoBeat>(props.mulmoScript.beats, index);
