@@ -87,7 +87,7 @@
           >
             <Eye class="h-4 w-4" />
           </Button>
-          <div class="copy-button-wrapper relative">
+          <div class="group/copy relative">
             <Button
               @click="copyProject($event, project)"
               variant="ghost"
@@ -96,7 +96,9 @@
             >
               <Copy class="h-4 w-4" />
             </Button>
-            <span class="copy-tooltip">
+            <span
+              class="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-border bg-popover px-2 py-1 text-xs text-muted-foreground opacity-0 transition-opacity duration-200 group-hover/copy:opacity-100"
+            >
               {{ t("dashboard.copy.tooltip") }}
             </span>
           </div>
@@ -271,28 +273,5 @@ const viewProject = (event: Event, project: Project) => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-/* Copy button tooltip */
-.copy-tooltip {
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: 0.5rem;
-  padding: 0.25rem 0.5rem;
-  background-color: var(--popover);
-  color: var(--muted-foreground);
-  border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  font-size: 0.75rem;
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 200ms;
-}
-
-.copy-button-wrapper:hover .copy-tooltip {
-  opacity: 1;
 }
 </style>
