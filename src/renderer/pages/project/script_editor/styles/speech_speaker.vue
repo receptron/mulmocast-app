@@ -10,7 +10,7 @@
       </SelectTrigger>
       <SelectContent>
         <SelectItem v-for="provider in providers" :value="provider" :key="provider">
-          {{ getProviderName(provider) }}
+          {{ t("ai.provider." + provider + ".speechName") }}
         </SelectItem>
       </SelectContent>
     </Select>
@@ -130,19 +130,13 @@ import { Label, Input } from "@/components/ui";
 import SettingsAlert from "../settings_alert.vue";
 
 import { useI18n } from "vue-i18n";
-const { t, te } = useI18n();
+const { t } = useI18n();
 
 const props = defineProps<{
   speaker?: Speaker;
   name: string;
   settingPresence: Record<string, boolean>;
 }>();
-
-const getProviderName = (provider: string) => {
-  const speechNameKey = `ai.provider.${provider}.speechName`;
-  const nameKey = `ai.provider.${provider}.name`;
-  return te(speechNameKey) ? t(speechNameKey) : t(nameKey);
-};
 
 const emit = defineEmits<{
   updateSpeakerData: [updates: Partial<Speaker>, overridden?: boolean];
