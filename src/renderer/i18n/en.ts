@@ -238,6 +238,10 @@ const lang = {
       },
       alertTemplate: "You need to setup {thing}",
     },
+    imageModel: {
+      nanoBananaPro: "Nano Banana Pro (gemini-3-pro-image-preview)",
+      nanoBanana: "Nano Banana (gemini-2.5-flash-image)",
+    },
     apiKeyName: {
       OPENAI_API_KEY: "OpenAI API Key",
       NIJIVOICE_API_KEY: "NijiVoice API Key",
