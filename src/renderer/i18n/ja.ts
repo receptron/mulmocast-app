@@ -213,9 +213,11 @@ const lang = {
     provider: {
       openai: {
         name: "OpenAI",
+        speechName: "OpenAI",
       },
       nijivoice: {
         name: "Nijivoice",
+        speechName: "Nijivoice",
         warning: "にじボイスは2026年2月4日にサービス終了予定です",
         warningLink: "https://algomatic.jp/news/notice_nijivoice_20251121",
       },
@@ -225,12 +227,15 @@ const lang = {
       },
       gemini: {
         name: "Gemini",
+        speechName: "Gemini",
       },
       elevenlabs: {
         name: "ElevenLabs",
+        speechName: "ElevenLabs",
       },
       replicate: {
         name: "Replicate",
+        speechName: "Replicate",
       },
       alertTemplate: "設定画面で{thing}を設定してください",
     },

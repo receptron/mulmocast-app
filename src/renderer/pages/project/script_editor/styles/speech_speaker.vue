@@ -9,9 +9,9 @@
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem v-for="provider in providers" :value="provider" :key="provider">{{
-          t("ai.provider." + provider + ".name", t("ai.provider." + provider + ".name"))
-        }}</SelectItem>
+        <SelectItem v-for="provider in providers" :value="provider" :key="provider">
+          {{ t("ai.provider." + provider + ".speechName") }}
+        </SelectItem>
       </SelectContent>
     </Select>
     <SettingsAlert

@@ -213,9 +213,11 @@ const lang = {
     provider: {
       openai: {
         name: "OpenAI",
+        speechName: "OpenAI",
       },
       nijivoice: {
         name: "Nijivoice",
+        speechName: "Nijivoice",
         warning: "Nijivoice service will end on February 4, 2026",
         warningLink: "https://algomatic.jp/news/notice_nijivoice_20251121",
       },
@@ -225,9 +227,11 @@ const lang = {
       },
       gemini: {
         name: "Gemini",
+        speechName: "Gemini",
       },
       elevenlabs: {
         name: "ElevenLabs",
+        speechName: "ElevenLabs",
       },
       replicate: {
         name: "Replicate",
