@@ -1,6 +1,7 @@
 <template>
   <Layout>
-    <div class="mx-auto max-w-7xl space-y-6 p-6">
+    <TooltipProvider>
+      <div class="mx-auto max-w-7xl space-y-6 p-6">
       <!-- Main Content -->
       <div class="border-border bg-card rounded-lg border p-6 shadow-sm">
         <div class="mb-6 flex items-center justify-between">
@@ -105,6 +106,7 @@
       @confirm="confirmDelete"
       @cancel="cancelDelete"
     />
+    </TooltipProvider>
   </Layout>
 </template>
 
@@ -121,6 +123,7 @@ import ProjectItems from "./dashboard/project_items.vue";
 
 import { Button, ConfirmDialog } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 import { useMulmoGlobalStore } from "@/store";
 
