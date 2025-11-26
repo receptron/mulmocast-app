@@ -11,7 +11,7 @@
       <video
         class="mx-auto h-auto max-h-[80vh] w-auto object-contain"
         :src="audioSource"
-        :poster="imageSource ?? mulmoImage"
+        :poster="imageSource"
       />
     </div>
     <div v-else-if="imageSource" class="relative inline-block">
