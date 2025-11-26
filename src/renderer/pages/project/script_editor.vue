@@ -280,7 +280,7 @@
           {{ t("project.scriptEditor.reference.mode") }} -
           {{ t("project.scriptEditor.reference.modeDescription") }}
         </p>
-        <p class="text-muted-foreground text-sm">
+        <p class="text-muted-foreground text-sm whitespace-pre-line">
           {{
             t("project.scriptEditor.reference.description", {
               key: t("beat.imageReference.keyField"),

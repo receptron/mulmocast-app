@@ -458,7 +458,7 @@ const lang = {
         mode: "Materials",
         modeDescription: "Manage materials used in your presentation",
         description:
-          'Use materials to keep the appearance of AI-generated images consistent. Materials can include not only characters but also backgrounds and props. Create materials with an "image generation prompt" or add your own image files. Then, in each BEAT, specify the "{key}" in the "{imageParamsImages}" section.',
+          'Use materials to keep the appearance of AI-generated images consistent. Materials can include not only characters but also backgrounds and props.\n\nCreate materials with an "image generation prompt" or add your own image files (you can upload files, specify URLs, or use previously generated images).\n\nThen, in each BEAT, specify the "{key}" in the "{imageParamsImages}" section.',
         imageGenerationDisabled: {
           needPrompt: 'Please enter "{imagePromptLabel}"',
           needValidScript:
