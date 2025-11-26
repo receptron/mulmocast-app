@@ -97,7 +97,7 @@
               <Copy class="h-4 w-4" />
             </Button>
             <span
-              class="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-border bg-popover px-2 py-1 text-xs text-muted-foreground opacity-0 transition-opacity duration-200 group-hover/copy:opacity-100"
+              class="border-border bg-popover text-muted-foreground pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded-md border px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover/copy:opacity-100"
             >
               {{ t("dashboard.copy.tooltip") }}
             </span>
