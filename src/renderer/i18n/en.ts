@@ -426,6 +426,8 @@ const lang = {
       pdfHandout: "PDF (Handout)",
     },
     scriptEditor: {
+      beatCopied: "Beat copied",
+      beatDeleted: "Beat deleted",
       text: {
         tabLabel: "Text",
         mode: "Text Mode",
