@@ -87,19 +87,21 @@
           >
             <Eye class="h-4 w-4" />
           </Button>
-          <Tooltip>
-            <TooltipTrigger as-child>
-              <Button
-                @click="copyProject($event, project)"
-                variant="ghost"
-                size="icon"
-                class="text-muted-foreground hover:text-primary"
-              >
-                <Copy class="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="top">{{ t("dashboard.copy.tooltip") }}</TooltipContent>
-          </Tooltip>
+          <div class="group relative">
+            <Button
+              @click="copyProject($event, project)"
+              variant="ghost"
+              size="icon"
+              class="text-muted-foreground hover:text-primary"
+            >
+              <Copy class="h-4 w-4" />
+            </Button>
+            <span
+              class="bg-popover text-muted-foreground border-border pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform rounded border px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+            >
+              {{ t("dashboard.copy.tooltip") }}
+            </span>
+          </div>
           <Button
             @click="deleteProject($event, project)"
             variant="ghost"
@@ -120,7 +122,6 @@ import { Calendar, FileText, Trash2, Loader2, Eye, Copy } from "lucide-vue-next"
 import type { Project } from "@/lib/project_api";
 import { formatDate, mediaUri } from "@/lib/utils";
 import { Button, Skeleton } from "@/components/ui";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useMulmoEventStore } from "@/store/mulmo_event";
 import { useI18n } from "vue-i18n";
 
