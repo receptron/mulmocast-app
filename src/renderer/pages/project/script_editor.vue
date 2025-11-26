@@ -535,7 +535,7 @@ const deleteBeat = (index: number) => {
 
 const copyBeat = (index: number) => {
   if (index >= 0 && index < props.mulmoScript.beats.length) {
-    const { id: _, ...beatWithoutId } = props.mulmoScript.beats[index];
+    const { id: __, ...beatWithoutId } = props.mulmoScript.beats[index];
     const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, setRandomBeatId(beatWithoutId));
     emit("updateMulmoScriptAndPushToHistory", {
       ...props.mulmoScript,
