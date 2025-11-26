@@ -458,6 +458,8 @@ const lang = {
         modeDescription: "素材を管理します",
         description:
           "生成AIで作る画像の見た目を安定させるために、素材を使用します。キャラクターだけでなく、背景や小物なども素材として登録できます。素材は「画像生成プロンプト」で作成するか、「画像ファイル」で追加して設定します。その後、各BEATの「{imageParamsImages}」欄で「{key}」を指定してください。",
+        additionalDescription:
+          "素材は画像生成時の参照情報です。同じ素材キーで生成された画像は、別のBEATでも見た目を揃えやすくなります。生成した画像を動画で使いたい場合は、各BEATの「{imageParamsImages}」で素材キーを指定し、必要に応じて画像生成プロンプトも設定してください。",
         imageGenerationDisabled: {
           needPrompt: "「{imagePromptLabel}」を入力してください",
           needValidScript: "「{beatTabLabel}」タブの内容が正しく設定されると、画像生成ボタンが押せるようになります。",

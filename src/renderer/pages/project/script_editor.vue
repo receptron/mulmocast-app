@@ -288,6 +288,13 @@
             })
           }}
         </p>
+        <p class="text-muted-foreground mt-2 text-sm">
+          {{
+            t("project.scriptEditor.reference.additionalDescription", {
+              imageParamsImages: t("parameters.imageParams.images"),
+            })
+          }}
+        </p>
         <Charactor
           :projectId="projectId"
           :images="props.mulmoScript?.imageParams?.images ?? {}"
