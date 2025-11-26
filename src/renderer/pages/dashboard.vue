@@ -199,6 +199,11 @@ const sortedProjects = computed(() => {
   });
 });
 
+const buildCopiedTitle = (project: Project) => {
+  const baseTitle = project?.script?.title || t("project.newProject.defaultTitle");
+  return t("dashboard.copy.copiedTitle", { title: baseTitle });
+};
+
 const handleCreateProject = async () => {
   const title = t("project.newProject.defaultTitle");
   const settings = await window.electronAPI.settings.get();
@@ -229,6 +234,10 @@ const handleCreateProject = async () => {
 const handleCopyProject = async (project: Project) => {
   try {
     const copiedProject = await projectApi.copy(project.metadata.id);
+    await projectApi.saveProjectScript(copiedProject.metadata.id, {
+      ...(copiedProject.script ?? {}),
+      title: buildCopiedTitle(project),
+    });
     // Navigate to the copied project
     router.push(`/project/${copiedProject.metadata.id}`);
   } catch (error) {

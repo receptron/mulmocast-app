@@ -375,6 +375,10 @@ const lang = {
       titleAsc: "Title (A-Z)",
       titleDesc: "Title (Z-A)",
     },
+    copy: {
+      tooltip: "Duplicate this project",
+      copiedTitle: "Copy of {title}",
+    },
     empty: {
       welcome: "Welcome to MulmoCast!",
       introduction1: "First, click the {createNew} button.",

@@ -375,6 +375,10 @@ const lang = {
       titleAsc: "タイトル（昇順）",
       titleDesc: "タイトル（降順）",
     },
+    copy: {
+      tooltip: "プロジェクトを複製",
+      copiedTitle: "{title} のコピー",
+    },
     empty: {
       welcome: "ようこそ、MulmoCast へ！",
       introduction1: "まずは「{createNew}」ボタンを押してみましょう。",
