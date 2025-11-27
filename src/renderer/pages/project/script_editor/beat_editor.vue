@@ -103,7 +103,7 @@
         <span class="text-muted-foreground text-sm">{{ t("beat.duration.unit") }}</span>
         <div v-if="expectDuration && beat.moviePrompt" class="text-muted-foreground text-sm">
           <div>{{ t("beat.duration.supportedDurations", { durations: expectDuration.join(", ") }) }}</div>
-          <div v-if="isVeo31Model" >
+          <div v-if="isVeo31Model">
             {{ t("beat.duration.veo31ExtendedNote") }}
           </div>
         </div>

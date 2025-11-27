@@ -750,6 +750,7 @@ const lang = {
       title: "動画生成設定",
       providerNone: "なし",
       modelAuto: "自動",
+      veo31Note: "Google Veo 3.1は長尺動画の生成に対応しています。",
     },
     lipSyncParams: {
       title: "リップシンク設定",

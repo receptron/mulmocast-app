@@ -749,6 +749,7 @@ const lang = {
       title: "Movie Parameters",
       providerNone: "None",
       modelAuto: "Auto",
+      veo31Note: "Google Veo 3.1 supports extended video generation for long-form content.",
     },
     lipSyncParams: {
       title: "Lip Sync Parameters",
