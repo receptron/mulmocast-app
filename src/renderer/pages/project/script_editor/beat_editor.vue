@@ -100,9 +100,12 @@
         @blur="justSaveAndPushToHistory"
       />
       <span class="text-muted-foreground text-sm">{{ t("beat.duration.unit") }}</span>
-      <span v-if="expectDuration && beat.moviePrompt" class="text-muted-foreground text-sm">
-        {{ t("beat.duration.supportedDurations", { durations: expectDuration.join(", ") }) }}
-      </span>
+      <div v-if="expectDuration && beat.moviePrompt" class="text-muted-foreground text-sm">
+        <div>{{ t("beat.duration.supportedDurations", { durations: expectDuration.join(", ") }) }}</div>
+        <div v-if="isVeo31Model" class="mt-1">
+          {{ t("beat.duration.veo31ExtendedNote") }}
+        </div>
+      </div>
       <span
         class="bg-popover text-muted-foreground border-border pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform rounded border px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100"
       >
@@ -477,6 +480,14 @@ const expectDuration = computed(() => {
   const model = movieParams.model as string;
   const modelParams = provider2MovieAgent[provider]?.modelParams as Record<string, { durations?: number[] }>;
   return modelParams?.[model]?.durations;
+});
+
+const isVeo31Model = computed(() => {
+  const movieParams = props.mulmoScript?.movieParams;
+  if (!movieParams?.provider || !movieParams?.model) {
+    return false;
+  }
+  return movieParams.provider === "google" && movieParams.model === "veo-3.1-generate-preview";
 });
 
 const durationTooltipKey = computed(() => {
