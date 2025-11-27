@@ -605,6 +605,7 @@ const lang = {
       unit: "s",
       placeholder: "auto",
       supportedDurations: "Recommended durations: [{durations}]s",
+      veo31ExtendedNote: "For 8s+: 15, 22, 29... (adding 7s each), up to 148s max (costs per generation)",
       tooltipStillImage: {
         line1: "Use this to specify how long you want the image to display.",
         line2: "However, it cannot end before the audio finishes.",

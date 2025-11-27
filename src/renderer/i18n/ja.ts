@@ -604,6 +604,7 @@ const lang = {
       unit: "秒",
       placeholder: "自動",
       supportedDurations: "推奨される動画長: [{durations}]秒",
+      veo31ExtendedNote: "8秒以上の場合: 15, 22, 29... のように7秒ずつ追加、最大148秒（生成回数分の料金がかかります）",
       tooltipStillImage: {
         line1: "表示したい時間を指定したいときに使います。",
         line2: "ただし、音声の長さより短く終わらせることはできません。",

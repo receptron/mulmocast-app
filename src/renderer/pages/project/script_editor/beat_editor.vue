@@ -89,34 +89,39 @@
       </div>
     </div>
 
-    <div class="group relative mb-4 flex items-center gap-2" v-if="beatType === 'imagePrompt' && isPro">
-      <Label class="mb-1 block">{{ t("beat.duration.label") }}</Label>
+    <div class="group relative mb-4" v-if="beatType === 'imagePrompt' && isPro">
+      <div class="flex items-center gap-2">
+        <Label class="mb-1 block">{{ t("beat.duration.label") }}</Label>
 
-      <Input
-        class="w-16"
-        :placeholder="t('beat.duration.placeholder')"
-        :model-value="beat?.duration"
-        @update:model-value="(value) => update('duration', value === '' ? undefined : Number(value))"
-        @blur="justSaveAndPushToHistory"
-      />
-      <span class="text-muted-foreground text-sm">{{ t("beat.duration.unit") }}</span>
-      <span v-if="expectDuration && beat.moviePrompt" class="text-muted-foreground text-sm">
-        {{ t("beat.duration.supportedDurations", { durations: expectDuration.join(", ") }) }}
-      </span>
-      <span
-        class="bg-popover text-muted-foreground border-border pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform rounded border px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-      >
-        <div>{{ t(durationTooltipKey + ".line1") }}</div>
-        <div :class="durationTooltipKey === 'beat.duration.tooltipGeneratedVideo' ? 'ml-2' : ''">
-          {{ t(durationTooltipKey + ".line2") }}
+        <Input
+          class="w-16"
+          :placeholder="t('beat.duration.placeholder')"
+          :model-value="beat?.duration"
+          @update:model-value="(value) => update('duration', value === '' ? undefined : Number(value))"
+          @blur="justSaveAndPushToHistory"
+        />
+        <span class="text-muted-foreground text-sm">{{ t("beat.duration.unit") }}</span>
+        <div v-if="expectDuration && beat.moviePrompt" class="text-muted-foreground text-sm">
+          <div>{{ t("beat.duration.supportedDurations", { durations: expectDuration.join(", ") }) }}</div>
+          <div v-if="isVeo31Model" >
+            {{ t("beat.duration.veo31ExtendedNote") }}
+          </div>
         </div>
-        <div v-if="durationTooltipKey === 'beat.duration.tooltipGeneratedVideo'" class="ml-2">
-          {{ t(durationTooltipKey + ".line3", { label: t("beat.duration.label") }) }}
-        </div>
-        <div v-if="durationTooltipKey === 'beat.duration.tooltipGeneratedVideo'">
-          {{ t(durationTooltipKey + ".line4") }}
-        </div>
-      </span>
+        <span
+          class="bg-popover text-muted-foreground border-border pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 transform rounded border px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+        >
+          <div>{{ t(durationTooltipKey + ".line1") }}</div>
+          <div :class="durationTooltipKey === 'beat.duration.tooltipGeneratedVideo' ? 'ml-2' : ''">
+            {{ t(durationTooltipKey + ".line2") }}
+          </div>
+          <div v-if="durationTooltipKey === 'beat.duration.tooltipGeneratedVideo'" class="ml-2">
+            {{ t(durationTooltipKey + ".line3", { label: t("beat.duration.label") }) }}
+          </div>
+          <div v-if="durationTooltipKey === 'beat.duration.tooltipGeneratedVideo'">
+            {{ t(durationTooltipKey + ".line4") }}
+          </div>
+        </span>
+      </div>
     </div>
 
     <div class="grid grid-cols-2 gap-4">
@@ -477,6 +482,14 @@ const expectDuration = computed(() => {
   const model = movieParams.model as string;
   const modelParams = provider2MovieAgent[provider]?.modelParams as Record<string, { durations?: number[] }>;
   return modelParams?.[model]?.durations;
+});
+
+const isVeo31Model = computed(() => {
+  const movieParams = props.mulmoScript?.movieParams;
+  if (!movieParams?.provider || !movieParams?.model) {
+    return false;
+  }
+  return movieParams.provider === "google" && movieParams.model === "veo-3.1-generate-preview";
 });
 
 const durationTooltipKey = computed(() => {
