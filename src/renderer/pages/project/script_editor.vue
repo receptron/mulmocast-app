@@ -115,6 +115,7 @@
                   class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
                 />
                 <Copy
+                  v-if="false"
                   @click="copyBeat(index)"
                   class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
                   :data-testid="`script-editor-text-tab-copy-beat-${index}`"
@@ -243,6 +244,7 @@
                   class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
                 />
                 <Copy
+                  v-if="false"
                   @click="copyBeat(index)"
                   class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
                   :data-testid="`script-editor-media-tab-copy-beat-${index}`"
