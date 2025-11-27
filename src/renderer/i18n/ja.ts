@@ -997,6 +997,7 @@ const lang = {
           addBGMAgent: "BGM追加処理でエラーが発生しました。",
           ttsGoogleAgent: "音声合成（Google TTS）でエラーが発生しました。",
           ttsOpenaiAgent: "音声合成（OpenAI TTS）でエラーが発生しました。",
+          ttsGeminiAgent: "音声合成（Gemini TTS）でエラーが発生しました。",
           ttsNijivoiceAgent: "音声合成（Nijivoice）でエラーが発生しました。",
           ttsElevenlabsAgent: "音声合成（ElevenLabs）でエラーが発生しました。",
         },
@@ -1007,7 +1008,15 @@ const lang = {
       },
       apiKeyInvalid: {
         imageOpenaiAgent: "OpenAIのAPI Keyが正しくありません",
+        imageReplicateAgent: "ReplicateのAPI Tokenが正しくありません",
+        imageGenAIAgent: "GeminiのAPI Keyが正しくありません",
+        movieGenAIAgent: "GeminiのAPI Keyが正しくありません",
+        movieReplicateAgent: "ReplicateのAPI Tokenが正しくありません",
         ttsOpenaiAgent: "OpenAIのAPI Keyが正しくありません",
+        ttsGoogleAgent: "GeminiのAPI Keyが正しくありません",
+        ttsGeminiAgent: "GeminiのAPI Keyが正しくありません",
+        ttsNijivoiceAgent: "NijiVoiceのAPI Keyが正しくありません",
+        ttsElevenlabsAgent: "ElevenLabsのAPI Keyが正しくありません",
         openaiAgent: "OpenAIのAPI Keyが正しくありません",
         openAIAgent: "OpenAIのAPI Keyが正しくありません",
         anthropicAgent: "AnthropicのAPI Keyが正しくありません",
@@ -1015,8 +1024,18 @@ const lang = {
       apiRateLimit: {
         imageOpenaiAgent:
           "OpenAIのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
+        imageReplicateAgent:
+          "ReplicateのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
+        imageGenAIAgent: "GeminiのAPIの利用制限に引っかかっています。しばらくしてから再度試してください",
+        movieGenAIAgent: "GeminiのAPIの利用制限に引っかかっています。しばらくしてから再度試してください",
+        movieReplicateAgent:
+          "ReplicateのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
         ttsOpenaiAgent:
           "OpenAIのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
+        ttsGoogleAgent: "GeminiのAPIの利用制限に引っかかっています。しばらくしてから再度試してください",
+        ttsGeminiAgent: "GeminiのAPIの利用制限に引っかかっています。しばらくしてから再度試してください",
+        ttsElevenlabsAgent:
+          "ElevenLabsのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
       },
       translate: {
         apiError: {
