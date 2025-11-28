@@ -85,7 +85,7 @@
     "@graphai/llm_agents": "^2.0.12",
     "@graphai/stream_agent_filter": "^2.0.2",
     "@graphai/vanilla": "^2.0.12",
-    "@monaco-editor/loader": "^1.6.1",
+    "@monaco-editor/loader": "^1.7.0",
     "@mozilla/readability": "^0.6.0",
     "@receptron/event_agent_generator": "^0.0.6",
     "@tailwindcss/vite": "^4.1.17",
