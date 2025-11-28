@@ -408,6 +408,12 @@ export const IMAGE_PARAMS_DEFAULT_VALUES: MulmoImageParams = {
   moderation: undefined,
 };
 
+// Image model display name mappings for i18n
+export const IMAGE_MODEL_DISPLAY_KEYS: Record<string, string> = {
+  "gemini-3-pro-image-preview": "nanoBananaPro",
+  "gemini-2.5-flash-image": "nanoBanana",
+};
+
 export const AUDIO_PARAMS_DEFAULT_VALUES = {
   padding: 0.3,
   introPadding: 1.0,

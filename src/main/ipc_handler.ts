@@ -5,7 +5,7 @@ import { mulmoHandler } from "./mulmo/handler";
 import * as projectManager from "./project_manager";
 import { saveSettings, loadSettings } from "./settings_manager";
 import type { ProjectMetadata, Lang, Settings } from "../types";
-import { MEDIA_FILE_EXTENSIONS } from "../shared/constants";
+import { MEDIA_FILE_EXTENSIONS, MIME_TYPES } from "../shared/constants";
 
 export const registerIPCHandler = () => {
   // In this file you can include the rest of your app's specific main process
@@ -90,25 +90,12 @@ export const registerIPCHandler = () => {
 
     const [fileBuffer, stats] = await Promise.all([fs.readFile(filePath), fs.stat(filePath)]);
     const extension = path.extname(filePath).slice(1).toLowerCase();
-    const mimeTypes: Record<string, string> = {
-      jpg: "image/jpeg",
-      jpeg: "image/jpeg",
-      png: "image/png",
-      mp4: "video/mp4",
-      mov: "video/quicktime",
-      webm: "video/webm",
-      ogg: "video/ogg",
-      ogv: "video/ogg",
-      mpeg: "video/mpeg",
-      mp2t: "video/mp2t",
-      mpg: "video/mpeg",
-    };
     const arrayBuffer = fileBuffer.buffer.slice(fileBuffer.byteOffset, fileBuffer.byteOffset + fileBuffer.byteLength);
 
     return {
       name: path.basename(filePath),
       size: stats.size,
-      type: mimeTypes[extension] ?? "",
+      type: MIME_TYPES[extension] ?? "",
       buffer: arrayBuffer,
     };
   });

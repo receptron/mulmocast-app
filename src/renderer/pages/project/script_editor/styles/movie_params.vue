@@ -2,6 +2,9 @@
   <Card class="p-4">
     <h4 class="font-medium">{{ t("parameters.movieParams.title") }}</h4>
     <div class="space-y-3">
+      <div class="text-muted-foreground text-sm">
+        {{ t("parameters.movieParams.veo31Note") }}
+      </div>
       <div>
         <Label>{{ t("ui.common.provider") }}</Label>
         <Select :model-value="movieParams?.provider" @update:model-value="handleProviderChange">

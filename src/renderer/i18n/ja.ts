@@ -213,9 +213,11 @@ const lang = {
     provider: {
       openai: {
         name: "OpenAI",
+        speechName: "OpenAI",
       },
       nijivoice: {
         name: "Nijivoice",
+        speechName: "Nijivoice",
         warning: "にじボイスは2026年2月4日にサービス終了予定です",
         warningLink: "https://algomatic.jp/news/notice_nijivoice_20251121",
       },
@@ -225,14 +227,21 @@ const lang = {
       },
       gemini: {
         name: "Gemini",
+        speechName: "Gemini",
       },
       elevenlabs: {
         name: "ElevenLabs",
+        speechName: "ElevenLabs",
       },
       replicate: {
         name: "Replicate",
+        speechName: "Replicate",
       },
       alertTemplate: "設定画面で{thing}を設定してください",
+    },
+    imageModel: {
+      nanoBananaPro: "Nano Banana Pro (gemini-3-pro-image-preview)",
+      nanoBanana: "Nano Banana (gemini-2.5-flash-image)",
     },
     apiKeyName: {
       OPENAI_API_KEY: "OpenAI API Key",
@@ -366,6 +375,10 @@ const lang = {
       titleAsc: "タイトル（昇順）",
       titleDesc: "タイトル（降順）",
     },
+    copy: {
+      tooltip: "プロジェクトを複製",
+      copiedTitle: "{title} のコピー",
+    },
     empty: {
       welcome: "ようこそ、MulmoCast へ！",
       introduction1: "まずは「{createNew}」ボタンを押してみましょう。",
@@ -412,6 +425,8 @@ const lang = {
       pdfHandout: "PDF (資料)",
     },
     scriptEditor: {
+      beatCopied: "Beatをコピーしました",
+      beatDeleted: "Beatを削除しました",
       text: {
         tabLabel: "翻訳",
         mode: "翻訳モード",
@@ -444,7 +459,7 @@ const lang = {
         mode: "素材設定",
         modeDescription: "素材を管理します",
         description:
-          "生成AIで作る画像の見た目を安定させるために、素材を使用します。キャラクターだけでなく、背景や小物なども素材として登録できます。素材は「画像生成プロンプト」で作成するか、「画像ファイル」で追加して設定します。その後、各BEATの「{imageParamsImages}」欄で「{key}」を指定してください。",
+          "生成AIで作る画像の見た目を安定させるために、素材を使用します。素材はキャラクターだけでなく、背景や小物などにも利用できます。\n\n素材は「画像生成プロンプト」で作成するか、「画像ファイル」から追加して設定します（画像ファイルはファイルアップロード・URL指定・生成済み画像のいずれかを利用できます）。\n\nその後、各BEATの「{imageParamsImages}」欄で「{key}」を指定してください。",
         imageGenerationDisabled: {
           needPrompt: "「{imagePromptLabel}」を入力してください",
           needValidScript: "「{beatTabLabel}」タブの内容が正しく設定されると、画像生成ボタンが押せるようになります。",
@@ -589,6 +604,7 @@ const lang = {
       unit: "秒",
       placeholder: "自動",
       supportedDurations: "推奨される動画長: [{durations}]秒",
+      veo31ExtendedNote: "8秒以上の場合: 15, 22, 29... のように7秒ずつ追加、最大148秒（生成回数分の料金がかかります）",
       tooltipStillImage: {
         line1: "表示したい時間を指定したいときに使います。",
         line2: "ただし、音声の長さより短く終わらせることはできません。",
@@ -734,6 +750,7 @@ const lang = {
       title: "動画生成設定",
       providerNone: "なし",
       modelAuto: "自動",
+      veo31Note: "Google Veo 3.1は長尺動画の生成に対応しています。",
     },
     lipSyncParams: {
       title: "リップシンク設定",
@@ -982,6 +999,7 @@ const lang = {
           addBGMAgent: "BGM追加処理でエラーが発生しました。",
           ttsGoogleAgent: "音声合成（Google TTS）でエラーが発生しました。",
           ttsOpenaiAgent: "音声合成（OpenAI TTS）でエラーが発生しました。",
+          ttsGeminiAgent: "音声合成（Gemini TTS）でエラーが発生しました。",
           ttsNijivoiceAgent: "音声合成（Nijivoice）でエラーが発生しました。",
           ttsElevenlabsAgent: "音声合成（ElevenLabs）でエラーが発生しました。",
         },
@@ -992,7 +1010,15 @@ const lang = {
       },
       apiKeyInvalid: {
         imageOpenaiAgent: "OpenAIのAPI Keyが正しくありません",
+        imageReplicateAgent: "ReplicateのAPI Tokenが正しくありません",
+        imageGenAIAgent: "GeminiのAPI Keyが正しくありません",
+        movieGenAIAgent: "GeminiのAPI Keyが正しくありません",
+        movieReplicateAgent: "ReplicateのAPI Tokenが正しくありません",
         ttsOpenaiAgent: "OpenAIのAPI Keyが正しくありません",
+        ttsGoogleAgent: "GeminiのAPI Keyが正しくありません",
+        ttsGeminiAgent: "GeminiのAPI Keyが正しくありません",
+        ttsNijivoiceAgent: "NijiVoiceのAPI Keyが正しくありません",
+        ttsElevenlabsAgent: "ElevenLabsのAPI Keyが正しくありません",
         openaiAgent: "OpenAIのAPI Keyが正しくありません",
         openAIAgent: "OpenAIのAPI Keyが正しくありません",
         anthropicAgent: "AnthropicのAPI Keyが正しくありません",
@@ -1000,8 +1026,18 @@ const lang = {
       apiRateLimit: {
         imageOpenaiAgent:
           "OpenAIのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
+        imageReplicateAgent:
+          "ReplicateのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
+        imageGenAIAgent: "GeminiのAPIの利用制限に引っかかっています。しばらくしてから再度試してください",
+        movieGenAIAgent: "GeminiのAPIの利用制限に引っかかっています。しばらくしてから再度試してください",
+        movieReplicateAgent:
+          "ReplicateのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
         ttsOpenaiAgent:
           "OpenAIのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
+        ttsGoogleAgent: "GeminiのAPIの利用制限に引っかかっています。しばらくしてから再度試してください",
+        ttsGeminiAgent: "GeminiのAPIの利用制限に引っかかっています。しばらくしてから再度試してください",
+        ttsElevenlabsAgent:
+          "ElevenLabsのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
       },
       translate: {
         apiError: {

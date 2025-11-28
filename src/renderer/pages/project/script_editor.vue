@@ -114,6 +114,12 @@
                   @click="() => positionUp(index + 1)"
                   class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
                 />
+                <Copy
+                  v-if="false"
+                  @click="copyBeat(index)"
+                  class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
+                  :data-testid="`script-editor-text-tab-copy-beat-${index}`"
+                />
                 <Trash
                   @click="deleteBeat(index)"
                   class="text-muted-foreground hover:text-destructive h-5 w-5 cursor-pointer transition"
@@ -237,6 +243,12 @@
                   @click="() => positionUp(index + 1)"
                   class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
                 />
+                <Copy
+                  v-if="false"
+                  @click="copyBeat(index)"
+                  class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
+                  :data-testid="`script-editor-media-tab-copy-beat-${index}`"
+                />
                 <Trash
                   @click="deleteBeat(index)"
                   class="text-muted-foreground hover:text-destructive h-5 w-5 cursor-pointer transition"
@@ -280,7 +292,7 @@
           {{ t("project.scriptEditor.reference.mode") }} -
           {{ t("project.scriptEditor.reference.modeDescription") }}
         </p>
-        <p class="text-muted-foreground text-sm">
+        <p class="text-muted-foreground text-sm whitespace-pre-line">
           {{
             t("project.scriptEditor.reference.description", {
               key: t("beat.imageReference.keyField"),
@@ -308,7 +320,7 @@
 import { ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
-import { ArrowUp, ArrowDown, Trash } from "lucide-vue-next";
+import { ArrowUp, ArrowDown, Trash, Copy } from "lucide-vue-next";
 import YAML from "yaml";
 import {
   MulmoPresentationStyleMethods,
@@ -343,6 +355,7 @@ import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/consta
 import { setRandomBeatId } from "@/lib/beat_util";
 import { projectApi } from "@/lib/project_api";
 import { useMulmoGlobalStore, useMulmoScriptHistoryStore } from "@/store";
+import { notifySuccess } from "@/lib/notification";
 
 const { t } = useI18n();
 
@@ -518,8 +531,22 @@ const deleteBeat = (index: number) => {
       ...props.mulmoScript,
       beats: newBeats,
     });
+    notifySuccess(t("project.scriptEditor.beatDeleted"));
   }
 };
+
+const copyBeat = (index: number) => {
+  if (index >= 0 && index < props.mulmoScript.beats.length) {
+    const { id: __, ...beatWithoutId } = props.mulmoScript.beats[index];
+    const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, setRandomBeatId(beatWithoutId));
+    emit("updateMulmoScriptAndPushToHistory", {
+      ...props.mulmoScript,
+      beats: newBeats,
+    });
+    notifySuccess(t("project.scriptEditor.beatCopied"));
+  }
+};
+
 const positionUp = (index: number) => {
   if (index <= 0 || index >= props.mulmoScript.beats.length) return;
   const newBeats = arrayPositionUp<MulmoBeat>(props.mulmoScript.beats, index);

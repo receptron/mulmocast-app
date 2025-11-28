@@ -33,7 +33,7 @@
               :key="model"
               :value="model"
             >
-              {{ model }}
+              {{ getModelDisplayName(model) }}
             </SelectItem>
           </SelectContent>
         </Select>
@@ -86,7 +86,7 @@ import { mulmoOpenAIImageModelSchema } from "mulmocast/browser";
 
 import SettingsAlert from "../settings_alert.vue";
 
-import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../../shared/constants";
+import { IMAGE_PARAMS_DEFAULT_VALUES, IMAGE_MODEL_DISPLAY_KEYS } from "../../../../../shared/constants";
 
 const { t } = useI18n();
 const qualityOptions = mulmoOpenAIImageModelSchema.shape.quality._def.innerType.options;
@@ -136,5 +136,10 @@ const handleUpdate = (field: keyof MulmoImageParams, value: string) => {
     ...currentParams,
     [field]: value == "__undefined__" ? undefined : value,
   });
+};
+
+const getModelDisplayName = (modelId: string): string => {
+  const i18nKey = IMAGE_MODEL_DISPLAY_KEYS[modelId];
+  return i18nKey ? t(`ai.imageModel.${i18nKey}`) : modelId;
 };
 </script>

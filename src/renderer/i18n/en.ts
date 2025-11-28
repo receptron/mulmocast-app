@@ -213,9 +213,11 @@ const lang = {
     provider: {
       openai: {
         name: "OpenAI",
+        speechName: "OpenAI",
       },
       nijivoice: {
         name: "Nijivoice",
+        speechName: "Nijivoice",
         warning: "Nijivoice service will end on February 4, 2026",
         warningLink: "https://algomatic.jp/news/notice_nijivoice_20251121",
       },
@@ -225,14 +227,20 @@ const lang = {
       },
       gemini: {
         name: "Gemini",
+        speechName: "Gemini",
       },
       elevenlabs: {
         name: "ElevenLabs",
+        speechName: "ElevenLabs",
       },
       replicate: {
         name: "Replicate",
       },
       alertTemplate: "You need to setup {thing}",
+    },
+    imageModel: {
+      nanoBananaPro: "Nano Banana Pro (gemini-3-pro-image-preview)",
+      nanoBanana: "Nano Banana (gemini-2.5-flash-image)",
     },
     apiKeyName: {
       OPENAI_API_KEY: "OpenAI API Key",
@@ -367,6 +375,10 @@ const lang = {
       titleAsc: "Title (A-Z)",
       titleDesc: "Title (Z-A)",
     },
+    copy: {
+      tooltip: "Duplicate this project",
+      copiedTitle: "Copy of {title}",
+    },
     empty: {
       welcome: "Welcome to MulmoCast!",
       introduction1: "First, click the {createNew} button.",
@@ -414,6 +426,8 @@ const lang = {
       pdfHandout: "PDF (Handout)",
     },
     scriptEditor: {
+      beatCopied: "Beat copied",
+      beatDeleted: "Beat deleted",
       text: {
         tabLabel: "Text",
         mode: "Text Mode",
@@ -446,7 +460,7 @@ const lang = {
         mode: "Materials",
         modeDescription: "Manage materials used in your presentation",
         description:
-          'Use materials to keep the appearance of AI-generated images consistent. Materials can include not only characters but also backgrounds and props. Create materials with an "image generation prompt" or add your own image files. Then, in each BEAT, specify the "{key}" in the "{imageParamsImages}" section.',
+          'Use materials to keep the appearance of AI-generated images consistent. Materials can include not only characters but also backgrounds and props.\n\nCreate materials with an "image generation prompt" or add your own image files (you can upload files, specify URLs, or use previously generated images).\n\nThen, in each BEAT, specify the "{key}" in the "{imageParamsImages}" section.',
         imageGenerationDisabled: {
           needPrompt: 'Please enter "{imagePromptLabel}"',
           needValidScript:
@@ -591,6 +605,7 @@ const lang = {
       unit: "s",
       placeholder: "auto",
       supportedDurations: "Recommended durations: [{durations}]s",
+      veo31ExtendedNote: "For 8s+: 15, 22, 29... (adding 7s each), up to 148s max (costs per generation)",
       tooltipStillImage: {
         line1: "Use this to specify how long you want the image to display.",
         line2: "However, it cannot end before the audio finishes.",
@@ -734,6 +749,7 @@ const lang = {
       title: "Movie Parameters",
       providerNone: "None",
       modelAuto: "Auto",
+      veo31Note: "Google Veo 3.1 supports extended video generation for long-form content.",
     },
     lipSyncParams: {
       title: "Lip Sync Parameters",
@@ -981,6 +997,7 @@ const lang = {
           addBGMAgent: "An error occurred while adding BGM.",
           ttsGoogleAgent: "An error occurred with speech synthesis (Google TTS).",
           ttsOpenaiAgent: "An error occurred with speech synthesis (OpenAI TTS).",
+          ttsGeminiAgent: "An error occurred with speech synthesis (Gemini TTS).",
           ttsNijivoiceAgent: "An error occurred with speech synthesis (Nijivoice).",
           ttsElevenlabsAgent: "An error occurred with speech synthesis (ElevenLabs).",
         },
@@ -991,14 +1008,29 @@ const lang = {
       },
       apiKeyInvalid: {
         imageOpenaiAgent: "The OpenAI API Key is invalid",
+        imageReplicateAgent: "The Replicate API Token is invalid",
+        imageGenAIAgent: "The Gemini API Key is invalid",
+        movieGenAIAgent: "The Gemini API Key is invalid",
+        movieReplicateAgent: "The Replicate API Token is invalid",
         ttsOpenaiAgent: "The OpenAI API Key is invalid",
+        ttsGoogleAgent: "The Gemini API Key is invalid",
+        ttsGeminiAgent: "The Gemini API Key is invalid",
+        ttsNijivoiceAgent: "The NijiVoice API Key is invalid",
+        ttsElevenlabsAgent: "The ElevenLabs API Key is invalid",
         openaiAgent: "The OpenAI API Key is invalid",
         openAIAgent: "The OpenAI API Key is invalid",
         anthropicAgent: "Anthropic API Key is invalid",
       },
       apiRateLimit: {
         imageOpenaiAgent: "The OpenAI API usage limit has been reached. Please add billing or try again later.",
+        imageReplicateAgent: "The Replicate API usage limit has been reached. Please add billing or try again later.",
+        imageGenAIAgent: "The Gemini API usage limit has been reached. Please try again later.",
+        movieGenAIAgent: "The Gemini API usage limit has been reached. Please try again later.",
+        movieReplicateAgent: "The Replicate API usage limit has been reached. Please add billing or try again later.",
         ttsOpenaiAgent: "The OpenAI API usage limit has been reached. Please add billing or try again later.",
+        ttsGoogleAgent: "The Gemini API usage limit has been reached. Please try again later.",
+        ttsGeminiAgent: "The Gemini API usage limit has been reached. Please try again later.",
+        ttsElevenlabsAgent: "The ElevenLabs API usage limit has been reached. Please add billing or try again later.",
       },
       translate: {
         apiError: {

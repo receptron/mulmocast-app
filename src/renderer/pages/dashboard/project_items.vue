@@ -87,14 +87,21 @@
           >
             <Eye class="h-4 w-4" />
           </Button>
-          <Button
-            @click="copyProject($event, project)"
-            variant="ghost"
-            size="icon"
-            class="text-muted-foreground hover:text-primary"
-          >
-            <Copy class="h-4 w-4" />
-          </Button>
+          <div class="group/copy relative">
+            <Button
+              @click="copyProject($event, project)"
+              variant="ghost"
+              size="icon"
+              class="text-muted-foreground hover:text-primary"
+            >
+              <Copy class="h-4 w-4" />
+            </Button>
+            <span
+              class="border-border bg-popover text-muted-foreground pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded-md border px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover/copy:opacity-100"
+            >
+              {{ t("dashboard.copy.tooltip") }}
+            </span>
+          </div>
           <Button
             @click="deleteProject($event, project)"
             variant="ghost"

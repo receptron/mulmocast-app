@@ -8,11 +8,7 @@
       <audio :src="audioSource" v-if="audioSource" />
     </div>
     <div v-else-if="audioSource">
-      <video
-        class="mx-auto h-auto max-h-[80vh] w-auto object-contain"
-        :src="audioSource"
-        :poster="imageSource ?? mulmoImage"
-      />
+      <video class="mx-auto h-auto max-h-[80vh] w-auto object-contain" :src="audioSource" :poster="imageSource" />
     </div>
     <div v-else-if="imageSource" class="relative inline-block">
       <img :src="imageSource" class="mx-auto h-auto max-h-[80vh] w-auto object-contain" />
