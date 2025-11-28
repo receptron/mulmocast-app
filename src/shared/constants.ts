@@ -461,10 +461,13 @@ export type VideoExtension = (typeof MEDIA_FILE_EXTENSIONS.video)[number];
 export type MediaExtension = ImageExtension | VideoExtension;
 
 // MIME type mappings for file extensions
-export const MIME_TYPES: Record<string, string> = {
+export const IMAGE_MIME_TYPES: Record<string, string> = {
   jpg: "image/jpeg",
   jpeg: "image/jpeg",
   png: "image/png",
+} as const;
+
+export const MOVIE_MIME_TYPES: Record<string, string> = {
   mp4: "video/mp4",
   mov: "video/quicktime",
   webm: "video/webm",
@@ -475,8 +478,13 @@ export const MIME_TYPES: Record<string, string> = {
   mp2t: "video/mp2t",
 } as const;
 
-export const IMAGE_MIME = ["image/jpeg", "image/png"];
-export const MOVIE_MIME = ["video/mp4", "video/quicktime", "video/mpeg"];
+export const MIME_TYPES = {
+  ...IMAGE_MIME_TYPES,
+  ...MOVIE_MIME_TYPES,
+} as const;
+
+export const IMAGE_MIME = [...new Set(Object.values(IMAGE_MIME_TYPES))];
+export const MOVIE_MIME = [...new Set(Object.values(MOVIE_MIME_TYPES))];
 
 export const MIME_EXT_MAP: Record<string, string> = {
   "image/jpeg": ".jpg",
@@ -484,4 +492,7 @@ export const MIME_EXT_MAP: Record<string, string> = {
   "video/mp4": ".mp4",
   "video/quicktime": ".mov",
   "video/mpeg": ".mpg",
+  "video/webm": ".webm",
+  "video/ogg": ".ogv",
+  "video/mp2t": ".mp2t",
 };
