@@ -707,7 +707,7 @@ const lang = {
       label: "ビート",
       idField: "ビートID",
       referenceField: "ビート参照",
-      placeholder: "参照するビートIDを入力してください（例: beat_1）",
+      placeholder: "参照するビートを選択",
       placeholderUrl: "画像URLを入力してください",
     },
     voice_over: {
