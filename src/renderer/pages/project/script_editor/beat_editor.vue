@@ -202,13 +202,16 @@
           <!-- reference -->
           <template v-else-if="beat.image.type === 'beat'">
             <Label class="mb-1 block">{{ t("beat.beat.label") }}</Label>
-            <Input
-              :placeholder="t('beat.beat.placeholder')"
-              :model-value="beat.image.id"
-              @update:model-value="(value) => update('image.id', String(value))"
-              @blur="justSaveAndPushToHistory"
-              type="text"
-            />
+            <Select :model-value="beat.image.id" @update:model-value="(value) => update('image.id', value)">
+              <SelectTrigger class="h-8">
+                <SelectValue :placeholder="t('beat.beat.placeholder')" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem v-for="refBeat in referenceBeats" :key="refBeat.id" :value="refBeat.id">
+                  {{ refBeat.label }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </template>
           <!-- Other -->
           <template v-else>
@@ -383,6 +386,7 @@ import { getLipSyncModelDescription, getLipSyncTargetInfo } from "./lip_sync_uti
 // components
 import MediaModal from "@/components/media_modal.vue";
 import { Badge, Button, Label, Input, Textarea, Checkbox } from "@/components/ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import BeatPreviewImage from "./beat_preview_image.vue";
 import BeatPreviewMovie from "./beat_preview_movie.vue";
 import BeatSelector from "./beat_selector.vue";
@@ -469,6 +473,16 @@ const enableLipSyncGenerate = computed(() => {
 });
 const beatId = computed(() => {
   return props.beat.id;
+});
+
+const referenceBeats = computed(() => {
+  return props.mulmoScript.beats
+    .map((beat, index) => ({
+      id: beat.id,
+      index,
+      label: `BEAT ${index + 1}`,
+    }))
+    .filter((_, index) => index !== props.index);
 });
 
 const expectDuration = computed(() => {
