@@ -341,6 +341,18 @@ export const VOICE_LISTS = {
     { id: "Atla", key: "atla" },
     { id: "Poporo", key: "poporo" },
     { id: "jikkyo_baby", key: "jikkyo_baby" },
+    { id: "Chunta", key: "chunta" },
+    { id: "Mikko", key: "mikko" },
+    { id: "Shion", key: "shion" },
+    { id: "President", key: "president" },
+    { id: "Kodama", key: "kodama" },
+    { id: "Kyusuke", key: "kyusuke" },
+    { id: "Kamiyama", key: "kamiyama" },
+    { id: "Cammy", key: "cammy" },
+    { id: "Marlo", key: "marlo" },
+    { id: "Kitahara", key: "kitahara" },
+    { id: "Ishigaki", key: "ishigaki" },
+    { id: "Suginaka", key: "suginaka" },
   ],
 } as const;
 
