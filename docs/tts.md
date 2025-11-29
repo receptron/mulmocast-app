@@ -6,6 +6,12 @@
 
 新しいTTSプロバイダーは、まず`mulmocast-cli`（mulmocastパッケージ）側で実装されている必要があります。mulmocastパッケージの`provider2TTSAgent`に定義が含まれていることを確認してください。
 
+## 基本方針
+
+**通常、TTSプロバイダーはvoiceIdのみを設定すれば十分です。**
+
+一部のプロバイダー（nijivoiceのspeed、openaiのinstruction、kotodamaのdecorationなど）は追加の設定（speechOptions）を必要としますが、これはプロバイダー固有の機能です。新しいプロバイダーを追加する際は、まず基本的な実装（voiceIdのみ）を行い、必要に応じてTTS固有設定を追加してください。
+
 ## 実装手順
 
 ### 1. API Key設定の追加
@@ -47,9 +53,15 @@ export const VOICE_LISTS = {
 - `id`: APIに渡す実際の値（mulmocastパッケージのデフォルト値と一致させる）
 - `key`: i18n翻訳キーに使用される識別子
 
-### 3. Decoration List（オプション）
+### 3. TTS固有の設定（オプション）
 
-プロバイダーが音声スタイル（decoration）をサポートする場合、`DECORATION_LISTS`に追加します：
+**通常はvoiceIdのみで十分です。**
+
+プロバイダーが追加の設定をサポートする場合のみ、以下の対応が必要です：
+
+#### 例: Kotodamaの場合（decoration）
+
+Kotodamaは音声スタイル（decoration）をサポートしているため、選択肢リストを定義します：
 
 **ファイル**: `src/shared/constants.ts`
 
@@ -65,6 +77,12 @@ export const DECORATION_LISTS = {
   ],
 } as const;
 ```
+
+#### 他のプロバイダーの例
+
+- **nijivoice**: `speed`（数値入力、範囲: 0.4-3.0）
+- **openai**: `instruction`（テキスト入力、読み上げスタイルの指示）
+- **elevenlabs**: `model`（モデル選択）
 
 ### 4. Settings Alert設定
 
@@ -86,29 +104,62 @@ const provider2ApiKey = {
 
 ### 5. i18n翻訳の追加
 
-#### 英語翻訳 (`src/renderer/i18n/en.ts`)
+#### 必須の翻訳項目
+
+すべてのTTSプロバイダーで必要な翻訳：
+
+**英語翻訳** (`src/renderer/i18n/en.ts`):
 
 ```typescript
 {
   ai: {
     provider: {
-      kotodama: {
-        name: "Kotodama",
-        speechName: "Kotodama",
+      [providerName]: {
+        name: "Provider Display Name",
+        speechName: "Provider Speech Name",
       },
     },
     apiKeyName: {
-      KOTODAMA_API_KEY: "Kotodama API Key",
+      [API_KEY_NAME]: "API Key Display Name",
     },
   },
   voiceList: {
-    kotodama: {
-      atla: "Atla",
-      poporo: "Poporo",
-      jikkyo_baby: "Jikkyo Baby",
+    [providerName]: {
+      [voiceKey]: "Voice Display Name",
+      // 各音声のキーと表示名
     },
   },
-  decorationList: { // decorationがある場合
+  errors: {
+    generate: {
+      apiError: {
+        [agentName]: "Error message for API errors.",
+      },
+      apiKeyInvalid: {
+        [agentName]: "Error message for invalid API key",
+      },
+      apiRateLimit: {
+        [agentName]: "Error message for rate limit.",
+      },
+      apiKeyMissing: {
+        [API_KEY_NAME]: "Error message for missing API key",
+      },
+    },
+  },
+}
+```
+
+**日本語翻訳** (`src/renderer/i18n/ja.ts`) も同様の構造で追加します。
+
+#### TTS固有設定の翻訳（オプション）
+
+プロバイダーが追加の設定をサポートする場合、その設定項目の翻訳も追加します。
+
+**Kotodamaの例（decoration）**:
+
+```typescript
+// en.ts
+{
+  decorationList: {
     kotodama: {
       neutral: "Neutral",
       neutral_en: "Neutral (English)",
@@ -120,51 +171,14 @@ const provider2ApiKey = {
   },
   parameters: {
     speechParams: {
-      decoration: "Voice Style", // decorationがある場合
-    },
-  },
-  errors: {
-    generate: {
-      apiError: {
-        ttsKotodamaAgent: "An error occurred with speech synthesis (Kotodama).",
-      },
-      apiKeyInvalid: {
-        ttsKotodamaAgent: "The Kotodama API Key is invalid",
-      },
-      apiRateLimit: {
-        ttsKotodamaAgent: "The Kotodama API usage limit has been reached. Please try again later.",
-      },
-      apiKeyMissing: {
-        KOTODAMA_API_KEY: "Kotodama API key is not set",
-      },
+      decoration: "Voice Style",
     },
   },
 }
-```
 
-#### 日本語翻訳 (`src/renderer/i18n/ja.ts`)
-
-```typescript
+// ja.ts
 {
-  ai: {
-    provider: {
-      kotodama: {
-        name: "Kotodama",
-        speechName: "Kotodama",
-      },
-    },
-    apiKeyName: {
-      KOTODAMA_API_KEY: "Kotodama API Key",
-    },
-  },
-  voiceList: {
-    kotodama: {
-      atla: "アトラ",
-      poporo: "ポポロ",
-      jikkyo_baby: "実況ベイビー",
-    },
-  },
-  decorationList: { // decorationがある場合
+  decorationList: {
     kotodama: {
       neutral: "ニュートラル",
       neutral_en: "ニュートラル（英語）",
@@ -176,33 +190,21 @@ const provider2ApiKey = {
   },
   parameters: {
     speechParams: {
-      decoration: "音声スタイル", // decorationがある場合
-    },
-  },
-  errors: {
-    generate: {
-      apiError: {
-        ttsKotodamaAgent: "音声合成（Kotodama）でエラーが発生しました。",
-      },
-      apiKeyInvalid: {
-        ttsKotodamaAgent: "KotodamaのAPI Keyが正しくありません",
-      },
-      apiRateLimit: {
-        ttsKotodamaAgent: "KotodamaのAPIの利用制限に引っかかっています。しばらくしてから再度試してください",
-      },
-      apiKeyMissing: {
-        KOTODAMA_API_KEY: "KotodamaのAPI Keyが設定されていません",
-      },
+      decoration: "音声スタイル",
     },
   },
 }
 ```
 
-### 6. UIコンポーネント（decorationがある場合）
+### 6. UIコンポーネント（TTS固有設定がある場合のみ）
+
+**通常はvoiceIdのみで、この手順は不要です。**
+
+プロバイダーが追加の設定を必要とする場合のみ、UIコンポーネントを追加します。
 
 **ファイル**: `src/renderer/pages/project/script_editor/styles/speech_speaker.vue`
 
-decorationセレクトを追加します：
+#### 例1: Kotodama（セレクト形式のdecoration）
 
 ```vue
 <template>
@@ -238,6 +240,35 @@ const getDecorationList = (provider: string) => {
 </script>
 ```
 
+#### 例2: Nijivoice（数値入力のspeed）
+
+```vue
+<div v-if="localizedSpeaker.provider === 'nijivoice'">
+  <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
+  <Input
+    :model-value="speaker.speed || ''"
+    @update:model-value="(value) => handleSpeechOptionsChange('speed', value)"
+    class="h-8"
+    type="number"
+    :placeholder="t('parameters.speechParams.speedPlaceholder')"
+  />
+</div>
+```
+
+#### 例3: OpenAI（テキスト入力のinstruction）
+
+```vue
+<div v-if="localizedSpeaker.provider === 'openai' || !localizedSpeaker.provider">
+  <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
+  <Input
+    :model-value="speaker?.speechOptions?.instruction || ''"
+    @update:model-value="(value) => handleSpeechOptionsChange('instruction', value)"
+    class="h-8"
+    :placeholder="t('parameters.speechParams.instructionPlaceholder')"
+  />
+</div>
+```
+
 ### 7. Provider切り替え時のデフォルト値設定
 
 **ファイル**: `src/renderer/pages/project/script_editor/styles/speech_speaker.vue`
@@ -259,16 +290,31 @@ const handleProviderChange = async (provider: string) => {
     displayName: props.speaker.displayName,
   };
 
-  // defaultDecorationがある場合は設定
+  // TTS固有設定のデフォルト値を設定（プロバイダーごとに異なる）
+  // 例: Kotodamaのdecoration
   if (provider === "kotodama" && providerConfig?.defaultDecoration) {
     updatedSpeakers.speechOptions = {
       decoration: providerConfig.defaultDecoration,
     };
   }
 
-  // ... 残りの処理
+  const lang = mulmoScriptHistoryStore.lang;
+  if (props.speaker?.lang?.[lang]) {
+    const langData = { ...props.speaker.lang };
+    langData[lang] = updatedSpeakers;
+    emit("updateSpeakerData", {
+      lang: langData,
+    });
+  } else {
+    emit("updateSpeakerData", updatedSpeakers, false);
+  }
 };
 ```
+
+**重要**:
+- 通常はvoiceIdの設定のみで十分です
+- TTS固有設定（speed, instruction, decorationなど）がある場合のみ、`speechOptions`を設定します
+- デフォルト値は`provider2TTSAgent`から取得するか、適切な初期値を設定します
 
 ## 重要なポイント
 
@@ -276,13 +322,22 @@ const handleProviderChange = async (provider: string) => {
 
 - **provider2TTSAgent**: mulmocastパッケージの`provider2TTSAgent`から設定を取得します
   - `defaultVoice`: デフォルトの音声ID
-  - `defaultDecoration`: デフォルトの音声スタイル（ある場合）
   - `agentName`: エージェント名（エラーメッセージのキーに使用）
   - `keyName`: 対応するAPI Keyの名前
+  - その他のプロバイダー固有設定（例: kotodamaの`defaultDecoration`）
 
 ### データ構造
 
-プロバイダー切り替え時に生成される設定例：
+#### 基本的なプロバイダー（voiceIdのみ）
+
+```json
+{
+  "provider": "openai",
+  "voiceId": "shimmer"
+}
+```
+
+#### TTS固有設定があるプロバイダー（例: Kotodama）
 
 ```json
 {
@@ -290,6 +345,28 @@ const handleProviderChange = async (provider: string) => {
   "voiceId": "Atla",
   "speechOptions": {
     "decoration": "neutral"
+  }
+}
+```
+
+#### その他の例
+
+```json
+// Nijivoice (speed)
+{
+  "provider": "nijivoice",
+  "voiceId": "hanamura_honoka",
+  "speechOptions": {
+    "speed": 1.2
+  }
+}
+
+// OpenAI (instruction)
+{
+  "provider": "openai",
+  "voiceId": "shimmer",
+  "speechOptions": {
+    "instruction": "Read slowly and gently"
   }
 }
 ```
@@ -302,17 +379,24 @@ const handleProviderChange = async (provider: string) => {
 
 ## チェックリスト
 
-新しいTTSプロバイダーを追加する際は、以下をすべて実装してください：
+新しいTTSプロバイダーを追加する際は、以下を実装してください：
 
-- [ ] `ENV_KEYS`にAPI Key定義を追加
-- [ ] `VOICE_LISTS`に音声リストを追加
-- [ ] （オプション）`DECORATION_LISTS`に音声スタイルを追加
+### 必須項目（すべてのプロバイダー）
+
+- [ ] `ENV_KEYS`にAPI Key定義を追加（constants.ts）
+- [ ] `VOICE_LISTS`に音声リストを追加（constants.ts）
 - [ ] `settings_alert.vue`の`provider2ApiKey`に追加
 - [ ] `en.ts`に英語翻訳を追加（provider, apiKeyName, voiceList, errors）
 - [ ] `ja.ts`に日本語翻訳を追加（provider, apiKeyName, voiceList, errors）
-- [ ] （decorationがある場合）UIコンポーネントにセレクトを追加
-- [ ] `handleProviderChange`でデフォルト値を設定
+- [ ] `handleProviderChange`でデフォルトvoiceIdを設定
 - [ ] `yarn run lint`と`yarn run type-check`を実行して確認
+
+### オプション項目（TTS固有設定がある場合のみ）
+
+- [ ] 設定項目のリストを`constants.ts`に追加（例: `DECORATION_LISTS`）
+- [ ] 設定項目の翻訳を`en.ts`と`ja.ts`に追加
+- [ ] UIコンポーネント（Select/Input）を`speech_speaker.vue`に追加
+- [ ] `handleProviderChange`でデフォルト値を`speechOptions`に設定
 
 ## 実装例: Kotodama TTS
 
