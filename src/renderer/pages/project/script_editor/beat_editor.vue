@@ -213,6 +213,19 @@
               </SelectContent>
             </Select>
           </template>
+          <template v-else-if="beat.image.type === 'voice_over'">
+            <Label class="mb-1 block">{{ t("beat.voice_over.label") }}</Label>
+            <Input
+              :placeholder="t('beat.startAt.placeholder')"
+              :model-value="beat.image.startAt"
+              @update:model-value="
+                (value) =>
+                  update('image.startAt', !value || !/^[0-9]+$/.test(String(value)) ? undefined : Number(value))
+              "
+              @blur="justSaveAndPushToHistory"
+              type="text"
+            />
+          </template>
           <!-- Other -->
           <template v-else>
             <div class="text-destructive text-sm">

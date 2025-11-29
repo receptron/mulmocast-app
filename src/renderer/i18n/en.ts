@@ -433,6 +433,7 @@ const lang = {
     scriptEditor: {
       beatCopied: "Beat copied",
       beatDeleted: "Beat deleted",
+      voice_over: "Voice Over",
       text: {
         tabLabel: "Text",
         mode: "Text Mode",
@@ -708,6 +709,13 @@ const lang = {
       referenceField: "Beat Reference",
       placeholder: "Enter beat ID to reference (e.g., beat_1)",
       placeholderUrl: "Enter image URL",
+    },
+    voice_over: {
+      badge: "Voice Over",
+      label: "Voice Over Start Time (s)",
+    },
+    startAt: {
+      placeholder: "e.g., 1 (start at 1 second)",
     },
     imagePrompt: {
       badge: "Image Prompt",
