@@ -432,6 +432,7 @@ const lang = {
     scriptEditor: {
       beatCopied: "Beatをコピーしました",
       beatDeleted: "Beatを削除しました",
+      voice_over: "ボイスオーバー",
       text: {
         tabLabel: "翻訳",
         mode: "翻訳モード",
@@ -708,6 +709,12 @@ const lang = {
       referenceField: "ビート参照",
       placeholder: "参照するビートIDを入力してください（例: beat_1）",
       placeholderUrl: "画像URLを入力してください",
+    },
+    voice_over: {
+      label: "ボイスオーバー開始時間（秒）",
+    },
+    startAt: {
+      placeholder: "例：1（1秒後に開始）",
     },
     imagePrompt: {
       badge: "Image Prompt",

@@ -210,6 +210,18 @@
               type="text"
             />
           </template>
+          <template v-else-if="beat.image.type === 'voice_over'">
+            <Label class="mb-1 block">{{ t("beat.voice_over.label") }}</Label>
+            <Input
+              :placeholder="t('beat.startAt.placeholder')"
+              :model-value="beat.image.startAt"
+              @update:model-value="
+                (value) => update('image.startAt', isNull(value) && !/^[0-9]+$/.test(value) ? undefined : Number(value))
+              "
+              @blur="justSaveAndPushToHistory"
+              type="text"
+            />
+          </template>
           <!-- Other -->
           <template v-else>
             <div class="text-destructive text-sm">
@@ -401,6 +413,8 @@ import Media from "./beat_editors/media.vue";
 import Mermaid from "./beat_editors/mermaid.vue";
 import Vision from "./beat_editors/vision.vue";
 import { useApiErrorNotify } from "@/composables/notify";
+
+import { isNull } from "graphai/lib/utils/utils";
 
 type FileData = ArrayBuffer | string | null;
 

@@ -79,6 +79,16 @@ export const beatTemplates: { key: string; beat: MulmoBeat }[] = [
     },
   },
   {
+    key: "voiceOver",
+    beat: {
+      text: "",
+      speaker: "",
+      image: {
+        type: "voice_over",
+      },
+    },
+  },
+  {
     key: "textSlide",
     beat: {
       text: "",
