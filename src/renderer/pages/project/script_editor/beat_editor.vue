@@ -216,7 +216,7 @@
               :placeholder="t('beat.startAt.placeholder')"
               :model-value="beat.image.startAt"
               @update:model-value="
-                (value) => update('image.startAt', isNull(value) || !/^[0-9]+$/.test(String(value)) ? undefined : Number(value))
+                (value) => update('image.startAt', !value || !/^[0-9]+$/.test(String(value)) ? undefined : Number(value))
               "
               @blur="justSaveAndPushToHistory"
               type="text"
