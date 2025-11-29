@@ -711,6 +711,7 @@ const lang = {
       placeholderUrl: "画像URLを入力してください",
     },
     voice_over: {
+      badge: "ボイスオーバー",
       label: "ボイスオーバー開始時間（秒）",
     },
     startAt: {

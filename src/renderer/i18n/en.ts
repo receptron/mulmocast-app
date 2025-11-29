@@ -711,6 +711,7 @@ const lang = {
       placeholderUrl: "Enter image URL",
     },
     voice_over: {
+      badge: "Voice Over",
       label: "Voice Over Start Time (s)",
     },
     startAt: {
