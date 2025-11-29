@@ -25,7 +25,11 @@
           {{ t("project.scriptEditor.reference.mode")
           }}<!-- Todo -->
         </template>
-        <template v-if="isImageGenerating || isHtmlGenerating">
+
+        <template v-if="beat?.image?.type === 'voice_over'">
+          {{ t("project.scriptEditor.voice_over") }}
+        </template>
+        <template v-else-if="isImageGenerating || isHtmlGenerating">
           <!-- TODO update design -->
           {{ t("ui.status.generating") }}
         </template>
@@ -91,6 +95,7 @@ const { t } = useI18n();
 const shouldShowGenerateButton = computed(() => {
   return (
     props.beat?.image?.type !== "beat" &&
+    props.beat?.image?.type !== "voice_over" &&
     !(
       ["image", "movie"].includes(props.beat?.image?.type || "") &&
       props.beat?.image &&
