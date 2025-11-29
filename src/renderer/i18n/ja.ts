@@ -233,6 +233,10 @@ const lang = {
         name: "ElevenLabs",
         speechName: "ElevenLabs",
       },
+      kotodama: {
+        name: "Kotodama",
+        speechName: "Kotodama",
+      },
       replicate: {
         name: "Replicate",
         speechName: "Replicate",
@@ -248,6 +252,7 @@ const lang = {
       NIJIVOICE_API_KEY: "NijiVoice API Key",
       TAVILY_API_KEY: "Tavily API Key",
       ELEVENLABS_API_KEY: "ElevenLabs API Key",
+      KOTODAMA_API_KEY: "Kotodama API Key",
       REPLICATE_API_TOKEN: "Replicate API Token",
       GEMINI_API_KEY: "Gemini API Key",
       ANTHROPIC_API_KEY: "Anthropic API Key",
@@ -780,6 +785,7 @@ const lang = {
       speedPlaceholder: "例）1.2（0.4〜3.0、標準は1.0）",
       instruction: "読み上げスタイル",
       instructionPlaceholder: "例）ゆっくりと優しく読んで",
+      decoration: "音声スタイル",
       placeholder: "登場人物の名前 (英数字のみ)",
       noSpeakersDefined: "登場人物が定義されていません",
       initializeSpeechParameters: "音声パラメータを初期化",
@@ -1002,6 +1008,7 @@ const lang = {
           ttsGeminiAgent: "音声合成（Gemini TTS）でエラーが発生しました。",
           ttsNijivoiceAgent: "音声合成（Nijivoice）でエラーが発生しました。",
           ttsElevenlabsAgent: "音声合成（ElevenLabs）でエラーが発生しました。",
+          ttsKotodamaAgent: "音声合成（Kotodama）でエラーが発生しました。",
         },
         generateAudioSpeechParam: "{speechParams} (speechParams) がセットされていません",
       },
@@ -1019,6 +1026,7 @@ const lang = {
         ttsGeminiAgent: "GeminiのAPI Keyが正しくありません",
         ttsNijivoiceAgent: "NijiVoiceのAPI Keyが正しくありません",
         ttsElevenlabsAgent: "ElevenLabsのAPI Keyが正しくありません",
+        ttsKotodamaAgent: "KotodamaのAPI Keyが正しくありません",
         openaiAgent: "OpenAIのAPI Keyが正しくありません",
         openAIAgent: "OpenAIのAPI Keyが正しくありません",
         anthropicAgent: "AnthropicのAPI Keyが正しくありません",
@@ -1038,6 +1046,7 @@ const lang = {
         ttsGeminiAgent: "GeminiのAPIの利用制限に引っかかっています。しばらくしてから再度試してください",
         ttsElevenlabsAgent:
           "ElevenLabsのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
+        ttsKotodamaAgent: "KotodamaのAPIの利用制限に引っかかっています。しばらくしてから再度試してください",
       },
       translate: {
         apiError: {
@@ -1050,6 +1059,7 @@ const lang = {
         NIJIVOICE_API_KEY: "NijiVoiceのAPI Keyが設定されていません",
         TAVILY_API_KEY: "TavilyのAPI Keyが設定されていません",
         ELEVENLABS_API_KEY: "ElevenLabsのAPI Keyが設定されていません",
+        KOTODAMA_API_KEY: "KotodamaのAPI Keyが設定されていません",
         REPLICATE_API_TOKEN: "ReplicateのAPI Tokenが設定されていません",
         GEMINI_API_KEY: "GeminiのAPI Keyが設定されていません",
         ANTHROPIC_API_KEY: "AnthropicのAPI Keyが設定されていません",
@@ -1274,6 +1284,21 @@ const lang = {
       hinata: "Hinata",
       steven_casteel: "Steven Casteel",
       sayuri: "Sayuri",
+    },
+    kotodama: {
+      atla: "アトラ",
+      poporo: "ポポロ",
+      jikkyo_baby: "実況ベイビー",
+    },
+  },
+  decorationList: {
+    kotodama: {
+      neutral: "ニュートラル",
+      neutral_en: "ニュートラル（英語）",
+      happy: "ハッピー",
+      happy_en: "ハッピー（英語）",
+      angry: "アングリー",
+      angry_en: "アングリー（英語）",
     },
   },
   updater: {

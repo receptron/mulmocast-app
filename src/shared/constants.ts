@@ -49,6 +49,12 @@ export const ENV_KEYS = {
     url: "https://elevenlabs.io/app/settings/api-keys",
     features: ["tts"] as FeatureKey[],
   },
+  KOTODAMA_API_KEY: {
+    title: "Kotodama API Key",
+    placeholder: "kt_...",
+    url: "https://kotodama.go-spiral.ai/",
+    features: ["tts"] as FeatureKey[],
+  },
   ANTHROPIC_API_KEY: {
     title: "Anthropic API Key",
     placeholder: "sk-...",
@@ -330,6 +336,22 @@ export const VOICE_LISTS = {
     { id: "j210dv0vWm7fCknyQpbA", key: "hinata" },
     { id: "QEj0heL4nQHjaGrihlr0", key: "steven_casteel" },
     { id: "l39JidvAMB3s85XyNSRd", key: "sayuri" },
+  ],
+  kotodama: [
+    { id: "Atla", key: "atla" },
+    { id: "Poporo", key: "poporo" },
+    { id: "jikkyo_baby", key: "jikkyo_baby" },
+  ],
+} as const;
+
+export const DECORATION_LISTS = {
+  kotodama: [
+    { id: "neutral", key: "neutral" },
+    { id: "neutral_en", key: "neutral_en" },
+    { id: "happy", key: "happy" },
+    { id: "happy_en", key: "happy_en" },
+    { id: "angry", key: "angry" },
+    { id: "angry_en", key: "angry_en" },
   ],
 } as const;
 
