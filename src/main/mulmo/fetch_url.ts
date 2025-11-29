@@ -4,10 +4,14 @@ import { createHash } from "crypto";
 import { extname } from "path";
 import fetch from "node-fetch";
 
-const IMAGE_MIME = ["image/jpeg", "image/png"];
-const MOVIE_MIME = ["video/mp4", "video/quicktime", "video/mpeg"];
-const IMAGE_EXT = [".jpg", ".jpeg", ".png"];
-const MOVIE_EXT = [".mp4", ".mov", ".mpg"];
+import {
+  MEDIA_FILE_EXTENSIONS,
+  IMAGE_MIME,
+  MOVIE_MIME,
+  MIME_EXT_MAP,
+  type ImageExtension,
+  type VideoExtension,
+} from "../../shared/constants";
 
 const guessTypeByMime = (mime: string): "image" | "movie" | undefined => {
   if (IMAGE_MIME.includes(mime)) {
@@ -19,12 +23,20 @@ const guessTypeByMime = (mime: string): "image" | "movie" | undefined => {
   return undefined;
 };
 
+const isImageExtension = (ext: string): ext is ImageExtension => {
+  return MEDIA_FILE_EXTENSIONS.image.includes(ext as ImageExtension);
+};
+
+const isVideoExtension = (ext: string): ext is VideoExtension => {
+  return MEDIA_FILE_EXTENSIONS.video.includes(ext as VideoExtension);
+};
+
 const guessTypeByExt = (ext: string): "image" | "movie" | undefined => {
   const lowered = ext.toLowerCase();
-  if (IMAGE_EXT.includes(lowered)) {
+  if (isImageExtension(lowered)) {
     return "image";
   }
-  if (MOVIE_EXT.includes(lowered)) {
+  if (isVideoExtension(lowered)) {
     return "movie";
   }
   return undefined;
@@ -65,15 +77,7 @@ export const fetchAndSave = async (
         result: false,
       };
     }
-    const mimeExtMap: Record<string, string> = {
-      "image/jpeg": ".jpg",
-      "image/png": ".png",
-      "video/mp4": ".mp4",
-      "video/quicktime": ".mov",
-      "video/mpeg": ".mpg",
-    };
-    const ext = extFromUrl || mimeExtMap[mime] || "";
-
+    const ext = extFromUrl || MIME_EXT_MAP[mime] || "";
     if (!ext) {
       console.log("no ext");
       return {

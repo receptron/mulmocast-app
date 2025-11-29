@@ -458,15 +458,22 @@ export const userLevels = [
 
 // Media file extensions for file dialogs and validation
 export const MEDIA_FILE_EXTENSIONS = {
-  image: ["jpg", "jpeg", "png"],
-  video: ["mp4", "mov", "webm", "ogg", "ogv", "mpeg", "mpg", "mp2t"],
-} as const;
+  image: ["jpg", "jpeg", "png"] as const,
+  video: ["mp4", "mov", "webm", "ogg", "ogv", "mpeg", "mpg", "mp2t"] as const,
+};
+
+export type ImageExtension = (typeof MEDIA_FILE_EXTENSIONS.image)[number];
+export type VideoExtension = (typeof MEDIA_FILE_EXTENSIONS.video)[number];
+export type MediaExtension = ImageExtension | VideoExtension;
 
 // MIME type mappings for file extensions
-export const MIME_TYPES: Record<string, string> = {
+export const IMAGE_MIME_TYPES: Record<string, string> = {
   jpg: "image/jpeg",
   jpeg: "image/jpeg",
   png: "image/png",
+} as const;
+
+export const MOVIE_MIME_TYPES: Record<string, string> = {
   mp4: "video/mp4",
   mov: "video/quicktime",
   webm: "video/webm",
@@ -476,3 +483,22 @@ export const MIME_TYPES: Record<string, string> = {
   mpg: "video/mpeg",
   mp2t: "video/mp2t",
 } as const;
+
+export const MIME_TYPES = {
+  ...IMAGE_MIME_TYPES,
+  ...MOVIE_MIME_TYPES,
+} as const;
+
+export const IMAGE_MIME = [...new Set(Object.values(IMAGE_MIME_TYPES))];
+export const MOVIE_MIME = [...new Set(Object.values(MOVIE_MIME_TYPES))];
+
+export const MIME_EXT_MAP: Record<string, string> = {
+  "image/jpeg": ".jpg",
+  "image/png": ".png",
+  "video/mp4": ".mp4",
+  "video/quicktime": ".mov",
+  "video/mpeg": ".mpg",
+  "video/webm": ".webm",
+  "video/ogg": ".ogv",
+  "video/mp2t": ".mp2t",
+};
