@@ -37,6 +37,7 @@ const provider2ApiKey = {
   gemini: "GEMINI_API_KEY",
   replicate: "REPLICATE_API_TOKEN",
   elevenlabs: "ELEVENLABS_API_KEY",
+  kotodama: "KOTODAMA_API_KEY",
 };
 
 const providerWarnings = ["nijivoice"];

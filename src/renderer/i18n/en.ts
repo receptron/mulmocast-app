@@ -233,6 +233,10 @@ const lang = {
         name: "ElevenLabs",
         speechName: "ElevenLabs",
       },
+      kotodama: {
+        name: "Kotodama",
+        speechName: "Kotodama",
+      },
       replicate: {
         name: "Replicate",
       },
@@ -247,6 +251,7 @@ const lang = {
       NIJIVOICE_API_KEY: "NijiVoice API Key",
       TAVILY_API_KEY: "Tavily API Key",
       ELEVENLABS_API_KEY: "ElevenLabs API Key",
+      KOTODAMA_API_KEY: "Kotodama API Key",
       REPLICATE_API_TOKEN: "Replicate API Token",
       GEMINI_API_KEY: "Gemini API Key",
       ANTHROPIC_API_KEY: "Anthropic API Key",
@@ -1000,6 +1005,7 @@ const lang = {
           ttsGeminiAgent: "An error occurred with speech synthesis (Gemini TTS).",
           ttsNijivoiceAgent: "An error occurred with speech synthesis (Nijivoice).",
           ttsElevenlabsAgent: "An error occurred with speech synthesis (ElevenLabs).",
+          ttsKotodamaAgent: "An error occurred with speech synthesis (Kotodama).",
         },
         generateAudioSpeechParam: "{speechParams} (speechParams) are not set",
       },
@@ -1017,6 +1023,7 @@ const lang = {
         ttsGeminiAgent: "The Gemini API Key is invalid",
         ttsNijivoiceAgent: "The NijiVoice API Key is invalid",
         ttsElevenlabsAgent: "The ElevenLabs API Key is invalid",
+        ttsKotodamaAgent: "The Kotodama API Key is invalid",
         openaiAgent: "The OpenAI API Key is invalid",
         openAIAgent: "The OpenAI API Key is invalid",
         anthropicAgent: "Anthropic API Key is invalid",
@@ -1031,6 +1038,7 @@ const lang = {
         ttsGoogleAgent: "The Gemini API usage limit has been reached. Please try again later.",
         ttsGeminiAgent: "The Gemini API usage limit has been reached. Please try again later.",
         ttsElevenlabsAgent: "The ElevenLabs API usage limit has been reached. Please add billing or try again later.",
+        ttsKotodamaAgent: "The Kotodama API usage limit has been reached. Please try again later.",
       },
       translate: {
         apiError: {
@@ -1044,6 +1052,7 @@ const lang = {
         NIJIVOICE_API_KEY: "NijiVoice API key is not set",
         TAVILY_API_KEY: "Tavily API key is not set",
         ELEVENLABS_API_KEY: "ElevenLabs API key is not set",
+        KOTODAMA_API_KEY: "Kotodama API key is not set",
         REPLICATE_API_TOKEN: "Replicate API token is not set",
         GEMINI_API_KEY: "Gemini API key is not set",
         ANTHROPIC_API_KEY: "Anthropic API key is not set",
@@ -1268,6 +1277,21 @@ const lang = {
       hinata: "Hinata",
       steven_casteel: "Steven Casteel",
       sayuri: "Sayuri",
+    },
+    kotodama: {
+      atla: "Atla",
+      poporo: "Poporo",
+      jikkyo_baby: "Jikkyo Baby",
+    },
+  },
+  decorationList: {
+    kotodama: {
+      neutral: "Neutral",
+      neutral_en: "Neutral (English)",
+      happy: "Happy",
+      happy_en: "Happy (English)",
+      angry: "Angry",
+      angry_en: "Angry (English)",
     },
   },
   updater: {

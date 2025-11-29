@@ -344,6 +344,17 @@ export const VOICE_LISTS = {
   ],
 } as const;
 
+export const DECORATION_LISTS = {
+  kotodama: [
+    { id: "neutral", key: "neutral" },
+    { id: "neutral_en", key: "neutral_en" },
+    { id: "happy", key: "happy" },
+    { id: "happy_en", key: "happy_en" },
+    { id: "angry", key: "angry" },
+    { id: "angry_en", key: "angry_en" },
+  ],
+} as const;
+
 export const SCRIPT_EDITOR_TABS = {
   TEXT: "text",
   YAML: "yaml",
