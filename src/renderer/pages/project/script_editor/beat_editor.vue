@@ -89,7 +89,7 @@
       </div>
     </div>
 
-    <div class="group relative mb-4 flex items-center gap-2" v-if="beatType === 'imagePrompt' && isPro">
+    <div class="group relative mb-4 flex items-center gap-2" v-if="(beatType === 'imagePrompt' || beat.image) && isPro">
       <Label class="mb-1 block">{{ t("beat.duration.label") }}</Label>
 
       <Input
