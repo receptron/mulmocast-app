@@ -64,6 +64,22 @@
       :placeholder="t('parameters.speechParams.speedPlaceholder')"
     />
   </div>
+  <div v-if="localizedSpeaker.provider === 'kotodama'">
+    <Label class="text-xs">{{ t("parameters.speechParams.decoration") }}</Label>
+    <Select
+      :model-value="speaker?.speechOptions?.decoration || 'neutral'"
+      @update:model-value="(value) => handleSpeechOptionsChange('decoration', value)"
+    >
+      <SelectTrigger class="h-8">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem v-for="decoration in getDecorationList('kotodama')" :key="decoration.id" :value="decoration.id">
+          {{ t(["decorationList", "kotodama", decoration.key ?? decoration.id].join(".")) }}
+        </SelectItem>
+      </SelectContent>
+    </Select>
+  </div>
   <div v-if="localizedSpeaker.provider === 'openai' || !localizedSpeaker.provider">
     <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
     <Input
@@ -120,8 +136,14 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { Speaker } from "mulmocast/browser";
-import { SPEECH_LANGUAGES, SPEECH_DEFAULT_LANGUAGE, VOICE_LISTS, defaultSpeechProvider } from "@/../shared/constants";
+import { type Speaker, provider2TTSAgent } from "mulmocast/browser";
+import {
+  SPEECH_LANGUAGES,
+  SPEECH_DEFAULT_LANGUAGE,
+  VOICE_LISTS,
+  DECORATION_LISTS,
+  defaultSpeechProvider,
+} from "@/../shared/constants";
 import { useMulmoScriptHistoryStore } from "@/store";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -156,6 +178,12 @@ const getVoiceList = (provider: string) => {
   return VOICE_LISTS[provider as Provider] || VOICE_LISTS.openai;
 };
 
+type DecorationProvider = keyof typeof DECORATION_LISTS;
+
+const getDecorationList = (provider: string) => {
+  return DECORATION_LISTS[provider as DecorationProvider] || [];
+};
+
 // const selectedLanguages = ref<Record<string, string>>({});
 // const handleLanguageChange = (language: string) => {
 //   console.log(language);
@@ -186,12 +214,22 @@ const handleSpeakerVoiceChange = (voiceId: string) => {
 };
 
 const handleProviderChange = async (provider: string) => {
-  const voiceId = DEFAULT_VOICE_IDS[provider];
-  const updatedSpeakers = {
+  type ProviderKey = keyof typeof provider2TTSAgent;
+  const providerConfig = provider2TTSAgent[provider as ProviderKey];
+
+  const voiceId = providerConfig?.defaultVoice || DEFAULT_VOICE_IDS[provider];
+  const updatedSpeakers: Partial<Speaker> = {
     provider,
     voiceId,
     displayName: props.speaker.displayName,
   };
+
+  // Set default decoration for kotodama
+  if (provider === "kotodama" && providerConfig?.defaultDecoration) {
+    updatedSpeakers.speechOptions = {
+      decoration: providerConfig.defaultDecoration,
+    };
+  }
 
   const lang = mulmoScriptHistoryStore.lang;
   if (props.speaker?.lang?.[lang]) {

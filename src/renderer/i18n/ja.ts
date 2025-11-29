@@ -785,6 +785,7 @@ const lang = {
       speedPlaceholder: "例）1.2（0.4〜3.0、標準は1.0）",
       instruction: "読み上げスタイル",
       instructionPlaceholder: "例）ゆっくりと優しく読んで",
+      decoration: "音声スタイル",
       placeholder: "登場人物の名前 (英数字のみ)",
       noSpeakersDefined: "登場人物が定義されていません",
       initializeSpeechParameters: "音声パラメータを初期化",

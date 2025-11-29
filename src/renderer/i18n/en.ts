@@ -784,6 +784,7 @@ const lang = {
       speedPlaceholder: "e.g., 1.2 (range: 0.4-3.0, default: 1.0)",
       instruction: "Reading Style",
       instructionPlaceholder: "e.g., Read slowly and gently",
+      decoration: "Voice Style",
       placeholder: "Speaker name (a-z0-9)",
       noSpeakersDefined: "No speakers defined",
       initializeSpeechParameters: "Initialize Speech Parameters",
