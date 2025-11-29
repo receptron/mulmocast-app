@@ -258,6 +258,8 @@
           :isHtmlGenerating="isHtmlGenerating"
           :imageFile="imageFile"
           :movieFile="movieFile"
+          :referencedImageFile="referencedImageFile"
+          :referencedMovieFile="referencedMovieFile"
           :toggleTypeMode="toggleTypeMode"
           :disabled="!isValidBeat || isArtifactGenerating || disabledImageGenearte"
           @openModal="openModal"
@@ -417,6 +419,8 @@ interface Props {
   imageFile: FileData;
   movieFile: FileData;
   lipSyncFiles: FileData;
+  imageFiles: Record<string, string | null>;
+  movieFiles: Record<string, string | null>;
   isEnd: boolean;
   isPro: boolean;
   isBeginner: boolean;
@@ -483,6 +487,20 @@ const referenceBeats = computed(() => {
       label: `BEAT ${index + 1}`,
     }))
     .filter((_, index) => index !== props.index);
+});
+
+const referencedImageFile = computed(() => {
+  if (props.beat.image?.type === "beat" && props.beat.image.id) {
+    return props.imageFiles[props.beat.image.id] ?? null;
+  }
+  return null;
+});
+
+const referencedMovieFile = computed(() => {
+  if (props.beat.image?.type === "beat" && props.beat.image.id) {
+    return props.movieFiles[props.beat.image.id] ?? null;
+  }
+  return null;
 });
 
 const expectDuration = computed(() => {

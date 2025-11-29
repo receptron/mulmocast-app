@@ -22,10 +22,32 @@
           </Button>
         </template>
         <template v-if="beat?.image?.type === 'beat'">
-          {{ t("project.scriptEditor.reference.mode")
-          }}<!-- Todo -->
+          <template v-if="referencedMovieFile">
+            <!-- Referenced video preview -->
+            <video
+              :size="64"
+              class="text-muted-foreground mx-auto mb-4 cursor-pointer transition-opacity hover:opacity-80"
+              controls
+              :src="mediaUri(referencedMovieFile)"
+              @click="openModal('video', referencedMovieFile)"
+            />
+          </template>
+          <template v-else-if="referencedImageFile">
+            <!-- Referenced image preview -->
+            <img
+              :src="mediaUri(referencedImageFile)"
+              class="cursor-pointer transition-opacity hover:opacity-80"
+              @click="openModal('image', referencedImageFile)"
+            />
+          </template>
+          <template v-else>
+            <FileImage :size="32" class="text-muted-foreground mx-auto mb-2" />
+            <p class="text-muted-foreground text-sm">
+              {{ t("project.scriptEditor.reference.mode") }}
+            </p>
+          </template>
         </template>
-        <template v-if="isImageGenerating || isHtmlGenerating">
+        <template v-else-if="isImageGenerating || isHtmlGenerating">
           <!-- TODO update design -->
           {{ t("ui.status.generating") }}
         </template>
@@ -76,6 +98,8 @@ interface Props {
   index: number;
   imageFile: ImageFile;
   movieFile: ImageFile;
+  referencedImageFile?: ImageFile;
+  referencedMovieFile?: ImageFile;
   isImageGenerating: boolean;
   isHtmlGenerating: boolean;
   toggleTypeMode?: boolean;
