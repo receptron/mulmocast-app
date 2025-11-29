@@ -4,7 +4,16 @@
 
 ## 前提条件
 
-新しいTTSプロバイダーは、まず`mulmocast-cli`（mulmocastパッケージ）側で実装されている必要があります。mulmocastパッケージの`provider2TTSAgent`に定義が含まれていることを確認してください。
+**まず、`mulmocast-cli`（mulmocastパッケージ）側で実装してください。**
+
+新しいTTSプロバイダーは、アプリに統合する前に`mulmocast-cli`側で実装されている必要があります。以下の手順で進めてください：
+
+1. **CLI側の実装**: まず、以下のドキュメントを参照してmulmocast-cli側でTTSプロバイダーを実装します
+   - 📄 [mulmocast-cli TTS Integration Guide](https://github.com/receptron/mulmocast-cli/blob/main/docs/tts.md)
+
+2. **実装確認**: mulmocastパッケージの`provider2TTSAgent`に新しいプロバイダーの定義が含まれていることを確認してください
+
+3. **アプリ側の統合**: CLI側の実装が完了したら、このドキュメントの手順に従ってアプリ側に統合します
 
 ## 基本方針
 
