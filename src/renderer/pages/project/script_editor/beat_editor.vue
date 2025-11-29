@@ -216,7 +216,8 @@
               :placeholder="t('beat.startAt.placeholder')"
               :model-value="beat.image.startAt"
               @update:model-value="
-                (value) => update('image.startAt', !value || !/^[0-9]+$/.test(String(value)) ? undefined : Number(value))
+                (value) =>
+                  update('image.startAt', !value || !/^[0-9]+$/.test(String(value)) ? undefined : Number(value))
               "
               @blur="justSaveAndPushToHistory"
               type="text"
@@ -413,8 +414,6 @@ import Media from "./beat_editors/media.vue";
 import Mermaid from "./beat_editors/mermaid.vue";
 import Vision from "./beat_editors/vision.vue";
 import { useApiErrorNotify } from "@/composables/notify";
-
-import { isNull } from "graphai/lib/utils/utils";
 
 type FileData = ArrayBuffer | string | null;
 
