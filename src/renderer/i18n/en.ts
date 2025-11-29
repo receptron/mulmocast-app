@@ -707,7 +707,7 @@ const lang = {
       label: "Material",
       idField: "Beat ID",
       referenceField: "Beat Reference",
-      placeholder: "Enter beat ID to reference (e.g., beat_1)",
+      placeholder: "Select beat to reference",
       placeholderUrl: "Enter image URL",
     },
     voice_over: {

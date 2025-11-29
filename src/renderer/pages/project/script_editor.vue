@@ -221,6 +221,8 @@
                   :imageFile="imageFiles[beat.id]"
                   :movieFile="movieFiles[beat.id]"
                   :lipSyncFiles="lipSyncFiles[beat.id]"
+                  :imageFiles="imageFiles"
+                  :movieFiles="movieFiles"
                   :mulmoError="mulmoError?.['beats']?.[index] ?? []"
                   :settingPresence="settingPresence"
                   @update="update"
