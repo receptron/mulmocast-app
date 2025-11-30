@@ -1355,6 +1355,7 @@ const lang = {
     FAQ: "FAQ",
     discord: "Discord Community",
     ASK: "ASK/Request",
+    logFolder: "Open Log Folder",
     undo: "Undo",
     redo: "Redo",
     cut: "Cut",

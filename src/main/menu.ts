@@ -1,6 +1,7 @@
 import { Menu, MenuItemConstructorOptions, BrowserWindow, shell } from "electron";
 import * as settingsManager from "./settings_manager";
 import config from "../renderer/i18n/index";
+import { LOG_DIR } from "./logger";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -129,6 +130,14 @@ export const getMenu = async () => {
               .catch((error) => {
                 console.error("Failed to open external URL:", error);
               });
+          },
+        },
+        {
+          label: menuProps["logFolder"],
+          click: () => {
+            shell.openPath(LOG_DIR).catch((error) => {
+              console.error("Failed to open log folder:", error);
+            });
           },
         },
       ],
