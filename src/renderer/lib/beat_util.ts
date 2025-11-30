@@ -54,7 +54,6 @@ export const getBeatType = (beat: MulmoBeat) => {
 // image (image.type other)
 // imagePrompt
 export const enableMovieType = (beat: MulmoBeat) => {
-  console.log(beat);
   if (beat.image?.type) {
     if (beat.image.type === "movie") {
       return false;
