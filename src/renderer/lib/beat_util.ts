@@ -62,8 +62,5 @@ export const enableMovieType = (beat: MulmoBeat) => {
       return false;
     }
   }
-  if (beat.htmlPrompt) {
-    return false;
-  }
-  return true;
+  return !beat.htmlPrompt;
 };
