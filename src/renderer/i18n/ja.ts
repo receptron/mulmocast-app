@@ -1361,6 +1361,7 @@ const lang = {
     FAQ: "よくある質問",
     discord: "Discordコミュニティ",
     ASK: "問い合わせ",
+    logFolder: "ログフォルダーを開く",
     undo: "取り消す",
     redo: "やり直す",
     cut: "カット",

@@ -4,7 +4,7 @@ import path from "node:path";
 import log from "electron-log";
 import { GraphAILogger } from "graphai";
 
-const LOG_DIR = path.join(app.getPath("userData"), "mulmocastLog");
+export const LOG_DIR = path.join(app.getPath("userData"), "mulmocastLog");
 const RETENTION_DAYS = 7;
 const MAX_SIZE = 10 * 1024 * 1024;
 
