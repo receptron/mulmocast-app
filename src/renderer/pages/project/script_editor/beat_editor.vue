@@ -311,7 +311,7 @@
       </div>
 
       <!-- left: lipSync edit -->
-      <div class="flex flex-col gap-1" v-if="beatType === 'imagePrompt' && enableLipSync">
+      <div class="flex flex-col gap-1" v-if="enableMovie && enableLipSync">
         <!-- movie edit -->
         <div class="flex items-center gap-2">
           <Checkbox
@@ -331,7 +331,7 @@
         </div>
       </div>
       <!-- right: lipSync preview -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableLipSync">
+      <div class="flex flex-col gap-4" v-if="enableMovie && enableLipSync">
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
