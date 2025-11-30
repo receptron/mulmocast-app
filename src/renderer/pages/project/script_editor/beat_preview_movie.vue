@@ -5,7 +5,7 @@
       <!-- Movie preview -->
       <div class="border-border relative rounded-lg border-2 border-dashed p-4 text-center">
         <!-- Generate movie button -->
-        <template v-if="shouldShowGenerateButton && shouldBeGeneratedWithPrompt">
+        <template v-if="enableMovie">
           <Button
             variant="ghost"
             size="icon"
@@ -51,7 +51,7 @@ import { useI18n } from "vue-i18n";
 
 import { Button } from "@/components/ui/button";
 import { mediaUri } from "@/lib/utils";
-import { isLocalSourceMediaBeat } from "@/lib/beat_util";
+import { enableMovieType } from "@/lib/beat_util";
 
 interface Props {
   beat: MulmoBeat;
@@ -69,19 +69,8 @@ const emit = defineEmits(["openModal", "generateMovie"]);
 const { t } = useI18n();
 
 // Computed properties for button visibility
-const shouldShowGenerateButton = computed(() => {
-  return (
-    props.beat?.image?.type !== "beat" &&
-    !(
-      ["image", "movie"].includes(props.beat?.image?.type || "") &&
-      props.beat?.image &&
-      isLocalSourceMediaBeat(props.beat)
-    )
-  );
-});
-
-const shouldBeGeneratedWithPrompt = computed(() => {
-  return !props.beat.htmlPrompt && !props.beat.image;
+const enableMovie = computed(() => {
+  return enableMovieType(props.beat);
 });
 
 const openModal = (type: "image" | "video" | "audio" | "other", src: ArrayBuffer | string | null) => {

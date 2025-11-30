@@ -281,7 +281,7 @@
       </div>
 
       <!-- left: movie edit -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableMovie">
+      <div class="flex flex-col gap-4" v-if="enableMovie && hasMovieApiKey">
         <!-- movie edit -->
         <div>
           <Label class="mb-1 block">{{ t("beat.moviePrompt.label") }}: </Label>
@@ -296,7 +296,7 @@
         </div>
       </div>
       <!-- right: movie preview -->
-      <div class="flex flex-col gap-4" v-if="beatType === 'imagePrompt' && enableMovie">
+      <div class="flex flex-col gap-4" v-if="enableMovie && hasMovieApiKey">
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
@@ -410,7 +410,14 @@ import SpeakerSelector from "./speaker_selector.vue";
 
 // lib
 import { useMulmoEventStore } from "../../../store";
-import { getBadge, getBeatType, isMediaBeat, isURLSourceMediaBeat, isLocalSourceMediaBeat } from "@/lib/beat_util.js";
+import {
+  getBadge,
+  getBeatType,
+  enableMovieType,
+  isMediaBeat,
+  isURLSourceMediaBeat,
+  isLocalSourceMediaBeat,
+} from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
 import { notifyProgress, notifyError } from "@/lib/notification";
 
@@ -615,6 +622,10 @@ const generateImageOnlyImage = () => {
 };
 
 const enableMovie = computed(() => {
+  return enableMovieType(props.beat);
+});
+
+const hasMovieApiKey = computed(() => {
   try {
     const movieAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
     return hasApiKey(movieAgentInfo.keyName);
@@ -626,7 +637,7 @@ const enableMovie = computed(() => {
 
 const generateImageOnlyMovie = () => {
   const movieAgentInfo = MulmoPresentationStyleMethods.getMovieAgentInfo(props.mulmoScript, props.beat);
-  if (!enableMovie.value) {
+  if (!hasMovieApiKey.value) {
     apiErrorNotify(movieAgentInfo.keyName);
     return;
   }

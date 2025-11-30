@@ -47,3 +47,24 @@ export const getBeatType = (beat: MulmoBeat) => {
   }
   return "imagePrompt";
 };
+
+// html (htmlPrompt)
+// beat (reference)
+// movie (image.type movie)
+// image (image.type other)
+// imagePrompt
+export const enableMovieType = (beat: MulmoBeat) => {
+  console.log(beat);
+  if (beat.image?.type) {
+    if (beat.image.type === "movie") {
+      return false;
+    }
+    if (beat.image.type === "beat") {
+      return false;
+    }
+  }
+  if (beat.htmlPrompt) {
+    return false;
+  }
+  return true;
+};
