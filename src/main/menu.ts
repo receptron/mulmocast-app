@@ -13,11 +13,6 @@ export const getMenu = async () => {
 
   const template: MenuItemConstructorOptions[] = [
     {
-      role: "fileMenu",
-      submenu: [isMac ? { role: "close", label: menuProps["close"] } : { role: "quit", label: menuProps["quit"] }],
-      label: menuProps["fileMenu"],
-    },
-    {
       role: "editMenu",
       label: menuProps["editMenu"],
       submenu: [
@@ -158,6 +153,12 @@ export const getMenu = async () => {
         { type: "separator" },
         { role: "quit", label: menuProps["quit"] },
       ],
+    });
+  } else {
+    template.unshift({
+      role: "fileMenu",
+      submenu: [{ role: "quit", label: menuProps["quit"] }],
+      label: menuProps["fileMenu"],
     });
   }
 
