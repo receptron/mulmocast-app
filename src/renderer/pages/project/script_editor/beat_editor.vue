@@ -89,7 +89,7 @@
       </div>
     </div>
 
-    <div class="group relative mb-4 flex items-center gap-2" v-if="isPro">
+    <div class="group relative mb-4 flex items-center gap-2" v-if="isPro && beat.image?.type !== 'voice_over'">
       <Label class="mb-1 block">{{ t("beat.duration.label") }}</Label>
 
       <Input
@@ -281,7 +281,7 @@
       </div>
 
       <!-- left: movie edit -->
-      <div class="flex flex-col gap-4" v-if="enableMovie && hasMovieApiKey">
+      <div class="flex flex-col gap-4" v-if="enableMovie && hasMovieApiKey && beat.image?.type !== 'voice_over'">
         <!-- movie edit -->
         <div>
           <Label class="mb-1 block">{{ t("beat.moviePrompt.label") }}: </Label>
@@ -296,7 +296,7 @@
         </div>
       </div>
       <!-- right: movie preview -->
-      <div class="flex flex-col gap-4" v-if="enableMovie && hasMovieApiKey">
+      <div class="flex flex-col gap-4" v-if="enableMovie && hasMovieApiKey && beat.image?.type !== 'voice_over'">
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
@@ -311,7 +311,7 @@
       </div>
 
       <!-- left: lipSync edit -->
-      <div class="flex flex-col gap-1" v-if="enableLipSync && hasLipSyncKey">
+      <div class="flex flex-col gap-1" v-if="enableLipSync && hasLipSyncKey && beat.image?.type !== 'voice_over'">
         <!-- movie edit -->
         <div class="flex items-center gap-2">
           <Checkbox
@@ -331,7 +331,7 @@
         </div>
       </div>
       <!-- right: lipSync preview -->
-      <div class="flex flex-col gap-4" v-if="enableLipSync && hasLipSyncKey">
+      <div class="flex flex-col gap-4" v-if="enableLipSync && hasLipSyncKey && beat.image?.type !== 'voice_over'">
         <BeatPreviewMovie
           :beat="beat"
           :index="index"

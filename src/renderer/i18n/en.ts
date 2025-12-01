@@ -713,6 +713,8 @@ const lang = {
     voice_over: {
       badge: "Voice Over",
       label: "Voice Over Start Time (s)",
+      title: "Voice Over",
+      description: "• Overlay audio on top of the previous beat's video\n• Specify the start time in seconds",
     },
     startAt: {
       placeholder: "e.g., 1 (start at 1 second)",
