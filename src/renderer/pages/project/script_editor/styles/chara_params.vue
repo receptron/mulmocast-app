@@ -26,18 +26,16 @@
     <Card class="mt-2 p-3">
       <!-- Closed: Show only checked images in a grid -->
       <div v-if="!isExpanded" class="grid grid-cols-4 gap-2">
-        <div
-          v-for="imageKey in displayedImageKeys"
-          :key="imageKey"
-          class="group relative"
-        >
+        <div v-for="imageKey in displayedImageKeys" :key="imageKey" class="group relative">
           <img
             v-if="imageRefs[imageKey]"
             :src="imageRefs[imageKey]"
             class="h-20 w-full rounded border object-cover"
             :alt="imageKey"
           />
-          <div class="bg-background/80 absolute bottom-0 left-0 right-0 truncate px-1 py-0.5 text-xs opacity-0 transition-opacity group-hover:opacity-100">
+          <div
+            class="bg-background/80 absolute right-0 bottom-0 left-0 truncate px-1 py-0.5 text-xs opacity-0 transition-opacity group-hover:opacity-100"
+          >
             {{ imageKey }}
           </div>
         </div>
@@ -47,13 +45,10 @@
         <div
           v-for="imageKey in displayedImageKeys"
           :key="imageKey"
-          class="flex cursor-pointer items-center gap-3 rounded-sm transition-colors hover:bg-accent/50"
+          class="hover:bg-accent/50 flex cursor-pointer items-center gap-3 rounded-sm transition-colors"
           @click="toggleImageName(imageKey)"
         >
-          <Checkbox
-            :model-value="currentValues.includes(imageKey)"
-            class="mr-2 pointer-events-none"
-          />
+          <Checkbox :model-value="currentValues.includes(imageKey)" class="pointer-events-none mr-2" />
           <span class="flex-1 text-sm">{{ imageKey }}</span>
           <img
             v-if="imageRefs[imageKey]"

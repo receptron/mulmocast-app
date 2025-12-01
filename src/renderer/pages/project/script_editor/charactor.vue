@@ -207,9 +207,12 @@ const openImage = (imageKey: string) => {
   modalSrc.value = imageRefs.value[imageKey];
 };
 
-watch(() => props.isValidScriptData, () => {
-  loadReference();
-});
+watch(
+  () => props.isValidScriptData,
+  () => {
+    loadReference();
+  },
+);
 
 const isValidData = computed(() => {
   const schema = z.union([mulmoImageMediaSchema, mulmoImagePromptMediaSchema]);
