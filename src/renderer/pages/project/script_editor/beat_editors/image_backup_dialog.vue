@@ -193,7 +193,14 @@ const open = async () => {
   await loadBackups();
 };
 
+const reload = async () => {
+  if (isOpen.value) {
+    await loadBackups();
+  }
+};
+
 defineExpose({
   open,
+  reload,
 });
 </script>

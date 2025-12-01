@@ -265,6 +265,7 @@
       <!-- right: image preview -->
       <div class="flex flex-col gap-4">
         <BeatPreviewImage
+          ref="beatPreviewImageRef"
           :beat="beat"
           :index="index"
           :isImageGenerating="isImageGenerating"
@@ -383,7 +384,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import {
   type MulmoBeat,
@@ -716,4 +717,33 @@ const openModal = (type: "image" | "video" | "audio" | "other", src: ArrayBuffer
   modalSrc.value = mediaUri(src);
   modalOpen.value = true;
 };
+
+const beatPreviewImageRef = ref<{ reloadBackupDialog: () => Promise<void> } | null>(null);
+
+const reloadBackupDialog = async () => {
+  if (beatPreviewImageRef.value) {
+    await beatPreviewImageRef.value.reloadBackupDialog();
+  }
+};
+
+// Watch for image generation completion and reload backup dialog
+watch(
+  () => mulmoEventStore.mulmoEvent,
+  (event) => {
+    if (
+      event?.kind === "beatGenerate" &&
+      event?.sessionType === "image" &&
+      event?.inSession === false &&
+      event?.index === props.index
+    ) {
+      // Image generation completed for this beat, reload backup dialog
+      reloadBackupDialog();
+    }
+  },
+  { deep: true },
+);
+
+defineExpose({
+  reloadBackupDialog,
+});
 </script>

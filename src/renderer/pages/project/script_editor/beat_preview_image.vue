@@ -131,7 +131,7 @@ const emit = defineEmits(["openModal", "generateImage", "imageRestored"]);
 const { t } = useI18n();
 const route = useRoute();
 const projectId = computed(() => route.params.id as string);
-const imageBackupDialogRef = ref<{ open: () => void } | null>(null);
+const imageBackupDialogRef = ref<{ open: () => void; reload: () => void } | null>(null);
 
 // Computed properties for button visibility
 const shouldShowGenerateButton = computed(() => {
@@ -171,4 +171,14 @@ const openImageBackup = async () => {
 const handleImageRestored = () => {
   emit("imageRestored");
 };
+
+const reloadBackupDialog = async () => {
+  if (imageBackupDialogRef.value) {
+    await imageBackupDialogRef.value.reload();
+  }
+};
+
+defineExpose({
+  reloadBackupDialog,
+});
 </script>
