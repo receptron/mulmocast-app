@@ -594,7 +594,8 @@ const lang = {
       text: "Text",
       placeholder: "{language} input: {speaker}'s voice content",
       // Generate audio requirements
-      generateAudioNeedsText: "Text required to '{action}'",
+      generateAudioNeedsText:
+        "Text required to '{action}'. Leave blank to continue audio from the previous beat (spillover feature).",
       generateAudioNeedsMedia: "Image or movie required to '{action}'. Add, fetch, or generate one from Markdown.",
       // Speaker tooltip
       tooltipTitle: "Select {speakerLabel}",

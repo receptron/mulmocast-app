@@ -591,7 +591,8 @@ const lang = {
       text: "テキスト",
       placeholder: "{language}で{speaker}の話す内容を書いてください",
       // Generate audio requirements
-      generateAudioNeedsText: "「{action}」には話す内容が必要です",
+      generateAudioNeedsText:
+        "「{action}」には話す内容が必要です。空白のままにすると前のビートの音声が継続されます(スピルオーバー機能)。",
       generateAudioNeedsMedia:
         "「{action}」には画像または動画が必要です。ファイル追加・URL取得・Markdown等から生成してください。",
       // Speaker tooltip
