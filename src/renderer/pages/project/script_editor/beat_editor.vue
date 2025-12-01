@@ -265,6 +265,7 @@
       <!-- right: image preview -->
       <div class="flex flex-col gap-4">
         <BeatPreviewImage
+          ref="beatPreviewImageRef"
           :beat="beat"
           :index="index"
           :isImageGenerating="isImageGenerating"
@@ -277,6 +278,7 @@
           :disabled="!isValidBeat || isArtifactGenerating || disabledImageGenearte"
           @openModal="openModal"
           @generateImage="generateImageOnlyImage"
+          @imageRestored="handleImageRestored"
         />
       </div>
 
@@ -298,6 +300,7 @@
       <!-- right: movie preview -->
       <div class="flex flex-col gap-4" v-if="enableMovie && hasMovieApiKey">
         <BeatPreviewMovie
+          ref="beatPreviewMovieRef"
           :beat="beat"
           :index="index"
           :isMovieGenerating="isMovieGenerating"
@@ -306,6 +309,7 @@
           :toggleTypeMode="toggleTypeMode"
           @openModal="openModal"
           @generateMovie="generateImageOnlyMovie"
+          @movieRestored="handleMovieRestored"
           :disabled="!isValidBeat || isArtifactGenerating"
         />
       </div>
@@ -382,7 +386,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import {
   type MulmoBeat,
@@ -459,6 +463,8 @@ const emit = defineEmits([
   "changeBeat",
   "updateImageNames",
   "justSaveAndPushToHistory",
+  "imageRestored",
+  "movieRestored",
 ]);
 
 const route = useRoute();
@@ -704,10 +710,64 @@ const justSaveAndPushToHistory = () => {
   emit("justSaveAndPushToHistory");
 };
 
+const handleImageRestored = () => {
+  emit("imageRestored");
+};
+
 const openModal = (type: "image" | "video" | "audio" | "other", src: ArrayBuffer | string | null) => {
   if (!src) return;
   modalType.value = type;
   modalSrc.value = mediaUri(src);
   modalOpen.value = true;
 };
+
+const beatPreviewImageRef = ref<{ reloadBackupDialog: () => Promise<void> } | null>(null);
+const beatPreviewMovieRef = ref<{ reloadBackupDialog: () => Promise<void> } | null>(null);
+
+const reloadBackupDialog = async () => {
+  if (beatPreviewImageRef.value) {
+    await beatPreviewImageRef.value.reloadBackupDialog();
+  }
+};
+
+const reloadMovieBackupDialog = async () => {
+  if (beatPreviewMovieRef.value) {
+    await beatPreviewMovieRef.value.reloadBackupDialog();
+  }
+};
+
+const handleMovieRestored = () => {
+  emit("movieRestored");
+};
+
+// Watch for image generation completion and reload backup dialog
+watch(
+  () => mulmoEventStore.mulmoEvent,
+  (event) => {
+    if (
+      event?.kind === "beatGenerate" &&
+      event?.sessionType === "image" &&
+      event?.inSession === false &&
+      event?.index === props.index
+    ) {
+      // Image generation completed for this beat, reload backup dialog
+      reloadBackupDialog();
+    }
+    if (
+      event?.kind === "beatGenerate" &&
+      event?.sessionType === "movie" &&
+      event?.inSession === false &&
+      event?.index === props.index
+    ) {
+      // Movie generation completed for this beat, reload backup dialog
+      reloadMovieBackupDialog();
+    }
+  },
+  { deep: true },
+);
+
+defineExpose({
+  reloadBackupDialog,
+  reloadMovieBackupDialog,
+});
 </script>

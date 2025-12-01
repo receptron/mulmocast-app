@@ -41,6 +41,10 @@ import {
   mulmoReferenceImagesFile,
   mulmoMultiLinguals,
   mulmoBGM,
+  mulmoImageBackupList,
+  mulmoImageRestoreBackup,
+  mulmoMovieBackupList,
+  mulmoMovieRestoreBackup,
 } from "./handler_contents";
 import { mulmoImageFetchURL, mulmoReferenceImageFetchURL } from "./handler_image_fetch";
 import { mulmoReferenceImageUpload, mulmoImageUpload } from "./handler_image_upload";
@@ -205,6 +209,14 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return mulmoMultiLinguals(args[0] as string);
       case "mulmoBGM":
         return await mulmoBGM(args[0] as string);
+      case "mulmoImageBackupList":
+        return await mulmoImageBackupList(args[0] as string, args[1] as string);
+      case "mulmoImageRestoreBackup":
+        return await mulmoImageRestoreBackup(args[0] as string, args[1] as string, args[2] as string);
+      case "mulmoMovieBackupList":
+        return await mulmoMovieBackupList(args[0] as string, args[1] as string);
+      case "mulmoMovieRestoreBackup":
+        return await mulmoMovieRestoreBackup(args[0] as string, args[1] as string, args[2] as string);
       case "mulmoUpdateMultiLingual":
         return await mulmoUpdateMultiLingual(args[0] as string, args[1] as number, args[2] as MultiLingualTexts);
       case "graphaiPuppeteerAgent":

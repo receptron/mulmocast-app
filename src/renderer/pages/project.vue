@@ -137,6 +137,8 @@
                     :mulmoError="mulmoScriptHistoryStore.mulmoError"
                     @updateMultiLingual="updateMultiLingual"
                     :mulmoMultiLinguals="mulmoMultiLinguals"
+                    @imageRestored="handleImageRestored"
+                    @movieRestored="handleMovieRestored"
                   />
                 </CardContent>
               </Card>
@@ -488,6 +490,14 @@ const generateImage = async (index: number, target: string) => {
     errorMessage: t("notify.image.errorMessage"),
     errorDescription: t("notify.error.noContext"),
   });
+};
+
+const handleImageRestored = async () => {
+  await downloadImageFiles(projectId.value);
+};
+
+const handleMovieRestored = async () => {
+  await downloadImageFiles(projectId.value);
 };
 
 const downloadMulmoScript = () => {
