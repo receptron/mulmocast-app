@@ -51,7 +51,6 @@ import { useI18n } from "vue-i18n";
 
 import { Button } from "@/components/ui/button";
 import { mediaUri } from "@/lib/utils";
-import { enableMovieType } from "@/lib/beat_util";
 
 interface Props {
   beat: MulmoBeat;
@@ -59,6 +58,7 @@ interface Props {
   movieFile: ArrayBuffer | string | null;
   isMovieGenerating: boolean;
   enableMovieGenerate: boolean;
+  enableMovie: boolean;
   toggleTypeMode?: boolean;
   disabled?: boolean;
 }
@@ -67,11 +67,6 @@ const props = defineProps<Props>();
 const emit = defineEmits(["openModal", "generateMovie"]);
 
 const { t } = useI18n();
-
-// Computed properties for button visibility
-const enableMovie = computed(() => {
-  return enableMovieType(props.beat);
-});
 
 const openModal = (type: "image" | "video" | "audio" | "other", src: ArrayBuffer | string | null) => {
   emit("openModal", type, src);
