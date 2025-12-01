@@ -594,7 +594,8 @@ const lang = {
       text: "Text",
       placeholder: "{language} input: {speaker}'s voice content",
       // Generate audio requirements
-      generateAudioNeedsText: "Text required to '{action}'",
+      generateAudioNeedsText:
+        "Text required to '{action}'. Leave blank to continue audio from the previous beat (spillover feature).",
       generateAudioNeedsMedia: "Image or movie required to '{action}'. Add, fetch, or generate one from Markdown.",
       // Speaker tooltip
       tooltipTitle: "Select {speakerLabel}",
@@ -713,6 +714,8 @@ const lang = {
     voice_over: {
       badge: "Voice Over",
       label: "Voice Over Start Time (s)",
+      title: "Voice Over",
+      description: "• Overlay audio on top of the previous beat's video\n• Specify the start time in seconds",
     },
     startAt: {
       placeholder: "e.g., 1 (start at 1 second)",

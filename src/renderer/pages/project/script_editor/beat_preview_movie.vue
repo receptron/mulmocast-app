@@ -67,7 +67,6 @@ import { useRoute } from "vue-router";
 
 import { Button } from "@/components/ui/button";
 import { mediaUri } from "@/lib/utils";
-import { enableMovieType } from "@/lib/beat_util";
 import MediaBackupDialog from "./beat_editors/media_backup_dialog.vue";
 
 interface Props {
@@ -76,6 +75,7 @@ interface Props {
   movieFile: ArrayBuffer | string | null;
   isMovieGenerating: boolean;
   enableMovieGenerate: boolean;
+  enableMovie: boolean;
   toggleTypeMode?: boolean;
   disabled?: boolean;
 }
@@ -87,11 +87,6 @@ const { t } = useI18n();
 const route = useRoute();
 const projectId = computed(() => route.params.id as string);
 const movieBackupDialogRef = ref<{ open: () => void; reload: () => void } | null>(null);
-
-// Computed properties for button visibility
-const enableMovie = computed(() => {
-  return enableMovieType(props.beat);
-});
 
 const openModal = (type: "image" | "video" | "audio" | "other", src: ArrayBuffer | string | null) => {
   emit("openModal", type, src);

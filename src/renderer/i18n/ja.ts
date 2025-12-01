@@ -432,7 +432,6 @@ const lang = {
     scriptEditor: {
       beatCopied: "Beatをコピーしました",
       beatDeleted: "Beatを削除しました",
-      voice_over: "ボイスオーバー",
       text: {
         tabLabel: "翻訳",
         mode: "翻訳モード",
@@ -592,7 +591,8 @@ const lang = {
       text: "テキスト",
       placeholder: "{language}で{speaker}の話す内容を書いてください",
       // Generate audio requirements
-      generateAudioNeedsText: "「{action}」には話す内容が必要です",
+      generateAudioNeedsText:
+        "「{action}」には話す内容が必要です。空白のままにすると前のビートの音声が継続されます(スピルオーバー機能)。",
       generateAudioNeedsMedia:
         "「{action}」には画像または動画が必要です。ファイル追加・URL取得・Markdown等から生成してください。",
       // Speaker tooltip
@@ -713,6 +713,8 @@ const lang = {
     voice_over: {
       badge: "ボイスオーバー",
       label: "ボイスオーバー開始時間（秒）",
+      title: "ボイスオーバー",
+      description: "• 前のビートの映像に音声を重ねます\n• 開始時刻（秒）を指定します",
     },
     startAt: {
       placeholder: "例：1（1秒後に開始）",

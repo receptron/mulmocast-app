@@ -81,6 +81,16 @@ export default [
   sonarjs.configs.recommended,
   ...vueI18n.configs.recommended,
   {
+    settings: {
+      'vue-i18n': {
+        localeDir: [
+          '.i18n-cache/*.{json}',
+        ],
+        messageSyntaxVersion: '^11.0.0',
+      },
+    },
+  },
+  {
     ignores: [
       "node_modules/**",
       ".vite/**",
@@ -186,10 +196,6 @@ export default [
     settings: {
       "import/resolver": {
         typescript: true,
-      },
-      'vue-i18n': {
-        localeDir: ".i18n-cache/*.{json}",
-        messageSyntaxVersion: "^11.0.0",
       },
     },
   },

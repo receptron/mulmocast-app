@@ -48,7 +48,12 @@
           </template>
         </template>
         <template v-else-if="beat?.image?.type === 'voice_over'">
-          {{ t("project.scriptEditor.voice_over") }}
+          <div class="text-muted-foreground text-center text-sm">
+            <p class="font-medium">{{ t("beat.voice_over.title") }}</p>
+            <div class="whitespace-pre-line">
+              {{ t("beat.voice_over.description") }}
+            </div>
+          </div>
         </template>
         <template v-else-if="isImageGenerating || isHtmlGenerating">
           <!-- TODO update design -->
