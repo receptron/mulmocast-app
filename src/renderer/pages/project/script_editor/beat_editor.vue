@@ -311,7 +311,7 @@
       </div>
 
       <!-- left: lipSync edit -->
-      <div class="flex flex-col gap-1" v-if="enableMovie && enableLipSync && beat.image?.type !== 'voice_over'">
+      <div class="flex flex-col gap-1" v-if="enableLipSync && hasLipSyncKey && beat.image?.type !== 'voice_over'">
         <!-- movie edit -->
         <div class="flex items-center gap-2">
           <Checkbox
@@ -331,7 +331,7 @@
         </div>
       </div>
       <!-- right: lipSync preview -->
-      <div class="flex flex-col gap-4" v-if="enableMovie && enableLipSync && beat.image?.type !== 'voice_over'">
+      <div class="flex flex-col gap-4" v-if="enableLipSync && hasLipSyncKey && beat.image?.type !== 'voice_over'">
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
@@ -414,6 +414,7 @@ import {
   getBadge,
   getBeatType,
   enableMovieType,
+  enableLipSyncType,
   isMediaBeat,
   isURLSourceMediaBeat,
   isLocalSourceMediaBeat,
@@ -624,6 +625,9 @@ const generateImageOnlyImage = () => {
 const enableMovie = computed(() => {
   return enableMovieType(props.beat);
 });
+const enableLipSync = computed(() => {
+  return enableLipSyncType(props.beat);
+});
 
 const hasMovieApiKey = computed(() => {
   try {
@@ -644,7 +648,7 @@ const generateImageOnlyMovie = () => {
   emit("generateImage", props.index, "movie");
 };
 
-const enableLipSync = computed(() => {
+const hasLipSyncKey = computed(() => {
   const lipSyncAgentInfo = MulmoPresentationStyleMethods.getLipSyncAgentInfo(props.mulmoScript, props.beat);
   return hasApiKey(lipSyncAgentInfo.keyName);
 });
