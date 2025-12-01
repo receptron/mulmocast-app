@@ -88,11 +88,12 @@
       </div>
     </div>
     <!-- Image backup dialog -->
-    <ImageBackupDialog
+    <MediaBackupDialog
       v-if="beat?.id"
       ref="imageBackupDialogRef"
       :project-id="projectId"
       :beat-id="beat.id"
+      media-type="image"
       @restored="handleImageRestored"
     />
   </div>
@@ -108,7 +109,7 @@ import { useRoute } from "vue-router";
 import { Button } from "@/components/ui/button";
 import { mediaUri } from "@/lib/utils";
 import { isLocalSourceMediaBeat } from "@/lib/beat_util";
-import ImageBackupDialog from "./beat_editors/image_backup_dialog.vue";
+import MediaBackupDialog from "./beat_editors/media_backup_dialog.vue";
 
 type ImageFile = ArrayBuffer | string | null;
 

@@ -138,6 +138,7 @@
                     @updateMultiLingual="updateMultiLingual"
                     :mulmoMultiLinguals="mulmoMultiLinguals"
                     @imageRestored="handleImageRestored"
+                    @movieRestored="handleMovieRestored"
                   />
                 </CardContent>
               </Card>
@@ -492,6 +493,10 @@ const generateImage = async (index: number, target: string) => {
 };
 
 const handleImageRestored = async () => {
+  await downloadImageFiles(projectId.value);
+};
+
+const handleMovieRestored = async () => {
   await downloadImageFiles(projectId.value);
 };
 

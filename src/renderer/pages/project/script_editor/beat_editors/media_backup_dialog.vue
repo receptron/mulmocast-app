@@ -2,9 +2,9 @@
   <Dialog :open="isOpen" @update:open="handleDialogOpenChange">
     <DialogContent class="sm:max-w-4xl">
       <DialogHeader>
-        <DialogTitle>{{ t("beat.imageBackup.title") }}</DialogTitle>
+        <DialogTitle>{{ t(`beat.${mediaType}Backup.title`) }}</DialogTitle>
         <DialogDescription>
-          {{ t("beat.imageBackup.description") }}
+          {{ t(`beat.${mediaType}Backup.description`) }}
         </DialogDescription>
       </DialogHeader>
       <div class="flex h-[600px] flex-col gap-4">
@@ -25,8 +25,14 @@
               >
                 <div class="bg-muted aspect-video w-full overflow-hidden rounded-md">
                   <img
+                    v-if="mediaType === 'image'"
                     :src="backup.previewUrl"
                     :alt="backup.fileName"
+                    class="h-full w-full object-cover transition-transform group-hover:scale-[1.02]"
+                  />
+                  <video
+                    v-else
+                    :src="backup.previewUrl"
                     class="h-full w-full object-cover transition-transform group-hover:scale-[1.02]"
                   />
                 </div>
@@ -39,7 +45,7 @@
             </template>
             <template v-else>
               <div class="text-muted-foreground col-span-full flex items-center justify-center py-8 text-sm">
-                {{ loadError || t("beat.imageBackup.empty") }}
+                {{ loadError || t(`beat.${mediaType}Backup.empty`) }}
               </div>
             </template>
           </div>
@@ -68,6 +74,7 @@ interface BackupImage {
 const props = defineProps<{
   projectId: string;
   beatId: string;
+  mediaType: "image" | "movie";
 }>();
 
 const emit = defineEmits<{
@@ -115,17 +122,18 @@ const loadBackups = async () => {
   loadError.value = null;
 
   try {
-    const result = await window.electronAPI.mulmoHandler("mulmoImageBackupList", props.projectId, props.beatId);
+    const method = props.mediaType === "image" ? "mulmoImageBackupList" : "mulmoMovieBackupList";
+    const result = await window.electronAPI.mulmoHandler(method, props.projectId, props.beatId);
 
     // Check if result is an error object
     if (result && typeof result === "object" && "error" in result) {
-      loadError.value = t("beat.imageBackup.loadError");
+      loadError.value = t(`beat.${props.mediaType}Backup.loadError`);
       return;
     }
 
     // Check if result is an array
     if (!Array.isArray(result)) {
-      loadError.value = t("beat.imageBackup.loadError");
+      loadError.value = t(`beat.${props.mediaType}Backup.loadError`);
       return;
     }
 
@@ -133,12 +141,13 @@ const loadBackups = async () => {
     objectUrls.value.forEach((url) => URL.revokeObjectURL(url));
     objectUrls.value = [];
 
+    const mimeType = props.mediaType === "image" ? "image/png" : "video/mp4";
     backupImages.value = result
       .map((item: { fileName: string; timestamp: number; imageData: unknown }) => {
         const arrayBuffer = toArrayBuffer(item.imageData);
         if (!arrayBuffer) return null;
 
-        const blob = new Blob([arrayBuffer], { type: "image/png" });
+        const blob = new Blob([arrayBuffer], { type: mimeType });
         const url = URL.createObjectURL(blob);
         objectUrls.value.push(url);
 
@@ -151,7 +160,7 @@ const loadBackups = async () => {
       })
       .filter((item): item is BackupImage => item !== null);
   } catch {
-    loadError.value = t("beat.imageBackup.loadError");
+    loadError.value = t(`beat.${props.mediaType}Backup.loadError`);
   } finally {
     isLoading.value = false;
   }
@@ -159,22 +168,21 @@ const loadBackups = async () => {
 
 const handleSelect = async (backup: BackupImage) => {
   try {
-    const result = (await window.electronAPI.mulmoHandler(
-      "mulmoImageRestoreBackup",
-      props.projectId,
-      props.beatId,
-      backup.fileName,
-    )) as { result: boolean; error?: string };
+    const method = props.mediaType === "image" ? "mulmoImageRestoreBackup" : "mulmoMovieRestoreBackup";
+    const result = (await window.electronAPI.mulmoHandler(method, props.projectId, props.beatId, backup.fileName)) as {
+      result: boolean;
+      error?: string;
+    };
 
     if (result.result) {
-      notifySuccess(t("beat.imageBackup.restored"));
+      notifySuccess(t(`beat.${props.mediaType}Backup.restored`));
       isOpen.value = false;
       emit("restored");
     } else {
-      notifyError(t("beat.imageBackup.restoreError", { error: result.error || "Unknown error" }));
+      notifyError(t(`beat.${props.mediaType}Backup.restoreError`, { error: result.error || "Unknown error" }));
     }
   } catch (error: unknown) {
-    notifyError(t("beat.imageBackup.restoreError", { error: String(error) }));
+    notifyError(t(`beat.${props.mediaType}Backup.restoreError`, { error: String(error) }));
   }
 };
 

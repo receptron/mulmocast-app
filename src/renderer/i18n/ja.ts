@@ -727,6 +727,16 @@ const lang = {
       restored: "画像を復元しました",
       restoreError: "画像の復元に失敗しました: {error}",
     },
+    movieBackup: {
+      title: "動画履歴",
+      description: "過去に生成された動画を選択して復元します",
+      openButton: "動画履歴",
+      current: "現在",
+      empty: "バックアップ動画が見つかりません",
+      loadError: "バックアップ動画の読み込みに失敗しました",
+      restored: "動画を復元しました",
+      restoreError: "動画の復元に失敗しました: {error}",
+    },
     imagePrompt: {
       badge: "Image Prompt",
       label: "画像生成プロンプト",

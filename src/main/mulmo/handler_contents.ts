@@ -280,21 +280,32 @@ export const mulmoBGM = async (projectId: string) => {
   }
 };
 
-// Image backup management
-export const mulmoImageBackupList = async (projectId: string, beatId: string) => {
+// Generic media backup management
+const getMediaDirectory = (projectPath: string, __mediaType: "image" | "movie") => {
+  // Both images and movies are stored in the same directory
+  return path.join(projectPath, "output", "images", "script");
+};
+
+const getMediaExtensions = (mediaType: "image" | "movie") => {
+  if (mediaType === "image") {
+    return "(png|jpg|jpeg)";
+  }
+  return "(mp4|mov|avi|webm)";
+};
+
+const mulmoMediaBackupList = async (projectId: string, beatId: string, mediaType: "image" | "movie") => {
   try {
     const projectPath = getProjectPath(projectId);
-    const imagesDir = path.join(projectPath, "output", "images", "script");
+    const mediaDir = getMediaDirectory(projectPath, mediaType);
 
-    if (!fs.existsSync(imagesDir)) {
+    if (!fs.existsSync(mediaDir)) {
       return [];
     }
 
-    const files = fs.readdirSync(imagesDir);
-
-    // Pattern: {beatId}-{timestamp}.png (only backup files)
+    const files = fs.readdirSync(mediaDir);
     const beatIdEscaped = beatId.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-    const backupPattern = new RegExp(`^${beatIdEscaped}-(\\d+)\\.(png|jpg|jpeg)$`, "i");
+    const extensions = getMediaExtensions(mediaType);
+    const backupPattern = new RegExp(`^${beatIdEscaped}-(\\d+)\\.${extensions}$`, "i");
 
     const backups: Array<{ fileName: string; timestamp: number }> = [];
 
@@ -306,13 +317,11 @@ export const mulmoImageBackupList = async (projectId: string, beatId: string) =>
       }
     }
 
-    // Sort by timestamp descending (newest first)
     backups.sort((a, b) => b.timestamp - a.timestamp);
 
-    // Return list with image data
     return await Promise.all(
       backups.map(async (backup) => {
-        const filePath = path.join(imagesDir, backup.fileName);
+        const filePath = path.join(mediaDir, backup.fileName);
         const buffer = fs.readFileSync(filePath);
         return {
           fileName: backup.fileName,
@@ -327,21 +336,34 @@ export const mulmoImageBackupList = async (projectId: string, beatId: string) =>
   }
 };
 
-export const mulmoImageRestoreBackup = async (projectId: string, beatId: string, backupFileName: string) => {
+// Image backup management (wrapper for backward compatibility)
+export const mulmoImageBackupList = async (projectId: string, beatId: string) => {
+  return mulmoMediaBackupList(projectId, beatId, "image");
+};
+
+// Movie backup management
+export const mulmoMovieBackupList = async (projectId: string, beatId: string) => {
+  return mulmoMediaBackupList(projectId, beatId, "movie");
+};
+
+const mulmoMediaRestoreBackup = async (
+  projectId: string,
+  beatId: string,
+  backupFileName: string,
+  mediaType: "image" | "movie",
+) => {
   try {
     const projectPath = getProjectPath(projectId);
-    const imagesDir = path.join(projectPath, "output", "images", "script");
-    const backupPath = path.join(imagesDir, backupFileName);
+    const mediaDir = getMediaDirectory(projectPath, mediaType);
+    const backupPath = path.join(mediaDir, backupFileName);
 
     if (!fs.existsSync(backupPath)) {
       return { result: false, error: "Backup file not found" };
     }
 
-    // Get extension from backup file
     const ext = path.extname(backupFileName);
-    const currentPath = path.join(imagesDir, `${beatId}${ext}`);
+    const currentPath = path.join(mediaDir, `${beatId}${ext}`);
 
-    // Copy backup file to current file
     fs.copyFileSync(backupPath, currentPath);
 
     return { result: true };
@@ -349,4 +371,14 @@ export const mulmoImageRestoreBackup = async (projectId: string, beatId: string,
     GraphAILogger.log(error);
     return { result: false, error: String(error) };
   }
+};
+
+// Image restore (wrapper for backward compatibility)
+export const mulmoImageRestoreBackup = async (projectId: string, beatId: string, backupFileName: string) => {
+  return mulmoMediaRestoreBackup(projectId, beatId, backupFileName, "image");
+};
+
+// Movie restore
+export const mulmoMovieRestoreBackup = async (projectId: string, beatId: string, backupFileName: string) => {
+  return mulmoMediaRestoreBackup(projectId, beatId, backupFileName, "movie");
 };

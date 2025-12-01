@@ -727,6 +727,16 @@ const lang = {
       restored: "Image restored successfully",
       restoreError: "Failed to restore image: {error}",
     },
+    movieBackup: {
+      title: "Movie History",
+      description: "Select a previously generated movie to restore it",
+      openButton: "Movie History",
+      current: "Current",
+      empty: "No backup movies found",
+      loadError: "Failed to load backup movies",
+      restored: "Movie restored successfully",
+      restoreError: "Failed to restore movie: {error}",
+    },
     imagePrompt: {
       badge: "Image Prompt",
       label: "Image Generation Prompt",

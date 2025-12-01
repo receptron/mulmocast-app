@@ -33,6 +33,12 @@
             :size="40"
             @click="openModal('video', movieFile)"
           />
+          <!-- Movie backup button -->
+          <div v-if="beat?.moviePrompt !== undefined" class="mt-2">
+            <Button variant="outline" size="sm" @click="openMovieBackup" type="button">
+              {{ t("beat.movieBackup.openButton") }}
+            </Button>
+          </div>
         </div>
         <div v-else>
           <Video :size="32" class="text-muted-foreground mx-auto mb-2" />
@@ -40,18 +46,29 @@
         </div>
       </div>
     </div>
+    <!-- Movie backup dialog -->
+    <MediaBackupDialog
+      v-if="beat?.id"
+      ref="movieBackupDialogRef"
+      :project-id="projectId"
+      :beat-id="beat.id"
+      media-type="movie"
+      @restored="handleMovieRestored"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { Video, Play, Loader2, Sparkles } from "lucide-vue-next";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import type { MulmoBeat } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
 
 import { Button } from "@/components/ui/button";
 import { mediaUri } from "@/lib/utils";
 import { enableMovieType } from "@/lib/beat_util";
+import MediaBackupDialog from "./beat_editors/media_backup_dialog.vue";
 
 interface Props {
   beat: MulmoBeat;
@@ -64,9 +81,12 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["openModal", "generateMovie"]);
+const emit = defineEmits(["openModal", "generateMovie", "movieRestored"]);
 
 const { t } = useI18n();
+const route = useRoute();
+const projectId = computed(() => route.params.id as string);
+const movieBackupDialogRef = ref<{ open: () => void; reload: () => void } | null>(null);
 
 // Computed properties for button visibility
 const enableMovie = computed(() => {
@@ -81,7 +101,27 @@ const generateMovie = () => {
   emit("generateMovie");
 };
 
+const openMovieBackup = async () => {
+  if (movieBackupDialogRef.value) {
+    await movieBackupDialogRef.value.open();
+  }
+};
+
+const handleMovieRestored = () => {
+  emit("movieRestored");
+};
+
+const reloadBackupDialog = async () => {
+  if (movieBackupDialogRef.value) {
+    await movieBackupDialogRef.value.reload();
+  }
+};
+
 const movieGenerateButtonTitle = computed(() => {
   return props.toggleTypeMode ? "changeBeatTypeFirst" : props.isMovieGenerating ? "generating" : "generateMovie";
+});
+
+defineExpose({
+  reloadBackupDialog,
 });
 </script>

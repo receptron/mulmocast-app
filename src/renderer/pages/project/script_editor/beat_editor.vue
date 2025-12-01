@@ -300,6 +300,7 @@
       <!-- right: movie preview -->
       <div class="flex flex-col gap-4" v-if="enableMovie && hasMovieApiKey">
         <BeatPreviewMovie
+          ref="beatPreviewMovieRef"
           :beat="beat"
           :index="index"
           :isMovieGenerating="isMovieGenerating"
@@ -308,6 +309,7 @@
           :toggleTypeMode="toggleTypeMode"
           @openModal="openModal"
           @generateMovie="generateImageOnlyMovie"
+          @movieRestored="handleMovieRestored"
           :disabled="!isValidBeat || isArtifactGenerating"
         />
       </div>
@@ -462,6 +464,7 @@ const emit = defineEmits([
   "updateImageNames",
   "justSaveAndPushToHistory",
   "imageRestored",
+  "movieRestored",
 ]);
 
 const route = useRoute();
@@ -719,11 +722,22 @@ const openModal = (type: "image" | "video" | "audio" | "other", src: ArrayBuffer
 };
 
 const beatPreviewImageRef = ref<{ reloadBackupDialog: () => Promise<void> } | null>(null);
+const beatPreviewMovieRef = ref<{ reloadBackupDialog: () => Promise<void> } | null>(null);
 
 const reloadBackupDialog = async () => {
   if (beatPreviewImageRef.value) {
     await beatPreviewImageRef.value.reloadBackupDialog();
   }
+};
+
+const reloadMovieBackupDialog = async () => {
+  if (beatPreviewMovieRef.value) {
+    await beatPreviewMovieRef.value.reloadBackupDialog();
+  }
+};
+
+const handleMovieRestored = () => {
+  emit("movieRestored");
 };
 
 // Watch for image generation completion and reload backup dialog
@@ -739,11 +753,21 @@ watch(
       // Image generation completed for this beat, reload backup dialog
       reloadBackupDialog();
     }
+    if (
+      event?.kind === "beatGenerate" &&
+      event?.sessionType === "movie" &&
+      event?.inSession === false &&
+      event?.index === props.index
+    ) {
+      // Movie generation completed for this beat, reload backup dialog
+      reloadMovieBackupDialog();
+    }
   },
   { deep: true },
 );
 
 defineExpose({
   reloadBackupDialog,
+  reloadMovieBackupDialog,
 });
 </script>
