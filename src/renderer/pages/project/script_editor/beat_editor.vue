@@ -413,7 +413,6 @@ import { useMulmoEventStore } from "../../../store";
 import {
   getBadge,
   getBeatType,
-  enableMovieType,
   isMediaBeat,
   isURLSourceMediaBeat,
   isLocalSourceMediaBeat,
@@ -623,10 +622,6 @@ const generateImageOnlyImage = () => {
   }
   emit("generateImage", props.index, "image");
 };
-
-const enableMovie = computed(() => {
-  return enableMovieType(props.beat);
-});
 
 const hasMovieApiKey = computed(() => {
   try {
