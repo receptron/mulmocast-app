@@ -279,3 +279,74 @@ export const mulmoBGM = async (projectId: string) => {
     return buffer.buffer;
   }
 };
+
+// Image backup management
+export const mulmoImageBackupList = async (projectId: string, beatId: string) => {
+  try {
+    const projectPath = getProjectPath(projectId);
+    const imagesDir = path.join(projectPath, "output", "images", "script");
+
+    if (!fs.existsSync(imagesDir)) {
+      return [];
+    }
+
+    const files = fs.readdirSync(imagesDir);
+
+    // Pattern: {beatId}-{timestamp}.png (only backup files)
+    const beatIdEscaped = beatId.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+    const backupPattern = new RegExp(`^${beatIdEscaped}-(\\d+)\\.(png|jpg|jpeg)$`, "i");
+
+    const backups: Array<{ fileName: string; timestamp: number }> = [];
+
+    for (const file of files) {
+      const backupMatch = file.match(backupPattern);
+      if (backupMatch) {
+        const timestamp = parseInt(backupMatch[1], 10);
+        backups.push({ fileName: file, timestamp });
+      }
+    }
+
+    // Sort by timestamp descending (newest first)
+    backups.sort((a, b) => b.timestamp - a.timestamp);
+
+    // Return list with image data
+    return await Promise.all(
+      backups.map(async (backup) => {
+        const filePath = path.join(imagesDir, backup.fileName);
+        const buffer = fs.readFileSync(filePath);
+        return {
+          fileName: backup.fileName,
+          timestamp: backup.timestamp,
+          imageData: buffer.buffer,
+        };
+      }),
+    );
+  } catch (error) {
+    GraphAILogger.log(error);
+    return [];
+  }
+};
+
+export const mulmoImageRestoreBackup = async (projectId: string, beatId: string, backupFileName: string) => {
+  try {
+    const projectPath = getProjectPath(projectId);
+    const imagesDir = path.join(projectPath, "output", "images", "script");
+    const backupPath = path.join(imagesDir, backupFileName);
+
+    if (!fs.existsSync(backupPath)) {
+      return { result: false, error: "Backup file not found" };
+    }
+
+    // Get extension from backup file
+    const ext = path.extname(backupFileName);
+    const currentPath = path.join(imagesDir, `${beatId}${ext}`);
+
+    // Copy backup file to current file
+    fs.copyFileSync(backupPath, currentPath);
+
+    return { result: true };
+  } catch (error) {
+    GraphAILogger.log(error);
+    return { result: false, error: String(error) };
+  }
+};

@@ -230,6 +230,7 @@
                   @generateImage="generateImage"
                   @changeBeat="changeBeat"
                   @justSaveAndPushToHistory="justSaveAndPushToHistory"
+                  @imageRestored="handleImageRestored"
                 />
               </Card>
               <div
@@ -382,6 +383,7 @@ const emit = defineEmits([
   "generateImage",
   "update:scriptEditorActiveTab",
   "updateMultiLingual",
+  "imageRestored",
 ]);
 
 const route = useRoute();
@@ -524,6 +526,10 @@ const updateImageData = (index: number) => {
 
 const generateImage = (index: number, target: string) => {
   emit("generateImage", index, target);
+};
+
+const handleImageRestored = () => {
+  emit("imageRestored");
 };
 
 const deleteBeat = (index: number) => {

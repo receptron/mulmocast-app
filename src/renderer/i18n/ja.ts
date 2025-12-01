@@ -717,6 +717,16 @@ const lang = {
     startAt: {
       placeholder: "例：1（1秒後に開始）",
     },
+    imageBackup: {
+      title: "画像履歴",
+      description: "過去に生成された画像を選択して復元します",
+      openButton: "画像履歴",
+      current: "現在",
+      empty: "バックアップ画像が見つかりません",
+      loadError: "バックアップ画像の読み込みに失敗しました",
+      restored: "画像を復元しました",
+      restoreError: "画像の復元に失敗しました: {error}",
+    },
     imagePrompt: {
       badge: "Image Prompt",
       label: "画像生成プロンプト",

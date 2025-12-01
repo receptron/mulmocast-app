@@ -277,6 +277,7 @@
           :disabled="!isValidBeat || isArtifactGenerating || disabledImageGenearte"
           @openModal="openModal"
           @generateImage="generateImageOnlyImage"
+          @imageRestored="handleImageRestored"
         />
       </div>
 
@@ -459,6 +460,7 @@ const emit = defineEmits([
   "changeBeat",
   "updateImageNames",
   "justSaveAndPushToHistory",
+  "imageRestored",
 ]);
 
 const route = useRoute();
@@ -702,6 +704,10 @@ const updateImageData = (data: MulmoImageAsset, callback?: () => void) => {
 };
 const justSaveAndPushToHistory = () => {
   emit("justSaveAndPushToHistory");
+};
+
+const handleImageRestored = () => {
+  emit("imageRestored");
 };
 
 const openModal = (type: "image" | "video" | "audio" | "other", src: ArrayBuffer | string | null) => {
