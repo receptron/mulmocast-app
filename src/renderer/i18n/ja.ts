@@ -129,6 +129,12 @@ const lang = {
       // Project actions
       createNew: "新規作成",
       openProjectFolder: "プロジェクトのフォルダを開く",
+
+      // UI controls
+      expand: "編集",
+      collapse: "プレビュー",
+      selectAll: "全選択",
+      deselectAll: "全解除",
     },
 
     // Status messages

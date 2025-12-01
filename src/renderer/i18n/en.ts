@@ -129,6 +129,12 @@ const lang = {
       // Project actions
       createNew: "Create New",
       openProjectFolder: "Open Project Folder",
+
+      // UI controls
+      expand: "Edit",
+      collapse: "Preview",
+      selectAll: "Select All",
+      deselectAll: "Deselect All",
     },
 
     // Status messages
