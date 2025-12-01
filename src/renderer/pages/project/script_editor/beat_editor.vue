@@ -630,7 +630,7 @@ const enableLipSync = computed(() => {
 });
 
 const isVoiceOver = computed(() => {
-  return props.beat.image?.type === 'voice_over';
+  return props.beat.image?.type === "voice_over";
 });
 
 const hasMovieApiKey = computed(() => {
