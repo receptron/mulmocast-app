@@ -51,7 +51,6 @@ import { useI18n } from "vue-i18n";
 
 import { Button } from "@/components/ui/button";
 import { mediaUri } from "@/lib/utils";
-import { enableMovieType } from "@/lib/beat_util";
 
 interface Props {
   beat: MulmoBeat;
