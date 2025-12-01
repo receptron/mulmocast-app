@@ -432,7 +432,6 @@ const lang = {
     scriptEditor: {
       beatCopied: "Beatをコピーしました",
       beatDeleted: "Beatを削除しました",
-      voice_over: "ボイスオーバー",
       text: {
         tabLabel: "翻訳",
         mode: "翻訳モード",
@@ -713,6 +712,8 @@ const lang = {
     voice_over: {
       badge: "ボイスオーバー",
       label: "ボイスオーバー開始時間（秒）",
+      title: "ボイスオーバー",
+      description: "• 前のビートの映像に音声を重ねます\n• 開始時刻（秒）を指定します",
     },
     startAt: {
       placeholder: "例：1（1秒後に開始）",
