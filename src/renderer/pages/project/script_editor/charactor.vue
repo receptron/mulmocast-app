@@ -132,7 +132,7 @@
 
 <script setup lang="ts">
 import { Trash, Sparkles, FileImage, Loader2 } from "lucide-vue-next";
-import { ref, computed, nextTick } from "vue";
+import { ref, computed, nextTick, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { z } from "zod";
 import { useMediaUrl } from "../composable/media_url";
@@ -206,6 +206,10 @@ const openImage = (imageKey: string) => {
   modalOpen.value = true;
   modalSrc.value = imageRefs.value[imageKey];
 };
+
+watch(() => props.isValidScriptData, () => {
+  loadReference();
+});
 
 const isValidData = computed(() => {
   const schema = z.union([mulmoImageMediaSchema, mulmoImagePromptMediaSchema]);
