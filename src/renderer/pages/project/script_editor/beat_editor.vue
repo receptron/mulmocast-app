@@ -100,7 +100,7 @@
         @blur="justSaveAndPushToHistory"
       />
       <span class="text-muted-foreground text-sm">{{ t("beat.duration.unit") }}</span>
-      <div v-if="expectDuration && beat.moviePrompt" class="text-muted-foreground text-sm">
+      <div v-if="expectDuration && beatContent.hasMoviePrompt" class="text-muted-foreground text-sm">
         <div>{{ t("beat.duration.supportedDurations", { durations: expectDuration.join(", ") }) }}</div>
         <div v-if="isVeo31Model" class="mt-1">
           {{ t("beat.duration.veo31ExtendedNote") }}
@@ -281,7 +281,7 @@
       </div>
 
       <!-- left: movie edit -->
-      <div class="flex flex-col gap-4" v-if="enableMovie && hasMovieApiKey">
+      <div class="flex flex-col gap-4" v-if="beatCapabilities.canShowMoviePromptUI && hasMovieApiKey">
         <!-- movie edit -->
         <div>
           <Label class="mb-1 block">{{ t("beat.moviePrompt.label") }}: </Label>
@@ -291,12 +291,12 @@
             @update:model-value="(value) => update('moviePrompt', String(value))"
             @blur="justSaveAndPushToHistory"
             class="mb-2 h-20 overflow-y-auto"
-            :disabled="lipSyncTargetInfo.supportsImage && beat.enableLipSync"
+            :disabled="beatCapabilities.shouldDisableMoviePrompt"
           />
         </div>
       </div>
       <!-- right: movie preview -->
-      <div class="flex flex-col gap-4" v-if="enableMovie && hasMovieApiKey">
+      <div class="flex flex-col gap-4" v-if="beatCapabilities.canShowMoviePromptUI && hasMovieApiKey">
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
@@ -311,7 +311,7 @@
       </div>
 
       <!-- left: lipSync edit -->
-      <div class="flex flex-col gap-1" v-if="enableMovie && enableLipSync">
+      <div class="flex flex-col gap-1" v-if="beatCapabilities.canShowLipSyncUI && enableLipSync">
         <!-- movie edit -->
         <div class="flex items-center gap-2">
           <Checkbox
@@ -331,7 +331,7 @@
         </div>
       </div>
       <!-- right: lipSync preview -->
-      <div class="flex flex-col gap-4" v-if="enableMovie && enableLipSync">
+      <div class="flex flex-col gap-4" v-if="beatCapabilities.canShowLipSyncUI && enableLipSync">
         <BeatPreviewMovie
           :beat="beat"
           :index="index"
@@ -417,6 +417,8 @@ import {
   isMediaBeat,
   isURLSourceMediaBeat,
   isLocalSourceMediaBeat,
+  getBeatContentType,
+  getBeatUICapabilities,
 } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
 import { notifyProgress, notifyError } from "@/lib/notification";
@@ -490,7 +492,7 @@ const beatType = computed(() => {
 });
 
 const enableMovieGenerate = computed(() => {
-  return !!props.beat.moviePrompt;
+  return beatCapabilities.value.canGenerateMovie;
 });
 const enableLipSyncGenerate = computed(() => {
   return !!props.beat.enableLipSync;
@@ -543,22 +545,23 @@ const isVeo31Model = computed(() => {
 });
 
 const durationTooltipKey = computed(() => {
-  // moviePromptがある場合 → 生成動画
-  if (props.beat.moviePrompt) {
-    return "beat.duration.tooltipGeneratedVideo";
-  }
-  // image.typeが"movie"の場合 → アップロードした動画
-  if (props.beat.image?.type === "movie") {
-    return "beat.duration.tooltipUploadedVideo";
-  }
-  // それ以外 → 静止画
-  return "beat.duration.tooltipStillImage";
+  const type = beatCapabilities.value.durationType;
+  const typeMap = {
+    generatedVideo: "beat.duration.tooltipGeneratedVideo",
+    uploadedVideo: "beat.duration.tooltipUploadedVideo",
+    stillImage: "beat.duration.tooltipStillImage",
+  };
+  return typeMap[type];
 });
 
 const lipSyncTargetInfo = computed(() => {
   const lipSyncParams = props.mulmoScript?.lipSyncParams;
   return getLipSyncTargetInfo(lipSyncParams?.provider, lipSyncParams?.model);
 });
+
+const beatContent = computed(() => getBeatContentType(props.beat));
+
+const beatCapabilities = computed(() => getBeatUICapabilities(props.beat, lipSyncTargetInfo.value));
 
 const lipSyncModelDescription = computed(() => {
   const lipSyncParams = props.mulmoScript?.lipSyncParams;
