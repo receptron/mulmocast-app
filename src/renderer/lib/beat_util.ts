@@ -64,3 +64,11 @@ export const enableMovieType = (beat: MulmoBeat) => {
   }
   return !beat.htmlPrompt;
 };
+export const enableLipSyncType = (beat: MulmoBeat) => {
+  if (beat.image?.type) {
+    if (beat.image.type === "beat") {
+      return false;
+    }
+  }
+  return !beat.htmlPrompt;
+};
