@@ -70,10 +70,7 @@ const saveBgmData = (data: BgmData): void => {
 // Generate filename with timestamp and random ID
 const generateFileName = (): string => {
   const now = new Date();
-  const timestamp = now
-    .toISOString()
-    .replace(/[-:T]/g, "")
-    .split(".")[0]; // YYYYMMDDHHMMSS
+  const timestamp = now.toISOString().replace(/[-:T]/g, "").split(".")[0]; // YYYYMMDDHHMMSS
   const randomId = randomUUID().split("-")[0]; // First part of UUID
   return `${timestamp}-${randomId}.mp3`;
 };

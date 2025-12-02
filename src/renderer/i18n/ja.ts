@@ -1402,7 +1402,8 @@ const lang = {
     errors: {
       generationFailed: "BGMの生成に失敗しました",
       permissionDenied: "API権限エラー",
-      permissionDescription: "お使いのElevenLabs APIキーに「music_generation」の権限がありません。APIプランをアップグレードするか、音楽生成が有効な別のAPIキーを使用してください。",
+      permissionDescription:
+        "お使いのElevenLabs APIキーに「music_generation」の権限がありません。APIプランをアップグレードするか、音楽生成が有効な別のAPIキーを使用してください。",
     },
   },
   nativeMenu: {

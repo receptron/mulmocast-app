@@ -1397,7 +1397,8 @@ const lang = {
     errors: {
       generationFailed: "Failed to generate BGM",
       permissionDenied: "API Permission Error",
-      permissionDescription: "Your ElevenLabs API key does not have the 'music_generation' permission. Please upgrade your API plan or use a different API key with music generation enabled.",
+      permissionDescription:
+        "Your ElevenLabs API key does not have the 'music_generation' permission. Please upgrade your API plan or use a different API key with music generation enabled.",
     },
   },
   nativeMenu: {

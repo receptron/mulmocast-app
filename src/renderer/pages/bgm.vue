@@ -31,7 +31,7 @@
             class="border-border bg-muted/50 flex items-center justify-between rounded-lg border border-dashed p-4"
           >
             <div class="flex flex-1 items-center space-x-4">
-              <Loader2 class="h-5 w-5 animate-spin text-primary" />
+              <Loader2 class="text-primary h-5 w-5 animate-spin" />
 
               <div class="flex-1">
                 <div class="flex items-center space-x-2">
@@ -147,7 +147,14 @@ import dayjs from "dayjs";
 
 import Layout from "@/components/layout.vue";
 import { Button, Badge, Textarea } from "@/components/ui";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { bufferToUrl } from "@/lib/utils";
 import { notifyError, notifySuccess } from "@/lib/notification";
