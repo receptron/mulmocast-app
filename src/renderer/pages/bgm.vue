@@ -15,7 +15,7 @@
         </div>
 
         <!-- BGM List -->
-        <div v-if="bgmList.length === 0" class="py-16 text-center">
+        <div v-if="bgmList.length === 0 && bgmStore.generatingBgms.length === 0" class="py-16 text-center">
           <div class="space-y-4">
             <Music class="text-muted-foreground mx-auto h-16 w-16" />
             <h2 class="text-foreground text-xl font-semibold">{{ t("bgm.empty.title") }}</h2>
@@ -24,6 +24,30 @@
         </div>
 
         <div v-else class="space-y-3">
+          <!-- Generating BGMs -->
+          <div
+            v-for="generatingBgm in bgmStore.generatingBgms"
+            :key="generatingBgm.tempId"
+            class="border-border bg-muted/50 flex items-center justify-between rounded-lg border border-dashed p-4"
+          >
+            <div class="flex flex-1 items-center space-x-4">
+              <Loader2 class="h-5 w-5 animate-spin text-primary" />
+
+              <div class="flex-1">
+                <div class="flex items-center space-x-2">
+                  <span class="font-medium">{{ generatingBgm.title }}</span>
+                  <Badge variant="outline" class="text-xs">{{ t("ui.actions.generating") }}</Badge>
+                </div>
+                <p class="text-muted-foreground text-xs">{{ t("bgm.generatingDescription") }}</p>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-2">
+              <Badge variant="secondary" class="text-xs">{{ generatingBgm.duration }}</Badge>
+            </div>
+          </div>
+
+          <!-- Existing BGMs -->
           <div
             v-for="bgm in bgmList"
             :key="bgm.id"
@@ -127,9 +151,11 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { bufferToUrl } from "@/lib/utils";
 import { notifyError, notifySuccess } from "@/lib/notification";
+import { useBgmStore } from "@/store";
 import type { BgmMetadata } from "@/types";
 
 const { t } = useI18n();
+const bgmStore = useBgmStore();
 
 interface BgmItem extends BgmMetadata {
   playing: boolean;
@@ -172,26 +198,41 @@ const openCreateDialog = () => {
 const generateBgm = async () => {
   createDialog.value.generating = true;
 
+  const title = createDialog.value.prompt.substring(0, 50) + (createDialog.value.prompt.length > 50 ? "..." : "");
+  const prompt = createDialog.value.prompt;
+  const duration = createDialog.value.duration;
+
+  // Generate temporary ID
+  const tempId = `temp-${Date.now()}`;
+
+  // Add to generating list
+  bgmStore.addGeneratingBgm({
+    tempId,
+    title,
+    prompt,
+    duration,
+    startedAt: new Date().toISOString(),
+  });
+
+  // Close dialog immediately
+  createDialog.value.open = false;
+  createDialog.value.generating = false;
+
+  // Continue generation in background
   try {
-    const title = createDialog.value.prompt.substring(0, 50) + (createDialog.value.prompt.length > 50 ? "..." : "");
-    const result = await window.electronAPI.mulmoHandler(
-      "bgmGenerate",
-      createDialog.value.prompt,
-      createDialog.value.duration,
-      title,
-    );
+    const result = await window.electronAPI.mulmoHandler("bgmGenerate", prompt, duration, title);
 
     // Check for error in response
     if (result && typeof result === "object" && "error" in result) {
       const error = result.error as { message?: string; detail?: { message?: string } };
       const errorMessage = error?.detail?.message || error?.message || "Unknown error occurred";
 
+      // Remove from generating list
+      bgmStore.removeGeneratingBgm(tempId);
+
       // Check if it's a permission error
       if (errorMessage.includes("missing_permissions") || errorMessage.includes("music_generation")) {
-        notifyError(
-          t("bgm.errors.permissionDenied"),
-          t("bgm.errors.permissionDescription"),
-        );
+        notifyError(t("bgm.errors.permissionDenied"), t("bgm.errors.permissionDescription"));
       } else {
         notifyError(t("bgm.errors.generationFailed"), errorMessage);
       }
@@ -205,15 +246,17 @@ const generateBgm = async () => {
       editing: false,
     };
 
+    // Remove from generating list
+    bgmStore.removeGeneratingBgm(tempId);
+
+    // Add to BGM list
     bgmList.value.unshift(newBgm);
-    createDialog.value.open = false;
     notifySuccess(t("bgm.created"));
   } catch (error) {
     console.error("Failed to generate BGM:", error);
+    bgmStore.removeGeneratingBgm(tempId);
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     notifyError(t("bgm.errors.generationFailed"), errorMessage);
-  } finally {
-    createDialog.value.generating = false;
   }
 };
 

@@ -1385,6 +1385,7 @@ const lang = {
     description: "プレゼンテーション用の背景音楽を作成・管理します",
     createNew: "新規BGM作成",
     created: "BGMを作成しました",
+    generatingDescription: "AIが背景音楽を生成中...",
     empty: {
       title: "BGMがまだ作成されていません",
       description: "「新規BGM作成」をクリックして、最初の背景音楽を生成してください",
