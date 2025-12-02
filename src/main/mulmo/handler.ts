@@ -145,6 +145,7 @@ const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: M
 export const mulmoHandler = async (method: string, webContents: WebContents, ...args: unknown[]) => {
   GraphAILogger.log(`handler ${method} run`);
   try {
+    // eslint-disable-next-line sonarjs/max-switch-cases
     switch (method) {
       case "mulmoActionRunner":
         return await mulmoActionRunner(

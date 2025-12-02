@@ -114,9 +114,9 @@
                 <SelectValue :placeholder="t('bgm.create.selectDuration')" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="30s">30{{ t("bgm.create.seconds") }}</SelectItem>
-                <SelectItem value="60s">60{{ t("bgm.create.seconds") }}</SelectItem>
-                <SelectItem value="120s">120{{ t("bgm.create.seconds") }}</SelectItem>
+                <SelectItem value="30s">{{ `30${t("bgm.create.seconds")}` }}</SelectItem>
+                <SelectItem value="60s">{{ `60${t("bgm.create.seconds")}` }}</SelectItem>
+                <SelectItem value="120s">{{ `120${t("bgm.create.seconds")}` }}</SelectItem>
               </SelectContent>
             </Select>
           </div>
