@@ -1384,6 +1384,7 @@ const lang = {
     title: "BGMライブラリ",
     description: "プレゼンテーション用の背景音楽を作成・管理します",
     createNew: "新規BGM作成",
+    created: "BGMを作成しました",
     empty: {
       title: "BGMがまだ作成されていません",
       description: "「新規BGM作成」をクリックして、最初の背景音楽を生成してください",
@@ -1396,6 +1397,11 @@ const lang = {
       durationLabel: "長さ",
       selectDuration: "長さを選択",
       seconds: "秒",
+    },
+    errors: {
+      generationFailed: "BGMの生成に失敗しました",
+      permissionDenied: "API権限エラー",
+      permissionDescription: "お使いのElevenLabs APIキーに「music_generation」の権限がありません。APIプランをアップグレードするか、音楽生成が有効な別のAPIキーを使用してください。",
     },
   },
   nativeMenu: {

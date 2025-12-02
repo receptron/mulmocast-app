@@ -1379,6 +1379,7 @@ const lang = {
     title: "BGM Library",
     description: "Create and manage background music for your presentations",
     createNew: "Create New BGM",
+    created: "BGM created successfully",
     empty: {
       title: "No BGM Created Yet",
       description: "Click 'Create New BGM' to generate your first background music",
@@ -1391,6 +1392,11 @@ const lang = {
       durationLabel: "Duration",
       selectDuration: "Select duration",
       seconds: "s",
+    },
+    errors: {
+      generationFailed: "Failed to generate BGM",
+      permissionDenied: "API Permission Error",
+      permissionDescription: "Your ElevenLabs API key does not have the 'music_generation' permission. Please upgrade your API plan or use a different API key with music generation enabled.",
     },
   },
   nativeMenu: {

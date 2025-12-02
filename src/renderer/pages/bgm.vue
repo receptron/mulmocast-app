@@ -38,14 +38,14 @@
               <div class="flex-1">
                 <input
                   v-if="bgm.editing"
-                  v-model="bgm.name"
+                  v-model="bgm.title"
                   @blur="saveNameEdit(bgm)"
                   @keyup.enter="saveNameEdit(bgm)"
                   class="bg-background border-border w-full rounded border px-2 py-1 text-sm"
                   type="text"
                 />
                 <div v-else class="flex items-center space-x-2">
-                  <span class="font-medium">{{ bgm.name }}</span>
+                  <span class="font-medium">{{ bgm.title }}</span>
                   <Button variant="ghost" size="icon" class="h-6 w-6" @click="startNameEdit(bgm)">
                     <Pencil class="h-3 w-3" />
                   </Button>
@@ -99,10 +99,13 @@
         </div>
 
         <DialogFooter>
-          <Button variant="outline" @click="createDialog.open = false">{{ t("ui.actions.cancel") }}</Button>
+          <Button variant="outline" @click="createDialog.open = false" :disabled="createDialog.generating">{{
+            t("ui.actions.cancel")
+          }}</Button>
           <Button @click="generateBgm" :disabled="createDialog.generating || !createDialog.prompt">
             <span v-if="!createDialog.generating">{{ t("ui.actions.generate") }}</span>
             <span v-else class="flex items-center space-x-2">
+              <Loader2 class="h-4 w-4 animate-spin" />
               <span>{{ t("ui.actions.generating") }}</span>
             </span>
           </Button>
@@ -114,7 +117,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { Plus, Music, Play, Pause, Pencil, Trash2 } from "lucide-vue-next";
+import { Plus, Music, Play, Pause, Pencil, Trash2, Loader2 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
 
@@ -122,19 +125,20 @@ import Layout from "@/components/layout.vue";
 import { Button, Badge, Textarea } from "@/components/ui";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { bufferToUrl } from "@/lib/utils";
+import { notifyError, notifySuccess } from "@/lib/notification";
+import type { BgmMetadata } from "@/types";
 
 const { t } = useI18n();
 
-interface BgmItem {
-  id: string;
-  name: string;
-  createdAt: string;
-  duration: string;
+interface BgmItem extends BgmMetadata {
   playing: boolean;
   editing: boolean;
+  audioUrl?: string;
 }
 
 const bgmList = ref<BgmItem[]>([]);
+const audioElement = ref<HTMLAudioElement | null>(null);
 
 const createDialog = ref({
   open: false,
@@ -143,27 +147,17 @@ const createDialog = ref({
   generating: false,
 });
 
-// Mock data for demonstration
 const loadBgmList = async () => {
-  // This will be replaced with actual API call
-  bgmList.value = [
-    {
-      id: "1",
-      name: "Upbeat Background Music",
-      createdAt: new Date().toISOString(),
-      duration: "60s",
+  try {
+    const items = (await window.electronAPI.mulmoHandler("bgmList")) as BgmMetadata[];
+    bgmList.value = items.map((item) => ({
+      ...item,
       playing: false,
       editing: false,
-    },
-    {
-      id: "2",
-      name: "Calm Piano Melody",
-      createdAt: new Date(Date.now() - 86400000).toISOString(),
-      duration: "120s",
-      playing: false,
-      editing: false,
-    },
-  ];
+    }));
+  } catch (error) {
+    console.error("Failed to load BGM list:", error);
+  }
 };
 
 const openCreateDialog = () => {
@@ -178,46 +172,122 @@ const openCreateDialog = () => {
 const generateBgm = async () => {
   createDialog.value.generating = true;
 
-  // Mock generation - will be replaced with actual API call
-  setTimeout(() => {
+  try {
+    const title = createDialog.value.prompt.substring(0, 50) + (createDialog.value.prompt.length > 50 ? "..." : "");
+    const result = await window.electronAPI.mulmoHandler(
+      "bgmGenerate",
+      createDialog.value.prompt,
+      createDialog.value.duration,
+      title,
+    );
+
+    // Check for error in response
+    if (result && typeof result === "object" && "error" in result) {
+      const error = result.error as { message?: string; detail?: { message?: string } };
+      const errorMessage = error?.detail?.message || error?.message || "Unknown error occurred";
+
+      // Check if it's a permission error
+      if (errorMessage.includes("missing_permissions") || errorMessage.includes("music_generation")) {
+        notifyError(
+          t("bgm.errors.permissionDenied"),
+          t("bgm.errors.permissionDescription"),
+        );
+      } else {
+        notifyError(t("bgm.errors.generationFailed"), errorMessage);
+      }
+      return;
+    }
+
+    const metadata = result as BgmMetadata;
     const newBgm: BgmItem = {
-      id: Date.now().toString(),
-      name: createDialog.value.prompt.substring(0, 30) + (createDialog.value.prompt.length > 30 ? "..." : ""),
-      createdAt: new Date().toISOString(),
-      duration: createDialog.value.duration,
+      ...metadata,
       playing: false,
       editing: false,
     };
 
     bgmList.value.unshift(newBgm);
     createDialog.value.open = false;
+    notifySuccess(t("bgm.created"));
+  } catch (error) {
+    console.error("Failed to generate BGM:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    notifyError(t("bgm.errors.generationFailed"), errorMessage);
+  } finally {
     createDialog.value.generating = false;
-  }, 2000);
+  }
 };
 
-const togglePlay = (id: string) => {
-  // Mock play/pause - will be replaced with actual audio playback
-  bgmList.value.forEach((bgm) => {
-    if (bgm.id === id) {
-      bgm.playing = !bgm.playing;
-    } else {
-      bgm.playing = false;
+const togglePlay = async (id: string) => {
+  const bgm = bgmList.value.find((b) => b.id === id);
+  if (!bgm) return;
+
+  // Stop all other playing audio
+  bgmList.value.forEach((b) => {
+    if (b.id !== id) {
+      b.playing = false;
     }
   });
+
+  if (bgm.playing) {
+    // Pause
+    if (audioElement.value) {
+      audioElement.value.pause();
+    }
+    bgm.playing = false;
+  } else {
+    // Play
+    try {
+      if (!bgm.audioUrl) {
+        // Load audio file
+        const buffer = (await window.electronAPI.mulmoHandler("bgmAudioFile", id)) as ArrayBuffer | null;
+        if (buffer) {
+          bgm.audioUrl = bufferToUrl(new Uint8Array(buffer), "audio/mpeg");
+        }
+      }
+
+      if (bgm.audioUrl) {
+        if (!audioElement.value) {
+          audioElement.value = new Audio();
+          audioElement.value.addEventListener("ended", () => {
+            bgmList.value.forEach((b) => {
+              b.playing = false;
+            });
+          });
+        }
+
+        audioElement.value.src = bgm.audioUrl;
+        await audioElement.value.play();
+        bgm.playing = true;
+      }
+    } catch (error) {
+      console.error("Failed to play BGM:", error);
+    }
+  }
 };
 
 const startNameEdit = (bgm: BgmItem) => {
   bgm.editing = true;
 };
 
-const saveNameEdit = (bgm: BgmItem) => {
+const saveNameEdit = async (bgm: BgmItem) => {
   bgm.editing = false;
-  // This will be replaced with actual API call to save name
+
+  try {
+    await window.electronAPI.mulmoHandler("bgmUpdateTitle", bgm.id, bgm.title);
+  } catch (error) {
+    console.error("Failed to update title:", error);
+  }
 };
 
 const deleteBgm = async (id: string) => {
-  // This will be replaced with actual API call
-  bgmList.value = bgmList.value.filter((bgm) => bgm.id !== id);
+  try {
+    const success = (await window.electronAPI.mulmoHandler("bgmDelete", id)) as boolean;
+    if (success) {
+      bgmList.value = bgmList.value.filter((bgm) => bgm.id !== id);
+    }
+  } catch (error) {
+    console.error("Failed to delete BGM:", error);
+  }
 };
 
 const formatDate = (dateString: string) => {

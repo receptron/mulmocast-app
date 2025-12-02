@@ -51,6 +51,7 @@ import { mulmoReferenceImageUpload, mulmoImageUpload } from "./handler_image_upl
 import { mulmoAudioBgmUpload, mulmoAudioBgmGet } from "./handler_audio_upload";
 import { graphaiPuppeteerAgent } from "./handler_graphai";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
+import { bgmList, bgmAudioFile, bgmGenerate, bgmUpdateTitle, bgmDelete } from "./handler_bgm";
 import type { ChatMessage } from "../../types";
 
 const isDev = !app.isPackaged;
@@ -221,6 +222,16 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoUpdateMultiLingual(args[0] as string, args[1] as number, args[2] as MultiLingualTexts);
       case "graphaiPuppeteerAgent":
         return await graphaiPuppeteerAgent(args[0] as { url: string });
+      case "bgmList":
+        return await bgmList();
+      case "bgmAudioFile":
+        return await bgmAudioFile(args[0] as string);
+      case "bgmGenerate":
+        return await bgmGenerate(args[0] as string, args[1] as string, args[2] as string);
+      case "bgmUpdateTitle":
+        return await bgmUpdateTitle(args[0] as string, args[1] as string);
+      case "bgmDelete":
+        return await bgmDelete(args[0] as string);
       default:
         throw new Error(`Unknown method: ${method}`);
     }
