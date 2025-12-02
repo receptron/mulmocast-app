@@ -78,13 +78,43 @@ export const useAudioFiles = () => {
     // console.log(audioFiles.value);
   };
 
-  const downloadAudioFile = async (projectId: string, lang: string, index: number, beatId: string) => {
-    const res = (await window.electronAPI.mulmoHandler("mulmoAudioFile", projectId, index)) as Uint8Array<ArrayBuffer>;
-    if (res) {
-      if (!audioFiles.value[lang]) {
-        audioFiles.value[lang] = {};
+  const downloadAudioFile = async (
+    projectId: string,
+    lang: string,
+    index: number,
+    beatId: string,
+    beatAudio?: { type: string; source?: { kind: string; path: string } },
+  ) => {
+    // If beat has uploaded audio file, load that instead of generated audio
+    if (beatAudio?.type === "audio" && beatAudio.source?.kind === "path") {
+      try {
+        const audioData = (await window.electronAPI.mulmoHandler(
+          "mulmoBeatAudioGet",
+          projectId,
+          beatAudio.source.path,
+        )) as ArrayBuffer;
+        if (audioData) {
+          if (!audioFiles.value[lang]) {
+            audioFiles.value[lang] = {};
+          }
+          audioFiles.value[lang][beatId] = bufferToUrl(new Uint8Array(audioData), "audio/mp3");
+        }
+      } catch (error) {
+        console.error(`Failed to load uploaded audio for beat ${beatId}:`, error);
       }
-      audioFiles.value[lang][beatId] = bufferToUrl(res, "audio/mp3");
+    } else {
+      // Load generated audio file
+      const res = (await window.electronAPI.mulmoHandler(
+        "mulmoAudioFile",
+        projectId,
+        index,
+      )) as Uint8Array<ArrayBuffer>;
+      if (res) {
+        if (!audioFiles.value[lang]) {
+          audioFiles.value[lang] = {};
+        }
+        audioFiles.value[lang][beatId] = bufferToUrl(res, "audio/mp3");
+      }
     }
   };
 

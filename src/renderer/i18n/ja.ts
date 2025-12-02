@@ -633,6 +633,14 @@ const lang = {
         line4: "2. 生成動画が最後まで再生されない場合、この値を調整してください。",
       },
     },
+    audio: {
+      generateFromText: "テキストから生成",
+      uploadFile: "ファイルをアップロード",
+      dropAudioHere: "オーディオファイルをここにドロップ",
+      clickToSelect: "またはクリックして選択",
+      clickToReplace: "クリックして変更",
+      uploadFailed: "オーディオファイルのアップロードに失敗しました",
+    },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
       badge: "Media File",

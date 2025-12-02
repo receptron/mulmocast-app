@@ -139,6 +139,9 @@
                     :mulmoMultiLinguals="mulmoMultiLinguals"
                     @imageRestored="handleImageRestored"
                     @movieRestored="handleMovieRestored"
+                    @audioUploaded="handleAudioUploaded"
+                    @audioRemoved="handleAudioRemoved"
+                    @audioGenerated="handleAudioGenerated"
                   />
                 </CardContent>
               </Card>
@@ -442,6 +445,25 @@ const handleUpdateScriptEditorActiveTab = async (tab: ScriptEditorTab) => {
   saveProjectMetadata({ updateTimestamp: false });
 };
 
+const handleAudioUploaded = async (index: number, beatId: string) => {
+  // Reload the uploaded audio file for preview
+  const beat = mulmoScriptHistoryStore.currentMulmoScript?.beats?.[index];
+  await downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, beatId, beat?.audio);
+};
+
+const handleAudioRemoved = (index: number, beatId: string) => {
+  // Clear the audio file from preview
+  const lang = mulmoScriptHistoryStore.lang;
+  if (audioFiles.value[lang]?.[beatId]) {
+    delete audioFiles.value[lang][beatId];
+  }
+};
+
+const handleAudioGenerated = async (index: number, beatId: string) => {
+  // Force load generated audio file (ignore beat.audio)
+  await downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, beatId, undefined);
+};
+
 const handleUpdateMulmoViewerActiveTab = (tab: MulmoViewerTab) => {
   projectMetadata.value.mulmoViewerActiveTab = tab;
   saveProjectMetadata({ updateTimestamp: false });
@@ -557,7 +579,8 @@ watch(
           return;
         }
         if (mulmoEvent.sessionType === "audio") {
-          downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, mulmoEvent.id);
+          const beat = mulmoScriptHistoryStore.currentMulmoScript?.beats?.[index];
+          downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, mulmoEvent.id, beat?.audio);
         }
         if (mulmoEvent.sessionType === "image") {
           downloadImageFile(projectId.value, index, mulmoEvent.id);

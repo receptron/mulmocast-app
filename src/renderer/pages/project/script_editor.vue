@@ -232,6 +232,9 @@
                   @justSaveAndPushToHistory="justSaveAndPushToHistory"
                   @imageRestored="handleImageRestored"
                   @movieRestored="handleMovieRestored"
+                  @audioUploaded="(index, beatId) => emit('audioUploaded', index, beatId)"
+                  @audioRemoved="(index, beatId) => emit('audioRemoved', index, beatId)"
+                  @audioGenerated="(index, beatId) => emit('audioGenerated', index, beatId)"
                 />
               </Card>
               <div
@@ -386,6 +389,9 @@ const emit = defineEmits([
   "updateMultiLingual",
   "imageRestored",
   "movieRestored",
+  "audioUploaded",
+  "audioRemoved",
+  "audioGenerated",
 ]);
 
 const route = useRoute();

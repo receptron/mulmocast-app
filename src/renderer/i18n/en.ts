@@ -635,6 +635,14 @@ const lang = {
         line4: "2. If the generated video doesn't play to the end, adjust this value.",
       },
     },
+    audio: {
+      generateFromText: "Generate from Text",
+      uploadFile: "Upload File",
+      dropAudioHere: "Drop audio file here",
+      clickToSelect: "or click to select",
+      clickToReplace: "Click to replace",
+      uploadFailed: "Failed to upload audio file",
+    },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
       badge: "Media File",
