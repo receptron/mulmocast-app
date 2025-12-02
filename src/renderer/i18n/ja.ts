@@ -268,6 +268,7 @@ const lang = {
   },
   menu: {
     top: "ホーム",
+    bgm: "BGM",
     settings: "設定",
     mypage: "マイページ",
     signin: "ログイン",
@@ -1378,6 +1379,31 @@ const lang = {
     detail: "新しいバージョンがダウンロードされました。アプリケーションを再起動してアップデートを適用してください。",
     restartButtonText: "再起動",
     laterButtonText: "あとで",
+  },
+  bgm: {
+    title: "BGMライブラリ",
+    description: "プレゼンテーション用の背景音楽を作成・管理します",
+    createNew: "新規BGM作成",
+    created: "BGMを作成しました",
+    generatingDescription: "AIが背景音楽を生成中...",
+    empty: {
+      title: "BGMがまだ作成されていません",
+      description: "「新規BGM作成」をクリックして、最初の背景音楽を生成してください",
+    },
+    create: {
+      title: "新規BGM作成",
+      description: "プロンプトを入力して背景音楽を生成します",
+      promptLabel: "音楽の説明",
+      promptPlaceholder: "生成したい背景音楽のスタイルや雰囲気を説明してください...",
+      durationLabel: "長さ",
+      selectDuration: "長さを選択",
+      seconds: "秒",
+    },
+    errors: {
+      generationFailed: "BGMの生成に失敗しました",
+      permissionDenied: "API権限エラー",
+      permissionDescription: "お使いのElevenLabs APIキーに「music_generation」の権限がありません。APIプランをアップグレードするか、音楽生成が有効な別のAPIキーを使用してください。",
+    },
   },
   nativeMenu: {
     fileMenu: "ファイル",

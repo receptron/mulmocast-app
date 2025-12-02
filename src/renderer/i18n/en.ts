@@ -267,6 +267,7 @@ const lang = {
   },
   menu: {
     top: "Dashboard",
+    bgm: "BGM",
     settings: "Settings",
     mypage: "MyPage",
     signin: "SignIn",
@@ -1373,6 +1374,31 @@ const lang = {
     detail: "A new version has been downloaded. Restart the application to apply the updates.",
     restartButtonText: "Restart",
     laterButtonText: "Later",
+  },
+  bgm: {
+    title: "BGM Library",
+    description: "Create and manage background music for your presentations",
+    createNew: "Create New BGM",
+    created: "BGM created successfully",
+    generatingDescription: "AI is generating your background music...",
+    empty: {
+      title: "No BGM Created Yet",
+      description: "Click 'Create New BGM' to generate your first background music",
+    },
+    create: {
+      title: "Create New BGM",
+      description: "Enter a prompt to generate background music",
+      promptLabel: "Music Description",
+      promptPlaceholder: "Describe the style and mood of the background music you want...",
+      durationLabel: "Duration",
+      selectDuration: "Select duration",
+      seconds: "s",
+    },
+    errors: {
+      generationFailed: "Failed to generate BGM",
+      permissionDenied: "API Permission Error",
+      permissionDescription: "Your ElevenLabs API key does not have the 'music_generation' permission. Please upgrade your API plan or use a different API key with music generation enabled.",
+    },
   },
   nativeMenu: {
     fileMenu: "File",
