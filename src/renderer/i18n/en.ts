@@ -587,6 +587,7 @@ const lang = {
   beat: {
     videoPreview: "Video Preview",
     imagePreview: "Image Preview",
+    preview: "Preview",
     // Beat speaker settings
     speaker: {
       label: "Select Voice",
@@ -709,6 +710,7 @@ const lang = {
       idField: "Beat ID",
       referenceField: "Beat Reference",
       placeholder: "Select beat to reference",
+      description: "The image/video automatically updates when the referenced beat changes.",
     },
     voice_over: {
       badge: "Voice Over",

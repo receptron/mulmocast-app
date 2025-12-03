@@ -212,6 +212,9 @@
                 </SelectItem>
               </SelectContent>
             </Select>
+            <p class="text-muted-foreground mt-2 text-sm">
+              {{ t("beat.beat.description") }}
+            </p>
           </template>
           <template v-else-if="beat.image.type === 'voice_over'">
             <Label class="mb-1 block">{{ t("beat.voice_over.label") }}</Label>

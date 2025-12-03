@@ -584,6 +584,7 @@ const lang = {
   beat: {
     videoPreview: "動画プレビュー",
     imagePreview: "画像プレビュー",
+    preview: "プレビュー",
     // Beat speaker settings
     speaker: {
       label: "登場人物の声",
@@ -708,6 +709,7 @@ const lang = {
       idField: "ビートID",
       referenceField: "ビート参照",
       placeholder: "参照するビートを選択",
+      description: "参照元のビートの画像/動画が変わると、自動的に更新されます",
     },
     voice_over: {
       badge: "ボイスオーバー",

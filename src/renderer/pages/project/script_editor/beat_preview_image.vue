@@ -43,7 +43,7 @@
           <template v-else>
             <FileImage :size="32" class="text-muted-foreground mx-auto mb-2" />
             <p class="text-muted-foreground text-sm">
-              {{ t("project.scriptEditor.reference.mode") }}
+              {{ t("beat.preview") }}
             </p>
           </template>
         </template>
