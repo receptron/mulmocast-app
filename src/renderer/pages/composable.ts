@@ -89,6 +89,7 @@ export const useAudioFiles = () => {
     },
   ) => {
     if (options?.mode === "uploaded" && options.uploadPath) {
+      console.log("uploaded");
       // Load uploaded audio file from path
       try {
         const audioData = (await window.electronAPI.mulmoHandler(
@@ -106,13 +107,17 @@ export const useAudioFiles = () => {
         console.error(`Failed to load uploaded audio for beat ${beatId}:`, error);
       }
     } else {
+      console.log("generate");
+      await new Promise(resolve => setTimeout(resolve, 100));
       // Load generated TTS audio file (default mode)
       // Use mulmoGeneratedAudioFile to explicitly get TTS file (ignoring beat.audio)
+      
       const res = (await window.electronAPI.mulmoHandler(
         "mulmoGeneratedAudioFile",
         projectId,
         index,
       )) as Uint8Array<ArrayBuffer>;
+      console.log(res);
       if (res) {
         if (!audioFiles.value[lang]) {
           audioFiles.value[lang] = {};

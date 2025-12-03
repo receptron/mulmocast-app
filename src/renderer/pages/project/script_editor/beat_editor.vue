@@ -67,7 +67,6 @@
         :model-value="audioSourceType"
         @update:model-value="handleAudioSourceChange"
         class="mb-2"
-        @keydown.stop
       >
         <div class="flex items-center space-x-2">
           <RadioGroupItem id="generate" value="generate" />
@@ -758,7 +757,6 @@ const generateAudio = async () => {
   if (hadUploadedAudio) {
     // Set UI state first to prevent watcher from triggering save
     uploadedAudioFilename.value = "";
-    audioSourceType.value = "generate";
     // Notify parent to clear preview immediately
     emit("audioRemoved", props.index, props.beat.id);
     // Then update data (will be saved with debounce, but backend now uses mulmoGeneratedAudioFile)
@@ -914,26 +912,6 @@ const reloadMovieBackupDialog = async () => {
 const handleMovieRestored = () => {
   emit("movieRestored");
 };
-
-// Watch for beat.audio changes to update UI state
-watch(
-  () => props.beat.audio,
-  (audio) => {
-    if (audio?.type === "audio" && audio.source?.kind === "path") {
-      audioSourceType.value = "upload";
-      // Extract filename from path (handles both ./upload_audio/beat_0_file.mp3 and ../../assets/audio/file.mp3)
-      const path = audio.source.path as string;
-      const filename = path.split("/").pop() || path;
-      // Remove beat index prefix if present (e.g., "beat_0_file.mp3" -> "file.mp3")
-      const cleanFilename = filename.replace(/^beat_\d+_/, "");
-      uploadedAudioFilename.value = cleanFilename;
-    } else if (uploadedAudioFilename.value === "") {
-      // Only change to generate mode if there's no uploaded file
-      audioSourceType.value = "generate";
-    }
-  },
-  { immediate: true, deep: true },
-);
 
 // Watch audioFile changes and force reload audio element
 watch(
