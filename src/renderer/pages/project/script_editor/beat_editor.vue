@@ -509,7 +509,7 @@ const referenceBeats = computed(() => {
       index,
       label: `BEAT ${index + 1}`,
     }))
-    .filter((_, index) => index !== props.index);
+    .filter((_, index) => props.mulmoScript.beats[index]?.image?.type !== "beat");
 });
 
 const referencedImageFile = computed(() => {
