@@ -705,7 +705,7 @@ const lang = {
     },
     beat: {
       badge: "Beat",
-      label: "Reference Beat",
+      label: "Reference Other Beat",
       idField: "Beat ID",
       referenceField: "Beat Reference",
       placeholder: "Select beat to reference",

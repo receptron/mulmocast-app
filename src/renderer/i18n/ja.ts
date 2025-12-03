@@ -704,7 +704,7 @@ const lang = {
     },
     beat: {
       badge: "Beat",
-      label: "ビート参照",
+      label: "他のビートを参照",
       idField: "ビートID",
       referenceField: "ビート参照",
       placeholder: "参照するビートを選択",
