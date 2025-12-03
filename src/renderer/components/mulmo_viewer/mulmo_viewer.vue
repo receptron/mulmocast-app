@@ -310,8 +310,10 @@ watch(
         if (index === -1 || index === undefined) {
           return;
         }
-        const beat = props.project?.script?.beats?.[index];
-        downloadAudioFile(props.projectId, currentLanguage.value, index, mulmoEvent.id, beat?.audio);
+        // Audio generation completed - always load generated TTS file
+        downloadAudioFile(props.projectId, currentLanguage.value, index, mulmoEvent.id, {
+          mode: "generated",
+        });
       }
       if (mulmoEvent.sessionType === "multiLingual") {
         emit("updateMultiLingual");

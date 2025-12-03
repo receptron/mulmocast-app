@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { bufferToUrl } from "@/lib/utils";
 
 type MulmoImageResponse = {
@@ -83,15 +83,18 @@ export const useAudioFiles = () => {
     lang: string,
     index: number,
     beatId: string,
-    beatAudio?: { type: string; source?: { kind: string; path: string } },
+    options?: {
+      mode: "generated" | "uploaded";
+      uploadPath?: string;
+    },
   ) => {
-    // If beat has uploaded audio file, load that instead of generated audio
-    if (beatAudio?.type === "audio" && beatAudio.source?.kind === "path") {
+    if (options?.mode === "uploaded" && options.uploadPath) {
+      // Load uploaded audio file from path
       try {
         const audioData = (await window.electronAPI.mulmoHandler(
           "mulmoBeatAudioGet",
           projectId,
-          beatAudio.source.path,
+          options.uploadPath,
         )) as ArrayBuffer;
         if (audioData) {
           if (!audioFiles.value[lang]) {
@@ -103,7 +106,7 @@ export const useAudioFiles = () => {
         console.error(`Failed to load uploaded audio for beat ${beatId}:`, error);
       }
     } else {
-      // Load generated audio file
+      // Load generated TTS audio file (default mode)
       const res = (await window.electronAPI.mulmoHandler(
         "mulmoAudioFile",
         projectId,

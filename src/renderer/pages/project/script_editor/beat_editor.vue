@@ -63,7 +63,12 @@
       />
 
       <!-- Audio Source Selection -->
-      <RadioGroup :model-value="audioSourceType" @update:model-value="handleAudioSourceChange" class="mb-2">
+      <RadioGroup
+        :model-value="audioSourceType"
+        @update:model-value="handleAudioSourceChange"
+        class="mb-2"
+        @keydown.stop
+      >
         <div class="flex items-center space-x-2">
           <RadioGroupItem id="generate" value="generate" />
           <Label for="generate" class="cursor-pointer font-normal">{{ t("beat.audio.generateFromText") }}</Label>
@@ -142,6 +147,7 @@
 
       <!-- Audio Player -->
       <audio
+        ref="audioPlayerRef"
         :src="audioFile"
         v-if="!!audioFile"
         controlslist="nodownload noplaybackrate noremoteplayback"
@@ -553,6 +559,7 @@ const audioSourceType = ref<"generate" | "upload">("generate");
 const isAudioUploading = ref(false);
 const uploadedAudioFilename = ref<string>("");
 const audioFileInput = ref<HTMLInputElement>();
+const audioPlayerRef = ref<HTMLAudioElement>();
 
 const showSpeakerSelector = () => {
   toggleSpeakerMode.value = true;
@@ -749,9 +756,16 @@ const generateAudio = async () => {
   // Clear uploaded audio file when generating from text
   const hadUploadedAudio = props.beat.audio?.type === "audio" && props.beat.audio.source?.kind === "path";
   if (hadUploadedAudio) {
-    update("audio", undefined);
+    // Set UI state first to prevent watcher from triggering save
     uploadedAudioFilename.value = "";
     audioSourceType.value = "generate";
+    // Notify parent to clear preview immediately
+    emit("audioRemoved", props.index, props.beat.id);
+    // Then update data
+    update("audio", undefined);
+    // IMPORTANT: Wait for save to complete before generating audio
+    // Otherwise backend will still see the old beat.audio value
+    await new Promise(resolve => setTimeout(resolve, 1100));
   }
 
   try {
@@ -922,6 +936,16 @@ watch(
     }
   },
   { immediate: true, deep: true },
+);
+
+// Watch audioFile changes and force reload audio element
+watch(
+  () => props.audioFile,
+  (newSrc, oldSrc) => {
+    if (newSrc && newSrc !== oldSrc && audioPlayerRef.value) {
+      audioPlayerRef.value.load();
+    }
+  },
 );
 
 // Watch for image generation completion and reload backup dialog

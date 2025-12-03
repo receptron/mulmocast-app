@@ -413,8 +413,6 @@ const handleUpdateMulmoScript = (script: MulmoScript) => {
 };
 // internal use
 const saveMulmoScript = async () => {
-  console.log("saved", mulmoScriptHistoryStore.currentMulmoScript);
-  // insertSpeakers(mulmoScriptHistoryStore.currentMulmoScript);
   await projectApi.saveProjectScript(projectId.value, mulmoScriptHistoryStore.currentMulmoScript);
   projectMetadata.value.updatedAt = dayjs().toISOString();
   await projectApi.saveProjectMetadata(projectId.value, projectMetadata.value);
@@ -446,9 +444,15 @@ const handleUpdateScriptEditorActiveTab = async (tab: ScriptEditorTab) => {
 };
 
 const handleAudioUploaded = async (index: number, beatId: string) => {
-  // Reload the uploaded audio file for preview
+  // Load uploaded audio file for preview
   const beat = mulmoScriptHistoryStore.currentMulmoScript?.beats?.[index];
-  await downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, beatId, beat?.audio);
+  const uploadPath = beat?.audio?.type === "audio" && beat.audio.source?.kind === "path" ? beat.audio.source.path : undefined;
+  if (uploadPath) {
+    await downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, beatId, {
+      mode: "uploaded",
+      uploadPath,
+    });
+  }
 };
 
 const handleAudioRemoved = (index: number, beatId: string) => {
@@ -460,8 +464,10 @@ const handleAudioRemoved = (index: number, beatId: string) => {
 };
 
 const handleAudioGenerated = async (index: number, beatId: string) => {
-  // Force load generated audio file (ignore beat.audio)
-  await downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, beatId, undefined);
+  // Force load generated TTS audio file
+  await downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, beatId, {
+    mode: "generated",
+  });
 };
 
 const handleUpdateMulmoViewerActiveTab = (tab: MulmoViewerTab) => {
@@ -579,8 +585,10 @@ watch(
           return;
         }
         if (mulmoEvent.sessionType === "audio") {
-          const beat = mulmoScriptHistoryStore.currentMulmoScript?.beats?.[index];
-          downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, mulmoEvent.id, beat?.audio);
+          // Audio generation completed - always load generated TTS file
+          downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, mulmoEvent.id, {
+            mode: "generated",
+          });
         }
         if (mulmoEvent.sessionType === "image") {
           downloadImageFile(projectId.value, index, mulmoEvent.id);
