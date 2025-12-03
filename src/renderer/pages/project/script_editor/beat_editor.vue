@@ -761,11 +761,8 @@ const generateAudio = async () => {
     audioSourceType.value = "generate";
     // Notify parent to clear preview immediately
     emit("audioRemoved", props.index, props.beat.id);
-    // Then update data
+    // Then update data (will be saved with debounce, but backend now uses mulmoGeneratedAudioFile)
     update("audio", undefined);
-    // IMPORTANT: Wait for save to complete before generating audio
-    // Otherwise backend will still see the old beat.audio value
-    await new Promise(resolve => setTimeout(resolve, 1100));
   }
 
   try {

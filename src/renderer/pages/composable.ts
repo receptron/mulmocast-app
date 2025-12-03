@@ -107,8 +107,9 @@ export const useAudioFiles = () => {
       }
     } else {
       // Load generated TTS audio file (default mode)
+      // Use mulmoGeneratedAudioFile to explicitly get TTS file (ignoring beat.audio)
       const res = (await window.electronAPI.mulmoHandler(
-        "mulmoAudioFile",
+        "mulmoGeneratedAudioFile",
         projectId,
         index,
       )) as Uint8Array<ArrayBuffer>;
