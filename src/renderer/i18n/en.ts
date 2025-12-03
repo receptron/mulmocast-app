@@ -711,6 +711,7 @@ const lang = {
       referenceField: "Beat Reference",
       placeholder: "Select beat to reference",
       description: "The image/video automatically updates when the referenced beat changes.",
+      invalidReference: "Error: The referenced beat has been deleted. Please select a different beat.",
     },
     voice_over: {
       badge: "Voice Over",
