@@ -587,6 +587,7 @@ const lang = {
   beat: {
     videoPreview: "Video Preview",
     imagePreview: "Image Preview",
+    preview: "Preview",
     // Beat speaker settings
     speaker: {
       label: "Select Voice",
@@ -705,11 +706,11 @@ const lang = {
     },
     beat: {
       badge: "Beat",
-      label: "Material",
+      label: "Reference Other Beat",
       idField: "Beat ID",
       referenceField: "Beat Reference",
       placeholder: "Select beat to reference",
-      placeholderUrl: "Enter image URL",
+      description: "The image/video automatically updates when the referenced beat changes.",
     },
     voice_over: {
       badge: "Voice Over",
@@ -734,9 +735,11 @@ const lang = {
     },
     imageReference: {
       badge: "Material",
+      label: "Material",
       keyField: "Material Key",
       placeholder: "Material key (a-z0-9)",
       imagePromptPlaceholder: "Enter a prompt to generate material.",
+      placeholderUrl: "Enter image URL",
     },
     image: {
       badge: "Image",

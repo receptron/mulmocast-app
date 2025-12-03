@@ -584,6 +584,7 @@ const lang = {
   beat: {
     videoPreview: "動画プレビュー",
     imagePreview: "画像プレビュー",
+    preview: "プレビュー",
     // Beat speaker settings
     speaker: {
       label: "登場人物の声",
@@ -704,11 +705,11 @@ const lang = {
     },
     beat: {
       badge: "Beat",
-      label: "ビート",
+      label: "他のビートを参照",
       idField: "ビートID",
       referenceField: "ビート参照",
       placeholder: "参照するビートを選択",
-      placeholderUrl: "画像URLを入力してください",
+      description: "参照元のビートの画像/動画が変わると、自動的に更新されます",
     },
     voice_over: {
       badge: "ボイスオーバー",
@@ -733,9 +734,11 @@ const lang = {
     },
     imageReference: {
       badge: "素材",
+      label: "素材",
       keyField: "素材キー",
       placeholder: "素材のキーを登録(英数字のみ)",
       imagePromptPlaceholder: "素材を生成するためのプロンプトを入力してください。",
+      placeholderUrl: "画像URLを入力してください",
     },
     image: {
       badge: "Image",
