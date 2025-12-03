@@ -705,11 +705,10 @@ const lang = {
     },
     beat: {
       badge: "Beat",
-      label: "Material",
+      label: "Reference Beat",
       idField: "Beat ID",
       referenceField: "Beat Reference",
       placeholder: "Select beat to reference",
-      placeholderUrl: "Enter image URL",
     },
     voice_over: {
       badge: "Voice Over",
@@ -734,9 +733,11 @@ const lang = {
     },
     imageReference: {
       badge: "Material",
+      label: "Material",
       keyField: "Material Key",
       placeholder: "Material key (a-z0-9)",
       imagePromptPlaceholder: "Enter a prompt to generate material.",
+      placeholderUrl: "Enter image URL",
     },
     image: {
       badge: "Image",
