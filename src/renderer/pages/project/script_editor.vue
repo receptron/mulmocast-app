@@ -351,7 +351,7 @@ import Charactor from "./script_editor/charactor.vue";
 import TextEditor from "./script_editor/text_editor.vue";
 
 import { MulmoError } from "../../../types";
-import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
+import { arrayPositionUp, arrayInsertAfter } from "@/lib/array";
 import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
 
 import { setRandomBeatId } from "@/lib/beat_util";
@@ -382,6 +382,7 @@ const emit = defineEmits([
   "generateImage",
   "update:scriptEditorActiveTab",
   "updateMultiLingual",
+  "deleteBeat",
 ]);
 
 const route = useRoute();
@@ -527,14 +528,7 @@ const generateImage = (index: number, target: string) => {
 };
 
 const deleteBeat = (index: number) => {
-  if (index >= 0 && index < props.mulmoScript.beats.length) {
-    const newBeats = arrayRemoveAt(props.mulmoScript.beats, index);
-    emit("updateMulmoScriptAndPushToHistory", {
-      ...props.mulmoScript,
-      beats: newBeats,
-    });
-    notifySuccess(t("project.scriptEditor.beatDeleted"));
-  }
+  emit("deleteBeat", index);
 };
 
 const copyBeat = (index: number) => {
