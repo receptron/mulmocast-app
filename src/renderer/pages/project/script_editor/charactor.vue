@@ -238,7 +238,9 @@ const submitUrlImage = async (imageKey: string) => {
         emit("saveMulmo"); // TODO: not emited.
         emit("formatAndPushHistoryMulmoScript");
         mediaUrl.value = "";
-        await loadReference();
+        await nextTick();
+        const imageRes = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
+        imageRefs.value[imageKey] = imageRes ? bufferToUrl(imageRes, "image/png") : null;
         notifySuccess(t("notify.imageReference.successMessage"));
       } else {
         console.log("error");
@@ -279,11 +281,13 @@ const selectScriptImage = async (media: ProjectScriptMedia) => {
     ? media.projectRelativePath
     : `./${media.projectRelativePath.replace(/^\/+/u, "")}`;
 
-  emit("updateImagePath", activeImageKey.value, projectRelativePath);
+  const imageKey = activeImageKey.value;
+  emit("updateImagePath", imageKey, projectRelativePath);
   emit("saveMulmo");
   emit("formatAndPushHistoryMulmoScript");
   await nextTick();
-  await loadReference();
+  const imageRes = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
+  imageRefs.value[imageKey] = imageRes ? bufferToUrl(imageRes, "image/png") : null;
   notifySuccess(t("notify.imageReference.successMessage"));
   activeImageKey.value = null;
 };
