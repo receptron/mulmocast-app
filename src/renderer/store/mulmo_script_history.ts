@@ -92,8 +92,14 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
     return null;
   });
   const isValidScript = computed(() => {
-    return zodError.value.success;
+    const beatIds = new Set((currentMulmoScript.value?.beats ?? []).map((beat) => beat.id));
+    const referenceBeats = (currentMulmoScript.value?.beats ?? [])
+      .map((beat) => (beat.image?.type === "beat" ? beat.image.id : null))
+      .filter((id): id is string => id !== null);
+    const allIncluded = referenceBeats.every((id) => beatIds.has(id));
+    return zodError.value.success && allIncluded;
   });
+
   const hasBeatSchemaError = computed(() => {
     if (!zodError.value.success) {
       return zodError.value.error.issues.some((error: ZodIssue) => {
