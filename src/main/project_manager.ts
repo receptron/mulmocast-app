@@ -258,3 +258,55 @@ export const deleteProject = async (id: string): Promise<boolean> => {
     throw error;
   }
 };
+
+// Copy media files (images, audio, video) from one beat to another
+export const copyBeatMediaFiles = async (projectId: string, sourceBeatId: string, targetBeatId: string): Promise<boolean> => {
+  try {
+    const projectPath = getProjectPath(projectId);
+    const outputPath = path.join(projectPath, "output");
+
+    // Directories to check for media files
+    const mediaDirectories = [
+      path.join(outputPath, "images", "script"),
+      path.join(outputPath, "audio"),
+      path.join(outputPath, "movie"),
+    ];
+
+    let filesCopied = false;
+
+    for (const dir of mediaDirectories) {
+      try {
+        // Check if directory exists
+        await fs.access(dir);
+
+        // Get all files in the directory
+        const files = await fs.readdir(dir);
+
+        // Find files that match the source beat ID
+        const beatFiles = files.filter(file => file.startsWith(sourceBeatId));
+
+        for (const file of beatFiles) {
+          const sourcePath = path.join(dir, file);
+          // Replace the source beat ID with target beat ID in filename
+          const targetFileName = file.replace(sourceBeatId, targetBeatId);
+          const targetPath = path.join(dir, targetFileName);
+
+          // Copy the file
+          await fs.copyFile(sourcePath, targetPath);
+          filesCopied = true;
+          GraphAILogger.info(`Copied media file: ${file} -> ${targetFileName}`);
+        }
+      } catch (error) {
+        // Directory might not exist, which is fine - just continue
+        if ("code" in error && error.code !== "ENOENT") {
+          GraphAILogger.warn(`Error copying from ${dir}:`, error);
+        }
+      }
+    }
+
+    return filesCopied;
+  } catch (error) {
+    GraphAILogger.error("Failed to copy beat media files:", error);
+    return false;
+  }
+};

@@ -115,7 +115,6 @@
                   class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
                 />
                 <Copy
-                  v-if="false"
                   @click="copyBeat(index)"
                   class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
                   :data-testid="`script-editor-text-tab-copy-beat-${index}`"
@@ -246,7 +245,6 @@
                   class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
                 />
                 <Copy
-                  v-if="false"
                   @click="copyBeat(index)"
                   class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
                   :data-testid="`script-editor-media-tab-copy-beat-${index}`"
@@ -531,14 +529,30 @@ const deleteBeat = (index: number) => {
   emit("deleteBeat", index);
 };
 
-const copyBeat = (index: number) => {
+const copyBeat = async (index: number) => {
   if (index >= 0 && index < props.mulmoScript.beats.length) {
-    const { id: __, ...beatWithoutId } = props.mulmoScript.beats[index];
-    const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, setRandomBeatId(beatWithoutId));
+    const sourceBeat = props.mulmoScript.beats[index];
+    const sourceBeatId = sourceBeat.id;
+
+    const { id: __, ...beatWithoutId } = sourceBeat;
+    const newBeat = setRandomBeatId(beatWithoutId);
+    const targetBeatId = newBeat.id;
+
+    const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, newBeat);
     emit("updateMulmoScriptAndPushToHistory", {
       ...props.mulmoScript,
       beats: newBeats,
     });
+
+    // Copy media files (images, audio, video) associated with the beat
+    if (sourceBeatId && targetBeatId) {
+      try {
+        await projectApi.copyBeatMediaFiles(projectId.value, sourceBeatId, targetBeatId);
+      } catch (error) {
+        console.error("Failed to copy beat media files:", error);
+      }
+    }
+
     notifySuccess(t("project.scriptEditor.beatCopied"));
   }
 };
