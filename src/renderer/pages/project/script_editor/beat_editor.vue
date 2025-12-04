@@ -203,7 +203,7 @@
           <template v-else-if="beat.image.type === 'beat'">
             <Label class="mb-1 block">{{ t("beat.beat.label") }}</Label>
             <Select :model-value="beat.image.id" @update:model-value="(value) => update('image.id', value)">
-              <SelectTrigger class="h-8">
+              <SelectTrigger class="h-8" :class="!isReferencedBeatValid ? 'border-destructive' : ''">
                 <SelectValue :placeholder="t('beat.beat.placeholder')" />
               </SelectTrigger>
               <SelectContent>
@@ -212,6 +212,13 @@
                 </SelectItem>
               </SelectContent>
             </Select>
+            <p v-if="!isReferencedBeatValid" class="text-destructive mt-1 text-sm">
+              {{ t("beat.beat.invalidReference") }}
+            </p>
+            <div v-else class="text-muted-foreground mt-2 text-sm">
+              <p>{{ t("beat.beat.cannotReference", { beatLabel: t("beat.beat.label") }) }}</p>
+              <p class="mt-1">{{ t("beat.beat.description") }}</p>
+            </div>
           </template>
           <template v-else-if="beat.image.type === 'voice_over'">
             <Label class="mb-1 block">{{ t("beat.voice_over.label") }}</Label>
@@ -515,7 +522,15 @@ const referenceBeats = computed(() => {
       index,
       label: `BEAT ${index + 1}`,
     }))
-    .filter((_, index) => index !== props.index);
+    .filter((_, index) => props.mulmoScript.beats[index]?.image?.type !== "beat");
+});
+
+const isReferencedBeatValid = computed(() => {
+  if (props.beat.image?.type === "beat" && props.beat.image.id) {
+    const beatIds = props.mulmoScript.beats.map((b) => b.id);
+    return beatIds.includes(props.beat.image.id);
+  }
+  return true;
 });
 
 const referencedImageFile = computed(() => {

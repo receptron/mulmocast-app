@@ -2003,10 +2003,10 @@
   dependencies:
     cross-spawn "^7.0.1"
 
-"@modelcontextprotocol/sdk@^1.17.5":
-  version "1.21.1"
-  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.21.1.tgz#8fba02e7581d49cc9b047aab0cfd334043321fe5"
-  integrity sha512-UyLFcJLDvUuZbGnaQqXFT32CpPpGj7VS19roLut6gkQVhb439xUzYWbsUvdI3ZPL+2hnFosuugtYWE0Mcs1rmQ==
+"@modelcontextprotocol/sdk@^1.17.5", "@modelcontextprotocol/sdk@^1.22.0":
+  version "1.24.1"
+  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.24.1.tgz#4cc7366b8a9f975e653f28b6ef5bfde541a50226"
+  integrity sha512-YTg4v6bKSst8EJM8NXHC3nGm8kgHD08IbIBbognUeLAgGLVgLpYrgQswzLQd4OyTL4l614ejhqsDrV1//t02Qw==
   dependencies:
     ajv "^8.17.1"
     ajv-formats "^3.0.1"
@@ -2017,29 +2017,11 @@
     eventsource-parser "^3.0.0"
     express "^5.0.1"
     express-rate-limit "^7.5.0"
+    jose "^6.1.1"
     pkce-challenge "^5.0.0"
     raw-body "^3.0.0"
-    zod "^3.23.8"
-    zod-to-json-schema "^3.24.1"
-
-"@modelcontextprotocol/sdk@^1.22.0":
-  version "1.22.0"
-  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.22.0.tgz#b982143dfd36ef096b311d8ffadb2f91aabbbb1d"
-  integrity sha512-VUpl106XVTCpDmTBil2ehgJZjhyLY2QZikzF8NvTXtLRF1CvO5iEE2UNZdVIUer35vFOwMKYeUGbjJtvPWan3g==
-  dependencies:
-    ajv "^8.17.1"
-    ajv-formats "^3.0.1"
-    content-type "^1.0.5"
-    cors "^2.8.5"
-    cross-spawn "^7.0.5"
-    eventsource "^3.0.2"
-    eventsource-parser "^3.0.0"
-    express "^5.0.1"
-    express-rate-limit "^7.5.0"
-    pkce-challenge "^5.0.0"
-    raw-body "^3.0.0"
-    zod "^3.23.8"
-    zod-to-json-schema "^3.24.1"
+    zod "^3.25 || ^4.0"
+    zod-to-json-schema "^3.25.0"
 
 "@monaco-editor/loader@^1.7.0":
   version "1.7.0"
@@ -7260,6 +7242,11 @@ jiti@^2.6.1:
   resolved "https://registry.yarnpkg.com/jiti/-/jiti-2.6.1.tgz#178ef2fc9a1a594248c20627cd820187a4d78d92"
   integrity sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==
 
+jose@^6.1.1:
+  version "6.1.3"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-6.1.3.tgz#8453d7be88af7bb7d64a0481d6a35a0145ba3ea5"
+  integrity sha512-0TpaTfihd4QMNwrz/ob2Bp7X04yuxJkjRGi4aKmOqwhov54i6u79oCv7T+C7lo70MKH6BesI3vscD1yb/yzKXQ==
+
 jpeg-exif@^1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/jpeg-exif/-/jpeg-exif-1.1.4.tgz#781a65b6cd74f62cb1c493511020f8d3577a1c2b"
@@ -10848,17 +10835,22 @@ zip-stream@^6.0.1:
     compress-commons "^6.0.2"
     readable-stream "^4.0.0"
 
-zod-to-json-schema@^3.20.0, zod-to-json-schema@^3.24.1:
+zod-to-json-schema@^3.20.0:
   version "3.24.6"
   resolved "https://registry.yarnpkg.com/zod-to-json-schema/-/zod-to-json-schema-3.24.6.tgz#5920f020c4d2647edfbb954fa036082b92c9e12d"
   integrity sha512-h/z3PKvcTcTetyjl1fkj79MHNEjm+HpD6NXheWjzOekY7kV+lwDYnHw+ivHkijnCSMz1yJaWBD9vu/Fcmk+vEg==
 
-zod@^3.22.0, zod@^3.23.8, zod@^3.24.1:
+zod-to-json-schema@^3.25.0:
+  version "3.25.0"
+  resolved "https://registry.yarnpkg.com/zod-to-json-schema/-/zod-to-json-schema-3.25.0.tgz#df504c957c4fb0feff467c74d03e6aab0b013e1c"
+  integrity sha512-HvWtU2UG41LALjajJrML6uQejQhNJx+JBO9IflpSja4R03iNWfKXrj6W2h7ljuLyc1nKS+9yDyL/9tD1U/yBnQ==
+
+zod@^3.22.0, zod@^3.24.1:
   version "3.25.76"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.25.76.tgz#26841c3f6fd22a6a2760e7ccb719179768471e34"
   integrity sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==
 
-zod@^4.1.13:
+"zod@^3.25 || ^4.0", zod@^4.1.13:
   version "4.1.13"
   resolved "https://registry.yarnpkg.com/zod/-/zod-4.1.13.tgz#93699a8afe937ba96badbb0ce8be6033c0a4b6b1"
   integrity sha512-AvvthqfqrAhNH9dnfmrfKzX5upOdjUVJYFqNSlkmGf64gRaTzlPwz99IHYnVs28qYAybvAlBV+H7pn0saFY4Ig==

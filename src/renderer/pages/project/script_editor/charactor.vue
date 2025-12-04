@@ -17,7 +17,7 @@
             />
           </template>
           <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'path'">
-            <Label class="mb-1 block">{{ t("beat.beat.label") }}</Label>
+            <Label class="mb-1 block">{{ t("beat.imageReference.label") }}</Label>
 
             <div
               @dragover.prevent
@@ -35,7 +35,7 @@
             <div class="text-muted-foreground mt-2 ml-2 text-sm">{{ t("ui.common.or") }}</div>
             <div class="mt-2 flex flex-wrap gap-2">
               <Input
-                :placeholder="t('beat.beat.placeholderUrl')"
+                :placeholder="t('beat.imageReference.placeholderUrl')"
                 v-model="mediaUrl"
                 :invalid="!validateURL"
                 class="min-w-0 flex-1"

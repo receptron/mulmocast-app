@@ -594,6 +594,7 @@ const lang = {
   beat: {
     videoPreview: "Video Preview",
     imagePreview: "Image Preview",
+    preview: "Preview",
     // Beat speaker settings
     speaker: {
       label: "Select Voice",
@@ -712,11 +713,13 @@ const lang = {
     },
     beat: {
       badge: "Beat",
-      label: "Material",
+      label: "Reference Other Beat",
       idField: "Beat ID",
       referenceField: "Beat Reference",
       placeholder: "Select beat to reference",
-      placeholderUrl: "Enter image URL",
+      cannotReference: 'Beats with the "{beatLabel}" type cannot be referenced.',
+      description: "The image/video automatically updates when the referenced beat changes.",
+      invalidReference: "Error: The referenced beat has been deleted. Please select a different beat.",
     },
     voice_over: {
       badge: "Voice Over",
@@ -761,9 +764,11 @@ const lang = {
     },
     imageReference: {
       badge: "Material",
+      label: "Material",
       keyField: "Material Key",
       placeholder: "Material key (a-z0-9)",
       imagePromptPlaceholder: "Enter a prompt to generate material.",
+      placeholderUrl: "Enter image URL",
     },
     image: {
       badge: "Image",
