@@ -159,7 +159,7 @@ import MediaLibraryDialog, {
   type ProjectScriptMedia,
 } from "./beat_editors/media_library_dialog.vue";
 
-import { notifyProgress, notifyError } from "@/lib/notification";
+import { notifySuccess, notifyProgress, notifyError } from "@/lib/notification";
 import { useApiErrorNotify } from "@/composables/notify";
 import { useMulmoEventStore } from "../../../store";
 
@@ -194,7 +194,7 @@ const activeImageKey = ref<string | null>(null);
 const loadReference = async () => {
   imageRefs.value = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFiles", props.projectId);
   Object.keys(imageRefs.value).forEach((key) => {
-    imageRefs.value[key] = bufferToUrl(imageRefs.value[key], "image/png");
+    imageRefs.value[key] = bufferToUrl(imageRefs.value[key]);
   });
 };
 loadReference();
@@ -223,6 +223,12 @@ const update = (target: string, imageKey: string, prompt: string) => {
 // image fetch
 const { imageFetching, mediaUrl, validateURL, fetchEnable } = useMediaUrl();
 
+const loadImageAndSuccessMessage = async (imageKey: string) => {
+  const res = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
+  imageRefs.value[imageKey] = res ? bufferToUrl(res) : null;
+  notifySuccess(t("notify.imageReference.successMessage"));
+};
+
 const submitUrlImage = async (imageKey: string) => {
   try {
     imageFetching.value = true;
@@ -238,7 +244,10 @@ const submitUrlImage = async (imageKey: string) => {
         emit("saveMulmo"); // TODO: not emited.
         emit("formatAndPushHistoryMulmoScript");
         mediaUrl.value = "";
-        loadReference();
+        await nextTick();
+
+        // await loadReference();
+        await loadImageAndSuccessMessage(imageKey);
       } else {
         console.log("error");
         notifyError(t("notify.error.media.unsupportedMovie"));
@@ -282,7 +291,9 @@ const selectScriptImage = async (media: ProjectScriptMedia) => {
   emit("saveMulmo");
   emit("formatAndPushHistoryMulmoScript");
   await nextTick();
-  await loadReference();
+  await loadImageAndSuccessMessage(activeImageKey.value);
+  // await loadReference();
+  // notifySuccess(t("notify.imageReference.successMessage"));
   activeImageKey.value = null;
 };
 
@@ -314,8 +325,10 @@ const processReferenceImage = async (fileData: BinaryFileData, imageKey: string)
   emit("updateImagePath", imageKey, "./" + path);
   // Workaround: wait for the script change
   await nextTick();
+
   const res = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
-  imageRefs.value[imageKey] = res ? bufferToUrl(res, "image/png") : null;
+  imageRefs.value[imageKey] = res ? bufferToUrl(res) : null;
+  notifySuccess(t("notify.imageReference.successMessage"));
 };
 
 const handleDrop = async (eventOrFileData: DragEvent | BinaryFileData, imageKey: string) => {
@@ -389,7 +402,7 @@ const generateReferenceImage = async (imageKey: string, key: number) => {
     );
 
     const res = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
-    imageRefs.value[imageKey] = res ? bufferToUrl(res, "image/png") : null;
+    imageRefs.value[imageKey] = res ? bufferToUrl(res) : null;
   } catch (error) {
     console.log(error);
   }

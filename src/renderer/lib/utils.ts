@@ -40,8 +40,23 @@ export const mediaUri = (file: ArrayBuffer | string | null): string => {
   return URL.createObjectURL(new Blob([file]));
 };
 
-export const bufferToUrl = (buffer: Uint8Array<ArrayBuffer>, mimeType: string) => {
-  const blob = new Blob([buffer], { type: mimeType });
+export const bufferToUrl = (buffer: Uint8Array<ArrayBuffer>, mimeType?: string) => {
+  console.log(mimeType ?? guessMimeType(buffer));
+  const blob = new Blob([buffer], { type: mimeType ?? guessMimeType(buffer) });
   const url = URL.createObjectURL(blob);
   return url;
 };
+
+export function guessMimeType(buffer: Uint8Array): string | undefined {
+  if (buffer.length < 4) return;
+
+  const head = new Uint8Array(buffer.slice(0, 4));
+  const hex = [...head].map((b) => b.toString(16).padStart(2, "0")).join("");
+  console.log(hex);
+  if (hex.startsWith("89504e47")) return "image/png";
+  if (hex.startsWith("ffd8ff")) return "image/jpeg";
+  if (hex.startsWith("494433")) return "audio/mpeg"; // ID3
+  if (hex.startsWith("52494646")) return "audio/wav"; // RIFF (WAV/AVI/etc.)
+
+  return undefined;
+}
