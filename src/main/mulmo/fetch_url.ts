@@ -32,7 +32,7 @@ const isVideoExtension = (ext: string): ext is VideoExtension => {
 };
 
 const guessTypeByExt = (ext: string): "image" | "movie" | undefined => {
-  const lowered = ext.toLowerCase();
+  const lowered = ext.toLowerCase().replace(/^\./, "");
   if (isImageExtension(lowered)) {
     return "image";
   }
