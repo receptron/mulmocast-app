@@ -381,6 +381,7 @@ const emit = defineEmits([
   "update:scriptEditorActiveTab",
   "updateMultiLingual",
   "deleteBeat",
+  "refreshBeatMedia",
 ]);
 
 const route = useRoute();
@@ -548,6 +549,8 @@ const copyBeat = async (index: number) => {
     if (sourceBeatId && targetBeatId) {
       try {
         await projectApi.copyBeatMediaFiles(projectId.value, sourceBeatId, targetBeatId);
+        // Refresh media files to show the copied beat's media immediately
+        emit("refreshBeatMedia", targetBeatId, index + 1);
       } catch (error) {
         console.error("Failed to copy beat media files:", error);
       }
