@@ -710,6 +710,7 @@ const lang = {
       idField: "Beat ID",
       referenceField: "Beat Reference",
       placeholder: "Select beat to reference",
+      cannotReference: 'Beats with the "{beatLabel}" type cannot be referenced.',
       description: "The image/video automatically updates when the referenced beat changes.",
       invalidReference: "Error: The referenced beat has been deleted. Please select a different beat.",
     },
