@@ -291,14 +291,8 @@ export const copyBeatMediaFiles = async (
 
         for (const file of beatFiles) {
           const sourcePath = path.join(dir, file);
-
-          // Extract the file extension
-          const ext = path.extname(file);
-
-          // Create target filename with only the hash (beat ID), without date suffix
-          // Original might be: {beatId}-{date}.ext or {beatId}.ext
-          // Target should be: {targetBeatId}.ext
-          const targetFileName = `${targetBeatId}${ext}`;
+          // Replace the source beat ID with target beat ID in filename
+          const targetFileName = file.replace(sourceBeatId, targetBeatId);
           const targetPath = path.join(dir, targetFileName);
 
           // Copy the file
