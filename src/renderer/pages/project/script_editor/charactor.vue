@@ -159,7 +159,7 @@ import MediaLibraryDialog, {
   type ProjectScriptMedia,
 } from "./beat_editors/media_library_dialog.vue";
 
-import { notifyProgress, notifyError } from "@/lib/notification";
+import { notifyProgress, notifyError, notifySuccess } from "@/lib/notification";
 import { useApiErrorNotify } from "@/composables/notify";
 import { useMulmoEventStore } from "../../../store";
 
@@ -238,7 +238,8 @@ const submitUrlImage = async (imageKey: string) => {
         emit("saveMulmo"); // TODO: not emited.
         emit("formatAndPushHistoryMulmoScript");
         mediaUrl.value = "";
-        loadReference();
+        await loadReference();
+        notifySuccess(t("notify.imageReference.successMessage"));
       } else {
         console.log("error");
         notifyError(t("notify.error.media.unsupportedMovie"));
@@ -283,6 +284,7 @@ const selectScriptImage = async (media: ProjectScriptMedia) => {
   emit("formatAndPushHistoryMulmoScript");
   await nextTick();
   await loadReference();
+  notifySuccess(t("notify.imageReference.successMessage"));
   activeImageKey.value = null;
 };
 
@@ -316,6 +318,7 @@ const processReferenceImage = async (fileData: BinaryFileData, imageKey: string)
   await nextTick();
   const res = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
   imageRefs.value[imageKey] = res ? bufferToUrl(res, "image/png") : null;
+  notifySuccess(t("notify.imageReference.successMessage"));
 };
 
 const handleDrop = async (eventOrFileData: DragEvent | BinaryFileData, imageKey: string) => {
