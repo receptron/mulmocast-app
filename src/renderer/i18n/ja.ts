@@ -709,6 +709,7 @@ const lang = {
       idField: "ビートID",
       referenceField: "ビート参照",
       placeholder: "参照するビートを選択",
+      cannotReference: "「{beatLabel}」のビートは参照できません。",
       description: "参照元のビートの画像/動画が変わると、自動的に更新されます",
       invalidReference: "エラー: 参照先のビートが削除されています。別のビートを選択してください。",
     },

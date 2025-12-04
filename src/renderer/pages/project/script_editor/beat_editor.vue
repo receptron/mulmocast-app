@@ -215,9 +215,10 @@
             <p v-if="!isReferencedBeatValid" class="text-destructive mt-1 text-sm">
               {{ t("beat.beat.invalidReference") }}
             </p>
-            <p v-else class="text-muted-foreground mt-2 text-sm">
-              {{ t("beat.beat.description") }}
-            </p>
+            <div v-else class="text-muted-foreground mt-2 text-sm">
+              <p>{{ t("beat.beat.cannotReference", { beatLabel: t("beat.beat.label") }) }}</p>
+              <p class="mt-1">{{ t("beat.beat.description") }}</p>
+            </div>
           </template>
           <template v-else-if="beat.image.type === 'voice_over'">
             <Label class="mb-1 block">{{ t("beat.voice_over.label") }}</Label>
