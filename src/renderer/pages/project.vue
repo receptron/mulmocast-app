@@ -138,6 +138,7 @@
                     @updateMultiLingual="updateMultiLingual"
                     :mulmoMultiLinguals="mulmoMultiLinguals"
                     @deleteBeat="deleteBeat"
+                    @refreshBeatMedia="refreshBeatMedia"
                   />
                 </CardContent>
               </Card>
@@ -439,6 +440,14 @@ const deleteBeat = (index: number) => {
     });
 
     notifySuccess(t("project.scriptEditor.beatDeleted"));
+  }
+};
+
+// Refresh media files for a specific beat (used after copying)
+const refreshBeatMedia = async (beatId: string, index: number) => {
+  if (beatId) {
+    await downloadImageFile(projectId.value, index, beatId);
+    await downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, beatId);
   }
 };
 

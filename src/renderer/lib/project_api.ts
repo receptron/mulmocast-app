@@ -27,6 +27,10 @@ export const projectApi = {
     return await window.electronAPI.project.copy(id);
   },
 
+  async copyBeatMediaFiles(projectId: string, sourceBeatId: string, targetBeatId: string): Promise<boolean> {
+    return await window.electronAPI.project.copyBeatMediaFiles(projectId, sourceBeatId, targetBeatId);
+  },
+
   async saveProjectMetadata(id: string, data: unknown): Promise<boolean> {
     return await window.electronAPI.project.saveProjectMetadata(id, JSON.parse(JSON.stringify(data)));
   },
