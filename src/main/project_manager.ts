@@ -260,7 +260,11 @@ export const deleteProject = async (id: string): Promise<boolean> => {
 };
 
 // Copy media files (images, audio, video) from one beat to another
-export const copyBeatMediaFiles = async (projectId: string, sourceBeatId: string, targetBeatId: string): Promise<boolean> => {
+export const copyBeatMediaFiles = async (
+  projectId: string,
+  sourceBeatId: string,
+  targetBeatId: string,
+): Promise<boolean> => {
   try {
     const projectPath = getProjectPath(projectId);
     const outputPath = path.join(projectPath, "output");
@@ -283,7 +287,7 @@ export const copyBeatMediaFiles = async (projectId: string, sourceBeatId: string
         const files = await fs.readdir(dir);
 
         // Find files that match the source beat ID
-        const beatFiles = files.filter(file => file.startsWith(sourceBeatId));
+        const beatFiles = files.filter((file) => file.startsWith(sourceBeatId));
 
         for (const file of beatFiles) {
           const sourcePath = path.join(dir, file);
