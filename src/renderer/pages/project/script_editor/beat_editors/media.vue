@@ -67,6 +67,7 @@ import MediaLibraryDialog, {
   type MediaLibraryDialogExposed,
   type ProjectScriptMedia,
 } from "./media_library_dialog.vue";
+import { MEDIA_FILE_EXTENSIONS } from "../../../../../shared/constants";
 
 import { sleep } from "graphai";
 import { useI18n } from "vue-i18n";
@@ -150,10 +151,10 @@ const processMediaFile = async (fileData: BinaryFileData) => {
   const fileType = mimeType || fileExtension;
 
   const imageType = (() => {
-    if (["jpg", "jpeg", "png"].includes(fileType)) {
+    if (MEDIA_FILE_EXTENSIONS.image.includes(fileType)) {
       return "image";
     }
-    if (["mp4", "quicktime", "webm", "ogg", "mpeg", "mp2t", "mov", "mpg"].includes(fileType)) {
+    if (MEDIA_FILE_EXTENSIONS.video.includes(fileType)) {
       return "movie";
     }
     return undefined;
