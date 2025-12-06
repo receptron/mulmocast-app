@@ -82,7 +82,6 @@ export const useAudioFiles = () => {
       }
       return tmp;
     }, {});
-    // console.log(audioFiles.value);
   };
 
   const downloadAudioFile = async (
@@ -124,7 +123,6 @@ export const useAudioFiles = () => {
         projectId,
         index,
       )) as Uint8Array<ArrayBuffer>;
-      console.log(res);
       if (res) {
         if (!audioFiles.value[lang]) {
           audioFiles.value[lang] = {};
