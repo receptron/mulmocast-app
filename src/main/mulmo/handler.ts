@@ -41,12 +41,17 @@ import {
   mulmoReferenceImagesFile,
   mulmoMultiLinguals,
   mulmoBGM,
+  mulmoImageBackupList,
+  mulmoImageRestoreBackup,
+  mulmoMovieBackupList,
+  mulmoMovieRestoreBackup,
 } from "./handler_contents";
 import { mulmoImageFetchURL, mulmoReferenceImageFetchURL } from "./handler_image_fetch";
 import { mulmoReferenceImageUpload, mulmoImageUpload } from "./handler_image_upload";
 import { mulmoAudioBgmUpload, mulmoAudioBgmGet } from "./handler_audio_upload";
 import { graphaiPuppeteerAgent } from "./handler_graphai";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
+import { bgmList, bgmAudioFile, bgmGenerate, bgmUpdateTitle, bgmDelete } from "./handler_bgm";
 import type { ChatMessage } from "../../types";
 
 const isDev = !app.isPackaged;
@@ -140,6 +145,7 @@ const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: M
 export const mulmoHandler = async (method: string, webContents: WebContents, ...args: unknown[]) => {
   GraphAILogger.log(`handler ${method} run`);
   try {
+    // eslint-disable-next-line sonarjs/max-switch-cases
     switch (method) {
       case "mulmoActionRunner":
         return await mulmoActionRunner(
@@ -205,10 +211,28 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return mulmoMultiLinguals(args[0] as string);
       case "mulmoBGM":
         return await mulmoBGM(args[0] as string);
+      case "mulmoImageBackupList":
+        return await mulmoImageBackupList(args[0] as string, args[1] as string);
+      case "mulmoImageRestoreBackup":
+        return await mulmoImageRestoreBackup(args[0] as string, args[1] as string, args[2] as string);
+      case "mulmoMovieBackupList":
+        return await mulmoMovieBackupList(args[0] as string, args[1] as string);
+      case "mulmoMovieRestoreBackup":
+        return await mulmoMovieRestoreBackup(args[0] as string, args[1] as string, args[2] as string);
       case "mulmoUpdateMultiLingual":
         return await mulmoUpdateMultiLingual(args[0] as string, args[1] as number, args[2] as MultiLingualTexts);
       case "graphaiPuppeteerAgent":
         return await graphaiPuppeteerAgent(args[0] as { url: string });
+      case "bgmList":
+        return await bgmList();
+      case "bgmAudioFile":
+        return await bgmAudioFile(args[0] as string);
+      case "bgmGenerate":
+        return await bgmGenerate(args[0] as string, args[1] as string, args[2] as string);
+      case "bgmUpdateTitle":
+        return await bgmUpdateTitle(args[0] as string, args[1] as string);
+      case "bgmDelete":
+        return await bgmDelete(args[0] as string);
       default:
         throw new Error(`Unknown method: ${method}`);
     }

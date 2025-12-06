@@ -76,6 +76,12 @@
             class="cursor-pointer transition-opacity hover:opacity-80"
             @click="openModal('image', imageFile)"
           />
+          <!-- Image backup button -->
+          <div v-if="beat?.imagePrompt !== undefined" class="mt-2">
+            <Button variant="outline" size="sm" @click="openImageBackup" type="button">
+              {{ t("beat.imageBackup.openButton") }}
+            </Button>
+          </div>
         </template>
         <template v-else>
           <Video v-if="beat?.image?.type === 'movie'" :size="32" class="text-muted-foreground mx-auto mb-2" />
@@ -86,18 +92,29 @@
         </template>
       </div>
     </div>
+    <!-- Image backup dialog -->
+    <MediaBackupDialog
+      v-if="beat?.id"
+      ref="imageBackupDialogRef"
+      :project-id="projectId"
+      :beat-id="beat.id"
+      media-type="image"
+      @restored="handleImageRestored"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { FileImage, Video, Loader2, Sparkles } from "lucide-vue-next";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import type { MulmoBeat } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
 
 import { Button } from "@/components/ui/button";
 import { mediaUri } from "@/lib/utils";
 import { isLocalSourceMediaBeat } from "@/lib/beat_util";
+import MediaBackupDialog from "./beat_editors/media_backup_dialog.vue";
 
 type ImageFile = ArrayBuffer | string | null;
 
@@ -115,9 +132,12 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["openModal", "generateImage"]);
+const emit = defineEmits(["openModal", "generateImage", "imageRestored"]);
 
 const { t } = useI18n();
+const route = useRoute();
+const projectId = computed(() => route.params.id as string);
+const imageBackupDialogRef = ref<{ open: () => void; reload: () => void } | null>(null);
 
 // Computed properties for button visibility
 const shouldShowGenerateButton = computed(() => {
@@ -146,5 +166,25 @@ const imageGenerateButtonTitle = computed(() => {
     : props.isImageGenerating || props.isHtmlGenerating
       ? "generating"
       : "generateImage";
+});
+
+const openImageBackup = async () => {
+  if (imageBackupDialogRef.value) {
+    await imageBackupDialogRef.value.open();
+  }
+};
+
+const handleImageRestored = () => {
+  emit("imageRestored");
+};
+
+const reloadBackupDialog = async () => {
+  if (imageBackupDialogRef.value) {
+    await imageBackupDialogRef.value.reload();
+  }
+};
+
+defineExpose({
+  reloadBackupDialog,
 });
 </script>

@@ -86,7 +86,38 @@
       </div>
       <div>
         <Label>{{ t("parameters.audioParams.bgm") }}</Label>
-        <Select :model-value="currentBgmSelection" @update:model-value="handleBgmSelection">
+        <RadioGroup :model-value="bgmState.type" @update:model-value="handleBgmTypeChange" class="mt-2">
+          <div class="flex items-center space-x-2">
+            <RadioGroupItem id="preset" value="preset" />
+            <Label for="preset" class="cursor-pointer font-normal">{{
+              t("parameters.audioParams.bgmType.preset")
+            }}</Label>
+          </div>
+          <div class="flex items-center space-x-2">
+            <RadioGroupItem id="library" value="library" />
+            <Label for="library" class="cursor-pointer font-normal">{{
+              t("parameters.audioParams.bgmType.library")
+            }}</Label>
+          </div>
+          <div class="flex items-center space-x-2">
+            <RadioGroupItem id="custom" value="custom" />
+            <Label for="custom" class="cursor-pointer font-normal">{{
+              t("parameters.audioParams.bgmType.custom")
+            }}</Label>
+          </div>
+          <div class="flex items-center space-x-2">
+            <RadioGroupItem id="silent" value="silent" />
+            <Label for="silent" class="cursor-pointer font-normal">{{
+              t("parameters.audioParams.bgmType.silent")
+            }}</Label>
+          </div>
+        </RadioGroup>
+      </div>
+
+      <!-- Preset BGM Selection -->
+      <div v-if="bgmState.type === 'preset'" class="space-y-2">
+        <Label>{{ t("parameters.audioParams.selectPreset") }}</Label>
+        <Select :model-value="currentPresetUrl" @update:model-value="handlePresetSelection">
           <SelectTrigger>
             <SelectValue :placeholder="t('parameters.audioParams.bgmSelect')" />
           </SelectTrigger>
@@ -94,16 +125,25 @@
             <SelectItem v-for="bgm in bgmAssets.bgms" :key="bgm.name" :value="bgm.url">
               {{ bgm.title }}
             </SelectItem>
-            <SelectItem value="custom">
-              {{ t("parameters.audioParams.customAudio") }}
-            </SelectItem>
-            <SelectItem value="silent">
-              {{ t("parameters.audioParams.noBgm") }}
-            </SelectItem>
           </SelectContent>
         </Select>
       </div>
 
+      <!-- BGM Library Selection -->
+      <div v-if="bgmState.type === 'library'" class="space-y-2">
+        <div class="border-border bg-card flex items-center justify-between rounded-md border p-3 shadow-sm">
+          <div class="flex flex-1 items-center gap-2">
+            <Music class="text-muted-foreground h-4 w-4" />
+            <span v-if="bgmState.title" class="text-foreground text-sm font-medium">{{ bgmState.title }}</span>
+            <span v-else class="text-muted-foreground text-sm">{{ t("parameters.audioParams.noSelection") }}</span>
+          </div>
+          <Button variant="outline" size="sm" @click="handleLibraryOpen">
+            {{ t("parameters.audioParams.selectFromLibrary") }}
+          </Button>
+        </div>
+      </div>
+
+      <!-- Custom Upload -->
       <div v-if="bgmState.type === 'custom'" class="space-y-2">
         <div
           @dragover.prevent
@@ -154,6 +194,9 @@
 
       <MulmoError :mulmoError="mulmoError" />
     </div>
+
+    <!-- BGM Library Dialog -->
+    <BgmLibraryDialog ref="bgmLibraryDialogRef" @select="handleBgmLibrarySelect" />
   </Card>
 </template>
 
@@ -161,11 +204,24 @@
 import { useI18n } from "vue-i18n";
 import { computed, ref, watch, onUnmounted } from "vue";
 import { Music } from "lucide-vue-next";
-import { Card, Label, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui";
+import {
+  Card,
+  Label,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Button,
+} from "@/components/ui";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
 import { bgmAssets } from "mulmocast/data";
 import MulmoError from "./mulmo_error.vue";
+import BgmLibraryDialog from "./bgm_library_dialog.vue";
 import { AUDIO_PARAMS_DEFAULT_VALUES, SILENT_BGM } from "@/../shared/constants";
+import type { BgmMetadata } from "@/types";
 
 import { useMulmoGlobalStore } from "@/store";
 
@@ -186,28 +242,31 @@ const emit = defineEmits<{
 }>();
 
 const bgmState = ref<{
-  type: "preset" | "custom" | "silent";
+  type: "preset" | "custom" | "silent" | "library";
   url?: string;
   filename?: string;
+  title?: string;
   previewUrl?: string;
 }>({ type: "preset" });
 
 const isUploading = ref(false);
 const fileInput = ref<HTMLInputElement>();
+const bgmLibraryDialogRef = ref<{ open: () => void } | null>(null);
 
-const currentBgmSelection = computed(() => {
-  if (bgmState.value.type === "silent") return "silent";
-  if (bgmState.value.type === "custom") return "custom";
-
+const currentPresetUrl = computed(() => {
+  if (bgmState.value.type !== "preset") return "";
   const bgm = props.audioParams?.bgm;
-  if (!bgm) return AUDIO_PARAMS_DEFAULT_VALUES.bgm.url;
-  if (bgm.kind === "url" && bgm.url === SILENT_BGM.url) return "silent";
-  if (bgm.kind === "path") return "custom";
-  if (bgm.kind === "url") return bgm.url;
-  return AUDIO_PARAMS_DEFAULT_VALUES.bgm.url;
+  if (!bgm || bgm.kind !== "url") return AUDIO_PARAMS_DEFAULT_VALUES.bgm.url;
+  return bgm.url;
 });
 
 const audioPreviewUrl = computed(() => {
+  if (bgmState.value.type === "library" && bgmState.value.previewUrl) {
+    return bgmState.value.previewUrl;
+  }
+  if (bgmState.value.type === "library") {
+    return null;
+  }
   if (bgmState.value.type === "custom" && bgmState.value.previewUrl) {
     return bgmState.value.previewUrl;
   }
@@ -236,6 +295,34 @@ const initializeBgmState = async () => {
   }
   if (bgm.kind === "path") {
     const filename = typeof bgm.path === "string" ? bgm.path.split("/").pop() || bgm.path : String(bgm.path);
+
+    // Check if it's a BGM library path
+    if (typeof bgm.path === "string" && bgm.path.includes("../../bgm/")) {
+      // Load BGM list to get the title
+      try {
+        const bgmList = (await window.electronAPI.mulmoHandler("bgmList")) as BgmMetadata[];
+        const matchedBgm = bgmList.find((b) => b.fileName === filename);
+
+        bgmState.value = {
+          type: "library",
+          filename,
+          title: matchedBgm?.title || filename,
+        };
+
+        // Load preview audio
+        const audioData = await window.electronAPI.mulmoHandler("mulmoAudioBgmGet", props.projectId, bgm.path);
+        if (audioData) {
+          const blob = new Blob([new Uint8Array(audioData as ArrayBuffer)], { type: "audio/mpeg" });
+          bgmState.value.previewUrl = URL.createObjectURL(blob);
+        }
+      } catch (error) {
+        console.error("Failed to load library BGM:", error);
+        bgmState.value = { type: "library", filename };
+      }
+      return;
+    }
+
+    // Custom uploaded BGM
     bgmState.value = { type: "custom", filename };
 
     try {
@@ -273,10 +360,10 @@ const handleUpdate = (field: keyof typeof AUDIO_PARAMS_DEFAULT_VALUES, value: nu
   });
 };
 
-const handleBgmSelection = (selection: string) => {
+const handleBgmTypeChange = (type: "preset" | "custom" | "silent" | "library") => {
   const currentParams = props.audioParams || ({} as AudioParams);
 
-  if (selection === "silent") {
+  if (type === "silent") {
     bgmState.value = { type: "silent" };
     emit("update", {
       ...AUDIO_PARAMS_DEFAULT_VALUES,
@@ -285,19 +372,48 @@ const handleBgmSelection = (selection: string) => {
     });
     return;
   }
-  if (selection === "custom") {
-    bgmState.value = { type: "custom" };
+
+  if (type === "library") {
+    bgmState.value = { type: "library" };
+    // Don't update audioParams yet, wait for user to select a BGM
     return;
   }
-  bgmState.value = { type: "preset", url: selection };
+
+  if (type === "custom") {
+    bgmState.value = { type: "custom" };
+    // Don't update audioParams yet, wait for user to upload a file
+    return;
+  }
+
+  if (type === "preset") {
+    bgmState.value = { type: "preset" };
+    // Set default preset BGM
+    emit("update", {
+      ...AUDIO_PARAMS_DEFAULT_VALUES,
+      ...currentParams,
+      bgm: {
+        kind: "url",
+        url: AUDIO_PARAMS_DEFAULT_VALUES.bgm.url,
+      },
+    });
+  }
+};
+
+const handlePresetSelection = (url: string) => {
+  const currentParams = props.audioParams || ({} as AudioParams);
+  bgmState.value = { type: "preset", url };
   emit("update", {
     ...AUDIO_PARAMS_DEFAULT_VALUES,
     ...currentParams,
     bgm: {
       kind: "url",
-      url: selection,
+      url,
     },
   });
+};
+
+const handleLibraryOpen = () => {
+  bgmLibraryDialogRef.value?.open();
 };
 
 const handleFileClick = () => {
@@ -366,5 +482,41 @@ const handleDrop = (event: DragEvent) => {
   if (files && files.length > 0) {
     handleAudioFileUpload(files[0]);
   }
+};
+
+const handleBgmLibrarySelect = async (bgm: BgmMetadata) => {
+  const currentParams = props.audioParams || ({} as AudioParams);
+
+  // Construct relative path from script.json to BGM file
+  const relativePath = `../../bgm/${bgm.fileName}`;
+
+  bgmState.value = {
+    type: "library",
+    filename: bgm.fileName,
+    title: bgm.title,
+  };
+
+  // Load preview audio
+  try {
+    const audioData = await window.electronAPI.mulmoHandler("bgmAudioFile", bgm.id);
+    if (audioData) {
+      const blob = new Blob([new Uint8Array(audioData as ArrayBuffer)], { type: "audio/mpeg" });
+      if (bgmState.value.previewUrl) {
+        URL.revokeObjectURL(bgmState.value.previewUrl);
+      }
+      bgmState.value.previewUrl = URL.createObjectURL(blob);
+    }
+  } catch (error) {
+    console.error("Failed to load BGM preview:", error);
+  }
+
+  emit("update", {
+    ...AUDIO_PARAMS_DEFAULT_VALUES,
+    ...currentParams,
+    bgm: {
+      kind: "path",
+      path: relativePath,
+    },
+  });
 };
 </script>

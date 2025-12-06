@@ -129,6 +129,12 @@ const lang = {
       // Project actions
       createNew: "Create New",
       openProjectFolder: "Open Project Folder",
+
+      // UI controls
+      expand: "Edit",
+      collapse: "Preview",
+      selectAll: "Select All",
+      deselectAll: "Deselect All",
     },
 
     // Status messages
@@ -261,6 +267,7 @@ const lang = {
   },
   menu: {
     top: "Dashboard",
+    bgm: "BGM",
     settings: "Settings",
     mypage: "MyPage",
     signin: "SignIn",
@@ -723,6 +730,26 @@ const lang = {
     startAt: {
       placeholder: "e.g., 1 (start at 1 second)",
     },
+    imageBackup: {
+      title: "Image History",
+      description: "Select a previously generated image to restore it",
+      openButton: "Image History",
+      current: "Current",
+      empty: "No backup images found",
+      loadError: "Failed to load backup images",
+      restored: "Image restored successfully",
+      restoreError: "Failed to restore image: {error}",
+    },
+    movieBackup: {
+      title: "Movie History",
+      description: "Select a previously generated movie to restore it",
+      openButton: "Movie History",
+      current: "Current",
+      empty: "No backup movies found",
+      loadError: "Failed to load backup movies",
+      restored: "Movie restored successfully",
+      restoreError: "Failed to restore movie: {error}",
+    },
     imagePrompt: {
       badge: "Image Prompt",
       label: "Image Generation Prompt",
@@ -859,9 +886,24 @@ const lang = {
       audioVolume: "Audio Volume",
       audioVolumeDescription: "Voice/audio volume. 0.0 = mute, 1.0 = max.",
       bgm: "BGM",
+      bgmType: {
+        preset: "Preset BGM",
+        library: "BGM Library",
+        custom: "Custom Upload",
+        silent: "No BGM",
+      },
       bgmSelect: "Select BGM",
+      selectPreset: "Select Preset BGM",
+      selectFromLibrary: "Select from Library",
+      noSelection: "No BGM selected",
       noBgm: "None",
       customAudio: "Custom Audio",
+      bgmLibrary: {
+        title: "BGM Library",
+        description: "Select a BGM from your library",
+        selectItem: "BGM Library",
+        empty: "No BGM files in library",
+      },
       dropAudioHere: "Drop audio file here",
       clickToReplace: "Click to replace",
       clickToSelect: "or click to select",
@@ -1352,6 +1394,32 @@ const lang = {
     detail: "A new version has been downloaded. Restart the application to apply the updates.",
     restartButtonText: "Restart",
     laterButtonText: "Later",
+  },
+  bgm: {
+    title: "BGM Library",
+    description: "Create and manage background music for your presentations",
+    createNew: "Create New BGM",
+    created: "BGM created successfully",
+    generatingDescription: "AI is generating your background music...",
+    empty: {
+      title: "No BGM Created Yet",
+      description: "Click 'Create New BGM' to generate your first background music",
+    },
+    create: {
+      title: "Create New BGM",
+      description: "Enter a prompt to generate background music",
+      promptLabel: "Music Description",
+      promptPlaceholder: "Describe the style and mood of the background music you want...",
+      durationLabel: "Duration",
+      selectDuration: "Select duration",
+      seconds: "s",
+    },
+    errors: {
+      generationFailed: "Failed to generate BGM",
+      permissionDenied: "API Permission Error",
+      permissionDescription:
+        "Your ElevenLabs API key does not have the 'music_generation' permission. Please upgrade your API plan or use a different API key with music generation enabled.",
+    },
   },
   nativeMenu: {
     fileMenu: "File",

@@ -41,6 +41,19 @@
           </Button>
         </RouterLink>
 
+        <!-- BGM Button -->
+        <RouterLink :to="bgmItem.path">
+          <Button
+            :variant="isBgmActive ? 'default' : 'ghost'"
+            size="sm"
+            class="relative transition-transform duration-200 hover:scale-105"
+            data-testid="bgm-button"
+          >
+            <component :is="bgmItem.icon" :size="16" class="mr-1" />
+            {{ t("menu." + bgmItem.key) }}
+          </Button>
+        </RouterLink>
+
         <!-- Settings Button -->
         <Button
           variant="ghost"
@@ -63,7 +76,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { Home, Settings, Activity } from "lucide-vue-next";
+import { Home, Settings, Activity, Music } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 
 import { Button } from "@/components/ui/button";
@@ -78,6 +91,8 @@ const globalStore = useMulmoGlobalStore();
 const mulmoEventStore = useMulmoEventStore();
 
 const dashboardItem = { path: "/", icon: Home, key: "top" };
+const bgmItem = { path: "/bgm", icon: Music, key: "bgm" };
 
 const isDashboardActive = computed(() => route.path === dashboardItem.path);
+const isBgmActive = computed(() => route.path === bgmItem.path);
 </script>

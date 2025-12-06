@@ -87,3 +87,12 @@ export type ProjectScriptMedia = {
   mediaType: MediaType;
   mimeType: string;
 };
+
+export type BgmMetadata = {
+  id: string;
+  fileName: string;
+  title: string;
+  prompt: string;
+  duration: string;
+  createdAt: string;
+};
