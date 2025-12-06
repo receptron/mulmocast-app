@@ -274,7 +274,7 @@ watch(
       downloadImageFiles(newProjectId);
       downloadAudioFiles(newProjectId, currentLanguage.value);
       const bgmRes = await window.electronAPI.mulmoHandler("mulmoBGM", newProjectId);
-      bgmFile.value = bgmRes && (bgmRes?.result !== false) ? bufferToUrl(bgmRes) : null;
+      bgmFile.value = bgmRes && bgmRes?.result !== false ? bufferToUrl(bgmRes) : null;
     }
   },
   { immediate: true },
