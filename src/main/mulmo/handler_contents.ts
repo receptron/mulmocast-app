@@ -107,7 +107,14 @@ export const mulmoGeneratedAudioFile = async (projectId: string, index: number) 
     const audioDirPath = MulmoStudioContextMethods.getAudioDirPath(context);
 
     // Calculate TTS file path using hash
-    const hash_string = [text, voiceId, speechOptions?.instruction ?? "", speechOptions?.speed ?? 1.0, provider, model ?? ""].join(":");
+    const hash_string = [
+      text,
+      voiceId,
+      speechOptions?.instruction ?? "",
+      speechOptions?.speed ?? 1.0,
+      provider,
+      model ?? "",
+    ].join(":");
     const audioFileName = `${context.studio.filename}_${hashSHA256(hash_string)}`;
     const fileName = getAudioFilePath(audioDirPath, context.studio.filename, audioFileName, lang);
 

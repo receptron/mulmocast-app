@@ -63,11 +63,7 @@
       />
 
       <!-- Audio Source Selection -->
-      <RadioGroup
-        :model-value="audioSourceType"
-        @update:model-value="handleAudioSourceChange"
-        class="mb-2"
-      >
+      <RadioGroup :model-value="audioSourceType" @update:model-value="handleAudioSourceChange" class="mb-2">
         <div class="flex items-center space-x-2">
           <RadioGroupItem id="generate" value="generate" />
           <Label for="generate" class="cursor-pointer font-normal">{{ t("beat.audio.generateFromText") }}</Label>

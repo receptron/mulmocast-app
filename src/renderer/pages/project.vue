@@ -491,7 +491,8 @@ const handleUpdateScriptEditorActiveTab = async (tab: ScriptEditorTab) => {
 const handleAudioUploaded = async (index: number, beatId: string) => {
   // Load uploaded audio file for preview
   const beat = mulmoScriptHistoryStore.currentMulmoScript?.beats?.[index];
-  const uploadPath = beat?.audio?.type === "audio" && beat.audio.source?.kind === "path" ? beat.audio.source.path : undefined;
+  const uploadPath =
+    beat?.audio?.type === "audio" && beat.audio.source?.kind === "path" ? beat.audio.source.path : undefined;
   if (uploadPath) {
     await downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, beatId, {
       mode: "uploaded",

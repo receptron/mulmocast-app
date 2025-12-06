@@ -1,4 +1,4 @@
-import { ref, nextTick } from "vue";
+import { ref } from "vue";
 import { bufferToUrl } from "@/lib/utils";
 
 type MulmoImageResponse = {
@@ -115,10 +115,10 @@ export const useAudioFiles = () => {
       }
     } else {
       console.log("generate");
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
       // Load generated TTS audio file (default mode)
       // Use mulmoGeneratedAudioFile to explicitly get TTS file (ignoring beat.audio)
-      
+
       const res = (await window.electronAPI.mulmoHandler(
         "mulmoGeneratedAudioFile",
         projectId,
