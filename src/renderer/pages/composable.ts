@@ -82,16 +82,53 @@ export const useAudioFiles = () => {
       }
       return tmp;
     }, {});
-    // console.log(audioFiles.value);
   };
 
-  const downloadAudioFile = async (projectId: string, lang: string, index: number, beatId: string) => {
-    const res = (await window.electronAPI.mulmoHandler("mulmoAudioFile", projectId, index)) as Uint8Array<ArrayBuffer>;
-    if (res) {
-      if (!audioFiles.value[lang]) {
-        audioFiles.value[lang] = {};
+  const downloadAudioFile = async (
+    projectId: string,
+    lang: string,
+    index: number,
+    beatId: string,
+    options?: {
+      mode: "generated" | "uploaded";
+      uploadPath?: string;
+    },
+  ) => {
+    if (options?.mode === "uploaded" && options.uploadPath) {
+      console.log("uploaded");
+      // Load uploaded audio file from path
+      try {
+        const audioData = (await window.electronAPI.mulmoHandler(
+          "mulmoBeatAudioGet",
+          projectId,
+          options.uploadPath,
+        )) as ArrayBuffer;
+        if (audioData) {
+          if (!audioFiles.value[lang]) {
+            audioFiles.value[lang] = {};
+          }
+          audioFiles.value[lang][beatId] = bufferToUrl(new Uint8Array(audioData), "audio/mp3");
+        }
+      } catch (error) {
+        console.error(`Failed to load uploaded audio for beat ${beatId}:`, error);
       }
-      audioFiles.value[lang][beatId] = bufferToUrl(res, "audio/mp3");
+    } else {
+      console.log("generate");
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Load generated TTS audio file (default mode)
+      // Use mulmoGeneratedAudioFile to explicitly get TTS file (ignoring beat.audio)
+
+      const res = (await window.electronAPI.mulmoHandler(
+        "mulmoGeneratedAudioFile",
+        projectId,
+        index,
+      )) as Uint8Array<ArrayBuffer>;
+      if (res) {
+        if (!audioFiles.value[lang]) {
+          audioFiles.value[lang] = {};
+        }
+        audioFiles.value[lang][beatId] = bufferToUrl(res, "audio/mp3");
+      }
     }
   };
 

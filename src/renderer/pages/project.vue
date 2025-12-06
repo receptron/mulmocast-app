@@ -139,6 +139,9 @@
                     :mulmoMultiLinguals="mulmoMultiLinguals"
                     @imageRestored="handleImageRestored"
                     @movieRestored="handleMovieRestored"
+                    @audioUploaded="handleAudioUploaded"
+                    @audioRemoved="handleAudioRemoved"
+                    @audioGenerated="handleAudioGenerated"
                     @deleteBeat="deleteBeat"
                     @refreshBeatMedia="refreshBeatMedia"
                   />
@@ -455,8 +458,6 @@ const refreshBeatMedia = async (beatId: string, index: number) => {
 
 // internal use
 const saveMulmoScript = async () => {
-  console.log("saved", mulmoScriptHistoryStore.currentMulmoScript);
-  // insertSpeakers(mulmoScriptHistoryStore.currentMulmoScript);
   await projectApi.saveProjectScript(projectId.value, mulmoScriptHistoryStore.currentMulmoScript);
   projectMetadata.value.updatedAt = dayjs().toISOString();
   await projectApi.saveProjectMetadata(projectId.value, projectMetadata.value);
@@ -485,6 +486,34 @@ const handleUpdateScriptEditorActiveTab = async (tab: ScriptEditorTab) => {
   projectMetadata.value.scriptEditorActiveTab = tab;
   await projectApi.saveProjectScript(projectId.value, mulmoScriptHistoryStore.currentMulmoScript);
   saveProjectMetadata({ updateTimestamp: false });
+};
+
+const handleAudioUploaded = async (index: number, beatId: string) => {
+  // Load uploaded audio file for preview
+  const beat = mulmoScriptHistoryStore.currentMulmoScript?.beats?.[index];
+  const uploadPath =
+    beat?.audio?.type === "audio" && beat.audio.source?.kind === "path" ? beat.audio.source.path : undefined;
+  if (uploadPath) {
+    await downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, beatId, {
+      mode: "uploaded",
+      uploadPath,
+    });
+  }
+};
+
+const handleAudioRemoved = (index: number, beatId: string) => {
+  // Clear the audio file from preview
+  const lang = mulmoScriptHistoryStore.lang;
+  if (audioFiles.value[lang]?.[beatId]) {
+    delete audioFiles.value[lang][beatId];
+  }
+};
+
+const handleAudioGenerated = async (index: number, beatId: string) => {
+  // Force load generated TTS audio file
+  await downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, beatId, {
+    mode: "generated",
+  });
 };
 
 const handleUpdateMulmoViewerActiveTab = (tab: MulmoViewerTab) => {
@@ -602,7 +631,10 @@ watch(
           return;
         }
         if (mulmoEvent.sessionType === "audio") {
-          downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, mulmoEvent.id);
+          // Audio generation completed - always load generated TTS file
+          downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, mulmoEvent.id, {
+            mode: "generated",
+          });
         }
         if (mulmoEvent.sessionType === "image") {
           downloadImageFile(projectId.value, index, mulmoEvent.id);

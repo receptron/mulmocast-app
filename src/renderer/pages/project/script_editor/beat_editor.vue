@@ -61,7 +61,21 @@
         :class="isBeginner && !beat.text ? 'border-2 border-red-600' : ''"
         rows="2"
       />
-      <div class="flex items-center gap-2">
+
+      <!-- Audio Source Selection -->
+      <RadioGroup :model-value="audioSourceType" @update:model-value="handleAudioSourceChange" class="mb-2">
+        <div class="flex items-center space-x-2">
+          <RadioGroupItem id="generate" value="generate" />
+          <Label for="generate" class="cursor-pointer font-normal">{{ t("beat.audio.generateFromText") }}</Label>
+        </div>
+        <div class="flex items-center space-x-2">
+          <RadioGroupItem id="upload" value="upload" />
+          <Label for="upload" class="cursor-pointer font-normal">{{ t("beat.audio.uploadFile") }}</Label>
+        </div>
+      </RadioGroup>
+
+      <!-- Generate Audio Section -->
+      <div v-if="audioSourceType === 'generate'" class="flex items-center gap-2">
         <Button
           variant="outline"
           size="sm"
@@ -79,14 +93,62 @@
             t("beat.speaker.generateAudioNeedsMedia", { action: t("ui.actions.generateAudio").toLowerCase() })
           }}</span>
         </div>
-        <audio
-          :src="audioFile"
-          v-if="!!audioFile"
-          controlslist="nodownload noplaybackrate noremoteplayback"
-          class="h-7 flex-1"
-          controls
+      </div>
+
+      <!-- Upload Audio Section -->
+      <div v-if="audioSourceType === 'upload'" class="space-y-2">
+        <div
+          @dragover.prevent
+          @drop.prevent="handleAudioDrop"
+          @click="handleAudioFileClick"
+          :class="[
+            'border-border bg-card relative cursor-pointer rounded-md border-2 border-dashed p-3 text-center shadow-sm transition-colors',
+            isAudioUploading ? 'cursor-not-allowed opacity-50' : 'hover:bg-muted/50',
+          ]"
+        >
+          <template v-if="isAudioUploading">
+            <div class="text-muted-foreground">{{ t("ui.status.loading") }}</div>
+          </template>
+          <template v-else-if="uploadedAudioFilename">
+            <div class="flex items-center justify-center gap-2">
+              <Music class="text-muted-foreground h-4 w-4" />
+              <span class="text-foreground text-sm font-medium">{{ uploadedAudioFilename }}</span>
+              <Button
+                @click="handleAudioFileRemove"
+                variant="ghost"
+                size="icon"
+                class="h-6 w-6"
+                :title="t('ui.actions.delete')"
+              >
+                <X class="h-4 w-4" />
+              </Button>
+            </div>
+            <div class="text-muted-foreground mt-1 text-xs">{{ t("beat.audio.clickToReplace") }}</div>
+          </template>
+          <template v-else>
+            <div class="text-muted-foreground">{{ t("beat.audio.dropAudioHere") }}</div>
+            <div class="text-muted-foreground/80 mt-1 text-xs">{{ t("beat.audio.clickToSelect") }}</div>
+          </template>
+        </div>
+        <input
+          ref="audioFileInput"
+          type="file"
+          accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac,.webm"
+          @change="handleAudioFileSelect"
+          class="hidden"
+          :disabled="isAudioUploading"
         />
       </div>
+
+      <!-- Audio Player -->
+      <audio
+        ref="audioPlayerRef"
+        :src="audioFile"
+        v-if="!!audioFile"
+        controlslist="nodownload noplaybackrate noremoteplayback"
+        class="h-7 flex-1"
+        controls
+      />
     </div>
 
     <div class="group relative mb-4 flex items-center gap-2" v-if="isPro && !isVoiceOver">
@@ -408,13 +470,14 @@ import {
   provider2MovieAgent,
 } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
-import { ChevronDown, CircleUserRound } from "lucide-vue-next";
+import { ChevronDown, CircleUserRound, Music, X } from "lucide-vue-next";
 import { getLipSyncModelDescription, getLipSyncTargetInfo } from "./lip_sync_utils";
 
 // components
 import MediaModal from "@/components/media_modal.vue";
 import { Badge, Button, Label, Input, Textarea, Checkbox } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import BeatPreviewImage from "./beat_preview_image.vue";
 import BeatPreviewMovie from "./beat_preview_movie.vue";
 import BeatSelector from "./beat_selector.vue";
@@ -474,6 +537,9 @@ const emit = defineEmits([
   "justSaveAndPushToHistory",
   "imageRestored",
   "movieRestored",
+  "audioUploaded",
+  "audioRemoved",
+  "audioGenerated",
 ]);
 
 const route = useRoute();
@@ -490,6 +556,19 @@ const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 
 const toggleTypeMode = ref(false);
 const toggleSpeakerMode = ref(false);
+
+const audioSourceType = ref<"generate" | "upload">(
+  props.beat.audio?.type === "audio" && props.beat.audio.source?.kind === "path" ? "upload" : "generate",
+);
+const isAudioUploading = ref(false);
+const uploadedAudioFilename = ref<string>(
+  props.beat.audio?.type === "audio" && props.beat.audio.source?.kind === "path"
+    ? (props.beat.audio.source.path.split("/").pop() ?? "")
+    : "",
+);
+
+const audioFileInput = ref<HTMLInputElement>();
+const audioPlayerRef = ref<HTMLAudioElement>();
 
 const showSpeakerSelector = () => {
   toggleSpeakerMode.value = true;
@@ -691,6 +770,17 @@ const generateLipSyncMovie = async () => {
 };
 
 const generateAudio = async () => {
+  // Clear uploaded audio file when generating from text
+  const hadUploadedAudio = props.beat.audio?.type === "audio" && props.beat.audio.source?.kind === "path";
+  if (hadUploadedAudio) {
+    // Set UI state first to prevent watcher from triggering save
+    uploadedAudioFilename.value = "";
+    // Notify parent to clear preview immediately
+    emit("audioRemoved", props.index, props.beat.id);
+    // Then update data (will be saved with debounce, but backend now uses mulmoGeneratedAudioFile)
+    update("audio", undefined);
+  }
+
   try {
     const { provider } = MulmoStudioContextMethods.getAudioParam(
       { ...props.mulmoScript, presentationStyle: props.mulmoScript },
@@ -703,11 +793,12 @@ const generateAudio = async () => {
       return;
     }
 
-    notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", projectId.value, props.index), {
+    await notifyProgress(window.electronAPI.mulmoHandler("mulmoGenerateBeatAudio", projectId.value, props.index), {
       successMessage: t("notify.audio.successMessage"),
       errorMessage: t("notify.audio.errorMessage"),
       errorDescription: t("notify.error.noContext"),
     });
+    emit("audioGenerated", props.index, props.beat.id);
   } catch (error) {
     notifyError(
       t("ui.common.error"),
@@ -715,6 +806,85 @@ const generateAudio = async () => {
     );
     console.log(error);
   }
+};
+
+const handleAudioSourceChange = (type: "generate" | "upload") => {
+  audioSourceType.value = type;
+  // Don't clear data when switching modes - keep both options available
+};
+
+const handleAudioFileClick = () => {
+  if (!isAudioUploading.value) {
+    audioFileInput.value?.click();
+  }
+};
+
+const handleAudioFileUpload = async (file: File) => {
+  isAudioUploading.value = true;
+
+  const reader = new FileReader();
+  reader.onload = async () => {
+    try {
+      const uint8Array = new Uint8Array(reader.result as ArrayBuffer);
+      const path = (await window.electronAPI.mulmoHandler(
+        "mulmoBeatAudioUpload",
+        projectId.value,
+        props.index,
+        file.name,
+        [...uint8Array],
+      )) as string;
+
+      uploadedAudioFilename.value = file.name;
+
+      // Update beat.audio with the path
+      update("audio", {
+        type: "audio",
+        source: {
+          kind: "path",
+          path: `./${path}`,
+        },
+      });
+
+      // Notify parent to reload audio file for preview
+      emit("audioUploaded", props.index, props.beat.id);
+    } catch (error) {
+      console.error("Failed to upload audio file:", error);
+      notifyError(t("ui.common.error"), t("beat.audio.uploadFailed"));
+    } finally {
+      isAudioUploading.value = false;
+    }
+  };
+
+  reader.onerror = (error) => {
+    console.error("FileReader error:", error);
+    isAudioUploading.value = false;
+  };
+
+  reader.readAsArrayBuffer(file);
+};
+
+const handleAudioFileSelect = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const files = target.files;
+  if (files && files.length > 0) {
+    handleAudioFileUpload(files[0]);
+  }
+};
+
+const handleAudioDrop = (event: DragEvent) => {
+  const files = event.dataTransfer?.files;
+  if (files && files.length > 0) {
+    handleAudioFileUpload(files[0]);
+  }
+};
+
+const handleAudioFileRemove = (event: Event) => {
+  event.stopPropagation();
+  update("audio", undefined);
+  uploadedAudioFilename.value = "";
+
+  // Notify parent to clear the audio preview
+  emit("audioRemoved", props.index, props.beat.id);
 };
 
 const update = (path: string, value: unknown) => {
@@ -760,6 +930,16 @@ const reloadMovieBackupDialog = async () => {
 const handleMovieRestored = () => {
   emit("movieRestored");
 };
+
+// Watch audioFile changes and force reload audio element
+watch(
+  () => props.audioFile,
+  (newSrc, oldSrc) => {
+    if (newSrc && newSrc !== oldSrc && audioPlayerRef.value) {
+      audioPlayerRef.value.load();
+    }
+  },
+);
 
 // Watch for image generation completion and reload backup dialog
 watch(
