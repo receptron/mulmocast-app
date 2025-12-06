@@ -2003,10 +2003,30 @@
   dependencies:
     cross-spawn "^7.0.1"
 
-"@modelcontextprotocol/sdk@^1.17.5", "@modelcontextprotocol/sdk@^1.22.0":
+"@modelcontextprotocol/sdk@^1.22.0":
   version "1.24.1"
   resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.24.1.tgz#4cc7366b8a9f975e653f28b6ef5bfde541a50226"
   integrity sha512-YTg4v6bKSst8EJM8NXHC3nGm8kgHD08IbIBbognUeLAgGLVgLpYrgQswzLQd4OyTL4l614ejhqsDrV1//t02Qw==
+  dependencies:
+    ajv "^8.17.1"
+    ajv-formats "^3.0.1"
+    content-type "^1.0.5"
+    cors "^2.8.5"
+    cross-spawn "^7.0.5"
+    eventsource "^3.0.2"
+    eventsource-parser "^3.0.0"
+    express "^5.0.1"
+    express-rate-limit "^7.5.0"
+    jose "^6.1.1"
+    pkce-challenge "^5.0.0"
+    raw-body "^3.0.0"
+    zod "^3.25 || ^4.0"
+    zod-to-json-schema "^3.25.0"
+
+"@modelcontextprotocol/sdk@^1.24.3":
+  version "1.24.3"
+  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.24.3.tgz#81a3fcc919cb4ce8630e2bcecf59759176eb331a"
+  integrity sha512-YgSHW29fuzKKAHTGe9zjNoo+yF8KaQPzDC2W9Pv41E7/57IfY+AMGJ/aDFlgTLcVVELoggKE4syABCE75u3NCw==
   dependencies:
     ajv "^8.17.1"
     ajv-formats "^3.0.1"
@@ -3425,24 +3445,24 @@
   dependencies:
     "@rolldown/pluginutils" "1.0.0-beta.50"
 
-"@volar/language-core@2.4.23":
-  version "2.4.23"
-  resolved "https://registry.yarnpkg.com/@volar/language-core/-/language-core-2.4.23.tgz#deb6dbc5fdbafa9bb7ba691fc59cb196cdb856d3"
-  integrity sha512-hEEd5ET/oSmBC6pi1j6NaNYRWoAiDhINbT8rmwtINugR39loROSlufGdYMF9TaKGfz+ViGs1Idi3mAhnuPcoGQ==
+"@volar/language-core@2.4.26":
+  version "2.4.26"
+  resolved "https://registry.yarnpkg.com/@volar/language-core/-/language-core-2.4.26.tgz#ce2a2d6100e33906f48a4ece9211f17f42ad4c8d"
+  integrity sha512-hH0SMitMxnB43OZpyF1IFPS9bgb2I3bpCh76m2WEK7BE0A0EzpYsRp0CCH2xNKshr7kacU5TQBLYn4zj7CG60A==
   dependencies:
-    "@volar/source-map" "2.4.23"
+    "@volar/source-map" "2.4.26"
 
-"@volar/source-map@2.4.23":
-  version "2.4.23"
-  resolved "https://registry.yarnpkg.com/@volar/source-map/-/source-map-2.4.23.tgz#d476e11a3a669d89858a5eb38b02342be39b0e44"
-  integrity sha512-Z1Uc8IB57Lm6k7q6KIDu/p+JWtf3xsXJqAX/5r18hYOTpJyBn0KXUR8oTJ4WFYOcDzWC9n3IflGgHowx6U6z9Q==
+"@volar/source-map@2.4.26":
+  version "2.4.26"
+  resolved "https://registry.yarnpkg.com/@volar/source-map/-/source-map-2.4.26.tgz#b89b3663669f4eea448f8ff517b909beee354933"
+  integrity sha512-JJw0Tt/kSFsIRmgTQF4JSt81AUSI1aEye5Zl65EeZ8H35JHnTvFGmpDOBn5iOxd48fyGE+ZvZBp5FcgAy/1Qhw==
 
-"@volar/typescript@2.4.23":
-  version "2.4.23"
-  resolved "https://registry.yarnpkg.com/@volar/typescript/-/typescript-2.4.23.tgz#b9b114ea01ad0ad977139edda0239fdafdb21ad7"
-  integrity sha512-lAB5zJghWxVPqfcStmAP1ZqQacMpe90UrP5RJ3arDyrhy4aCUQqmxPPLB2PWDKugvylmO41ljK7vZ+t6INMTag==
+"@volar/typescript@2.4.26":
+  version "2.4.26"
+  resolved "https://registry.yarnpkg.com/@volar/typescript/-/typescript-2.4.26.tgz#1928f2a206d7040949b9f021a9eb7c228752cd32"
+  integrity sha512-N87ecLD48Sp6zV9zID/5yuS1+5foj0DfuYGdQ6KHj/IbKvyKv1zNX6VCmnKYwtmHadEO6mFc2EKISiu3RDPAvA==
   dependencies:
-    "@volar/language-core" "2.4.23"
+    "@volar/language-core" "2.4.26"
     path-browserify "^1.0.1"
     vscode-uri "^3.0.8"
 
@@ -3596,12 +3616,12 @@
     typescript-eslint "^8.35.1"
     vue-eslint-parser "^10.2.0"
 
-"@vue/language-core@3.1.5":
-  version "3.1.5"
-  resolved "https://registry.yarnpkg.com/@vue/language-core/-/language-core-3.1.5.tgz#a77446d229773225bb5b532f795c4857a77cc2e6"
-  integrity sha512-FMcqyzWN+sYBeqRMWPGT2QY0mUasZMVIuHvmb5NT3eeqPrbHBYtCP8JWEUCDCgM+Zr62uuWY/qoeBrPrzfa78w==
+"@vue/language-core@3.1.6":
+  version "3.1.6"
+  resolved "https://registry.yarnpkg.com/@vue/language-core/-/language-core-3.1.6.tgz#d4ae2f429526554082c3a0beecf3e5f5c75a010d"
+  integrity sha512-F3BIvDVyyj+6Sgl9Ev9zsb/DJ48rrH2EiI5NnIEpJKo7Yk8v0n2QjfG7/RYyFhYSMOJcsf6aAt5hx4JaNbhKbg==
   dependencies:
-    "@volar/language-core" "2.4.23"
+    "@volar/language-core" "2.4.26"
     "@vue/compiler-dom" "^3.5.0"
     "@vue/shared" "^3.5.0"
     alien-signals "^3.0.0"
@@ -5252,10 +5272,10 @@ electron-winstaller@^5.3.0:
   optionalDependencies:
     "@electron/windows-sign" "^1.1.2"
 
-electron@39.2.5:
-  version "39.2.5"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-39.2.5.tgz#de4260573f5df13e8c4dc9e2879f9f15de3ac9a6"
-  integrity sha512-LXlOcH3CNopcVTQWjp680fMygdNrWKdIe3hyMtlyceO+Jd0b2hdMw1iWz36I+UUXHXPH87i937gXYi0jze2fCw==
+electron@39.2.6:
+  version "39.2.6"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-39.2.6.tgz#7e1fdc01020418ea6c5cc92a3dd05fe65ad94941"
+  integrity sha512-dHBgTodWBZd+tL1Dt0PSh/CFLHeDkFCTKCTXu1dgPhlE9Z3k2zzlBQ9B2oW55CFsKanBDHiUomHJNw0XaSdQpA==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^22.7.7"
@@ -7667,10 +7687,10 @@ lru-cache@^7.14.1, lru-cache@^7.7.1:
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.18.3.tgz#f793896e0fd0e954a59dfdd82f0773808df6aa89"
   integrity sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==
 
-lucide-vue-next@^0.555.0:
-  version "0.555.0"
-  resolved "https://registry.yarnpkg.com/lucide-vue-next/-/lucide-vue-next-0.555.0.tgz#0da713a3d1c74d8928b23c106f31bd972721028c"
-  integrity sha512-7hczPsiMD/y+VNLpal5Q5Wv09kQxlHS0l/cM1xagrd+MA3i5umMm+PUXqllvsbgwAl3PHv27fo59h4PN02GM5A==
+lucide-vue-next@^0.556.0:
+  version "0.556.0"
+  resolved "https://registry.yarnpkg.com/lucide-vue-next/-/lucide-vue-next-0.556.0.tgz#cce570e0be0b6f19819d9cd67c7f35afd100a21e"
+  integrity sha512-JvdCM2smkWrMDhkfD/FpZiWekkbWD6MZLstIFx/FOVZgULrnMr5hegCB9LlTdgllEFnQYQs8hhHC1WYcAV9HTA==
 
 magic-string@^0.30.21:
   version "0.30.21"
@@ -7999,20 +8019,20 @@ muggle-string@^0.4.1:
   resolved "https://registry.yarnpkg.com/muggle-string/-/muggle-string-0.4.1.tgz#3b366bd43b32f809dc20659534dd30e7c8a0d328"
   integrity sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==
 
-mulmocast-vision@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/mulmocast-vision/-/mulmocast-vision-1.0.4.tgz#eab9121404c03e5b80f81017ac1c67eb488ad5f5"
-  integrity sha512-8b/aHhCa35yTg6UmreT36CAdJKGxxUtAIJT4l0n5Vq1dG1APTfQsxXJKZRobwBE/1QUsXlJ4MYxrDCzqIvp2gg==
+mulmocast-vision@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/mulmocast-vision/-/mulmocast-vision-1.0.8.tgz#60d479dfdcfa74413ad6b670f5feedf7686235b1"
+  integrity sha512-08rAaLuonOcJyMYEly4obEyq9OCCGtAqzotl1zBD1yPlVYHt1fZTW4OA5RTjulG+KT+SnpsRyqWNDiZ5MhHaPw==
   dependencies:
-    "@modelcontextprotocol/sdk" "^1.17.5"
+    "@modelcontextprotocol/sdk" "^1.24.3"
     nunjucks "^3.2.4"
     pdfkit "^0.17.2"
-    puppeteer "^24.19.0"
+    puppeteer "^24.32.0"
 
-mulmocast@^2.0.8:
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.0.8.tgz#f4b30265cd4530a6952515a51c0a52d14d20c274"
-  integrity sha512-ipSRghISyJgxQHCQpA0JNSlBc71oW6CpEGVZMohTX+gpd3fBI+KnSqCOxG2MX8l9dx1NNdK3NNvGyblDQoLfxw==
+mulmocast@^2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.0.9.tgz#7061efc019db717dfff18ba0894d2df86cb46edd"
+  integrity sha512-dZVdTh/7hM9+vATUQMmkyy0aBN1vwtd5QorUxhU8a6jV7lZ9KDNOFro68VhAv6indiOBs0TkiYq77qPG1LR9FA==
   dependencies:
     "@google-cloud/text-to-speech" "^6.4.0"
     "@google/genai" "^1.30.0"
@@ -8037,11 +8057,11 @@ mulmocast@^2.0.8:
     graphai "^2.0.16"
     jsdom "^27.2.0"
     marked "^17.0.1"
-    mulmocast-vision "^1.0.4"
+    mulmocast-vision "^1.0.8"
     ora "^9.0.0"
-    puppeteer "^24.31.0"
+    puppeteer "^24.32.0"
     replicate "^1.4.0"
-    yaml "^2.8.1"
+    yaml "^2.8.2"
     yargs "^18.0.0"
     zod "^4.1.13"
 
@@ -8844,7 +8864,7 @@ puppeteer-core@24.32.0:
     webdriver-bidi-protocol "0.3.9"
     ws "^8.18.3"
 
-puppeteer@24.32.0, puppeteer@^24.19.0, puppeteer@^24.31.0:
+puppeteer@24.32.0, puppeteer@^24.32.0:
   version "24.32.0"
   resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-24.32.0.tgz#0f0e20b8024b3fdc46c9f06afee69f0e450473d4"
   integrity sha512-exyxHPV5DSsigIhM/pzLcyzl5XU4Dp5lNP+APwIeStDxAdYqpMnJ1qN0QHXghjJx+cQJczby+ySH5rgv/5GQLw==
@@ -10421,13 +10441,13 @@ vue-sonner@^2.0.9:
   resolved "https://registry.yarnpkg.com/vue-sonner/-/vue-sonner-2.0.9.tgz#32ec9a394eb8903bb40e48d974ce55ffa6be8dc4"
   integrity sha512-i6BokNlNDL93fpzNxN/LZSn6D6MzlO+i3qXt6iVZne3x1k7R46d5HlFB4P8tYydhgqOrRbIZEsnRd3kG7qGXyw==
 
-vue-tsc@^3.1.5:
-  version "3.1.5"
-  resolved "https://registry.yarnpkg.com/vue-tsc/-/vue-tsc-3.1.5.tgz#9f2bace5c32be943780ae4a7a298329b2777e711"
-  integrity sha512-L/G9IUjOWhBU0yun89rv8fKqmKC+T0HfhrFjlIml71WpfBv9eb4E9Bev8FMbyueBIU9vxQqbd+oOsVcDa5amGw==
+vue-tsc@^3.1.6:
+  version "3.1.6"
+  resolved "https://registry.yarnpkg.com/vue-tsc/-/vue-tsc-3.1.6.tgz#6f1518690b2c6cfb8a56f642bff2ca3c4f9f51c0"
+  integrity sha512-h5mMNGIDI+WMZxTeuYcpfSeDtBIiHXAg3qsrt65H4vcFTYmuM1THNHMzlnDvD8kX0fwLuf6auxWP340bH/zcpw==
   dependencies:
-    "@volar/typescript" "2.4.23"
-    "@vue/language-core" "3.1.5"
+    "@volar/typescript" "2.4.26"
+    "@vue/language-core" "3.1.6"
 
 vue@^3.5.13:
   version "3.5.24"
@@ -10740,10 +10760,15 @@ yaml-eslint-parser@^1.3.2:
     eslint-visitor-keys "^3.0.0"
     yaml "^2.0.0"
 
-yaml@^2.0.0, yaml@^2.8.1:
+yaml@^2.0.0:
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.8.1.tgz#1870aa02b631f7e8328b93f8bc574fac5d6c4d79"
   integrity sha512-lcYcMxX2PO9XMGvAJkJ3OsNMw+/7FKes7/hgerGUYWIoWu5j/+YQqcZr5JnPZWzOsEBgMbSbiSTn/dv/69Mkpw==
+
+yaml@^2.8.2:
+  version "2.8.2"
+  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.8.2.tgz#5694f25eca0ce9c3e7a9d9e00ce0ddabbd9e35c5"
+  integrity sha512-mplynKqc1C2hTVYxd0PU2xQAc22TI1vShAYGksCCfxbn/dFwnHTNi1bvYsBTkhdUNtGIf5xNOg938rrSSYvS9A==
 
 yargs-parser@^20.2.2:
   version "20.2.9"
