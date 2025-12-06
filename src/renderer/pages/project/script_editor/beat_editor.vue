@@ -557,15 +557,14 @@ const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 const toggleTypeMode = ref(false);
 const toggleSpeakerMode = ref(false);
 
-
 const audioSourceType = ref<"generate" | "upload">(
-  props.beat.audio?.type === "audio" && props.beat.audio.source?.kind === "path" ? "upload" : "generate"
+  props.beat.audio?.type === "audio" && props.beat.audio.source?.kind === "path" ? "upload" : "generate",
 );
 const isAudioUploading = ref(false);
 const uploadedAudioFilename = ref<string>(
   props.beat.audio?.type === "audio" && props.beat.audio.source?.kind === "path"
-    ? props.beat.audio.source.path.split("/").pop() ?? ""
-    : ""
+    ? (props.beat.audio.source.path.split("/").pop() ?? "")
+    : "",
 );
 
 const audioFileInput = ref<HTMLInputElement>();
