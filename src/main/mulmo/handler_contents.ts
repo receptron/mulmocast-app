@@ -53,6 +53,7 @@ export const mulmoAudioFiles = async (
       return { result: false, noContext: true };
     }
     const audios = listLocalizedAudioPaths(context);
+    // TODO: fix return data type
     return context.studio.script.beats.reduce(
       (tmp, beat, index) => {
         const fileName = audios[index];
