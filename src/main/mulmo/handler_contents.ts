@@ -2,6 +2,7 @@ import {
   getBeatAudioPathOrUrl,
   MulmoPresentationStyleMethods,
   MulmoMediaSourceMethods,
+  MulmoStudioContextMethods,
   imagePreprocessAgent,
   getReferenceImagePath,
   getMultiLingual,
@@ -11,6 +12,8 @@ import {
   listLocalizedAudioPaths,
   defaultBGMPath,
   resolveAssetPath,
+  getAudioFilePath,
+  hashSHA256,
   type MulmoStudioContext,
   type MulmoStudioMultiLingual,
   type MulmoBeat,
@@ -78,6 +81,40 @@ export const mulmoAudioFile = async (projectId: string, index: number) => {
     }
     const beat = context.studio.script.beats[0];
     return beatAudio(context)(beat);
+  } catch (error) {
+    GraphAILogger.log(error);
+  }
+};
+
+// Get generated TTS audio file only (ignore beat.audio)
+export const mulmoGeneratedAudioFile = async (projectId: string, index: number) => {
+  try {
+    const context = await getContext(projectId, null, index);
+    if (!context) {
+      return { result: false, noContext: true };
+    }
+    const beat = context.studio.script.beats[0];
+
+    // Get TTS file path directly without checking beat.audio
+    const text = beat.text;
+    if (text === undefined || text === "" || context.studio.script.audioParams.suppressSpeech) {
+      return undefined;
+    }
+
+    const lang = context.lang ?? context.studio.script?.lang ?? "en";
+    const { voiceId, provider, speechOptions, model } = MulmoStudioContextMethods.getAudioParam(context, beat, lang);
+    const audioDirPath = MulmoStudioContextMethods.getAudioDirPath(context);
+
+    // Calculate TTS file path using hash
+    const hash_string = [text, voiceId, speechOptions?.instruction ?? "", speechOptions?.speed ?? 1.0, provider, model ?? ""].join(":");
+    const audioFileName = `${context.studio.filename}_${hashSHA256(hash_string)}`;
+    const fileName = getAudioFilePath(audioDirPath, context.studio.filename, audioFileName, lang);
+
+    if (fileExstsSync(fileName)) {
+      const buffer = fs.readFileSync(fileName);
+      return buffer.buffer;
+    }
+    return;
   } catch (error) {
     GraphAILogger.log(error);
   }

@@ -35,6 +35,7 @@ import {
 import {
   mulmoAudioFiles,
   mulmoAudioFile,
+  mulmoGeneratedAudioFile,
   mulmoImageFile,
   mulmoImageFiles,
   mulmoReferenceImagesFiles,
@@ -48,7 +49,7 @@ import {
 } from "./handler_contents";
 import { mulmoImageFetchURL, mulmoReferenceImageFetchURL } from "./handler_image_fetch";
 import { mulmoReferenceImageUpload, mulmoImageUpload } from "./handler_image_upload";
-import { mulmoAudioBgmUpload, mulmoAudioBgmGet } from "./handler_audio_upload";
+import { mulmoAudioBgmUpload, mulmoAudioBgmGet, mulmoBeatAudioUpload, mulmoBeatAudioGet } from "./handler_audio_upload";
 import { graphaiPuppeteerAgent } from "./handler_graphai";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 import { bgmList, bgmAudioFile, bgmGenerate, bgmUpdateTitle, bgmDelete } from "./handler_bgm";
@@ -170,6 +171,8 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoAudioFiles(args[0] as string, args[1] as string | undefined);
       case "mulmoAudioFile":
         return await mulmoAudioFile(args[0] as string, args[1] as number);
+      case "mulmoGeneratedAudioFile":
+        return await mulmoGeneratedAudioFile(args[0] as string, args[1] as number);
       case "mulmoImageFiles":
         return await mulmoImageFiles(args[0] as string);
       case "mulmoImageFile":
@@ -197,6 +200,15 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await mulmoAudioBgmUpload(args[0] as string, args[1] as string, args[2] as Uint8Array);
       case "mulmoAudioBgmGet":
         return await mulmoAudioBgmGet(args[0] as string, args[1] as string);
+      case "mulmoBeatAudioUpload":
+        return await mulmoBeatAudioUpload(
+          args[0] as string,
+          args[1] as number,
+          args[2] as string,
+          args[3] as Uint8Array,
+        );
+      case "mulmoBeatAudioGet":
+        return await mulmoBeatAudioGet(args[0] as string, args[1] as string);
       case "mulmoReferenceImage":
         return await mulmoReferenceImage(
           args[0] as string,

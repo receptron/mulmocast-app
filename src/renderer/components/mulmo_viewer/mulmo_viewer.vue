@@ -310,7 +310,10 @@ watch(
         if (index === -1 || index === undefined) {
           return;
         }
-        downloadAudioFile(props.projectId, currentLanguage.value, index, mulmoEvent.id);
+        // Audio generation completed - always load generated TTS file
+        downloadAudioFile(props.projectId, currentLanguage.value, index, mulmoEvent.id, {
+          mode: "generated",
+        });
       }
       if (mulmoEvent.sessionType === "multiLingual") {
         emit("updateMultiLingual");
