@@ -41,6 +41,12 @@ export const registerIPCHandler = () => {
 
   ipcMain.handle("project:copy", (_event: IpcMainInvokeEvent, id: string) => projectManager.copyProject(id));
 
+  ipcMain.handle(
+    "project:copyBeatMediaFiles",
+    (_event: IpcMainInvokeEvent, projectId: string, sourceBeatId: string, targetBeatId: string) =>
+      projectManager.copyBeatMediaFiles(projectId, sourceBeatId, targetBeatId),
+  );
+
   ipcMain.handle("project:saveProjectMetadata", (_event: IpcMainInvokeEvent, id: string, metaData: ProjectMetadata) =>
     projectManager.saveProjectMetadata(id, metaData),
   );

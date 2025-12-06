@@ -19,6 +19,7 @@ export interface ElectronAPI {
     getProjectMulmoScript: (name: string) => Promise<unknown>;
     delete: (name: string) => Promise<unknown>;
     copy: (id: string) => Promise<unknown>;
+    copyBeatMediaFiles: (projectId: string, sourceBeatId: string, targetBeatId: string) => Promise<boolean>;
     getPath: (name: string) => Promise<unknown>;
     listScriptImages: (name: string) => Promise<unknown>;
     saveProjectMetadata: (id: string, data: unknown) => Promise<unknown>;
@@ -51,6 +52,8 @@ const api: ElectronAPI = {
     getProjectMulmoScript: (name: string) => ipcRenderer.invoke("project:getProjectMulmoScript", name),
     delete: (name: string) => ipcRenderer.invoke("project:delete", name),
     copy: (id: string) => ipcRenderer.invoke("project:copy", id),
+    copyBeatMediaFiles: (projectId: string, sourceBeatId: string, targetBeatId: string) =>
+      ipcRenderer.invoke("project:copyBeatMediaFiles", projectId, sourceBeatId, targetBeatId),
     getPath: (name: string) => ipcRenderer.invoke("project:getPath", name),
     listScriptImages: (name: string) => ipcRenderer.invoke("project:listScriptImages", name),
     saveProjectMetadata: (id: string, data: unknown) => ipcRenderer.invoke("project:saveProjectMetadata", id, data),

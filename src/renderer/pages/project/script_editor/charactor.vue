@@ -17,7 +17,7 @@
             />
           </template>
           <template v-if="images[imageKey].type === 'image' && images[imageKey].source.kind === 'path'">
-            <Label class="mb-1 block">{{ t("beat.beat.label") }}</Label>
+            <Label class="mb-1 block">{{ t("beat.imageReference.label") }}</Label>
 
             <div
               @dragover.prevent
@@ -35,7 +35,7 @@
             <div class="text-muted-foreground mt-2 ml-2 text-sm">{{ t("ui.common.or") }}</div>
             <div class="mt-2 flex flex-wrap gap-2">
               <Input
-                :placeholder="t('beat.beat.placeholderUrl')"
+                :placeholder="t('beat.imageReference.placeholderUrl')"
                 v-model="mediaUrl"
                 :invalid="!validateURL"
                 class="min-w-0 flex-1"
@@ -159,7 +159,7 @@ import MediaLibraryDialog, {
   type ProjectScriptMedia,
 } from "./beat_editors/media_library_dialog.vue";
 
-import { notifyProgress, notifyError } from "@/lib/notification";
+import { notifySuccess, notifyProgress, notifyError } from "@/lib/notification";
 import { useApiErrorNotify } from "@/composables/notify";
 import { useMulmoEventStore } from "../../../store";
 
@@ -194,7 +194,7 @@ const activeImageKey = ref<string | null>(null);
 const loadReference = async () => {
   imageRefs.value = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFiles", props.projectId);
   Object.keys(imageRefs.value).forEach((key) => {
-    imageRefs.value[key] = bufferToUrl(imageRefs.value[key], "image/png");
+    imageRefs.value[key] = bufferToUrl(imageRefs.value[key]);
   });
 };
 loadReference();
@@ -230,6 +230,12 @@ const update = (target: string, imageKey: string, prompt: string) => {
 // image fetch
 const { imageFetching, mediaUrl, validateURL, fetchEnable } = useMediaUrl();
 
+const loadImageAndSuccessMessage = async (imageKey: string) => {
+  const res = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
+  imageRefs.value[imageKey] = res ? bufferToUrl(res) : null;
+  notifySuccess(t("notify.imageReference.successMessage"));
+};
+
 const submitUrlImage = async (imageKey: string) => {
   try {
     imageFetching.value = true;
@@ -245,7 +251,10 @@ const submitUrlImage = async (imageKey: string) => {
         emit("saveMulmo"); // TODO: not emited.
         emit("formatAndPushHistoryMulmoScript");
         mediaUrl.value = "";
-        loadReference();
+        await nextTick();
+
+        // await loadReference();
+        await loadImageAndSuccessMessage(imageKey);
       } else {
         console.log("error");
         notifyError(t("notify.error.media.unsupportedMovie"));
@@ -289,7 +298,9 @@ const selectScriptImage = async (media: ProjectScriptMedia) => {
   emit("saveMulmo");
   emit("formatAndPushHistoryMulmoScript");
   await nextTick();
-  await loadReference();
+  await loadImageAndSuccessMessage(activeImageKey.value);
+  // await loadReference();
+  // notifySuccess(t("notify.imageReference.successMessage"));
   activeImageKey.value = null;
 };
 
@@ -321,8 +332,10 @@ const processReferenceImage = async (fileData: BinaryFileData, imageKey: string)
   emit("updateImagePath", imageKey, "./" + path);
   // Workaround: wait for the script change
   await nextTick();
+
   const res = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
-  imageRefs.value[imageKey] = res ? bufferToUrl(res, "image/png") : null;
+  imageRefs.value[imageKey] = res ? bufferToUrl(res) : null;
+  notifySuccess(t("notify.imageReference.successMessage"));
 };
 
 const handleDrop = async (eventOrFileData: DragEvent | BinaryFileData, imageKey: string) => {
@@ -396,7 +409,7 @@ const generateReferenceImage = async (imageKey: string, key: number) => {
     );
 
     const res = await window.electronAPI.mulmoHandler("mulmoReferenceImagesFile", props.projectId, imageKey);
-    imageRefs.value[imageKey] = res ? bufferToUrl(res, "image/png") : null;
+    imageRefs.value[imageKey] = res ? bufferToUrl(res) : null;
   } catch (error) {
     console.log(error);
   }

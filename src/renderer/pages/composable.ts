@@ -48,6 +48,12 @@ export const useImageFiles = () => {
     lipSyncFiles.value = {};
   };
 
+  const deleteImageData = (beatId: string) => {
+    delete imageFiles.value[beatId];
+    delete movieFiles.value[beatId];
+    delete lipSyncFiles.value[beatId];
+  };
+
   return {
     imageFiles,
     movieFiles,
@@ -55,6 +61,7 @@ export const useImageFiles = () => {
     downloadImageFiles,
     downloadImageFile,
     resetImagesData,
+    deleteImageData,
   };
 };
 
@@ -131,10 +138,17 @@ export const useAudioFiles = () => {
     audioFiles.value = {};
   };
 
+  const deleteAudioData = (beatId: string) => {
+    Object.keys(audioFiles.value).forEach((lang) => {
+      delete audioFiles.value[lang][beatId];
+    });
+  };
+
   return {
     audioFiles,
     downloadAudioFiles,
     downloadAudioFile,
     resetAudioData,
+    deleteAudioData,
   };
 };

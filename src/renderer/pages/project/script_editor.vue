@@ -115,7 +115,6 @@
                   class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
                 />
                 <Copy
-                  v-if="false"
                   @click="copyBeat(index)"
                   class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
                   :data-testid="`script-editor-text-tab-copy-beat-${index}`"
@@ -251,7 +250,6 @@
                   class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
                 />
                 <Copy
-                  v-if="false"
                   @click="copyBeat(index)"
                   class="text-muted-foreground hover:text-primary h-5 w-5 cursor-pointer transition"
                   :data-testid="`script-editor-media-tab-copy-beat-${index}`"
@@ -356,7 +354,7 @@ import Charactor from "./script_editor/charactor.vue";
 import TextEditor from "./script_editor/text_editor.vue";
 
 import { MulmoError } from "../../../types";
-import { arrayPositionUp, arrayInsertAfter, arrayRemoveAt } from "@/lib/array";
+import { arrayPositionUp, arrayInsertAfter } from "@/lib/array";
 import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
 
 import { setRandomBeatId } from "@/lib/beat_util";
@@ -392,6 +390,8 @@ const emit = defineEmits([
   "audioUploaded",
   "audioRemoved",
   "audioGenerated",
+  "deleteBeat",
+  "refreshBeatMedia",
 ]);
 
 const route = useRoute();
@@ -545,24 +545,35 @@ const handleMovieRestored = () => {
 };
 
 const deleteBeat = (index: number) => {
-  if (index >= 0 && index < props.mulmoScript.beats.length) {
-    const newBeats = arrayRemoveAt(props.mulmoScript.beats, index);
-    emit("updateMulmoScriptAndPushToHistory", {
-      ...props.mulmoScript,
-      beats: newBeats,
-    });
-    notifySuccess(t("project.scriptEditor.beatDeleted"));
-  }
+  emit("deleteBeat", index);
 };
 
-const copyBeat = (index: number) => {
+const copyBeat = async (index: number) => {
   if (index >= 0 && index < props.mulmoScript.beats.length) {
-    const { id: __, ...beatWithoutId } = props.mulmoScript.beats[index];
-    const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, setRandomBeatId(beatWithoutId));
+    const sourceBeat = props.mulmoScript.beats[index];
+    const sourceBeatId = sourceBeat.id;
+
+    const { id: __, ...beatWithoutId } = sourceBeat;
+    const newBeat = setRandomBeatId(beatWithoutId);
+    const targetBeatId = newBeat.id;
+
+    const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, newBeat);
     emit("updateMulmoScriptAndPushToHistory", {
       ...props.mulmoScript,
       beats: newBeats,
     });
+
+    // Copy media files (images, audio, video) associated with the beat
+    if (sourceBeatId && targetBeatId) {
+      try {
+        await projectApi.copyBeatMediaFiles(projectId.value, sourceBeatId, targetBeatId);
+        // Refresh media files to show the copied beat's media immediately
+        emit("refreshBeatMedia", targetBeatId, index + 1);
+      } catch (error) {
+        console.error("Failed to copy beat media files:", error);
+      }
+    }
+
     notifySuccess(t("project.scriptEditor.beatCopied"));
   }
 };

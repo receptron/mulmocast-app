@@ -142,6 +142,8 @@
                     @audioUploaded="handleAudioUploaded"
                     @audioRemoved="handleAudioRemoved"
                     @audioGenerated="handleAudioGenerated"
+                    @deleteBeat="deleteBeat"
+                    @refreshBeatMedia="refreshBeatMedia"
                   />
                 </CardContent>
               </Card>
@@ -319,6 +321,7 @@ import { projectApi, type ProjectMetadata } from "@/lib/project_api";
 import { notifySuccess, notifyProgress, notifyError } from "@/lib/notification";
 import { setRandomBeatId } from "@/lib/beat_util.js";
 import { insertSpeakers } from "./utils";
+import { arrayRemoveAt } from "@/lib/array";
 
 import { useMulmoEventStore, useMulmoScriptHistoryStore, useMulmoGlobalStore } from "@/store";
 
@@ -365,10 +368,17 @@ const updateMultiLingual = async () => {
   }
 };
 
-const { imageFiles, movieFiles, lipSyncFiles, resetImagesData, downloadImageFiles, downloadImageFile } =
-  useImageFiles();
+const {
+  imageFiles,
+  movieFiles,
+  lipSyncFiles,
+  resetImagesData,
+  downloadImageFiles,
+  downloadImageFile,
+  deleteImageData,
+} = useImageFiles();
 
-const { audioFiles, downloadAudioFiles, downloadAudioFile, resetAudioData } = useAudioFiles();
+const { audioFiles, downloadAudioFiles, downloadAudioFile, resetAudioData, deleteAudioData } = useAudioFiles();
 
 // Load project data on mount
 onMounted(async () => {
@@ -411,6 +421,41 @@ const handleUpdateMulmoScript = (script: MulmoScript) => {
   mulmoScriptHistoryStore.updateMulmoScript(script);
   saveMulmoScriptDebounced();
 };
+
+// Delete beat and its associated media files
+const deleteBeat = (index: number) => {
+  const currentScript = mulmoScriptHistoryStore.currentMulmoScript;
+  if (index >= 0 && index < currentScript.beats.length) {
+    const beat = currentScript.beats[index];
+    const beatIdToDelete = beat.id;
+
+    // Remove beat from script
+    const newBeats = arrayRemoveAt(currentScript.beats, index);
+
+    // Delete associated media files if beatId exists
+    if (beatIdToDelete) {
+      deleteImageData(beatIdToDelete);
+      deleteAudioData(beatIdToDelete);
+    }
+
+    // Update script and save
+    handleUpdateMulmoScriptAndPushToHistory({
+      ...currentScript,
+      beats: newBeats,
+    });
+
+    notifySuccess(t("project.scriptEditor.beatDeleted"));
+  }
+};
+
+// Refresh media files for a specific beat (used after copying)
+const refreshBeatMedia = async (beatId: string, index: number) => {
+  if (beatId) {
+    await downloadImageFile(projectId.value, index, beatId);
+    await downloadAudioFile(projectId.value, mulmoScriptHistoryStore.lang, index, beatId);
+  }
+};
+
 // internal use
 const saveMulmoScript = async () => {
   await projectApi.saveProjectScript(projectId.value, mulmoScriptHistoryStore.currentMulmoScript);
