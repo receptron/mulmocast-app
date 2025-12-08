@@ -63,7 +63,7 @@
       />
 
       <!-- Audio Source Selection -->
-      <RadioGroup :model-value="audioSourceType" @update:model-value="handleAudioSourceChange" class="mb-2">
+      <RadioGroup :model-value="audioSourceType" @update:model-value="handleAudioSourceChange" class="mb-2 flex gap-4">
         <div class="flex items-center space-x-2">
           <RadioGroupItem id="generate" value="generate" />
           <Label for="generate" class="cursor-pointer font-normal">{{ t("beat.audio.generateFromText") }}</Label>
@@ -73,27 +73,6 @@
           <Label for="upload" class="cursor-pointer font-normal">{{ t("beat.audio.uploadFile") }}</Label>
         </div>
       </RadioGroup>
-
-      <!-- Generate Audio Section -->
-      <div v-if="audioSourceType === 'generate'" class="flex items-center gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          @click="generateAudio()"
-          class="w-fit"
-          :disabled="!isValidBeat || isArtifactGenerating || beat?.text?.length === 0"
-          >{{ t("ui.actions.generateAudio") }}</Button
-        >
-        <!-- Error messages for disabled Generate Audio button -->
-        <div v-if="beat?.text?.length === 0 || !isValidBeat" class="ml-2 text-xs text-red-600">
-          <span v-if="beat?.text?.length === 0">{{
-            t("beat.speaker.generateAudioNeedsText", { action: t("ui.actions.generateAudio").toLowerCase() })
-          }}</span>
-          <span v-else-if="!isValidBeat">{{
-            t("beat.speaker.generateAudioNeedsMedia", { action: t("ui.actions.generateAudio").toLowerCase() })
-          }}</span>
-        </div>
-      </div>
 
       <!-- Upload Audio Section -->
       <div v-if="audioSourceType === 'upload'" class="space-y-2">
@@ -140,16 +119,49 @@
         />
       </div>
 
-      <!-- Audio Player -->
+      <!-- Generate Audio Section -->
+      <div v-if="audioSourceType === 'generate'" class="space-y-2">
+        <div class="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            @click="generateAudio()"
+            class="w-fit"
+            :disabled="!isValidBeat || isArtifactGenerating || beat?.text?.length === 0"
+            >{{ t("ui.actions.generateAudio") }}</Button
+          >
+          <!-- Audio Player for generate mode -->
+          <audio
+            ref="audioPlayerRef"
+            :src="audioFile"
+            v-if="!!audioFile"
+            controlslist="nodownload noplaybackrate noremoteplayback"
+            class="h-7 flex-1"
+            controls
+          />
+        </div>
+        <!-- Error messages for disabled Generate Audio button -->
+        <div v-if="beat?.text?.length === 0 || !isValidBeat" class="text-xs text-red-600">
+          <span v-if="beat?.text?.length === 0">{{
+            t("beat.speaker.generateAudioNeedsText", { action: t("ui.actions.generateAudio").toLowerCase() })
+          }}</span>
+          <span v-else-if="!isValidBeat">{{
+            t("beat.speaker.generateAudioNeedsMedia", { action: t("ui.actions.generateAudio").toLowerCase() })
+          }}</span>
+        </div>
+      </div>
+
+      <!-- Audio Player for upload mode -->
       <audio
         ref="audioPlayerRef"
         :src="audioFile"
-        v-if="!!audioFile"
+        v-if="audioSourceType === 'upload' && !!audioFile"
         controlslist="nodownload noplaybackrate noremoteplayback"
-        class="h-7 flex-1"
+        class="h-7 w-full"
         controls
       />
     </div>
+    <hr class="mb-2" />
 
     <div class="group relative mb-4 flex items-center gap-2" v-if="isPro && !isVoiceOver">
       <Label class="mb-1 block">{{ t("beat.duration.label") }}</Label>
@@ -419,7 +431,7 @@
         />
       </div>
     </div>
-
+    <hr class="m-2" />
     <BeatStyle
       :beat="beat"
       @update="update"
