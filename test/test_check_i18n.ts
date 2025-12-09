@@ -107,7 +107,7 @@ test("collectKeysWithValues: object with boolean values", () => {
 test("collectKeysWithValues: object with special characters in keys", () => {
   const obj = {
     "key-with-dash": "value1",
-    "key_with_underscore": "value2",
+    key_with_underscore: "value2",
     "key.with.dot": "value3",
   };
   const result = collectKeysWithValues(obj);
@@ -192,9 +192,9 @@ test("collectKeysWithValues: very deeply nested object (10 levels)", () => {
 
 test("collectKeysWithValues: object with unicode characters in keys", () => {
   const obj = {
-    "日本語": "japanese",
-    "中文": "chinese",
-    "한글": "korean",
+    日本語: "japanese",
+    中文: "chinese",
+    한글: "korean",
   };
   const result = collectKeysWithValues(obj);
   assert.strictEqual(result.size, 3);

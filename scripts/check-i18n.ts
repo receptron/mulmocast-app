@@ -1,10 +1,7 @@
 export const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   !!value && typeof value === "object" && !Array.isArray(value);
 
-export const collectKeysWithValues = (
-  obj: Record<string, unknown>,
-  prefix = ""
-): Map<string, string> => {
+export const collectKeysWithValues = (obj: Record<string, unknown>, prefix = ""): Map<string, string> => {
   const result = new Map<string, string>();
 
   for (const [key, value] of Object.entries(obj)) {
