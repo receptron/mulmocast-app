@@ -4,47 +4,47 @@ import ja from "../src/renderer/i18n/ja";
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   !!value && typeof value === "object" && !Array.isArray(value);
 
-const collectKeys = (obj: Record<string, unknown>, prefix = ""): Set<string> => {
-  const keys = new Set<string>();
+const collectKeysWithValues = (obj: Record<string, unknown>, prefix = ""): Map<string, string> => {
+  const result = new Map<string, string>();
 
   for (const [key, value] of Object.entries(obj)) {
     const path = prefix ? `${prefix}.${key}` : key;
 
     if (isPlainObject(value)) {
-      for (const childKey of collectKeys(value, path)) {
-        keys.add(childKey);
+      for (const [childKey, childValue] of collectKeysWithValues(value, path)) {
+        result.set(childKey, childValue);
       }
     } else {
-      keys.add(path);
+      result.set(path, String(value));
     }
   }
 
-  return keys;
+  return result;
 };
 
-const enKeys = collectKeys(en);
-const jaKeys = collectKeys(ja);
+const enMap = collectKeysWithValues(en);
+const jaMap = collectKeysWithValues(ja);
 
-const missingInJa = [...enKeys].filter((key) => !jaKeys.has(key));
-const missingInEn = [...jaKeys].filter((key) => !enKeys.has(key));
+const allKeys = new Set([...enMap.keys(), ...jaMap.keys()]);
+const sortedKeys = [...allKeys].sort();
 
-if (!missingInJa.length && !missingInEn.length) {
+let hasMismatches = false;
+
+for (const key of sortedKeys) {
+  const jaValue = jaMap.get(key);
+  const enValue = enMap.get(key);
+
+  if (!jaValue || !enValue) {
+    hasMismatches = true;
+    console.log(`\n${key}`);
+    console.log(`  - ja: ${jaValue || "missing"}`);
+    console.log(`  - en: ${enValue || "missing"}`);
+  }
+}
+
+if (!hasMismatches) {
   console.log("i18n keys match between en and ja ✅");
   process.exit(0);
-}
-
-if (missingInJa.length) {
-  console.error(`Missing in ja (${missingInJa.length}):`);
-  for (const key of missingInJa) {
-    console.error(`  - ${key}`);
-  }
-}
-
-if (missingInEn.length) {
-  console.error(`Missing in en (${missingInEn.length}):`);
-  for (const key of missingInEn) {
-    console.error(`  - ${key}`);
-  }
 }
 
 process.exit(1);
