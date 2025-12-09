@@ -240,7 +240,17 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
       case "bgmAudioFile":
         return await bgmAudioFile(args[0] as string);
       case "bgmGenerate":
-        return await bgmGenerate(args[0] as string, args[1] as string, args[2] as string);
+        try {
+          return await bgmGenerate(args[0] as string, args[1] as string, args[2] as string);
+        } catch (error) {
+          // Send error via progress-update event (same pattern as audio generation)
+          webContents.send("progress-update", {
+            type: "error",
+            data: error,
+            cause: error?.cause,
+          });
+          return { error };
+        }
       case "bgmUpdateTitle":
         return await bgmUpdateTitle(args[0] as string, args[1] as string);
       case "bgmDelete":

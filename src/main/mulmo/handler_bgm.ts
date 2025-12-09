@@ -122,10 +122,26 @@ export const bgmGenerate = async (prompt: string, duration: string, title: strin
   const elevenlabs = new ElevenLabsClient();
 
   // Generate music
-  const track = await elevenlabs.music.compose({
-    prompt,
-    musicLengthMs: durationToMs(duration),
-  });
+  let track;
+  try {
+    track = await elevenlabs.music.compose({
+      prompt,
+      musicLengthMs: durationToMs(duration),
+    });
+  } catch (error: any) {
+    // Handle ElevenLabs API errors with structured cause
+    if (error?.status === 401 || error?.statusCode === 401) {
+      throw new Error("Failed to generate music: Invalid API key", {
+        cause: {
+          action: "music",
+          type: "apiKeyInvalid",
+          agentName: "ttsElevenlabsAgent",
+        },
+      });
+    }
+    // Re-throw other errors as-is
+    throw error;
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const readable = (track as any).audioStream ?? (track as any).stream ?? (track as any).data ?? track;
