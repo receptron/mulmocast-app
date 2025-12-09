@@ -128,9 +128,10 @@ export const bgmGenerate = async (prompt: string, duration: string, title: strin
       prompt,
       musicLengthMs: durationToMs(duration),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Handle ElevenLabs API errors with structured cause
-    if (error?.status === 401 || error?.statusCode === 401) {
+    const apiError = error as { status?: number; statusCode?: number };
+    if (apiError?.status === 401 || apiError?.statusCode === 401) {
       throw new Error("Failed to generate music: Invalid API key", {
         cause: {
           action: "music",
