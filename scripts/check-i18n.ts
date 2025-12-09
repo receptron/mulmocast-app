@@ -1,55 +1,19 @@
-export const isPlainObject = (value: unknown): value is Record<string, unknown> =>
-  !!value && typeof value === "object" && !Array.isArray(value);
+import en from "../src/renderer/i18n/en";
+import ja from "../src/renderer/i18n/ja";
+import { collectKeysWithValues, findMissingKeys, formatMissingKey } from "./check-i18n-core";
 
-export const collectKeysWithValues = (obj: Record<string, unknown>, prefix = ""): Map<string, string> => {
-  const result = new Map<string, string>();
+const enMap = collectKeysWithValues(en);
+const jaMap = collectKeysWithValues(ja);
 
-  for (const [key, value] of Object.entries(obj)) {
-    const path = prefix ? `${prefix}.${key}` : key;
+const missingKeys = findMissingKeys(enMap, jaMap);
 
-    if (isPlainObject(value)) {
-      for (const [childKey, childValue] of collectKeysWithValues(value, path)) {
-        result.set(childKey, childValue);
-      }
-    } else {
-      result.set(path, String(value));
-    }
-  }
-
-  return result;
-};
-
-// Only run the check when this file is executed directly (not imported)
-if (require.main === module) {
-  (async () => {
-    const en = (await import("../src/renderer/i18n/en")).default;
-    const ja = (await import("../src/renderer/i18n/ja")).default;
-
-    const enMap = collectKeysWithValues(en);
-    const jaMap = collectKeysWithValues(ja);
-
-    const allKeys = new Set([...enMap.keys(), ...jaMap.keys()]);
-    const sortedKeys = [...allKeys].sort();
-
-    let hasMismatches = false;
-
-    for (const key of sortedKeys) {
-      const jaValue = jaMap.get(key);
-      const enValue = enMap.get(key);
-
-      if (!jaValue || !enValue) {
-        hasMismatches = true;
-        console.log(`\n${key}`);
-        console.log(`  - ja: ${jaValue || "[MISSING]"}`);
-        console.log(`  - en: ${enValue || "[MISSING]"}`);
-      }
-    }
-
-    if (!hasMismatches) {
-      console.log("i18n keys match between en and ja ✅");
-      process.exit(0);
-    }
-
-    process.exit(1);
-  })();
+if (missingKeys.length === 0) {
+  console.log("i18n keys match between en and ja ✅");
+  process.exit(0);
 }
+
+missingKeys.forEach((missing) => {
+  console.log(formatMissingKey(missing));
+});
+
+process.exit(1);
