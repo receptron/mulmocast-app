@@ -122,13 +122,10 @@ export const bgmGenerate = async (prompt: string, duration: string, title: strin
   const elevenlabs = new ElevenLabsClient();
 
   // Generate music
-  let track;
-  try {
-    track = await elevenlabs.music.compose({
-      prompt,
-      musicLengthMs: durationToMs(duration),
-    });
-  } catch (error: unknown) {
+  const track = await elevenlabs.music.compose({
+    prompt,
+    musicLengthMs: durationToMs(duration),
+  }).catch((error: unknown) => {
     // Handle ElevenLabs API errors with structured cause
     const apiError = error as { status?: number; statusCode?: number };
     if (apiError?.status === 401 || apiError?.statusCode === 401) {
@@ -142,7 +139,7 @@ export const bgmGenerate = async (prompt: string, duration: string, title: strin
     }
     // Re-throw other errors as-is
     throw error;
-  }
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const readable = (track as any).audioStream ?? (track as any).stream ?? (track as any).data ?? track;
