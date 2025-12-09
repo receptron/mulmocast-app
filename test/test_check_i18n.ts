@@ -1,6 +1,11 @@
 import test from "node:test";
 import assert from "node:assert";
-import { isPlainObject, collectKeysWithValues } from "../scripts/check-i18n";
+import {
+  isPlainObject,
+  collectKeysWithValues,
+  findMissingKeys,
+  formatMissingKey,
+} from "../scripts/check-i18n-core";
 
 // isPlainObject のテスト
 test("isPlainObject: basic object returns true", () => {
@@ -301,4 +306,105 @@ test("collectKeysWithValues: objects with whitespace in values", () => {
   assert.strictEqual(result.get("key2"), "trailing spaces  ");
   assert.strictEqual(result.get("key3"), "  both  ");
   assert.strictEqual(result.get("key4"), "multiple   spaces");
+});
+
+// findMissingKeys のテスト
+test("findMissingKeys: no missing keys", () => {
+  const enMap = new Map([
+    ["key1", "value1"],
+    ["key2", "value2"],
+  ]);
+  const jaMap = new Map([
+    ["key1", "値1"],
+    ["key2", "値2"],
+  ]);
+  const result = findMissingKeys(enMap, jaMap);
+  assert.strictEqual(result.length, 0);
+});
+
+test("findMissingKeys: missing in ja", () => {
+  const enMap = new Map([
+    ["key1", "value1"],
+    ["key2", "value2"],
+  ]);
+  const jaMap = new Map([["key1", "値1"]]);
+  const result = findMissingKeys(enMap, jaMap);
+  assert.strictEqual(result.length, 1);
+  assert.strictEqual(result[0].key, "key2");
+  assert.strictEqual(result[0].enValue, "value2");
+  assert.strictEqual(result[0].jaValue, undefined);
+});
+
+test("findMissingKeys: missing in en", () => {
+  const enMap = new Map([["key1", "value1"]]);
+  const jaMap = new Map([
+    ["key1", "値1"],
+    ["key2", "値2"],
+  ]);
+  const result = findMissingKeys(enMap, jaMap);
+  assert.strictEqual(result.length, 1);
+  assert.strictEqual(result[0].key, "key2");
+  assert.strictEqual(result[0].enValue, undefined);
+  assert.strictEqual(result[0].jaValue, "値2");
+});
+
+test("findMissingKeys: multiple missing keys", () => {
+  const enMap = new Map([
+    ["key1", "value1"],
+    ["key3", "value3"],
+  ]);
+  const jaMap = new Map([
+    ["key1", "値1"],
+    ["key2", "値2"],
+  ]);
+  const result = findMissingKeys(enMap, jaMap);
+  assert.strictEqual(result.length, 2);
+  assert.strictEqual(result[0].key, "key2");
+  assert.strictEqual(result[1].key, "key3");
+});
+
+test("findMissingKeys: returns sorted keys", () => {
+  const enMap = new Map([
+    ["zebra", "z"],
+    ["alpha", "a"],
+  ]);
+  const jaMap = new Map([["alpha", "あ"]]);
+  const result = findMissingKeys(enMap, jaMap);
+  assert.strictEqual(result.length, 1);
+  assert.strictEqual(result[0].key, "zebra");
+});
+
+// formatMissingKey のテスト
+test("formatMissingKey: missing in ja", () => {
+  const missing = {
+    key: "test.key",
+    enValue: "English Value",
+    jaValue: undefined,
+  };
+  const result = formatMissingKey(missing);
+  assert.ok(result.includes("test.key"));
+  assert.ok(result.includes("- ja: [MISSING]"));
+  assert.ok(result.includes("- en: English Value"));
+});
+
+test("formatMissingKey: missing in en", () => {
+  const missing = {
+    key: "test.key",
+    enValue: undefined,
+    jaValue: "日本語の値",
+  };
+  const result = formatMissingKey(missing);
+  assert.ok(result.includes("test.key"));
+  assert.ok(result.includes("- ja: 日本語の値"));
+  assert.ok(result.includes("- en: [MISSING]"));
+});
+
+test("formatMissingKey: preserves special characters", () => {
+  const missing = {
+    key: "test.key",
+    enValue: "Value with 'quotes' and \"double quotes\"",
+    jaValue: undefined,
+  };
+  const result = formatMissingKey(missing);
+  assert.ok(result.includes("Value with 'quotes' and \"double quotes\""));
 });
