@@ -1,11 +1,6 @@
 import test from "node:test";
 import assert from "node:assert";
-import {
-  isPlainObject,
-  collectKeysWithValues,
-  findMissingKeys,
-  formatMissingKey,
-} from "../scripts/check-i18n-core";
+import { isPlainObject, collectKeysWithValues, findMissingKeys, formatMissingKey } from "../scripts/check-i18n-core";
 
 // isPlainObject のテスト
 test("isPlainObject: basic object returns true", () => {

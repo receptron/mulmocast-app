@@ -1,10 +1,7 @@
 export const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   !!value && typeof value === "object" && !Array.isArray(value);
 
-export const collectKeysWithValues = (
-  obj: Record<string, unknown>,
-  prefix = ""
-): Map<string, string> => {
+export const collectKeysWithValues = (obj: Record<string, unknown>, prefix = ""): Map<string, string> => {
   const result = new Map<string, string>();
 
   for (const [key, value] of Object.entries(obj)) {
@@ -28,10 +25,7 @@ export interface MissingKey {
   enValue: string | undefined;
 }
 
-export const findMissingKeys = (
-  enMap: Map<string, string>,
-  jaMap: Map<string, string>
-): ReadonlyArray<MissingKey> => {
+export const findMissingKeys = (enMap: Map<string, string>, jaMap: Map<string, string>): ReadonlyArray<MissingKey> => {
   const allKeys = new Set([...enMap.keys(), ...jaMap.keys()]);
   const sortedKeys = [...allKeys].sort();
 
