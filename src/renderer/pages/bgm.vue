@@ -15,9 +15,7 @@
         </div>
 
         <!-- ElevenLabs API Key Alert -->
-        <div v-if="!hasElevenLabsApiKey" class="text-destructive mb-4">
-          {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName.ELEVENLABS_API_KEY") }) }}
-        </div>
+        <SettingsAlert provider="elevenlabs" :setting-presence="globalStore.settingPresence" class="mb-4" />
 
         <!-- BGM List -->
         <div v-if="bgmList.length === 0 && bgmStore.generatingBgms.length === 0" class="py-16 text-center">
@@ -145,12 +143,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { Plus, Music, Play, Pause, Pencil, Trash2, Loader2 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
 
 import Layout from "@/components/layout.vue";
+import SettingsAlert from "@/pages/project/script_editor/settings_alert.vue";
 import { Button, Badge, Textarea } from "@/components/ui";
 import {
   Dialog,
@@ -163,11 +162,12 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { bufferToUrl } from "@/lib/utils";
 import { notifyError, notifySuccess } from "@/lib/notification";
-import { useBgmStore } from "@/store";
+import { useBgmStore, useMulmoGlobalStore } from "@/store";
 import type { BgmMetadata } from "@/types";
 
 const { t } = useI18n();
 const bgmStore = useBgmStore();
+const globalStore = useMulmoGlobalStore();
 
 interface BgmItem extends BgmMetadata {
   playing: boolean;
@@ -177,12 +177,6 @@ interface BgmItem extends BgmMetadata {
 
 const bgmList = ref<BgmItem[]>([]);
 const audioElement = ref<HTMLAudioElement | null>(null);
-
-// Check if ElevenLabs API Key is set
-const apiKeys = ref<Record<string, string>>({});
-const hasElevenLabsApiKey = computed(() => {
-  return apiKeys.value.ELEVENLABS_API_KEY && apiKeys.value.ELEVENLABS_API_KEY.trim() !== "";
-});
 
 const createDialog = ref({
   open: false,
@@ -355,19 +349,7 @@ const formatDate = (dateString: string) => {
   return dayjs(dateString).format("YYYY/MM/DD HH:mm");
 };
 
-const loadApiKeys = async () => {
-  try {
-    const settings = await window.electronAPI.settings.get();
-    if (settings.APIKEY) {
-      apiKeys.value = settings.APIKEY;
-    }
-  } catch (error) {
-    console.error("Failed to load API keys:", error);
-  }
-};
-
 onMounted(() => {
   loadBgmList();
-  loadApiKeys();
 });
 </script>
