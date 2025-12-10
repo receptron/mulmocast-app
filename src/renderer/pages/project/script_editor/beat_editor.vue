@@ -527,7 +527,7 @@ import {
 import { useI18n } from "vue-i18n";
 import { ChevronDown, CircleUserRound, Music, X } from "lucide-vue-next";
 import { getLipSyncModelDescription, getLipSyncTargetInfo } from "./lip_sync_utils";
-import { TRANSITION_TYPES } from "@/../shared/constants";
+import { TRANSITION_TYPES, DEFAULT_TRANSITION_DURATION } from "@/../shared/constants";
 
 // components
 import MediaModal from "@/components/media_modal.vue";
@@ -635,7 +635,7 @@ const beatTransitionType = computed(() => {
 });
 
 const beatTransitionDuration = computed(() => {
-  return props.beat.movieParams?.transition?.duration ?? 0.3;
+  return props.beat.movieParams?.transition?.duration ?? DEFAULT_TRANSITION_DURATION;
 });
 
 const showSpeakerSelector = () => {
@@ -968,15 +968,22 @@ const handleBeatTransitionTypeChange = (value: string) => {
       ...props.beat.movieParams,
       transition: {
         type: type as MulmoTransition["type"],
-        duration: props.beat.movieParams?.transition?.duration ?? 0.3,
+        duration: props.beat.movieParams?.transition?.duration ?? DEFAULT_TRANSITION_DURATION,
       },
     };
     update("movieParams", movieParams);
   }
+  justSaveAndPushToHistory();
 };
 
 const handleBeatTransitionDurationChange = (value: string | number) => {
-  const duration = typeof value === "string" ? parseFloat(value) : value;
+  let duration = typeof value === "string" ? parseFloat(value) : value;
+  // Validate and clamp duration value
+  if (isNaN(duration) || duration < 0) {
+    duration = 0;
+  } else if (duration > 2) {
+    duration = 2;
+  }
   const movieParams = {
     ...props.beat.movieParams,
     transition: {

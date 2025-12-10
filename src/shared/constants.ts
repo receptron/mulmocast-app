@@ -553,6 +553,9 @@ export const MIME_EXT_MAP: Record<string, string> = {
   "video/webm": ".webm",
 };
 
+// Default transition duration in seconds
+export const DEFAULT_TRANSITION_DURATION = 0.3;
+
 // Transition types for movie transitions
 export const TRANSITION_TYPES: ReadonlyArray<{
   value: string;

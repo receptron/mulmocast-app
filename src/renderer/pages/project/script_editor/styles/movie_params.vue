@@ -94,7 +94,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import MulmoError from "./mulmo_error.vue";
 import SettingsAlert from "../settings_alert.vue";
 import { defaultProviders, provider2MovieAgent, type MulmoPresentationStyle } from "mulmocast/browser";
-import { TRANSITION_TYPES } from "@/../shared/constants";
+import { TRANSITION_TYPES, DEFAULT_TRANSITION_DURATION } from "@/../shared/constants";
 
 type MovieParams = MulmoPresentationStyle["movieParams"];
 
@@ -127,7 +127,7 @@ const DEFAULT_VALUES: MovieParams = {
   model: "",
   transition: {
     type: undefined,
-    duration: 0.3,
+    duration: DEFAULT_TRANSITION_DURATION,
   },
 };
 
