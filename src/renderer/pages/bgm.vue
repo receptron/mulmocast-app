@@ -22,7 +22,7 @@
           <div class="space-y-4">
             <Music class="text-muted-foreground mx-auto h-16 w-16" />
             <h2 class="text-foreground text-xl font-semibold">{{ t("bgm.empty.title") }}</h2>
-            <p class="text-muted-foreground">{{ t("bgm.empty.description") }}</p>
+            <p class="text-muted-foreground">{{ t("bgm.empty.description", { buttonLabel: t("bgm.createNew") }) }}</p>
             <p class="text-destructive mt-2 text-sm whitespace-pre-line">{{ t("bgm.empty.requirementNote") }}</p>
           </div>
         </div>
