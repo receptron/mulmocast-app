@@ -554,7 +554,11 @@ export const MIME_EXT_MAP: Record<string, string> = {
 };
 
 // Transition types for movie transitions
-export const TRANSITION_TYPES = [
+export const TRANSITION_TYPES: ReadonlyArray<{
+  value: string;
+  label: string;
+  group: "slide" | "wipe" | null;
+}> = [
   { value: "__undefined__", label: "typeNone", group: null },
   { value: "fade", label: "typeFade", group: null },
   // Slide Transitions
@@ -575,4 +579,4 @@ export const TRANSITION_TYPES = [
   { value: "wipetr", label: "typeWipetr", group: "wipe" },
   { value: "wipebl", label: "typeWipebl", group: "wipe" },
   { value: "wipebr", label: "typeWipebr", group: "wipe" },
-] as const;
+];
