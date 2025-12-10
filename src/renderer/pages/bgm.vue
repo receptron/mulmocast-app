@@ -14,12 +14,16 @@
           </Button>
         </div>
 
+        <!-- ElevenLabs API Key Alert -->
+        <SettingsAlert provider="elevenlabs" :setting-presence="globalStore.settingPresence" class="mb-4" />
+
         <!-- BGM List -->
         <div v-if="bgmList.length === 0 && bgmStore.generatingBgms.length === 0" class="py-16 text-center">
           <div class="space-y-4">
             <Music class="text-muted-foreground mx-auto h-16 w-16" />
             <h2 class="text-foreground text-xl font-semibold">{{ t("bgm.empty.title") }}</h2>
-            <p class="text-muted-foreground">{{ t("bgm.empty.description") }}</p>
+            <p class="text-muted-foreground">{{ t("bgm.empty.description", { buttonLabel: t("bgm.createNew") }) }}</p>
+            <p class="text-destructive mt-2 text-sm whitespace-pre-line">{{ t("bgm.empty.requirementNote") }}</p>
           </div>
         </div>
 
@@ -146,6 +150,7 @@ import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
 
 import Layout from "@/components/layout.vue";
+import SettingsAlert from "@/pages/project/script_editor/settings_alert.vue";
 import { Button, Badge, Textarea } from "@/components/ui";
 import {
   Dialog,
@@ -158,11 +163,12 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { bufferToUrl } from "@/lib/utils";
 import { notifyError, notifySuccess } from "@/lib/notification";
-import { useBgmStore } from "@/store";
+import { useBgmStore, useMulmoGlobalStore } from "@/store";
 import type { BgmMetadata } from "@/types";
 
 const { t } = useI18n();
 const bgmStore = useBgmStore();
+const globalStore = useMulmoGlobalStore();
 
 interface BgmItem extends BgmMetadata {
   playing: boolean;

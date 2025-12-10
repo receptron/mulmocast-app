@@ -1436,7 +1436,9 @@ const lang = {
     generatingDescription: "AIが背景音楽を生成中...",
     empty: {
       title: "BGMがまだ作成されていません",
-      description: "「新規BGM作成」をクリックして、最初の背景音楽を生成してください",
+      description: "「{buttonLabel}」をクリックして、最初の背景音楽を生成してください",
+      requirementNote:
+        "BGMを作成するにはElevenLabsの有料プランとAPI Keyが必要です。\nAPI Keyの「Music Generation」権限を「Access」に変更してください。",
     },
     create: {
       title: "新規BGM作成",
