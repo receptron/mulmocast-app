@@ -554,6 +554,7 @@ import {
 } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
 import { notifyProgress, notifyError } from "@/lib/notification";
+import type { MulmoTransition } from "@/types";
 
 import Markdown from "./beat_editors/markdown.vue";
 import Chart from "./beat_editors/chart.vue";
@@ -966,7 +967,7 @@ const handleBeatTransitionTypeChange = (value: string) => {
     const movieParams = {
       ...props.beat.movieParams,
       transition: {
-        type: type as any,
+        type: type as MulmoTransition["type"],
         duration: props.beat.movieParams?.transition?.duration ?? 0.3,
       },
     };
