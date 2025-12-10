@@ -518,11 +518,13 @@ export const userLevels = [
 export const MEDIA_FILE_EXTENSIONS = {
   image: ["jpg", "jpeg", "png"] as const,
   video: ["mp4", "mov", "webm"] as const,
+  audio: ["mp3", "wav", "ogg", "m4a", "aac", "flac", "webm"] as const,
 };
 
 export type ImageExtension = (typeof MEDIA_FILE_EXTENSIONS.image)[number];
 export type VideoExtension = (typeof MEDIA_FILE_EXTENSIONS.video)[number];
-export type MediaExtension = ImageExtension | VideoExtension;
+export type AudioExtension = (typeof MEDIA_FILE_EXTENSIONS.audio)[number];
+export type MediaExtension = ImageExtension | VideoExtension | AudioExtension;
 
 // MIME type mappings for file extensions
 export const IMAGE_MIME_TYPES: Record<string, string> = {
@@ -537,13 +539,25 @@ export const MOVIE_MIME_TYPES: Record<string, string> = {
   webm: "video/webm",
 } as const;
 
+export const AUDIO_MIME_TYPES: Record<string, string> = {
+  mp3: "audio/mpeg",
+  wav: "audio/wav",
+  ogg: "audio/ogg",
+  m4a: "audio/mp4",
+  aac: "audio/aac",
+  flac: "audio/flac",
+  webm: "audio/webm",
+} as const;
+
 export const MIME_TYPES = {
   ...IMAGE_MIME_TYPES,
   ...MOVIE_MIME_TYPES,
+  ...AUDIO_MIME_TYPES,
 } as const;
 
 export const IMAGE_MIME = [...new Set(Object.values(IMAGE_MIME_TYPES))];
 export const MOVIE_MIME = [...new Set(Object.values(MOVIE_MIME_TYPES))];
+export const AUDIO_MIME = [...new Set(Object.values(AUDIO_MIME_TYPES))];
 
 export const MIME_EXT_MAP: Record<string, string> = {
   "image/jpeg": ".jpg",
@@ -551,6 +565,13 @@ export const MIME_EXT_MAP: Record<string, string> = {
   "video/mp4": ".mp4",
   "video/quicktime": ".mov",
   "video/webm": ".webm",
+  "audio/mpeg": ".mp3",
+  "audio/wav": ".wav",
+  "audio/ogg": ".ogg",
+  "audio/mp4": ".m4a",
+  "audio/aac": ".aac",
+  "audio/flac": ".flac",
+  "audio/webm": ".webm",
 };
 
 // Default transition duration in seconds

@@ -114,7 +114,7 @@
         <input
           ref="audioFileInput"
           type="file"
-          accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac,.webm"
+          :accept="audioAccept"
           @change="handleAudioFileSelect"
           class="hidden"
           :disabled="isAudioUploading"
@@ -529,7 +529,7 @@ import {
 import { useI18n } from "vue-i18n";
 import { ChevronDown, CircleUserRound, Music, X } from "lucide-vue-next";
 import { getLipSyncModelDescription, getLipSyncTargetInfo } from "./lip_sync_utils";
-import { TRANSITION_TYPES, DEFAULT_TRANSITION_DURATION } from "@/../shared/constants";
+import { TRANSITION_TYPES, DEFAULT_TRANSITION_DURATION, MEDIA_FILE_EXTENSIONS } from "../../../../shared/constants";
 
 // components
 import MediaModal from "@/components/media_modal.vue";
@@ -631,6 +631,12 @@ const audioFileInput = ref<HTMLInputElement>();
 const audioPlayerRef = ref<HTMLAudioElement>();
 
 const beatAdvancedSettingsOpen = ref(false);
+
+// Generate accept attribute from constants
+const audioAccept = computed(() => {
+  const extensions = MEDIA_FILE_EXTENSIONS.audio.map((ext) => `.${ext}`).join(",");
+  return `audio/*,${extensions}`;
+});
 
 const beatTransitionType = computed(() => {
   return props.beat.movieParams?.transition?.type || "__undefined__";
@@ -890,6 +896,16 @@ const handleAudioFileClick = () => {
 };
 
 const handleAudioFileUpload = async (file: File) => {
+  // Validate file type
+  const fileExtension = file.name.split(".").pop()?.toLowerCase() ?? "";
+  const mimeType = file.type.split("/")[1] ?? "";
+  const fileType = mimeType || fileExtension;
+
+  if (!MEDIA_FILE_EXTENSIONS.audio.includes(fileType as any) && !file.type.startsWith("audio/")) {
+    notifyError(t("notify.error.media.unsupportedType", { fileType }));
+    return;
+  }
+
   isAudioUploading.value = true;
 
   const reader = new FileReader();
