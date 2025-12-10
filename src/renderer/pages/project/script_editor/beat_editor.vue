@@ -92,13 +92,13 @@
           </template>
           <template v-else-if="uploadedAudioFilename">
             <div class="flex items-center justify-center gap-2">
-              <Music class="text-muted-foreground h-4 w-4" />
-              <span class="text-foreground text-sm font-medium">{{ uploadedAudioFilename }}</span>
+              <Music class="text-muted-foreground h-4 w-4 flex-shrink-0" />
+              <span class="text-foreground truncate text-sm font-medium" :title="uploadedAudioFilename">{{ uploadedAudioFilename }}</span>
               <Button
                 @click="handleAudioFileRemove"
                 variant="ghost"
                 size="icon"
-                class="h-6 w-6"
+                class="h-6 w-6 flex-shrink-0"
                 :title="t('ui.actions.delete')"
               >
                 <X class="h-4 w-4" />
