@@ -6,6 +6,12 @@ export const notifySuccess = (message: string, description?: string) => {
   });
 };
 
+export const notifyInfo = (message: string, description?: string) => {
+  toast.info(message, {
+    description,
+  });
+};
+
 export const notifyError = (
   message: string,
   description?: string,
