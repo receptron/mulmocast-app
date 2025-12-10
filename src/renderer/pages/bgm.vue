@@ -174,7 +174,8 @@ import {
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { bufferToUrl } from "@/lib/utils";
-import { notifyError, notifySuccess } from "@/lib/notification";
+import { notifyError, notifySuccess, notifyInfo } from "@/lib/notification";
+import { toast } from "vue-sonner";
 import { useBgmStore, useMulmoGlobalStore } from "@/store";
 import type { BgmMetadata } from "@/types";
 
@@ -190,6 +191,7 @@ interface BgmItem extends BgmMetadata {
 
 const bgmList = ref<BgmItem[]>([]);
 const audioElement = ref<HTMLAudioElement | null>(null);
+const bgmToastIds = ref<Map<string, string | number>>(new Map());
 
 const createDialog = ref({
   open: false,
@@ -248,6 +250,12 @@ const generateBgm = async () => {
     startedAt: new Date().toISOString(),
   });
 
+  // Show loading toast
+  const toastId = toast.loading(t("bgm.generatingDescription"), {
+    duration: Infinity,
+  });
+  bgmToastIds.value.set(tempId, toastId);
+
   // Close dialog immediately
   createDialog.value.open = false;
   createDialog.value.generating = false;
@@ -260,6 +268,10 @@ const generateBgm = async () => {
     if (result && typeof result === "object" && "error" in result) {
       const error = result.error as { message?: string; detail?: { message?: string } };
       const errorMessage = error?.detail?.message || error?.message || "Unknown error occurred";
+
+      // Dismiss loading toast
+      toast.dismiss(toastId);
+      bgmToastIds.value.delete(tempId);
 
       // Remove from generating list
       bgmStore.removeGeneratingBgm(tempId);
@@ -280,6 +292,10 @@ const generateBgm = async () => {
       editing: false,
     };
 
+    // Dismiss loading toast and show success
+    toast.dismiss(toastId);
+    bgmToastIds.value.delete(tempId);
+
     // Remove from generating list
     bgmStore.removeGeneratingBgm(tempId);
 
@@ -288,6 +304,14 @@ const generateBgm = async () => {
     notifySuccess(t("bgm.created"));
   } catch (error) {
     console.error("Failed to generate BGM:", error);
+
+    // Dismiss loading toast
+    const savedToastId = bgmToastIds.value.get(tempId);
+    if (savedToastId) {
+      toast.dismiss(savedToastId);
+      bgmToastIds.value.delete(tempId);
+    }
+
     bgmStore.removeGeneratingBgm(tempId);
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     notifyError(t("bgm.errors.generationFailed"), errorMessage);
