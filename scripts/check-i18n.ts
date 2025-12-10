@@ -1,50 +1,19 @@
 import en from "../src/renderer/i18n/en";
 import ja from "../src/renderer/i18n/ja";
-
-const isPlainObject = (value: unknown): value is Record<string, unknown> =>
-  !!value && typeof value === "object" && !Array.isArray(value);
-
-const collectKeysWithValues = (obj: Record<string, unknown>, prefix = ""): Map<string, string> => {
-  const result = new Map<string, string>();
-
-  for (const [key, value] of Object.entries(obj)) {
-    const path = prefix ? `${prefix}.${key}` : key;
-
-    if (isPlainObject(value)) {
-      for (const [childKey, childValue] of collectKeysWithValues(value, path)) {
-        result.set(childKey, childValue);
-      }
-    } else {
-      result.set(path, String(value));
-    }
-  }
-
-  return result;
-};
+import { collectKeysWithValues, findMissingKeys, formatMissingKey } from "./check-i18n-core";
 
 const enMap = collectKeysWithValues(en);
 const jaMap = collectKeysWithValues(ja);
 
-const allKeys = new Set([...enMap.keys(), ...jaMap.keys()]);
-const sortedKeys = [...allKeys].sort();
+const missingKeys = findMissingKeys(enMap, jaMap);
 
-let hasMismatches = false;
-
-for (const key of sortedKeys) {
-  const jaValue = jaMap.get(key);
-  const enValue = enMap.get(key);
-
-  if (!jaValue || !enValue) {
-    hasMismatches = true;
-    console.log(`\n${key}`);
-    console.log(`  - ja: ${jaValue || "missing"}`);
-    console.log(`  - en: ${enValue || "missing"}`);
-  }
-}
-
-if (!hasMismatches) {
+if (missingKeys.length === 0) {
   console.log("i18n keys match between en and ja ✅");
   process.exit(0);
 }
+
+missingKeys.forEach((missing) => {
+  console.log(formatMissingKey(missing));
+});
 
 process.exit(1);
