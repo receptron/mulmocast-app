@@ -96,3 +96,30 @@ export type BgmMetadata = {
   duration: string;
   createdAt: string;
 };
+
+export type MulmoTransition = {
+  type:
+    | "fade"
+    | "slideout_left"
+    | "slideout_right"
+    | "slideout_up"
+    | "slideout_down"
+    | "slidein_left"
+    | "slidein_right"
+    | "slidein_up"
+    | "slidein_down"
+    | "wipeleft"
+    | "wiperight"
+    | "wipeup"
+    | "wipedown"
+    | "wipetl"
+    | "wipetr"
+    | "wipebl"
+    | "wipebr";
+  duration?: number;
+};
+
+export type MulmoMovieParams = {
+  transition?: MulmoTransition;
+  // Add other movieParams properties as needed
+};
