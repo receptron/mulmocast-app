@@ -644,6 +644,9 @@ const lang = {
       clickToReplace: "Click to replace",
       uploadFailed: "Failed to upload audio file",
     },
+    advancedSettings: {
+      title: "Advanced Beat Settings",
+    },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
       badge: "Media File",

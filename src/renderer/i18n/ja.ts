@@ -642,6 +642,9 @@ const lang = {
       clickToReplace: "クリックして変更",
       uploadFailed: "オーディオファイルのアップロードに失敗しました",
     },
+    advancedSettings: {
+      title: "ビートの詳細設定",
+    },
     // Beat type structures (moved from beat.form.*)
     mediaFile: {
       badge: "Media File",
