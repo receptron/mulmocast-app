@@ -552,3 +552,34 @@ export const MIME_EXT_MAP: Record<string, string> = {
   "video/quicktime": ".mov",
   "video/webm": ".webm",
 };
+
+// Default transition duration in seconds
+export const DEFAULT_TRANSITION_DURATION = 0.3;
+
+// Transition types for movie transitions
+export const TRANSITION_TYPES: ReadonlyArray<{
+  value: string;
+  label: string;
+  group: "slide" | "wipe" | null;
+}> = [
+  { value: "__undefined__", label: "typeNone", group: null },
+  { value: "fade", label: "typeFade", group: null },
+  // Slide Transitions
+  { value: "slideout_left", label: "typeSlideoutLeft", group: "slide" },
+  { value: "slideout_right", label: "typeSlideoutRight", group: "slide" },
+  { value: "slideout_up", label: "typeSlideoutUp", group: "slide" },
+  { value: "slideout_down", label: "typeSlideoutDown", group: "slide" },
+  { value: "slidein_left", label: "typeSlideinLeft", group: "slide" },
+  { value: "slidein_right", label: "typeSlideinRight", group: "slide" },
+  { value: "slidein_up", label: "typeSlideinUp", group: "slide" },
+  { value: "slidein_down", label: "typeSlideinDown", group: "slide" },
+  // Wipe Transitions
+  { value: "wipeleft", label: "typeWipeleft", group: "wipe" },
+  { value: "wiperight", label: "typeWiperight", group: "wipe" },
+  { value: "wipeup", label: "typeWipeup", group: "wipe" },
+  { value: "wipedown", label: "typeWipedown", group: "wipe" },
+  { value: "wipetl", label: "typeWipetl", group: "wipe" },
+  { value: "wipetr", label: "typeWipetr", group: "wipe" },
+  { value: "wipebl", label: "typeWipebl", group: "wipe" },
+  { value: "wipebr", label: "typeWipebr", group: "wipe" },
+];

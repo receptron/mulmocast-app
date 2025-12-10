@@ -464,6 +464,49 @@
       </div>
     </div>
 
+    <!-- Advanced Beat Settings -->
+    <Collapsible v-model:open="beatAdvancedSettingsOpen" class="mt-4" v-if="index > 0">
+      <CollapsibleTrigger as-child>
+        <div class="mb-3 cursor-pointer">
+          <div class="flex items-center gap-2">
+            <ChevronDown :class="['h-4 w-4 transition-transform', beatAdvancedSettingsOpen && 'rotate-180']" />
+            <h4 class="text-sm font-medium">{{ t("beat.advancedSettings.title") }}</h4>
+          </div>
+        </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent class="space-y-3">
+        <!-- Transition Settings -->
+        <div>
+          <Label>{{ t("parameters.transitionParams.type") }}</Label>
+          <Select :model-value="beatTransitionType" @update:model-value="handleBeatTransitionTypeChange">
+            <SelectTrigger>
+              <SelectValue :placeholder="t('parameters.transitionParams.typeNone')" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem
+                v-for="transitionType in TRANSITION_TYPES"
+                :key="transitionType.value"
+                :value="transitionType.value"
+              >
+                {{ t(`parameters.transitionParams.${transitionType.label}`) }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div v-if="beat.movieParams?.transition?.type">
+          <Label>{{ t("parameters.transitionParams.duration") }}</Label>
+          <Input
+            :model-value="beatTransitionDuration"
+            @update:model-value="handleBeatTransitionDurationChange"
+            type="number"
+            step="0.1"
+            min="0"
+            max="2"
+          />
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+
     <MediaModal v-model:open="modalOpen" :type="modalType" :src="modalSrc" />
   </div>
 </template>
@@ -484,12 +527,14 @@ import {
 import { useI18n } from "vue-i18n";
 import { ChevronDown, CircleUserRound, Music, X } from "lucide-vue-next";
 import { getLipSyncModelDescription, getLipSyncTargetInfo } from "./lip_sync_utils";
+import { TRANSITION_TYPES, DEFAULT_TRANSITION_DURATION } from "@/../shared/constants";
 
 // components
 import MediaModal from "@/components/media_modal.vue";
 import { Badge, Button, Label, Input, Textarea, Checkbox } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import BeatPreviewImage from "./beat_preview_image.vue";
 import BeatPreviewMovie from "./beat_preview_movie.vue";
 import BeatSelector from "./beat_selector.vue";
@@ -509,6 +554,7 @@ import {
 } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
 import { notifyProgress, notifyError } from "@/lib/notification";
+import type { MulmoTransition } from "@/types";
 
 import Markdown from "./beat_editors/markdown.vue";
 import Chart from "./beat_editors/chart.vue";
@@ -581,6 +627,16 @@ const uploadedAudioFilename = ref<string>(
 
 const audioFileInput = ref<HTMLInputElement>();
 const audioPlayerRef = ref<HTMLAudioElement>();
+
+const beatAdvancedSettingsOpen = ref(false);
+
+const beatTransitionType = computed(() => {
+  return props.beat.movieParams?.transition?.type || "__undefined__";
+});
+
+const beatTransitionDuration = computed(() => {
+  return props.beat.movieParams?.transition?.duration ?? DEFAULT_TRANSITION_DURATION;
+});
 
 const showSpeakerSelector = () => {
   toggleSpeakerMode.value = true;
@@ -897,6 +953,44 @@ const handleAudioFileRemove = (event: Event) => {
 
   // Notify parent to clear the audio preview
   emit("audioRemoved", props.index, props.beat.id);
+};
+
+const handleBeatTransitionTypeChange = (value: string) => {
+  const type = value === "__undefined__" ? undefined : value;
+  if (type === undefined) {
+    // Remove transition entirely when set to "None"
+    const movieParams = props.beat.movieParams ? { ...props.beat.movieParams } : {};
+    delete movieParams.transition;
+    update("movieParams", Object.keys(movieParams).length > 0 ? movieParams : undefined);
+  } else {
+    // Initialize movieParams with transition
+    const movieParams = {
+      ...props.beat.movieParams,
+      transition: {
+        type: type as MulmoTransition["type"],
+        duration: props.beat.movieParams?.transition?.duration ?? DEFAULT_TRANSITION_DURATION,
+      },
+    };
+    update("movieParams", movieParams);
+  }
+};
+
+const handleBeatTransitionDurationChange = (value: string | number) => {
+  let duration = typeof value === "string" ? parseFloat(value) : value;
+  // Validate and clamp duration value
+  if (isNaN(duration) || duration < 0) {
+    duration = 0;
+  } else if (duration > 2) {
+    duration = 2;
+  }
+  const movieParams = {
+    ...props.beat.movieParams,
+    transition: {
+      ...props.beat.movieParams?.transition,
+      duration,
+    },
+  };
+  update("movieParams", movieParams);
 };
 
 const update = (path: string, value: unknown) => {
