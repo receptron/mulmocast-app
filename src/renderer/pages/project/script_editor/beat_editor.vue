@@ -65,12 +65,14 @@
       <!-- Audio Source Selection -->
       <RadioGroup :model-value="audioSourceType" @update:model-value="handleAudioSourceChange" class="mb-2 flex gap-4">
         <div class="flex items-center space-x-2">
-          <RadioGroupItem id="generate" value="generate" />
-          <Label for="generate" class="cursor-pointer font-normal">{{ t("beat.audio.generateFromText") }}</Label>
+          <RadioGroupItem :id="`generate-${index}`" value="generate" />
+          <Label :for="`generate-${index}`" class="cursor-pointer font-normal">{{
+            t("beat.audio.generateFromText")
+          }}</Label>
         </div>
         <div class="flex items-center space-x-2">
-          <RadioGroupItem id="upload" value="upload" />
-          <Label for="upload" class="cursor-pointer font-normal">{{ t("beat.audio.uploadFile") }}</Label>
+          <RadioGroupItem :id="`upload-${index}`" value="upload" />
+          <Label :for="`upload-${index}`" class="cursor-pointer font-normal">{{ t("beat.audio.uploadFile") }}</Label>
         </div>
       </RadioGroup>
 
@@ -90,13 +92,15 @@
           </template>
           <template v-else-if="uploadedAudioFilename">
             <div class="flex items-center justify-center gap-2">
-              <Music class="text-muted-foreground h-4 w-4" />
-              <span class="text-foreground text-sm font-medium">{{ uploadedAudioFilename }}</span>
+              <Music class="text-muted-foreground h-4 w-4 flex-shrink-0" />
+              <span class="text-foreground truncate text-sm font-medium" :title="uploadedAudioFilename">{{
+                uploadedAudioFilename
+              }}</span>
               <Button
                 @click="handleAudioFileRemove"
                 variant="ghost"
                 size="icon"
-                class="h-6 w-6"
+                class="h-6 w-6 flex-shrink-0"
                 :title="t('ui.actions.delete')"
               >
                 <X class="h-4 w-4" />
@@ -112,7 +116,7 @@
         <input
           ref="audioFileInput"
           type="file"
-          accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac,.webm"
+          :accept="audioAccept"
           @change="handleAudioFileSelect"
           class="hidden"
           :disabled="isAudioUploading"
@@ -527,7 +531,12 @@ import {
 import { useI18n } from "vue-i18n";
 import { ChevronDown, CircleUserRound, Music, X } from "lucide-vue-next";
 import { getLipSyncModelDescription, getLipSyncTargetInfo } from "./lip_sync_utils";
-import { TRANSITION_TYPES, DEFAULT_TRANSITION_DURATION } from "@/../shared/constants";
+import {
+  TRANSITION_TYPES,
+  DEFAULT_TRANSITION_DURATION,
+  MEDIA_FILE_EXTENSIONS,
+  type AudioExtension,
+} from "../../../../shared/constants";
 
 // components
 import MediaModal from "@/components/media_modal.vue";
@@ -629,6 +638,12 @@ const audioFileInput = ref<HTMLInputElement>();
 const audioPlayerRef = ref<HTMLAudioElement>();
 
 const beatAdvancedSettingsOpen = ref(false);
+
+// Generate accept attribute from constants
+const audioAccept = computed(() => {
+  const extensions = MEDIA_FILE_EXTENSIONS.audio.map((ext) => `.${ext}`).join(",");
+  return `audio/*,${extensions}`;
+});
 
 const beatTransitionType = computed(() => {
   return props.beat.movieParams?.transition?.type || "__undefined__";
@@ -888,6 +903,19 @@ const handleAudioFileClick = () => {
 };
 
 const handleAudioFileUpload = async (file: File) => {
+  // Validate file type
+  const fileExtension = file.name.split(".").pop()?.toLowerCase() ?? "";
+  const mimeType = file.type.split("/")[1] ?? "";
+  const fileType = mimeType || fileExtension;
+
+  const isValidExtension = MEDIA_FILE_EXTENSIONS.audio.includes(fileType as AudioExtension);
+  const isAudioMimeType = file.type.startsWith("audio/");
+
+  if (!isValidExtension && !isAudioMimeType) {
+    notifyError(t("notify.error.media.unsupportedType", { fileType }));
+    return;
+  }
+
   isAudioUploading.value = true;
 
   const reader = new FileReader();
