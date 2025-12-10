@@ -1144,10 +1144,10 @@
     minimist "^1.2.8"
     postject "^1.0.0-alpha.6"
 
-"@elevenlabs/elevenlabs-js@^2.26.0":
-  version "2.26.0"
-  resolved "https://registry.yarnpkg.com/@elevenlabs/elevenlabs-js/-/elevenlabs-js-2.26.0.tgz#d8e3a40dc6b1d7cd1933fddfa28b6990b8d5e126"
-  integrity sha512-MkRV1/bIhIKWSZ2y79q83+6AEhZfznfAHYMPq+H0Dm016mEOUq6YQNhGdpLJkzLQ3G6yJMHVkXQIyLZvZkzPRg==
+"@elevenlabs/elevenlabs-js@^2.27.0":
+  version "2.27.0"
+  resolved "https://registry.yarnpkg.com/@elevenlabs/elevenlabs-js/-/elevenlabs-js-2.27.0.tgz#f8eb597091ff5e2ade393d9571e13c7829cd4096"
+  integrity sha512-jKZnERY2eEJLtFVz6i0dR24fc1CqzBEJoRcoR66lO26gSjm7BpsGQ1rSCaOXnV9IivRTA/hJATkRBBWqfEjIRQ==
   dependencies:
     command-exists "^1.2.9"
     node-fetch "^2.7.0"
@@ -8028,10 +8028,10 @@ mulmocast-vision@^1.0.8:
     pdfkit "^0.17.2"
     puppeteer "^24.32.0"
 
-mulmocast@^2.1.3:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.1.3.tgz#7d05eceeaa215bb4ba04472dc01d521f436c2520"
-  integrity sha512-J6V95ochyHGxTo1DuDd7yU53NWGAWPTxz+/xbGhfz57g41Rrx0hCIBz+g/7uPaeToEy6dhZ3E4zQlkvAKXDA1g==
+mulmocast@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.1.4.tgz#5f09fff84d3cafcc6c90e10309d36f9c33fce6cc"
+  integrity sha512-b0X/ELvmLz0wv8HXgUCJQSRng7XaZeTXW/2qhKpbXsGgwCcgKq5J0mcRgvrclH5LuBD0D5FmagUmke13VtFt2g==
   dependencies:
     "@google-cloud/text-to-speech" "^6.4.0"
     "@google/genai" "^1.32.0"
