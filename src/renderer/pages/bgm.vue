@@ -84,7 +84,7 @@
 
             <div class="flex items-center space-x-2">
               <Badge variant="secondary" class="text-xs">{{ bgm.duration }}</Badge>
-              <Button variant="ghost" size="icon" @click="deleteBgm(bgm.id)">
+              <Button variant="ghost" size="icon" @click="handleDeleteBgm(bgm)">
                 <Trash2 class="h-4 w-4" />
               </Button>
             </div>
@@ -140,6 +140,18 @@
         </DialogFooter>
       </DialogContent>
     </Dialog>
+
+    <!-- Delete Confirmation Dialog -->
+    <ConfirmDialog
+      v-model:open="deleteDialog.open"
+      :dialog-title-key="deleteDialog.dialogTitleKey"
+      :dialog-title-params="deleteDialog.dialogTitleParams"
+      :dialog-description-key="deleteDialog.dialogDescriptionKey"
+      :loading="deleteDialog.loading"
+      confirm-label-key="ui.actions.delete"
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    />
   </Layout>
 </template>
 
@@ -151,7 +163,7 @@ import dayjs from "dayjs";
 
 import Layout from "@/components/layout.vue";
 import SettingsAlert from "@/pages/project/script_editor/settings_alert.vue";
-import { Button, Badge, Textarea } from "@/components/ui";
+import { Button, Badge, Textarea, ConfirmDialog } from "@/components/ui";
 import {
   Dialog,
   DialogContent,
@@ -184,6 +196,15 @@ const createDialog = ref({
   prompt: "",
   duration: "60s",
   generating: false,
+});
+
+const deleteDialog = ref({
+  open: false,
+  dialogTitleKey: "",
+  dialogTitleParams: {},
+  dialogDescriptionKey: "",
+  loading: false,
+  bgmToDelete: null as BgmItem | null,
 });
 
 const loadBgmList = async () => {
@@ -335,15 +356,37 @@ const saveNameEdit = async (bgm: BgmItem) => {
   }
 };
 
-const deleteBgm = async (id: string) => {
+const handleDeleteBgm = (bgm: BgmItem) => {
+  deleteDialog.value = {
+    open: true,
+    dialogTitleKey: "bgm.confirmDelete",
+    dialogTitleParams: { title: bgm.title },
+    dialogDescriptionKey: "ui.messages.cannotUndo",
+    loading: false,
+    bgmToDelete: bgm,
+  };
+};
+
+const confirmDelete = async () => {
+  if (!deleteDialog.value.bgmToDelete) return;
+
+  deleteDialog.value.loading = true;
   try {
-    const success = (await window.electronAPI.mulmoHandler("bgmDelete", id)) as boolean;
+    const success = (await window.electronAPI.mulmoHandler("bgmDelete", deleteDialog.value.bgmToDelete.id)) as boolean;
     if (success) {
-      bgmList.value = bgmList.value.filter((bgm) => bgm.id !== id);
+      bgmList.value = bgmList.value.filter((bgm) => bgm.id !== deleteDialog.value.bgmToDelete?.id);
+      deleteDialog.value.open = false;
     }
   } catch (error) {
     console.error("Failed to delete BGM:", error);
+    notifyError(t("bgm.errors.deleteFailed"), String(error));
+  } finally {
+    deleteDialog.value.loading = false;
   }
+};
+
+const cancelDelete = () => {
+  deleteDialog.value.open = false;
 };
 
 const formatDate = (dateString: string) => {
