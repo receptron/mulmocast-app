@@ -531,7 +531,12 @@ import {
 import { useI18n } from "vue-i18n";
 import { ChevronDown, CircleUserRound, Music, X } from "lucide-vue-next";
 import { getLipSyncModelDescription, getLipSyncTargetInfo } from "./lip_sync_utils";
-import { TRANSITION_TYPES, DEFAULT_TRANSITION_DURATION, MEDIA_FILE_EXTENSIONS } from "../../../../shared/constants";
+import {
+  TRANSITION_TYPES,
+  DEFAULT_TRANSITION_DURATION,
+  MEDIA_FILE_EXTENSIONS,
+  type AudioExtension,
+} from "../../../../shared/constants";
 
 // components
 import MediaModal from "@/components/media_modal.vue";
@@ -903,7 +908,10 @@ const handleAudioFileUpload = async (file: File) => {
   const mimeType = file.type.split("/")[1] ?? "";
   const fileType = mimeType || fileExtension;
 
-  if (!MEDIA_FILE_EXTENSIONS.audio.includes(fileType as any) && !file.type.startsWith("audio/")) {
+  const isValidExtension = MEDIA_FILE_EXTENSIONS.audio.includes(fileType as AudioExtension);
+  const isAudioMimeType = file.type.startsWith("audio/");
+
+  if (!isValidExtension && !isAudioMimeType) {
     notifyError(t("notify.error.media.unsupportedType", { fileType }));
     return;
   }
