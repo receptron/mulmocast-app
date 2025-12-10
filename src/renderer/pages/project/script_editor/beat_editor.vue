@@ -65,12 +65,12 @@
       <!-- Audio Source Selection -->
       <RadioGroup :model-value="audioSourceType" @update:model-value="handleAudioSourceChange" class="mb-2 flex gap-4">
         <div class="flex items-center space-x-2">
-          <RadioGroupItem id="generate" value="generate" />
-          <Label for="generate" class="cursor-pointer font-normal">{{ t("beat.audio.generateFromText") }}</Label>
+          <RadioGroupItem :id="`generate-${index}`" value="generate" />
+          <Label :for="`generate-${index}`" class="cursor-pointer font-normal">{{ t("beat.audio.generateFromText") }}</Label>
         </div>
         <div class="flex items-center space-x-2">
-          <RadioGroupItem id="upload" value="upload" />
-          <Label for="upload" class="cursor-pointer font-normal">{{ t("beat.audio.uploadFile") }}</Label>
+          <RadioGroupItem :id="`upload-${index}`" value="upload" />
+          <Label :for="`upload-${index}`" class="cursor-pointer font-normal">{{ t("beat.audio.uploadFile") }}</Label>
         </div>
       </RadioGroup>
 
