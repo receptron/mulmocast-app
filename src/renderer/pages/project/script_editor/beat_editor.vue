@@ -973,7 +973,6 @@ const handleBeatTransitionTypeChange = (value: string) => {
     };
     update("movieParams", movieParams);
   }
-  justSaveAndPushToHistory();
 };
 
 const handleBeatTransitionDurationChange = (value: string | number) => {
@@ -992,7 +991,6 @@ const handleBeatTransitionDurationChange = (value: string | number) => {
     },
   };
   update("movieParams", movieParams);
-  justSaveAndPushToHistory();
 };
 
 const update = (path: string, value: unknown) => {
