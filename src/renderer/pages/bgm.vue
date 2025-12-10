@@ -372,10 +372,7 @@ const confirmDelete = async () => {
 
   deleteDialog.value.loading = true;
   try {
-    const success = (await window.electronAPI.mulmoHandler(
-      "bgmDelete",
-      deleteDialog.value.bgmToDelete.id
-    )) as boolean;
+    const success = (await window.electronAPI.mulmoHandler("bgmDelete", deleteDialog.value.bgmToDelete.id)) as boolean;
     if (success) {
       bgmList.value = bgmList.value.filter((bgm) => bgm.id !== deleteDialog.value.bgmToDelete?.id);
       deleteDialog.value.open = false;
