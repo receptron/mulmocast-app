@@ -14,6 +14,11 @@
           </Button>
         </div>
 
+        <!-- ElevenLabs API Key Alert -->
+        <div v-if="!hasElevenLabsApiKey" class="text-destructive mb-4">
+          {{ t("ai.provider.alertTemplate", { thing: t("ai.apiKeyName.ELEVENLABS_API_KEY") }) }}
+        </div>
+
         <!-- BGM List -->
         <div v-if="bgmList.length === 0 && bgmStore.generatingBgms.length === 0" class="py-16 text-center">
           <div class="space-y-4">
@@ -140,7 +145,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { Plus, Music, Play, Pause, Pencil, Trash2, Loader2 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
@@ -172,6 +177,12 @@ interface BgmItem extends BgmMetadata {
 
 const bgmList = ref<BgmItem[]>([]);
 const audioElement = ref<HTMLAudioElement | null>(null);
+
+// Check if ElevenLabs API Key is set
+const apiKeys = ref<Record<string, string>>({});
+const hasElevenLabsApiKey = computed(() => {
+  return apiKeys.value.ELEVENLABS_API_KEY && apiKeys.value.ELEVENLABS_API_KEY.trim() !== "";
+});
 
 const createDialog = ref({
   open: false,
@@ -344,7 +355,19 @@ const formatDate = (dateString: string) => {
   return dayjs(dateString).format("YYYY/MM/DD HH:mm");
 };
 
+const loadApiKeys = async () => {
+  try {
+    const settings = await window.electronAPI.settings.get();
+    if (settings.APIKEY) {
+      apiKeys.value = settings.APIKEY;
+    }
+  } catch (error) {
+    console.error("Failed to load API keys:", error);
+  }
+};
+
 onMounted(() => {
   loadBgmList();
+  loadApiKeys();
 });
 </script>
