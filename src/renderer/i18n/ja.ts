@@ -1430,6 +1430,7 @@ const lang = {
     description: "プレゼンテーション用の背景音楽を作成・管理します",
     createNew: "新規BGM作成",
     created: "BGMを作成しました",
+    confirmDelete: "「{title}」を削除しますか？",
     generatingDescription: "AIが背景音楽を生成中...",
     empty: {
       title: "BGMがまだ作成されていません",
@@ -1448,6 +1449,7 @@ const lang = {
     },
     errors: {
       generationFailed: "BGMの生成に失敗しました",
+      deleteFailed: "BGMの削除に失敗しました",
       permissionDenied: "API権限エラー",
       permissionDescription:
         "お使いのElevenLabs APIキーに「music_generation」の権限がありません。APIプランをアップグレードするか、音楽生成が有効な別のAPIキーを使用してください。",
