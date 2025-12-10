@@ -93,7 +93,9 @@
           <template v-else-if="uploadedAudioFilename">
             <div class="flex items-center justify-center gap-2">
               <Music class="text-muted-foreground h-4 w-4 flex-shrink-0" />
-              <span class="text-foreground truncate text-sm font-medium" :title="uploadedAudioFilename">{{ uploadedAudioFilename }}</span>
+              <span class="text-foreground truncate text-sm font-medium" :title="uploadedAudioFilename">{{
+                uploadedAudioFilename
+              }}</span>
               <Button
                 @click="handleAudioFileRemove"
                 variant="ghost"
