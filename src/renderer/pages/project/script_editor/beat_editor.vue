@@ -497,7 +497,9 @@
                 @update:model-value="handleTransitionToggle"
               />
               <Label class="cursor-pointer" :class="!beat.movieParams?.transition?.type ? 'text-muted-foreground' : ''">
-                {{ t("parameters.transitionParams.overrideTitle", { transition: t("parameters.transitionParams.title") }) }}
+                {{
+                  t("parameters.transitionParams.overrideTitle", { transition: t("parameters.transitionParams.title") })
+                }}
               </Label>
             </div>
             <template v-if="beat.movieParams?.transition?.type">
