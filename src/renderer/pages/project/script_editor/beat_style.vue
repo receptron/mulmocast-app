@@ -1,6 +1,11 @@
 <template>
-  <div class="flex items-center gap-2 mb-3">
-    <Checkbox variant="ghost" size="icon" :modelValue="!!beat?.imageParams" @update:model-value="updateBeatImageParams" />
+  <div class="mb-3 flex items-center gap-2">
+    <Checkbox
+      variant="ghost"
+      size="icon"
+      :modelValue="!!beat?.imageParams"
+      @update:model-value="updateBeatImageParams"
+    />
     <div class="group relative">
       <Label class="cursor-pointer" :class="!beat?.imageParams ? 'text-muted-foreground' : ''">
         {{ t("parameters.imageParams.customTitle") }}
