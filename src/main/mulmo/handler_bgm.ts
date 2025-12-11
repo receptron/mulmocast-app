@@ -129,13 +129,39 @@ export const bgmGenerate = async (prompt: string, duration: string, title: strin
     })
     .catch((error: unknown) => {
       // Handle ElevenLabs API errors with structured cause
-      const apiError = error as { status?: number; statusCode?: number };
+      const apiError = error as {
+        status?: number;
+        statusCode?: number;
+        body: {
+          detail: {
+            status: string;
+          };
+        };
+      };
       if (apiError?.status === 401 || apiError?.statusCode === 401) {
         throw new Error("Failed to generate music: Invalid API key", {
           cause: {
             action: "music",
             type: "apiKeyInvalid",
-            agentName: "ttsElevenlabsAgent",
+            agentName: "bgmElevenlabsAgent",
+          },
+        });
+      }
+      if (apiError.statusCode === 400 && apiError?.body?.detail?.status) {
+        if (apiError.body.detail.status === "bad_prompt") {
+          throw new Error("Failed to generate music: Bad Prompt", {
+            cause: {
+              action: "music",
+              type: "badPrompt",
+              agentName: "bgmElevenlabsAgent",
+            },
+          });
+        }
+        throw new Error("Failed to generate music: Invalid Error", {
+          cause: {
+            action: "music",
+            type: apiError.body.detail.status,
+            agentName: "bgmElevenlabsAgent",
           },
         });
       }
