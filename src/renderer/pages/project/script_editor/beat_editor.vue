@@ -495,7 +495,11 @@
                 :modelValue="!!beat.movieParams?.transition?.type"
                 @update:model-value="handleTransitionToggle"
               />
-              <Label class="cursor-pointer" :class="!beat.movieParams?.transition?.type ? 'text-muted-foreground' : ''">
+              <Label
+                class="cursor-pointer"
+                :class="!beat.movieParams?.transition?.type ? 'text-muted-foreground' : ''"
+                @click="handleTransitionToggle(!beat.movieParams?.transition?.type)"
+              >
                 {{
                   t("parameters.transitionParams.overrideTitle", { transition: t("parameters.transitionParams.title") })
                 }}
