@@ -437,6 +437,7 @@
     </div>
     <!-- Character Images Selection (only for imagePrompt beats) -->
     <template v-if="beatType === 'imagePrompt'">
+      <hr class="m-2" />
       <CharaParams :beat="beat" :images="mulmoScript.imageParams?.images" @updateImageNames="updateImageNames" />
     </template>
 
