@@ -462,7 +462,7 @@
     </div>
 
     <!-- Advanced Beat Settings -->
-    <template v-if="beatType === 'imagePrompt' || index > 0">
+    <template v-if="(beatType === 'imagePrompt' && isPro) || index > 0">
       <hr class="m-2" />
       <Collapsible v-model:open="beatAdvancedSettingsOpen" class="mt-4">
         <CollapsibleTrigger as-child>
