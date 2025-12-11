@@ -166,7 +166,7 @@
 </template>
 
 <script setup lang="ts">
-  import { computed } from "vue";
+import { computed } from "vue";
 import { type Speaker, provider2TTSAgent } from "mulmocast/browser";
 import {
   SPEECH_LANGUAGES,
@@ -241,7 +241,6 @@ const currentModel = computed(() => {
   const ttsProvider = provider2TTSAgent[localizedSpeaker.value.provider as TTSProvider];
   return localizedSpeaker.value.model ?? ttsProvider.defaultModel;
 });
-
 
 const handleSpeakerVoiceChange = (voiceId: string) => {
   const lang = mulmoScriptHistoryStore.lang;
