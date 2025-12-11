@@ -851,6 +851,7 @@ const lang = {
       language: "Language",
       displayName: "Display Name",
       voiceId: "Voice ID",
+      modelDefault: "Default",
       speed: "Reading Speed",
       speedPlaceholder: "e.g., 1.2 (range: 0.4-3.0, default: 1.0)",
       instruction: "Reading Style",
