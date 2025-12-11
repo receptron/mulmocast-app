@@ -435,17 +435,9 @@
         />
       </div>
     </div>
+    <!-- Character Images Selection (only for imagePrompt beats) -->
     <template v-if="beatType === 'imagePrompt'">
-      <hr class="m-2" />
-      <BeatStyle
-        :beat="beat"
-        @update="update"
-        :imageParams="mulmoScript.imageParams"
-        :settingPresence="settingPresence"
-        :isPro="isPro"
-        @updateImageNames="updateImageNames"
-        @justSaveAndPushToHistory="justSaveAndPushToHistory"
-      />
+      <CharaParams :beat="beat" :images="mulmoScript.imageParams?.images" @updateImageNames="updateImageNames" />
     </template>
 
     <div class="border-border/40 bg-muted/10 mt-4 rounded-md border p-3" v-if="false">
@@ -470,7 +462,7 @@
     </div>
 
     <!-- Advanced Beat Settings -->
-    <template v-if="index > 0">
+    <template v-if="beatType === 'imagePrompt' || index > 0">
       <hr class="m-2" />
       <Collapsible v-model:open="beatAdvancedSettingsOpen" class="mt-4">
         <CollapsibleTrigger as-child>
@@ -482,35 +474,49 @@
           </div>
         </CollapsibleTrigger>
         <CollapsibleContent class="space-y-3">
-          <!-- Transition Settings -->
-          <div>
-            <Label>{{ t("parameters.transitionParams.type") }}</Label>
-            <Select :model-value="beatTransitionType" @update:model-value="handleBeatTransitionTypeChange">
-              <SelectTrigger>
-                <SelectValue :placeholder="t('parameters.transitionParams.typeNone')" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem
-                  v-for="transitionType in TRANSITION_TYPES"
-                  :key="transitionType.value"
-                  :value="transitionType.value"
-                >
-                  {{ t(`parameters.transitionParams.${transitionType.label}`) }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div v-if="beat.movieParams?.transition?.type">
-            <Label>{{ t("parameters.transitionParams.duration") }}</Label>
-            <Input
-              :model-value="beatTransitionDuration"
-              @update:model-value="handleBeatTransitionDurationChange"
-              type="number"
-              step="0.1"
-              min="0"
-              max="2"
+          <!-- Image Generation Override Settings (only for imagePrompt beats) -->
+          <template v-if="beatType === 'imagePrompt' && isPro">
+            <BeatStyle
+              :beat="beat"
+              @update="update"
+              :imageParams="mulmoScript.imageParams"
+              :settingPresence="settingPresence"
+              :isPro="isPro"
+              @justSaveAndPushToHistory="justSaveAndPushToHistory"
             />
-          </div>
+          </template>
+
+          <!-- Transition Settings (only for beat 2 and onwards) -->
+          <template v-if="index > 0">
+            <div>
+              <Label>{{ t("parameters.transitionParams.type") }}</Label>
+              <Select :model-value="beatTransitionType" @update:model-value="handleBeatTransitionTypeChange">
+                <SelectTrigger>
+                  <SelectValue :placeholder="t('parameters.transitionParams.typeNone')" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem
+                    v-for="transitionType in TRANSITION_TYPES"
+                    :key="transitionType.value"
+                    :value="transitionType.value"
+                  >
+                    {{ t(`parameters.transitionParams.${transitionType.label}`) }}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div v-if="beat.movieParams?.transition?.type">
+              <Label>{{ t("parameters.transitionParams.duration") }}</Label>
+              <Input
+                :model-value="beatTransitionDuration"
+                @update:model-value="handleBeatTransitionDurationChange"
+                type="number"
+                step="0.1"
+                min="0"
+                max="2"
+              />
+            </div>
+          </template>
         </CollapsibleContent>
       </Collapsible>
     </template>
@@ -552,6 +558,7 @@ import BeatPreviewImage from "./beat_preview_image.vue";
 import BeatPreviewMovie from "./beat_preview_movie.vue";
 import BeatSelector from "./beat_selector.vue";
 import BeatStyle from "./beat_style.vue";
+import CharaParams from "./styles/chara_params.vue";
 import SpeakerSelector from "./speaker_selector.vue";
 
 // lib
