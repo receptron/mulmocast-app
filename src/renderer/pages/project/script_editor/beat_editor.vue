@@ -435,17 +435,18 @@
         />
       </div>
     </div>
-    <hr class="m-2" />
-    <BeatStyle
-      :beat="beat"
-      @update="update"
-      :imageParams="mulmoScript.imageParams"
-      :settingPresence="settingPresence"
-      :isPro="isPro"
-      @updateImageNames="updateImageNames"
-      @justSaveAndPushToHistory="justSaveAndPushToHistory"
-      v-if="beatType === 'imagePrompt'"
-    />
+    <template v-if="beatType === 'imagePrompt'">
+      <hr class="m-2" />
+      <BeatStyle
+        :beat="beat"
+        @update="update"
+        :imageParams="mulmoScript.imageParams"
+        :settingPresence="settingPresence"
+        :isPro="isPro"
+        @updateImageNames="updateImageNames"
+        @justSaveAndPushToHistory="justSaveAndPushToHistory"
+      />
+    </template>
 
     <div class="border-border/40 bg-muted/10 mt-4 rounded-md border p-3" v-if="false">
       <div class="flex items-start gap-3">
@@ -469,7 +470,9 @@
     </div>
 
     <!-- Advanced Beat Settings -->
-    <Collapsible v-model:open="beatAdvancedSettingsOpen" class="mt-4" v-if="index > 0">
+    <template v-if="index > 0">
+      <hr class="m-2" />
+      <Collapsible v-model:open="beatAdvancedSettingsOpen" class="mt-4">
       <CollapsibleTrigger as-child>
         <div class="mb-3 cursor-pointer">
           <div class="flex items-center gap-2">
@@ -509,7 +512,8 @@
           />
         </div>
       </CollapsibleContent>
-    </Collapsible>
+      </Collapsible>
+    </template>
 
     <MediaModal v-model:open="modalOpen" :type="modalType" :src="modalSrc" />
   </div>
