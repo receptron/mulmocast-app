@@ -49,7 +49,7 @@
           </Button>
         </div>
         <div class="space-y-2">
-          <SpeachSpeaker
+          <SpeechSpeaker
             :speaker="speaker"
             :name="name"
             @updateSpeakerData="(data, overridden) => updateSpeaker(name, data, overridden)"
@@ -88,7 +88,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import MulmoError from "./mulmo_error.vue";
 import { SPEECH_DEFAULT_LANGUAGE, VOICE_LISTS, defaultSpeechProvider } from "@/../shared/constants";
 import { type MulmoSpeechParams, type Speaker, type SpeakerDictonary, defaultSpeaker } from "mulmocast/browser";
-import SpeachSpeaker from "./speech_speaker.vue";
+import SpeechSpeaker from "./speech_speaker.vue";
 
 import { useI18n } from "vue-i18n";
 
