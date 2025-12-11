@@ -135,7 +135,25 @@ export const bgmGenerate = async (prompt: string, duration: string, title: strin
           cause: {
             action: "music",
             type: "apiKeyInvalid",
-            agentName: "ttsElevenlabsAgent",
+            agentName: "bgmElevenlabsAgent",
+          },
+        });
+      }
+      if (error.statusCode === 400 && error?.body?.detail?.status) {
+        if (error.body.detail.status === "bad_prompt") {
+          throw new Error("Failed to generate music: Bad Prompt", {
+            cause: {
+              action: "music",
+              type: "badPrompt",
+              agentName: "bgmElevenlabsAgent",
+            },
+          });
+        }
+        throw new Error("Failed to generate music: Invalid Error", {
+          cause: {
+            action: "music",
+            type: error.body.detail.status,
+            agentName: "bgmElevenlabsAgent",
           },
         });
       }
