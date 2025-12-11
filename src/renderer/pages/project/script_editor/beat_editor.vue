@@ -473,45 +473,45 @@
     <template v-if="index > 0">
       <hr class="m-2" />
       <Collapsible v-model:open="beatAdvancedSettingsOpen" class="mt-4">
-      <CollapsibleTrigger as-child>
-        <div class="mb-3 cursor-pointer">
-          <div class="flex items-center gap-2">
-            <ChevronDown :class="['h-4 w-4 transition-transform', beatAdvancedSettingsOpen && 'rotate-180']" />
-            <h4 class="text-sm font-medium">{{ t("beat.advancedSettings.title") }}</h4>
+        <CollapsibleTrigger as-child>
+          <div class="mb-3 cursor-pointer">
+            <div class="flex items-center gap-2">
+              <ChevronDown :class="['h-4 w-4 transition-transform', beatAdvancedSettingsOpen && 'rotate-180']" />
+              <h4 class="text-sm font-medium">{{ t("beat.advancedSettings.title") }}</h4>
+            </div>
           </div>
-        </div>
-      </CollapsibleTrigger>
-      <CollapsibleContent class="space-y-3">
-        <!-- Transition Settings -->
-        <div>
-          <Label>{{ t("parameters.transitionParams.type") }}</Label>
-          <Select :model-value="beatTransitionType" @update:model-value="handleBeatTransitionTypeChange">
-            <SelectTrigger>
-              <SelectValue :placeholder="t('parameters.transitionParams.typeNone')" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem
-                v-for="transitionType in TRANSITION_TYPES"
-                :key="transitionType.value"
-                :value="transitionType.value"
-              >
-                {{ t(`parameters.transitionParams.${transitionType.label}`) }}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div v-if="beat.movieParams?.transition?.type">
-          <Label>{{ t("parameters.transitionParams.duration") }}</Label>
-          <Input
-            :model-value="beatTransitionDuration"
-            @update:model-value="handleBeatTransitionDurationChange"
-            type="number"
-            step="0.1"
-            min="0"
-            max="2"
-          />
-        </div>
-      </CollapsibleContent>
+        </CollapsibleTrigger>
+        <CollapsibleContent class="space-y-3">
+          <!-- Transition Settings -->
+          <div>
+            <Label>{{ t("parameters.transitionParams.type") }}</Label>
+            <Select :model-value="beatTransitionType" @update:model-value="handleBeatTransitionTypeChange">
+              <SelectTrigger>
+                <SelectValue :placeholder="t('parameters.transitionParams.typeNone')" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem
+                  v-for="transitionType in TRANSITION_TYPES"
+                  :key="transitionType.value"
+                  :value="transitionType.value"
+                >
+                  {{ t(`parameters.transitionParams.${transitionType.label}`) }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div v-if="beat.movieParams?.transition?.type">
+            <Label>{{ t("parameters.transitionParams.duration") }}</Label>
+            <Input
+              :model-value="beatTransitionDuration"
+              @update:model-value="handleBeatTransitionDurationChange"
+              type="number"
+              step="0.1"
+              min="0"
+              max="2"
+            />
+          </div>
+        </CollapsibleContent>
       </Collapsible>
     </template>
 
