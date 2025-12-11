@@ -67,7 +67,7 @@
       volume="0.3"
     />
   </div>
-  <div v-if="localizedSpeaker.provider === 'nijivoice'">
+  <div v-if="localizedSpeaker.provider === 'nijivoice' || localizedSpeaker.provider === 'kotodama'">
     <audio
       :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${getVoiceList(localizedSpeaker.provider).find((a) => a.id === localizedSpeaker.voiceId).key}.mp3`"
       controls
