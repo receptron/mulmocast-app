@@ -435,17 +435,10 @@
         />
       </div>
     </div>
-    <hr class="m-2" />
-    <BeatStyle
-      :beat="beat"
-      @update="update"
-      :imageParams="mulmoScript.imageParams"
-      :settingPresence="settingPresence"
-      :isPro="isPro"
-      @updateImageNames="updateImageNames"
-      @justSaveAndPushToHistory="justSaveAndPushToHistory"
-      v-if="beatType === 'imagePrompt'"
-    />
+    <!-- Character Images Selection (only for imagePrompt beats) -->
+    <template v-if="beatType === 'imagePrompt'">
+      <CharaParams :beat="beat" :images="mulmoScript.imageParams?.images" @updateImageNames="updateImageNames" />
+    </template>
 
     <div class="border-border/40 bg-muted/10 mt-4 rounded-md border p-3" v-if="false">
       <div class="flex items-start gap-3">
@@ -469,54 +462,92 @@
     </div>
 
     <!-- Advanced Beat Settings -->
-    <Collapsible v-model:open="beatAdvancedSettingsOpen" class="mt-4" v-if="index > 0">
-      <CollapsibleTrigger as-child>
-        <div class="mb-3 cursor-pointer">
-          <div class="flex items-center gap-2">
-            <ChevronDown :class="['h-4 w-4 transition-transform', beatAdvancedSettingsOpen && 'rotate-180']" />
-            <h4 class="text-sm font-medium">{{ t("beat.advancedSettings.title") }}</h4>
+    <template v-if="(beatType === 'imagePrompt' && isPro) || index > 0">
+      <hr class="m-2" />
+      <Collapsible v-model:open="beatAdvancedSettingsOpen" class="mt-4">
+        <CollapsibleTrigger as-child>
+          <div class="mb-3 cursor-pointer">
+            <div class="flex items-center gap-2">
+              <ChevronDown :class="['h-4 w-4 transition-transform', beatAdvancedSettingsOpen && 'rotate-180']" />
+              <h4 class="text-sm font-medium">{{ t("beat.advancedSettings.title") }}</h4>
+            </div>
           </div>
-        </div>
-      </CollapsibleTrigger>
-      <CollapsibleContent class="space-y-3">
-        <!-- Transition Settings -->
-        <div>
-          <Label>{{ t("parameters.transitionParams.type") }}</Label>
-          <Select :model-value="beatTransitionType" @update:model-value="handleBeatTransitionTypeChange">
-            <SelectTrigger>
-              <SelectValue :placeholder="t('parameters.transitionParams.typeNone')" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem
-                v-for="transitionType in TRANSITION_TYPES"
-                :key="transitionType.value"
-                :value="transitionType.value"
+        </CollapsibleTrigger>
+        <CollapsibleContent class="space-y-3">
+          <!-- Image Generation Override Settings (only for imagePrompt beats) -->
+          <template v-if="beatType === 'imagePrompt' && isPro">
+            <BeatStyle
+              :beat="beat"
+              @update="update"
+              :imageParams="mulmoScript.imageParams"
+              :settingPresence="settingPresence"
+              :isPro="isPro"
+              @justSaveAndPushToHistory="justSaveAndPushToHistory"
+            />
+          </template>
+
+          <!-- Transition Settings (only for beat 2 and onwards) -->
+          <template v-if="index > 0">
+            <div class="mb-3 flex items-center gap-2">
+              <Checkbox
+                variant="ghost"
+                size="icon"
+                :modelValue="!!beat.movieParams?.transition?.type"
+                @update:model-value="handleTransitionToggle"
+              />
+              <Label
+                class="cursor-pointer"
+                :class="!beat.movieParams?.transition?.type ? 'text-muted-foreground' : ''"
+                @click="handleTransitionToggle(!beat.movieParams?.transition?.type)"
               >
-                {{ t(`parameters.transitionParams.${transitionType.label}`) }}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div v-if="beat.movieParams?.transition?.type">
-          <Label>{{ t("parameters.transitionParams.duration") }}</Label>
-          <Input
-            :model-value="beatTransitionDuration"
-            @update:model-value="handleBeatTransitionDurationChange"
-            type="number"
-            step="0.1"
-            min="0"
-            max="2"
-          />
-        </div>
-      </CollapsibleContent>
-    </Collapsible>
+                {{
+                  t("parameters.transitionParams.overrideTitle", { transition: t("parameters.transitionParams.title") })
+                }}
+              </Label>
+            </div>
+            <Card v-if="beat.movieParams?.transition?.type" class="mt-4 p-4">
+              <div class="space-y-3">
+                <div>
+                  <Label>{{ t("parameters.transitionParams.type") }}</Label>
+                  <Select :model-value="beatTransitionType" @update:model-value="handleBeatTransitionTypeChange">
+                    <SelectTrigger>
+                      <SelectValue :placeholder="t('parameters.transitionParams.typeNone')" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem
+                        v-for="transitionType in TRANSITION_TYPES"
+                        :key="transitionType.value"
+                        :value="transitionType.value"
+                      >
+                        {{ t(`parameters.transitionParams.${transitionType.label}`) }}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>{{ t("parameters.transitionParams.duration") }}</Label>
+                  <Input
+                    :model-value="beatTransitionDuration"
+                    @update:model-value="handleBeatTransitionDurationChange"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="2"
+                  />
+                </div>
+              </div>
+            </Card>
+          </template>
+        </CollapsibleContent>
+      </Collapsible>
+    </template>
 
     <MediaModal v-model:open="modalOpen" :type="modalType" :src="modalSrc" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import {
   type MulmoBeat,
@@ -540,7 +571,7 @@ import {
 
 // components
 import MediaModal from "@/components/media_modal.vue";
-import { Badge, Button, Label, Input, Textarea, Checkbox } from "@/components/ui";
+import { Badge, Button, Card, Label, Input, Textarea, Checkbox } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -548,6 +579,7 @@ import BeatPreviewImage from "./beat_preview_image.vue";
 import BeatPreviewMovie from "./beat_preview_movie.vue";
 import BeatSelector from "./beat_selector.vue";
 import BeatStyle from "./beat_style.vue";
+import CharaParams from "./styles/chara_params.vue";
 import SpeakerSelector from "./speaker_selector.vue";
 
 // lib
@@ -981,6 +1013,27 @@ const handleAudioFileRemove = (event: Event) => {
 
   // Notify parent to clear the audio preview
   emit("audioRemoved", props.index, props.beat.id);
+};
+
+const handleTransitionToggle = async (checked: boolean) => {
+  if (checked) {
+    // Set default transition type to "fade" when enabled
+    const movieParams = {
+      ...props.beat.movieParams,
+      transition: {
+        type: "fade" as MulmoTransition["type"],
+        duration: DEFAULT_TRANSITION_DURATION,
+      },
+    };
+    update("movieParams", movieParams);
+  } else {
+    // Remove transition when disabled
+    const movieParams = props.beat.movieParams ? { ...props.beat.movieParams } : {};
+    delete movieParams.transition;
+    update("movieParams", Object.keys(movieParams).length > 0 ? movieParams : undefined);
+  }
+  await nextTick();
+  emit("justSaveAndPushToHistory");
 };
 
 const handleBeatTransitionTypeChange = (value: string) => {

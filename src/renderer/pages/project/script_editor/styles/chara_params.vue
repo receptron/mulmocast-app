@@ -1,5 +1,6 @@
 <template>
   <div v-if="Object.keys(images ?? {}).length !== 0" class="mb-4">
+    <hr class="m-2" />
     <div class="group relative">
       <h4 class="mb-1 block text-sm">{{ t("parameters.imageParams.images") }}</h4>
       <p class="text-muted-foreground mb-2 text-xs">{{ t("parameters.imageParams.imagesDescription") }}</p>
