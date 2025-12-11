@@ -32,7 +32,7 @@
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="__undefined__">{{ t("parameters.speechParams.modelDefault") }}</SelectItem>
-        <SelectItem v-for="model in getModelList(localizedSpeaker.provider)" :key="model" :value="model">
+        <SelectItem v-for="model in modelList" :key="model" :value="model">
           {{ model }}
         </SelectItem>
       </SelectContent>
@@ -63,6 +63,14 @@
     <!-- play -->
     <audio
       :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${localizedSpeaker.voiceId}.mp3`"
+      controls
+      volume="0.3"
+    />
+  </div>
+  <div v-if="localizedSpeaker.provider === 'gemini'">
+    <!-- play -->
+    <audio
+      :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${currentModel}/${localizedSpeaker.voiceId}.mp3`"
       controls
       volume="0.3"
     />
@@ -158,7 +166,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+  import { computed } from "vue";
 import { type Speaker, provider2TTSAgent } from "mulmocast/browser";
 import {
   SPEECH_LANGUAGES,
@@ -209,11 +217,6 @@ const getDecorationList = (provider: string) => {
 
 type TTSProvider = keyof typeof provider2TTSAgent;
 
-const getModelList = (provider: string): string[] => {
-  const ttsProvider = provider2TTSAgent[provider as TTSProvider];
-  return ttsProvider?.models || [];
-};
-
 // const selectedLanguages = ref<Record<string, string>>({});
 // const handleLanguageChange = (language: string) => {
 //   console.log(language);
@@ -229,6 +232,16 @@ const localizedSpeaker = computed(() => {
   }
   return props.speaker;
 });
+
+const modelList = computed(() => {
+  const ttsProvider = provider2TTSAgent[localizedSpeaker.value.provider as TTSProvider];
+  return ttsProvider?.models || [];
+});
+const currentModel = computed(() => {
+  const ttsProvider = provider2TTSAgent[localizedSpeaker.value.provider as TTSProvider];
+  return localizedSpeaker.value.model ?? ttsProvider.defaultModel;
+});
+
 
 const handleSpeakerVoiceChange = (voiceId: string) => {
   const lang = mulmoScriptHistoryStore.lang;
