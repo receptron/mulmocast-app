@@ -8028,10 +8028,10 @@ mulmocast-vision@^1.0.8:
     pdfkit "^0.17.2"
     puppeteer "^24.32.0"
 
-mulmocast@^2.1.4:
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.1.4.tgz#5f09fff84d3cafcc6c90e10309d36f9c33fce6cc"
-  integrity sha512-b0X/ELvmLz0wv8HXgUCJQSRng7XaZeTXW/2qhKpbXsGgwCcgKq5J0mcRgvrclH5LuBD0D5FmagUmke13VtFt2g==
+mulmocast@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.1.5.tgz#7564d9887e3369ef85a6e570580ecd98e851449d"
+  integrity sha512-4ks0uNWX5OmISTKTZ76/mttO3lgiiT/gcE0wjpbsNbNCzsCo4M4Ic9DZwjIap+o5KZxRYy5Y+HZnuFHnTtal6g==
   dependencies:
     "@google-cloud/text-to-speech" "^6.4.0"
     "@google/genai" "^1.32.0"
