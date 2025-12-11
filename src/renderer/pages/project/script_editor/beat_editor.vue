@@ -489,34 +489,47 @@
 
           <!-- Transition Settings (only for beat 2 and onwards) -->
           <template v-if="index > 0">
-            <div>
-              <Label>{{ t("parameters.transitionParams.type") }}</Label>
-              <Select :model-value="beatTransitionType" @update:model-value="handleBeatTransitionTypeChange">
-                <SelectTrigger>
-                  <SelectValue :placeholder="t('parameters.transitionParams.typeNone')" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem
-                    v-for="transitionType in TRANSITION_TYPES"
-                    :key="transitionType.value"
-                    :value="transitionType.value"
-                  >
-                    {{ t(`parameters.transitionParams.${transitionType.label}`) }}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div v-if="beat.movieParams?.transition?.type">
-              <Label>{{ t("parameters.transitionParams.duration") }}</Label>
-              <Input
-                :model-value="beatTransitionDuration"
-                @update:model-value="handleBeatTransitionDurationChange"
-                type="number"
-                step="0.1"
-                min="0"
-                max="2"
+            <div class="mb-3 flex items-center gap-2">
+              <Checkbox
+                variant="ghost"
+                size="icon"
+                :modelValue="!!beat.movieParams?.transition?.type"
+                @update:model-value="handleTransitionToggle"
               />
+              <Label class="cursor-pointer" :class="!beat.movieParams?.transition?.type ? 'text-muted-foreground' : ''">
+                切り替え効果を設定する
+              </Label>
             </div>
+            <template v-if="beat.movieParams?.transition?.type">
+              <div>
+                <Label>{{ t("parameters.transitionParams.type") }}</Label>
+                <Select :model-value="beatTransitionType" @update:model-value="handleBeatTransitionTypeChange">
+                  <SelectTrigger>
+                    <SelectValue :placeholder="t('parameters.transitionParams.typeNone')" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem
+                      v-for="transitionType in TRANSITION_TYPES"
+                      :key="transitionType.value"
+                      :value="transitionType.value"
+                    >
+                      {{ t(`parameters.transitionParams.${transitionType.label}`) }}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>{{ t("parameters.transitionParams.duration") }}</Label>
+                <Input
+                  :model-value="beatTransitionDuration"
+                  @update:model-value="handleBeatTransitionDurationChange"
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  max="2"
+                />
+              </div>
+            </template>
           </template>
         </CollapsibleContent>
       </Collapsible>
@@ -527,7 +540,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import {
   type MulmoBeat,
@@ -993,6 +1006,27 @@ const handleAudioFileRemove = (event: Event) => {
 
   // Notify parent to clear the audio preview
   emit("audioRemoved", props.index, props.beat.id);
+};
+
+const handleTransitionToggle = async (checked: boolean) => {
+  if (checked) {
+    // Set default transition type to "fade" when enabled
+    const movieParams = {
+      ...props.beat.movieParams,
+      transition: {
+        type: "fade" as MulmoTransition["type"],
+        duration: DEFAULT_TRANSITION_DURATION,
+      },
+    };
+    update("movieParams", movieParams);
+  } else {
+    // Remove transition when disabled
+    const movieParams = props.beat.movieParams ? { ...props.beat.movieParams } : {};
+    delete movieParams.transition;
+    update("movieParams", Object.keys(movieParams).length > 0 ? movieParams : undefined);
+  }
+  await nextTick();
+  emit("justSaveAndPushToHistory");
 };
 
 const handleBeatTransitionTypeChange = (value: string) => {
