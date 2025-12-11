@@ -821,6 +821,7 @@ const lang = {
       title: "Transition Effect",
       description:
         "Set how scenes change. Fade makes the screen gently switch, while Slide moves the screen sideways to change scenes.",
+      overrideTitle: "Override {transition} for this beat",
       type: "Transition type",
       duration: "Transition duration (sec)",
       typeNone: "None",
