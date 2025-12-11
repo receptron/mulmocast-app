@@ -1,15 +1,13 @@
 appのttsサンプルを追加する方法
 
-1. 対応する voiceId の取得
-   * ファイル：`mulmocast-app/src/shared/constants.ts`
-   * 定数：`VOICE_LISTS`
-   * 追加・検証したい TTS の `id`（= `voiceId`）をここから取得する。
-2. mulmoScript を生成する
-   * スクリプト：
-     `https://github.com/receptron/mulmocast-cli/blob/main/batch/openai_sample.ts`
-   * 上記サンプルをベースに、対象の `voiceId` と `provider` に書き換えて実行し、`mulmoScript` を生成する。
-3. CLI にパッチを当てて audio ファイル名を voiceId にする
-   * 対象リポジトリ：`mulmocast-cli`
+1. mulmoScript を生成する
+   * このレポジトリの `batch/tts_mulmo_generator.ts` を実行すると、全ての provider/model の mulmoScript が自動生成される：
+     ```bash
+     npx tsx batch/tts_mulmo_generator.ts
+     ```
+   * このスクリプトは `src/shared/constants.ts` の `VOICE_LISTS` を参照し、各 provider の全ての voiceId に対して mulmoScript を生成する。
+2. CLI にパッチを当てて audio ファイル名を voiceId にする
+   * 対象リポジトリ：[mulmocast-cli](https://github.com/receptron/mulmocast-cli)
    * ファイル：`src/utils/filters.ts`
    * `fileCacheAgentFilter` 内で、キャッシュ処理の前に次のコードを追加し、生成された audio ファイルを `id.mp3`（= voiceId.mp3 想定）として同じディレクトリにコピーする。
 
@@ -22,20 +20,20 @@ appのttsサンプルを追加する方法
     export const fileCacheAgentFilter: AgentFilterFunction = async (context, next) => {
       const { force, file, index, mulmoContext, sessionType, id } = context.namedInputs.cache;
 
-   +  const hoge = path.resolve(path.dirname(file), id + ".mp3");
-   +  fs.copyFileSync(file, hoge);
+   +  const fileName = path.resolve(path.dirname(file), id + ".mp3");
+   +  fs.copyFileSync(file, fileName);
    +
       const shouldUseCache = async () => {
         if (force && force.some((element: boolean | undefined) => element)) {
           return false;
    ```
-4. mulmoScript から audio ファイルを生成する
-   * 手順 2 で作成した `mulmoScript` を元に、音声生成用のコマンドを実行する。
+3. mulmoScript から audio ファイルを生成する
+   * 手順 1 で作成した `mulmoScript` を元に、音声生成用のコマンドを実行する。
    * キャッシュを作るため、同じコマンドを 2 回実行する（2 回目はキャッシュ利用のため追加コストはほぼ発生しない想定）。
-5. 生成された audio ファイルをレポジトリに追加する
+4. 生成された audio ファイルをレポジトリに追加する
    * output/audio/以下にaudio ファイルは生成される
    * 生成された audio ファイルを以下のレポジトリに追加・コミットする：
-     * `https://github.com/receptron/mulmocast-media/tree/main/voice`
-6. mulmocast-app 側の修正を行う
+     * [mulmocast-media/voice](https://github.com/receptron/mulmocast-media/tree/main/voice)
+5. mulmocast-app 側の修正を行う
    * `mulmocast-app` の対応箇所を、以下の PR の差分を参考に修正する：
-     * `https://github.com/receptron/mulmocast-app/pull/1139`
+     * [PR #1139](https://github.com/receptron/mulmocast-app/pull/1139)
