@@ -5,37 +5,37 @@
   },
   "speechParams": {
     "speakers": {
-      "3JDquces8E8bkmvbh6Bc": {
+      "otan": {
         "provider": "elevenlabs",
         "voiceId": "3JDquces8E8bkmvbh6Bc",
         "model": "eleven_multilingual_v2"
       },
-      "c6SfcYrb2t09NHXiT80T": {
+      "janathan": {
         "provider": "elevenlabs",
         "voiceId": "c6SfcYrb2t09NHXiT80T",
         "model": "eleven_multilingual_v2"
       },
-      "Mv8AjrYZCBkdsmDHNwcB": {
+      "ishibashi": {
         "provider": "elevenlabs",
         "voiceId": "Mv8AjrYZCBkdsmDHNwcB",
         "model": "eleven_multilingual_v2"
       },
-      "8EkOjt4xTPGMclNlh1pk": {
+      "morioki": {
         "provider": "elevenlabs",
         "voiceId": "8EkOjt4xTPGMclNlh1pk",
         "model": "eleven_multilingual_v2"
       },
-      "j210dv0vWm7fCknyQpbA": {
+      "hinata": {
         "provider": "elevenlabs",
         "voiceId": "j210dv0vWm7fCknyQpbA",
         "model": "eleven_multilingual_v2"
       },
-      "QEj0heL4nQHjaGrihlr0": {
+      "steven_casteel": {
         "provider": "elevenlabs",
         "voiceId": "QEj0heL4nQHjaGrihlr0",
         "model": "eleven_multilingual_v2"
       },
-      "l39JidvAMB3s85XyNSRd": {
+      "sayuri": {
         "provider": "elevenlabs",
         "voiceId": "l39JidvAMB3s85XyNSRd",
         "model": "eleven_multilingual_v2"
@@ -44,8 +44,8 @@
   },
   "beats": [
     {
-      "id": "3JDquces8E8bkmvbh6Bc",
-      "speaker": "3JDquces8E8bkmvbh6Bc",
+      "id": "otan",
+      "speaker": "otan",
       "text": "こんにちは, これは音声テストです。音声は otan です",
       "image": {
         "type": "markdown",
@@ -55,8 +55,8 @@
       }
     },
     {
-      "id": "c6SfcYrb2t09NHXiT80T",
-      "speaker": "c6SfcYrb2t09NHXiT80T",
+      "id": "janathan",
+      "speaker": "janathan",
       "text": "こんにちは, これは音声テストです。音声は janathan です",
       "image": {
         "type": "markdown",
@@ -66,8 +66,8 @@
       }
     },
     {
-      "id": "Mv8AjrYZCBkdsmDHNwcB",
-      "speaker": "Mv8AjrYZCBkdsmDHNwcB",
+      "id": "ishibashi",
+      "speaker": "ishibashi",
       "text": "こんにちは, これは音声テストです。音声は ishibashi です",
       "image": {
         "type": "markdown",
@@ -77,8 +77,8 @@
       }
     },
     {
-      "id": "8EkOjt4xTPGMclNlh1pk",
-      "speaker": "8EkOjt4xTPGMclNlh1pk",
+      "id": "morioki",
+      "speaker": "morioki",
       "text": "こんにちは, これは音声テストです。音声は morioki です",
       "image": {
         "type": "markdown",
@@ -88,8 +88,8 @@
       }
     },
     {
-      "id": "j210dv0vWm7fCknyQpbA",
-      "speaker": "j210dv0vWm7fCknyQpbA",
+      "id": "hinata",
+      "speaker": "hinata",
       "text": "こんにちは, これは音声テストです。音声は hinata です",
       "image": {
         "type": "markdown",
@@ -99,8 +99,8 @@
       }
     },
     {
-      "id": "QEj0heL4nQHjaGrihlr0",
-      "speaker": "QEj0heL4nQHjaGrihlr0",
+      "id": "steven_casteel",
+      "speaker": "steven_casteel",
       "text": "こんにちは, これは音声テストです。音声は steven_casteel です",
       "image": {
         "type": "markdown",
@@ -110,8 +110,8 @@
       }
     },
     {
-      "id": "l39JidvAMB3s85XyNSRd",
-      "speaker": "l39JidvAMB3s85XyNSRd",
+      "id": "sayuri",
+      "speaker": "sayuri",
       "text": "こんにちは, これは音声テストです。音声は sayuri です",
       "image": {
         "type": "markdown",

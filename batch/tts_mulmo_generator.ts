@@ -14,24 +14,24 @@ Object.keys(provider2TTSAgent).map(provider => {
       VOICE_LISTS[provider].map((data) => {
         const { id, key } = data;
         const name = key ?? id;
-        speakers[id] = {
+        speakers[name] = {
           provider,
           voiceId: id,
           // model
         };
         if (model !== "none") {
-          speakers[id].model = model;
+          speakers[name].model = model;
         }
         beats.push({
-          id: id,
-          speaker: id,
+          id: name,
+          speaker: name,
           text: `こんにちは, これは音声テストです。音声は ${name} です`,
           image: {
             type: "markdown",
             markdown: [`# Voice is ${name}`],
           },
         });
-        console.log(id);
+        console.log(name);
       });
       
       const data = {
