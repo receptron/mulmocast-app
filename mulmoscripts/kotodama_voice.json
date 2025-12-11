@@ -1,0 +1,237 @@
+{
+  "$mulmocast": {
+    "version": "1.0",
+    "credit": "closing"
+  },
+  "speechParams": {
+    "speakers": {
+      "Atla": {
+        "provider": "kotodama",
+        "voiceId": "Atla"
+      },
+      "Poporo": {
+        "provider": "kotodama",
+        "voiceId": "Poporo"
+      },
+      "jikkyo_baby": {
+        "provider": "kotodama",
+        "voiceId": "jikkyo_baby"
+      },
+      "Chunta": {
+        "provider": "kotodama",
+        "voiceId": "Chunta"
+      },
+      "Mikko": {
+        "provider": "kotodama",
+        "voiceId": "Mikko"
+      },
+      "Shion": {
+        "provider": "kotodama",
+        "voiceId": "Shion"
+      },
+      "President": {
+        "provider": "kotodama",
+        "voiceId": "President"
+      },
+      "Kodama": {
+        "provider": "kotodama",
+        "voiceId": "Kodama"
+      },
+      "Kyusuke": {
+        "provider": "kotodama",
+        "voiceId": "Kyusuke"
+      },
+      "Kamiyama": {
+        "provider": "kotodama",
+        "voiceId": "Kamiyama"
+      },
+      "Cammy": {
+        "provider": "kotodama",
+        "voiceId": "Cammy"
+      },
+      "Marlo": {
+        "provider": "kotodama",
+        "voiceId": "Marlo"
+      },
+      "Kitahara": {
+        "provider": "kotodama",
+        "voiceId": "Kitahara"
+      },
+      "Ishigaki": {
+        "provider": "kotodama",
+        "voiceId": "Ishigaki"
+      },
+      "Suginaka": {
+        "provider": "kotodama",
+        "voiceId": "Suginaka"
+      }
+    }
+  },
+  "beats": [
+    {
+      "id": "Atla",
+      "speaker": "Atla",
+      "text": "こんにちは, これは音声テストです。音声は atla です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is atla"
+        ]
+      }
+    },
+    {
+      "id": "Poporo",
+      "speaker": "Poporo",
+      "text": "こんにちは, これは音声テストです。音声は poporo です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is poporo"
+        ]
+      }
+    },
+    {
+      "id": "jikkyo_baby",
+      "speaker": "jikkyo_baby",
+      "text": "こんにちは, これは音声テストです。音声は jikkyo_baby です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is jikkyo_baby"
+        ]
+      }
+    },
+    {
+      "id": "Chunta",
+      "speaker": "Chunta",
+      "text": "こんにちは, これは音声テストです。音声は chunta です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is chunta"
+        ]
+      }
+    },
+    {
+      "id": "Mikko",
+      "speaker": "Mikko",
+      "text": "こんにちは, これは音声テストです。音声は mikko です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is mikko"
+        ]
+      }
+    },
+    {
+      "id": "Shion",
+      "speaker": "Shion",
+      "text": "こんにちは, これは音声テストです。音声は shion です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is shion"
+        ]
+      }
+    },
+    {
+      "id": "President",
+      "speaker": "President",
+      "text": "こんにちは, これは音声テストです。音声は president です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is president"
+        ]
+      }
+    },
+    {
+      "id": "Kodama",
+      "speaker": "Kodama",
+      "text": "こんにちは, これは音声テストです。音声は kodama です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is kodama"
+        ]
+      }
+    },
+    {
+      "id": "Kyusuke",
+      "speaker": "Kyusuke",
+      "text": "こんにちは, これは音声テストです。音声は kyusuke です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is kyusuke"
+        ]
+      }
+    },
+    {
+      "id": "Kamiyama",
+      "speaker": "Kamiyama",
+      "text": "こんにちは, これは音声テストです。音声は kamiyama です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is kamiyama"
+        ]
+      }
+    },
+    {
+      "id": "Cammy",
+      "speaker": "Cammy",
+      "text": "こんにちは, これは音声テストです。音声は cammy です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is cammy"
+        ]
+      }
+    },
+    {
+      "id": "Marlo",
+      "speaker": "Marlo",
+      "text": "こんにちは, これは音声テストです。音声は marlo です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is marlo"
+        ]
+      }
+    },
+    {
+      "id": "Kitahara",
+      "speaker": "Kitahara",
+      "text": "こんにちは, これは音声テストです。音声は kitahara です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is kitahara"
+        ]
+      }
+    },
+    {
+      "id": "Ishigaki",
+      "speaker": "Ishigaki",
+      "text": "こんにちは, これは音声テストです。音声は ishigaki です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is ishigaki"
+        ]
+      }
+    },
+    {
+      "id": "Suginaka",
+      "speaker": "Suginaka",
+      "text": "こんにちは, これは音声テストです。音声は suginaka です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is suginaka"
+        ]
+      }
+    }
+  ]
+}

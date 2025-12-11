@@ -1,0 +1,124 @@
+{
+  "$mulmocast": {
+    "version": "1.0",
+    "credit": "closing"
+  },
+  "speechParams": {
+    "speakers": {
+      "3JDquces8E8bkmvbh6Bc": {
+        "provider": "elevenlabs",
+        "voiceId": "3JDquces8E8bkmvbh6Bc",
+        "model": "eleven_turbo_v2_5"
+      },
+      "c6SfcYrb2t09NHXiT80T": {
+        "provider": "elevenlabs",
+        "voiceId": "c6SfcYrb2t09NHXiT80T",
+        "model": "eleven_turbo_v2_5"
+      },
+      "Mv8AjrYZCBkdsmDHNwcB": {
+        "provider": "elevenlabs",
+        "voiceId": "Mv8AjrYZCBkdsmDHNwcB",
+        "model": "eleven_turbo_v2_5"
+      },
+      "8EkOjt4xTPGMclNlh1pk": {
+        "provider": "elevenlabs",
+        "voiceId": "8EkOjt4xTPGMclNlh1pk",
+        "model": "eleven_turbo_v2_5"
+      },
+      "j210dv0vWm7fCknyQpbA": {
+        "provider": "elevenlabs",
+        "voiceId": "j210dv0vWm7fCknyQpbA",
+        "model": "eleven_turbo_v2_5"
+      },
+      "QEj0heL4nQHjaGrihlr0": {
+        "provider": "elevenlabs",
+        "voiceId": "QEj0heL4nQHjaGrihlr0",
+        "model": "eleven_turbo_v2_5"
+      },
+      "l39JidvAMB3s85XyNSRd": {
+        "provider": "elevenlabs",
+        "voiceId": "l39JidvAMB3s85XyNSRd",
+        "model": "eleven_turbo_v2_5"
+      }
+    }
+  },
+  "beats": [
+    {
+      "id": "3JDquces8E8bkmvbh6Bc",
+      "speaker": "3JDquces8E8bkmvbh6Bc",
+      "text": "こんにちは, これは音声テストです。音声は otan です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is otan"
+        ]
+      }
+    },
+    {
+      "id": "c6SfcYrb2t09NHXiT80T",
+      "speaker": "c6SfcYrb2t09NHXiT80T",
+      "text": "こんにちは, これは音声テストです。音声は janathan です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is janathan"
+        ]
+      }
+    },
+    {
+      "id": "Mv8AjrYZCBkdsmDHNwcB",
+      "speaker": "Mv8AjrYZCBkdsmDHNwcB",
+      "text": "こんにちは, これは音声テストです。音声は ishibashi です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is ishibashi"
+        ]
+      }
+    },
+    {
+      "id": "8EkOjt4xTPGMclNlh1pk",
+      "speaker": "8EkOjt4xTPGMclNlh1pk",
+      "text": "こんにちは, これは音声テストです。音声は morioki です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is morioki"
+        ]
+      }
+    },
+    {
+      "id": "j210dv0vWm7fCknyQpbA",
+      "speaker": "j210dv0vWm7fCknyQpbA",
+      "text": "こんにちは, これは音声テストです。音声は hinata です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is hinata"
+        ]
+      }
+    },
+    {
+      "id": "QEj0heL4nQHjaGrihlr0",
+      "speaker": "QEj0heL4nQHjaGrihlr0",
+      "text": "こんにちは, これは音声テストです。音声は steven_casteel です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is steven_casteel"
+        ]
+      }
+    },
+    {
+      "id": "l39JidvAMB3s85XyNSRd",
+      "speaker": "l39JidvAMB3s85XyNSRd",
+      "text": "こんにちは, これは音声テストです。音声は sayuri です",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "# Voice is sayuri"
+        ]
+      }
+    }
+  ]
+}
