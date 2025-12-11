@@ -1097,6 +1097,11 @@ const lang = {
         },
         generateAudioSpeechParam: "{speechParams} (speechParams) are not set",
       },
+      music: {
+        badPrompt: {
+          bgmElevenlabsAgent: "Invalid prompt for BGM generation (ElevenLabs).",
+        },
+      },
       multilinguals: {
         errorMessage: "Failed to get translation data",
       },
@@ -1112,6 +1117,7 @@ const lang = {
         ttsNijivoiceAgent: "The NijiVoice API Key is invalid",
         ttsElevenlabsAgent: "The ElevenLabs API Key is invalid",
         ttsKotodamaAgent: "The Kotodama API Key is invalid",
+        bgmElevenlabsAgent: "The ElevenLabs API Key is invalid",
         openaiAgent: "The OpenAI API Key is invalid",
         openAIAgent: "The OpenAI API Key is invalid",
         anthropicAgent: "Anthropic API Key is invalid",
@@ -1127,6 +1133,7 @@ const lang = {
         ttsGeminiAgent: "The Gemini API usage limit has been reached. Please try again later.",
         ttsElevenlabsAgent: "The ElevenLabs API usage limit has been reached. Please add billing or try again later.",
         ttsKotodamaAgent: "The Kotodama API usage limit has been reached. Please try again later.",
+        bgmElevenlabsAgent: "The ElevenLabs API usage limit has been reached. Please add billing or try again later.",
       },
       translate: {
         apiError: {

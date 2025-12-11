@@ -1098,6 +1098,11 @@ const lang = {
         },
         generateAudioSpeechParam: "{speechParams} (speechParams) がセットされていません",
       },
+      music: {
+        badPrompt: {
+          bgmElevenlabsAgent: "BGM生成（ElevenLabs）で不正なプロンプトが指定されました。",
+        },
+      },
       multilinguals: {
         errorMessage: "翻訳データ取得に失敗しました",
       },
@@ -1113,6 +1118,7 @@ const lang = {
         ttsNijivoiceAgent: "NijiVoiceのAPI Keyが正しくありません",
         ttsElevenlabsAgent: "ElevenLabsのAPI Keyが正しくありません",
         ttsKotodamaAgent: "KotodamaのAPI Keyが正しくありません",
+        bgmElevenlabsAgent: "ElevenLabsのAPI Keyが正しくありません",
         openaiAgent: "OpenAIのAPI Keyが正しくありません",
         openAIAgent: "OpenAIのAPI Keyが正しくありません",
         anthropicAgent: "AnthropicのAPI Keyが正しくありません",
@@ -1133,6 +1139,8 @@ const lang = {
         ttsElevenlabsAgent:
           "ElevenLabsのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
         ttsKotodamaAgent: "KotodamaのAPIの利用制限に引っかかっています。しばらくしてから再度試してください",
+        bgmElevenlabsAgent:
+          "ElevenLabsのAPIの利用制限に引っかかっています。課金追加、もしくはしばらくしてから再度試してください",
       },
       translate: {
         apiError: {
