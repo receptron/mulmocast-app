@@ -502,36 +502,38 @@
                 }}
               </Label>
             </div>
-            <template v-if="beat.movieParams?.transition?.type">
-              <div>
-                <Label>{{ t("parameters.transitionParams.type") }}</Label>
-                <Select :model-value="beatTransitionType" @update:model-value="handleBeatTransitionTypeChange">
-                  <SelectTrigger>
-                    <SelectValue :placeholder="t('parameters.transitionParams.typeNone')" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem
-                      v-for="transitionType in TRANSITION_TYPES"
-                      :key="transitionType.value"
-                      :value="transitionType.value"
-                    >
-                      {{ t(`parameters.transitionParams.${transitionType.label}`) }}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+            <Card v-if="beat.movieParams?.transition?.type" class="mt-4 p-4">
+              <div class="space-y-3">
+                <div>
+                  <Label>{{ t("parameters.transitionParams.type") }}</Label>
+                  <Select :model-value="beatTransitionType" @update:model-value="handleBeatTransitionTypeChange">
+                    <SelectTrigger>
+                      <SelectValue :placeholder="t('parameters.transitionParams.typeNone')" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem
+                        v-for="transitionType in TRANSITION_TYPES"
+                        :key="transitionType.value"
+                        :value="transitionType.value"
+                      >
+                        {{ t(`parameters.transitionParams.${transitionType.label}`) }}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>{{ t("parameters.transitionParams.duration") }}</Label>
+                  <Input
+                    :model-value="beatTransitionDuration"
+                    @update:model-value="handleBeatTransitionDurationChange"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="2"
+                  />
+                </div>
               </div>
-              <div>
-                <Label>{{ t("parameters.transitionParams.duration") }}</Label>
-                <Input
-                  :model-value="beatTransitionDuration"
-                  @update:model-value="handleBeatTransitionDurationChange"
-                  type="number"
-                  step="0.1"
-                  min="0"
-                  max="2"
-                />
-              </div>
-            </template>
+            </Card>
           </template>
         </CollapsibleContent>
       </Collapsible>
@@ -566,7 +568,7 @@ import {
 
 // components
 import MediaModal from "@/components/media_modal.vue";
-import { Badge, Button, Label, Input, Textarea, Checkbox } from "@/components/ui";
+import { Badge, Button, Card, Label, Input, Textarea, Checkbox } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
