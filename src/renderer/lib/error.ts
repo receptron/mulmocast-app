@@ -200,6 +200,10 @@ export const convCauseToErrorMessage = (cause: {
   if (cause.errorCode && cause.errorType) {
     return [["notify.error", cause.action, cause.type, "openAIError", cause.errorCode].join("."), {}];
   }
+  if (cause.type === "badPrompt") {
+    return [["notify.error", cause.action, cause.type, cause.agentName].join("."), {}];
+  }
+  //  notify.error.music.badPrompt.bgmElevenlabsAgent
 
   console.log(cause);
   return ["notify.error.unknownError"];
