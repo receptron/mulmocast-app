@@ -20,7 +20,26 @@
       :provider="localizedSpeaker?.provider || defaultSpeechProvider"
     />
   </div>
+  <div v-if="localizedSpeaker.provider === 'gemini' || localizedSpeaker.provider === 'elevenlabs'">
+    <!-- model -->
+    <Label class="text-xs">{{ t("ui.common.model") }}</Label>
+    <Select
+      :model-value="localizedSpeaker.model || '__undefined__'"
+      @update:model-value="(value) => handleModelChange(String(value))"
+    >
+      <SelectTrigger class="h-8">
+        <SelectValue :placeholder="t('parameters.speechParams.modelDefault')" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="__undefined__">{{ t("parameters.speechParams.modelDefault") }}</SelectItem>
+        <SelectItem v-for="model in getModelList(localizedSpeaker.provider)" :key="model" :value="model">
+          {{ model }}
+        </SelectItem>
+      </SelectContent>
+    </Select>
+  </div>
   <div>
+    <!-- voiceId -->
     <Label class="text-xs">{{ t("parameters.speechParams.voiceId") }}</Label>
     <Select
       :model-value="localizedSpeaker.voiceId"
@@ -41,6 +60,7 @@
     </Select>
   </div>
   <div v-if="localizedSpeaker.provider === 'openai' || localizedSpeaker.provider === undefined">
+    <!-- play -->
     <audio
       :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${localizedSpeaker.voiceId}.mp3`"
       controls
@@ -55,6 +75,7 @@
     />
   </div>
   <div v-if="localizedSpeaker.provider === 'nijivoice'">
+    <!-- speed -->
     <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
     <Input
       :model-value="speaker.speed || ''"
@@ -65,6 +86,7 @@
     />
   </div>
   <div v-if="localizedSpeaker.provider === 'kotodama'">
+    <!-- decoration -->
     <Label class="text-xs">{{ t("parameters.speechParams.decoration") }}</Label>
     <Select
       :model-value="speaker?.speechOptions?.decoration || 'neutral'"
@@ -81,6 +103,7 @@
     </Select>
   </div>
   <div v-if="localizedSpeaker.provider === 'openai' || !localizedSpeaker.provider">
+    <!-- instruction -->
     <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
     <Input
       :model-value="speaker?.speechOptions?.instruction || ''"
@@ -184,6 +207,13 @@ const getDecorationList = (provider: string) => {
   return DECORATION_LISTS[provider as DecorationProvider] || [];
 };
 
+type TTSProvider = keyof typeof provider2TTSAgent;
+
+const getModelList = (provider: string): string[] => {
+  const ttsProvider = provider2TTSAgent[provider as TTSProvider];
+  return ttsProvider?.models || [];
+};
+
 // const selectedLanguages = ref<Record<string, string>>({});
 // const handleLanguageChange = (language: string) => {
 //   console.log(language);
@@ -245,6 +275,31 @@ const handleProviderChange = async (provider: string) => {
 
 const handleSpeechOptionsChange = (key: string, value: string) => {
   emit("updateSpeakerData", { speechOptions: { [key]: key === "speed" ? Number(value) : value } });
+};
+
+const handleModelChange = (model: string) => {
+  const lang = mulmoScriptHistoryStore.lang;
+  const updatedModel = model === "__undefined__" ? undefined : model;
+
+  if (props.speaker?.lang?.[lang]) {
+    const langData = { ...props.speaker.lang };
+    if (updatedModel === undefined) {
+      delete langData[lang].model;
+    } else {
+      langData[lang].model = updatedModel;
+    }
+    emit("updateSpeakerData", {
+      lang: langData,
+    });
+  } else {
+    if (updatedModel === undefined) {
+      // Remove model from speaker data
+      const { model: __model, ...speakerWithoutModel } = props.speaker || {};
+      emit("updateSpeakerData", speakerWithoutModel);
+    } else {
+      emit("updateSpeakerData", { model: updatedModel });
+    }
+  }
 };
 
 const handleDisplayNameChange = (language: string, value: string) => {

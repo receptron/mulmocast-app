@@ -856,6 +856,7 @@ const lang = {
       instruction: "読み上げスタイル",
       instructionPlaceholder: "例）ゆっくりと優しく読んで",
       decoration: "音声スタイル",
+      modelDefault: "デフォルト",
       placeholder: "登場人物の名前 (英数字のみ)",
       noSpeakersDefined: "登場人物が定義されていません",
       initializeSpeechParameters: "音声パラメータを初期化",
