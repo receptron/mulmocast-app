@@ -173,6 +173,9 @@ export const convCauseToErrorMessage = (cause: {
     if (cause.type === "invalidResponse") {
       return [["notify.error", cause.action, cause.type, cause.agentName].join(".")];
     }
+    if (cause.type === "voice_limit_reached") {
+      return [["notify.error", cause.action, cause.type, cause.agentName].join(".")];
+    }
     if (cause.type === "apiError") {
       if (prioritizedApiErrorTargets.has(cause.target)) {
         return [

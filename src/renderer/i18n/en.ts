@@ -1097,6 +1097,9 @@ const lang = {
           ttsKotodamaAgent: "An error occurred with speech synthesis (Kotodama).",
         },
         generateAudioSpeechParam: "{speechParams} (speechParams) are not set",
+        voice_limit_reached: {
+          ttsElevenlabsAgent: "You have reached your maximum amount of custom voices with ElevenLabs.",
+        },
       },
       music: {
         badPrompt: {

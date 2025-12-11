@@ -1098,6 +1098,9 @@ const lang = {
           ttsKotodamaAgent: "音声合成（Kotodama）でエラーが発生しました。",
         },
         generateAudioSpeechParam: "{speechParams} (speechParams) がセットされていません",
+        voice_limit_reached: {
+          ttsElevenlabsAgent: "ElevenLabsのカスタムボイスの上限に達しました。",
+        },
       },
       music: {
         badPrompt: {
