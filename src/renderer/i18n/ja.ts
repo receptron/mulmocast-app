@@ -823,7 +823,7 @@ const lang = {
         "場面が変わるときの演出を設定します。フェードは画面がふわっと切り替わり、スライドアウトは画面が横に流れて切り替わります。",
       overrideTitle: "このビートの{transition}を上書きする",
       type: "切り替えの種類",
-      duration: "切り替えの長さ(秒)",
+      duration: "切り替えの長さ（秒）",
       typeNone: "なし",
       typeFade: "フェード",
       // Slide Transitions
