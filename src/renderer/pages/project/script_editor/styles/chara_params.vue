@@ -3,7 +3,6 @@
     <hr class="m-2" />
     <div class="group relative">
       <h4 class="mb-1 block text-sm">{{ t("parameters.imageParams.images") }}</h4>
-      <p class="text-muted-foreground mb-2 text-xs">{{ t("parameters.imageParams.imagesDescription") }}</p>
       <span
         class="bg-popover text-popover-foreground border-border pointer-events-none absolute bottom-full left-0 mb-2 max-w-md transform rounded border px-2 py-1 text-xs whitespace-pre-wrap opacity-0 transition-opacity duration-200 group-hover:opacity-100"
       >
@@ -24,9 +23,18 @@
         </Button>
       </div>
     </div>
-    <Card class="mt-2 p-3">
+    <Card
+      :class="[
+        'mt-2 p-3',
+        isEmptyAndCollapsed && 'hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors',
+      ]"
+      @click="isEmptyAndCollapsed ? (isExpanded = true) : undefined"
+    >
       <!-- Closed: Show only checked images in a grid -->
       <div v-if="!isExpanded" class="grid grid-cols-4 gap-2">
+        <div v-if="displayedImageKeys.length === 0" class="text-muted-foreground col-span-4 text-center text-xs">
+          {{ t("parameters.imageParams.imagesDescription") }}
+        </div>
         <div v-for="imageKey in displayedImageKeys" :key="imageKey" class="group relative">
           <img
             v-if="imageRefs[imageKey]"
@@ -102,6 +110,11 @@ const displayedImageKeys = computed(() => {
   }
   // When collapsed, only show checked images
   return allKeys.filter((key) => currentValues.value.includes(key));
+});
+
+// Check if the image list is empty and collapsed - used to make the card clickable
+const isEmptyAndCollapsed = computed(() => {
+  return displayedImageKeys.value.length === 0 && !isExpanded.value;
 });
 
 const imageRefs = ref<Record<string, string | null>>({});
