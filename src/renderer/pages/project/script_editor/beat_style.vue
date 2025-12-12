@@ -7,7 +7,11 @@
       @update:model-value="updateBeatImageParams"
     />
     <div class="group relative">
-      <Label class="cursor-pointer" :class="!beat?.imageParams ? 'text-muted-foreground' : ''">
+      <Label
+        class="cursor-pointer"
+        :class="!beat?.imageParams ? 'text-muted-foreground' : ''"
+        @click="updateBeatImageParams(!beat?.imageParams)"
+      >
         {{ t("parameters.imageParams.customTitle") }}
       </Label>
       <span
