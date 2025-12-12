@@ -96,6 +96,7 @@ const lang = {
       downloadThing: "{thing}をダウンロード",
       view: "表示",
       viewThing: "{thing}を表示",
+      viewDetails: "詳細を見る",
 
       // Content generation
       generateImage: "画像生成",
@@ -1104,7 +1105,9 @@ const lang = {
       },
       music: {
         badPrompt: {
-          bgmElevenlabsAgent: "BGM生成（ElevenLabs）で不正なプロンプトが指定されました。",
+          bgmElevenlabsAgent:
+            "BGM生成（ElevenLabs）では指定できない内容が含まれています。プロンプトの条件はリンク先をご確認ください。",
+          bgmElevenlabsAgentLink: "https://elevenlabs.io/ja/music-terms",
         },
       },
       multilinguals: {

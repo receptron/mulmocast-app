@@ -96,6 +96,7 @@ const lang = {
       downloadThing: "Download {thing}",
       view: "View",
       viewThing: "View {thing}",
+      viewDetails: "View Details",
 
       // Content generation
       generateImage: "Generate image",
@@ -1103,7 +1104,9 @@ const lang = {
       },
       music: {
         badPrompt: {
-          bgmElevenlabsAgent: "Invalid prompt for BGM generation (ElevenLabs).",
+          bgmElevenlabsAgent:
+            "Your prompt contains content that cannot be used for BGM generation (ElevenLabs). Please check the link for the prompt requirements.",
+          bgmElevenlabsAgentLink: "https://elevenlabs.io/music-terms",
         },
       },
       multilinguals: {

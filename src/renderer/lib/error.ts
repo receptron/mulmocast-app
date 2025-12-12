@@ -204,7 +204,12 @@ export const convCauseToErrorMessage = (cause: {
     return [["notify.error", cause.action, cause.type, "openAIError", cause.errorCode].join("."), {}];
   }
   if (cause.type === "badPrompt") {
-    return [["notify.error", cause.action, cause.type, cause.agentName].join("."), {}];
+    const errorKey = ["notify.error", cause.action, cause.type, cause.agentName].join(".");
+    // Add link key for ElevenLabs BGM bad prompt error
+    if (errorKey === "notify.error.music.badPrompt.bgmElevenlabsAgent") {
+      return [errorKey, { linkKey: errorKey + "Link" }];
+    }
+    return [errorKey, {}];
   }
   //  notify.error.music.badPrompt.bgmElevenlabsAgent
 

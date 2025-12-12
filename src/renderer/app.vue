@@ -63,7 +63,18 @@ onMounted(async () => {
       const errorData = message.data as { message?: string };
       if (message.cause) {
         const data = convCauseToErrorMessage(message.cause);
-        notifyError("", t(data[0], data[1] ?? {}));
+        const params = data[1] ?? {};
+
+        // Add link button if linkKey is provided
+        const action =
+          params && typeof params === "object" && "linkKey" in params && typeof params.linkKey === "string"
+            ? {
+                label: t("ui.actions.viewDetails"),
+                onClick: () => window.electronAPI.openExternal(t(params.linkKey as string)),
+              }
+            : undefined;
+
+        notifyError("", t(data[0], params), action);
       } else if (errorData?.message) {
         notifyError("Error", errorData.message);
       }
