@@ -218,7 +218,7 @@ const DEFAULT_VOICE_IDS: Record<string, string> = providers.reduce((tmp, provide
 
 type Provider = keyof typeof VOICE_LISTS;
 
-const defaultDecoration = 'neutral';
+const defaultDecoration = "neutral";
 
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
