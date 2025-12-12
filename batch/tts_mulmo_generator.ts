@@ -1,10 +1,9 @@
 import fs from "fs";
 import path from "path";
 
-import { VOICE_LISTS } from "../src/shared/constants";
+import { VOICE_LISTS, DECORATION_LISTS } from "../src/shared/constants";
 import { provider2TTSAgent } from "mulmocast/browser";
 
-// const provider = "gemini";
 Object.keys(provider2TTSAgent).map(provider => {
   if (VOICE_LISTS[provider]) {
     const models = provider2TTSAgent[provider].models ?? ["none"];
@@ -22,16 +21,38 @@ Object.keys(provider2TTSAgent).map(provider => {
         if (model !== "none") {
           speakers[name].model = model;
         }
-        beats.push({
-          id: name,
-          speaker: name,
-          text: `こんにちは, これは音声テストです。音声は ${name} です`,
-          image: {
-            type: "markdown",
-            markdown: [`# Voice is ${name}`],
-          },
-        });
-        console.log(name);
+
+        // For kotodama, generate beats for each decoration
+        if (provider === "kotodama" && DECORATION_LISTS.kotodama) {
+          DECORATION_LISTS.kotodama.map((decorationData) => {
+            const { id: decorationId, key: decorationKey } = decorationData;
+            const beatId = `${name}_${decorationKey ?? decorationId}`;
+            beats.push({
+              id: beatId,
+              speaker: name,
+              text: `こんにちは, これは音声テストです。音声は ${name}、装飾は ${decorationKey ?? decorationId} です`,
+              speechOptions: {
+                decoration: decorationId,
+              },
+              image: {
+                type: "markdown",
+                markdown: [`# Voice is ${name}, decoration is ${decorationKey ?? decorationId}`],
+              },
+            });
+            console.log(beatId);
+          });
+        } else {
+          beats.push({
+            id: name,
+            speaker: name,
+            text: `こんにちは, これは音声テストです。音声は ${name} です`,
+            image: {
+              type: "markdown",
+              markdown: [`# Voice is ${name}`],
+            },
+          });
+          console.log(name);
+        }
       });
       
       const data = {
