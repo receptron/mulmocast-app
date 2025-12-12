@@ -24,7 +24,10 @@
       </div>
     </div>
     <Card
-      :class="['mt-2 p-3', isEmptyAndCollapsed && 'cursor-pointer transition-colors hover:bg-accent hover:text-accent-foreground']"
+      :class="[
+        'mt-2 p-3',
+        isEmptyAndCollapsed && 'hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors',
+      ]"
       @click="isEmptyAndCollapsed ? (isExpanded = true) : undefined"
     >
       <!-- Closed: Show only checked images in a grid -->
