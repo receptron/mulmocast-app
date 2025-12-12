@@ -1105,7 +1105,8 @@ const lang = {
       },
       music: {
         badPrompt: {
-          bgmElevenlabsAgent: "BGM生成（ElevenLabs）では指定できない内容が含まれています。プロンプトの条件はリンク先をご確認ください。",
+          bgmElevenlabsAgent:
+            "BGM生成（ElevenLabs）では指定できない内容が含まれています。プロンプトの条件はリンク先をご確認ください。",
           bgmElevenlabsAgentLink: "https://elevenlabs.io/ja/music-terms",
         },
       },

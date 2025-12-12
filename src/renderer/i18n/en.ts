@@ -1104,7 +1104,8 @@ const lang = {
       },
       music: {
         badPrompt: {
-          bgmElevenlabsAgent: "Your prompt contains content that cannot be used for BGM generation (ElevenLabs). Please check the link for the prompt requirements.",
+          bgmElevenlabsAgent:
+            "Your prompt contains content that cannot be used for BGM generation (ElevenLabs). Please check the link for the prompt requirements.",
           bgmElevenlabsAgentLink: "https://elevenlabs.io/music-terms",
         },
       },
