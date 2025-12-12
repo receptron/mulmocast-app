@@ -205,9 +205,9 @@ export const convCauseToErrorMessage = (cause: {
   }
   if (cause.type === "badPrompt") {
     const errorKey = ["notify.error", cause.action, cause.type, cause.agentName].join(".");
-    // Add link for ElevenLabs BGM bad prompt error
+    // Add link key for ElevenLabs BGM bad prompt error
     if (errorKey === "notify.error.music.badPrompt.bgmElevenlabsAgent") {
-      return [errorKey, { link: "https://elevenlabs.io/ja/music-terms" }];
+      return [errorKey, { linkKey: errorKey + "Link" }];
     }
     return [errorKey, {}];
   }

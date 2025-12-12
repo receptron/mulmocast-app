@@ -1106,6 +1106,7 @@ const lang = {
       music: {
         badPrompt: {
           bgmElevenlabsAgent: "BGM生成（ElevenLabs）で不正なプロンプトが指定されました。",
+          bgmElevenlabsAgentLink: "https://elevenlabs.io/ja/music-terms",
         },
       },
       multilinguals: {

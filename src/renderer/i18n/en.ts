@@ -1105,6 +1105,7 @@ const lang = {
       music: {
         badPrompt: {
           bgmElevenlabsAgent: "Invalid prompt for BGM generation (ElevenLabs).",
+          bgmElevenlabsAgentLink: "https://elevenlabs.io/music-terms",
         },
       },
       multilinguals: {
