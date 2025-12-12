@@ -96,6 +96,7 @@ const lang = {
       downloadThing: "Download {thing}",
       view: "View",
       viewThing: "View {thing}",
+      viewDetails: "View Details",
 
       // Content generation
       generateImage: "Generate image",

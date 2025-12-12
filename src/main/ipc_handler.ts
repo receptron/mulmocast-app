@@ -70,6 +70,10 @@ export const registerIPCHandler = () => {
     clipboard.writeText(text ?? "");
   });
 
+  ipcMain.handle("openExternal", async (_event: IpcMainInvokeEvent, url: string) => {
+    await shell.openExternal(url);
+  });
+
   ipcMain.handle("updateInstall", (__event: IpcMainInvokeEvent) => {
     autoUpdater.quitAndInstall();
   });
