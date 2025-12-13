@@ -403,6 +403,16 @@ onUnmounted(() => {
   mulmoScriptHistoryStore.resetMulmoScript();
 });
 
+watch(
+  () => mulmoScriptHistoryStore.isValidScript,
+  (newVal) => {
+    if (newVal) {
+      downloadAudioFiles(projectId.value, mulmoScriptHistoryStore.lang);
+      downloadImageFiles(projectId.value);
+    }
+  },
+);
+
 // mulmoScript
 // for only chat
 const handleUpdateMulmoScriptWithNotify = (script: MulmoScript) => {
