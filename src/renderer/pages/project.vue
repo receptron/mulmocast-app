@@ -405,8 +405,8 @@ onUnmounted(() => {
 
 watch(
   () => mulmoScriptHistoryStore.isValidScript,
-  (newVal) => {
-    if (newVal) {
+  (newVal, oldVal) => {
+    if (newVal && !oldVal) {
       downloadAudioFiles(projectId.value, mulmoScriptHistoryStore.lang);
       downloadImageFiles(projectId.value);
     }
