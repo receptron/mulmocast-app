@@ -90,13 +90,6 @@
       volume="0.3"
     />
   </div>
-  <div v-if="localizedSpeaker.provider === 'kotodama'">
-    <audio
-      :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${getVoiceList(localizedSpeaker.provider).find((a) => a.id === localizedSpeaker.voiceId).key}_${currentDecoration}.mp3`"
-      controls
-      volume="0.3"
-    />
-  </div>
   <div v-if="localizedSpeaker.provider === 'nijivoice'">
     <!-- speed -->
     <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
@@ -119,11 +112,19 @@
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem v-for="decoration in getDecorationList('kotodama')" :key="decoration.id" :value="decoration.id">
+        <SelectItem v-for="decoration in filteredDecorationList" :key="decoration.id" :value="decoration.id">
           {{ t(["decorationList", "kotodama", decoration.key ?? decoration.id].join(".")) }}
         </SelectItem>
       </SelectContent>
     </Select>
+    <!-- play - placed after decoration selector since decoration affects the audio -->
+    <audio
+      v-if="kotodamaVoiceKey"
+      :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${kotodamaVoiceKey}_${currentDecoration}.mp3`"
+      controls
+      volume="0.3"
+      class="mt-2"
+    />
   </div>
   <div v-if="localizedSpeaker.provider === 'openai' || !localizedSpeaker.provider">
     <!-- instruction -->
@@ -261,6 +262,28 @@ const currentModel = computed(() => {
 
 const currentDecoration = computed(() => {
   return props.speaker?.speechOptions?.decoration ?? defaultDecoration;
+});
+
+// Computed property to get kotodama voice key safely
+const kotodamaVoiceKey = computed(() => {
+  if (!localizedSpeaker.value || localizedSpeaker.value.provider !== "kotodama") return null;
+  const voiceList = getVoiceList("kotodama") as readonly { id: string; key?: string }[];
+  const voice = voiceList.find((v) => v.id === localizedSpeaker.value?.voiceId);
+  return voice?.key || null;
+});
+
+// Filter decoration list based on current language (Japanese or English)
+const filteredDecorationList = computed(() => {
+  const decorations = getDecorationList("kotodama") as readonly { id: string; key?: string }[];
+  const lang = mulmoScriptHistoryStore.lang;
+
+  // Filter by language: keep only decorations matching the current language
+  // Japanese decorations don't have _en suffix, English ones have _en suffix
+  if (lang === "ja") {
+    return decorations.filter((d) => !d.id.endsWith("_en"));
+  } else {
+    return decorations.filter((d) => d.id.endsWith("_en"));
+  }
 });
 
 const handleSpeakerVoiceChange = (voiceId: string) => {
