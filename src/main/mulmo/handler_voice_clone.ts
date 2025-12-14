@@ -5,6 +5,7 @@ export interface ClonedVoice {
   voice_id: string;
   name: string;
   category?: string;
+  previewUrl?: string;
 }
 
 // Get cloned voices from ElevenLabs
@@ -29,6 +30,7 @@ export const getClonedVoices = async (): Promise<ClonedVoice[]> => {
     voice_id: voice.voiceId,
     name: voice.name,
     category: voice.category,
+    previewUrl: voice.previewUrl,
   }));
 
   return voices;
