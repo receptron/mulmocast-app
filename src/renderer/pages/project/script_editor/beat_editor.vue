@@ -403,7 +403,7 @@
       <!-- left: lipSync edit -->
       <div class="flex flex-col gap-1" v-if="enableLipSync && hasLipSyncKey && !isVoiceOver">
         <!-- movie edit -->
-        <div class="flex items-center gap-2">
+        <div class="group relative flex items-center gap-2">
           <Checkbox
             variant="ghost"
             size="icon"
@@ -412,12 +412,15 @@
             :disabled="!canEnableLipSync"
           />
           <Label class="block" :class="{ 'opacity-50': !canEnableLipSync }">{{ t("beat.lipSync.label") }} </Label>
+          <span
+            v-if="!canEnableLipSync"
+            class="bg-popover text-muted-foreground border-border pointer-events-none absolute bottom-full left-0 mb-2 transform rounded border px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+          >
+            {{ lipSyncRequiresMediaMessage }}
+          </span>
         </div>
         <div v-if="lipSyncModelDescription" class="text-muted-foreground ml-6 text-sm">
           {{ lipSyncModelDescription }}
-        </div>
-        <div v-if="!canEnableLipSync" class="text-muted-foreground ml-6 text-sm">
-          {{ lipSyncRequiresMediaMessage }}
         </div>
       </div>
       <!-- right: lipSync preview -->
