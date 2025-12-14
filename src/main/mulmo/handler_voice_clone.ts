@@ -80,10 +80,26 @@ export const uploadVoiceClone = async (
   const result = await client.voices.ivc.create({
     name,
     files: [file],
-    remove_background_noise: false,
+    removeBackgroundNoise: false,
   });
 
   return {
-    voice_id: result.voice_id,
+    voice_id: result.voiceId,
   };
+};
+
+// Delete voice clone
+export const deleteVoice = async (voiceId: string): Promise<void> => {
+  const settings = await loadSettings();
+  const apiKey = settings.APIKEY["ELEVENLABS_API_KEY"];
+
+  if (!apiKey) {
+    throw new Error("ElevenLabs API Key is not set");
+  }
+
+  const client = new ElevenLabsClient({
+    apiKey,
+  });
+
+  await client.voices.delete(voiceId);
 };

@@ -50,7 +50,7 @@
               <div class="flex-1">
                 <input
                   v-if="voice.editing"
-                  v-model="voice.name"
+                  v-model="editingVoiceName"
                   @blur="saveNameEdit(voice)"
                   @keyup.enter="saveNameEdit(voice)"
                   class="bg-background border-border w-full rounded border px-2 py-1 text-sm"
@@ -60,6 +60,9 @@
                   <span class="font-medium">{{ voice.name }}</span>
                   <Button variant="ghost" size="icon" class="h-6 w-6" @click="startNameEdit(voice)">
                     <Pencil class="h-3 w-3" />
+                  </Button>
+                  <Button variant="ghost" size="icon" class="h-6 w-6" @click="openDeleteDialog(voice)">
+                    <Trash2 class="h-3 w-3" />
                   </Button>
                   <Badge v-if="voice.category" variant="secondary" class="text-xs">{{ voice.category }}</Badge>
                 </div>
@@ -124,12 +127,42 @@
         </DialogFooter>
       </DialogContent>
     </Dialog>
+
+    <!-- Delete Confirmation Dialog -->
+    <Dialog v-model:open="deleteDialog.open">
+      <DialogContent class="sm:max-w-[400px]">
+        <DialogHeader>
+          <DialogTitle>{{ t("voiceClone.deleteConfirmTitle") }}</DialogTitle>
+          <DialogDescription>{{ t("voiceClone.deleteConfirmDescription") }}</DialogDescription>
+        </DialogHeader>
+
+        <div v-if="deleteDialog.voiceName" class="py-4">
+          <p class="text-sm">
+            <span class="text-muted-foreground">{{ t("voiceClone.voiceName") }}: </span>
+            <span class="font-medium">{{ deleteDialog.voiceName }}</span>
+          </p>
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" @click="deleteDialog.open = false" :disabled="deleteDialog.deleting">
+            {{ t("ui.actions.cancel") }}
+          </Button>
+          <Button variant="destructive" @click="confirmDelete" :disabled="deleteDialog.deleting">
+            <span v-if="!deleteDialog.deleting">{{ t("ui.actions.delete") }}</span>
+            <span v-else class="flex items-center space-x-2">
+              <Loader2 class="h-4 w-4 animate-spin" />
+              <span>{{ t("ui.status.deleting") }}</span>
+            </span>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </Layout>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { Mic, Loader2, Play, Pause, Pencil, Plus } from "lucide-vue-next";
+import { ref, onMounted, computed } from "vue";
+import { Mic, Loader2, Play, Pause, Pencil, Plus, Trash2 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 
 import Layout from "@/components/layout.vue";
@@ -144,25 +177,21 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { notifyError, notifySuccess } from "@/lib/notification";
-import { useMulmoGlobalStore } from "@/store";
+import { useMulmoGlobalStore, useVoiceCloneStore } from "@/store";
 
 const { t } = useI18n();
 const globalStore = useMulmoGlobalStore();
+const voiceCloneStore = useVoiceCloneStore();
 
-interface ClonedVoice {
+interface VoiceItem {
   voice_id: string;
   name: string;
   category?: string;
   previewUrl?: string;
-}
-
-interface VoiceItem extends ClonedVoice {
   playing: boolean;
   editing: boolean;
 }
 
-const voices = ref<VoiceItem[]>([]);
-const loading = ref(false);
 const audioElement = ref<HTMLAudioElement | null>(null);
 
 const uploadDialog = ref({
@@ -174,20 +203,32 @@ const uploadDialog = ref({
 });
 const isDragging = ref(false);
 
+const deleteDialog = ref({
+  open: false,
+  voiceId: "",
+  voiceName: "",
+  deleting: false,
+});
+
+const voices = computed<VoiceItem[]>(() =>
+  voiceCloneStore.voices.map((voice) => ({
+    ...voice,
+    playing: playingVoiceId.value === voice.voice_id,
+    editing: editingVoiceId.value === voice.voice_id,
+  })),
+);
+const loading = computed(() => voiceCloneStore.loading);
+
+const playingVoiceId = ref<string | null>(null);
+const editingVoiceId = ref<string | null>(null);
+const editingVoiceName = ref("");
+
 const loadClonedVoices = async () => {
-  loading.value = true;
   try {
-    const result = (await window.electronAPI.mulmoHandler("getClonedVoices")) as ClonedVoice[];
-    voices.value = result.map((voice) => ({
-      ...voice,
-      playing: false,
-      editing: false,
-    }));
+    await voiceCloneStore.loadVoices();
   } catch (error) {
     console.error("Failed to load cloned voices:", error);
     notifyError(error);
-  } finally {
-    loading.value = false;
   }
 };
 
@@ -195,53 +236,51 @@ const togglePlay = (voiceId: string) => {
   const voice = voices.value.find((v) => v.voice_id === voiceId);
   if (!voice || !voice.previewUrl) return;
 
-  // Stop all other voices
-  voices.value.forEach((v) => {
-    if (v.voice_id !== voiceId) {
-      v.playing = false;
-    }
-  });
-
-  if (voice.playing) {
+  if (playingVoiceId.value === voiceId) {
     // Stop current voice
     if (audioElement.value) {
       audioElement.value.pause();
       audioElement.value.currentTime = 0;
     }
-    voice.playing = false;
+    playingVoiceId.value = null;
   } else {
     // Play new voice
     if (audioElement.value) {
       audioElement.value.src = voice.previewUrl;
       audioElement.value.play().catch((error) => {
         console.error("Failed to play audio:", error);
-        voice.playing = false;
+        playingVoiceId.value = null;
       });
-      voice.playing = true;
+      playingVoiceId.value = voiceId;
 
       // Reset playing state when audio ends
       audioElement.value.onended = () => {
-        voice.playing = false;
+        playingVoiceId.value = null;
       };
     }
   }
 };
 
 const startNameEdit = (voice: VoiceItem) => {
-  voice.editing = true;
+  editingVoiceId.value = voice.voice_id;
+  editingVoiceName.value = voice.name;
 };
 
 const saveNameEdit = async (voice: VoiceItem) => {
-  voice.editing = false;
+  const newName = editingVoiceName.value.trim();
+  editingVoiceId.value = null;
+  editingVoiceName.value = "";
+
+  if (!newName || newName === voice.name) {
+    return;
+  }
+
   try {
-    await window.electronAPI.mulmoHandler("updateVoiceName", voice.voice_id, voice.name);
-    // Reload the list to reflect changes from API
-    await loadClonedVoices();
+    await voiceCloneStore.updateVoiceName(voice.voice_id, newName);
+    notifySuccess(t("voiceClone.nameUpdated"));
   } catch (error) {
     console.error("Failed to update voice name:", error);
     notifyError(error);
-    // Reload to restore original name
-    await loadClonedVoices();
   }
 };
 
@@ -300,21 +339,39 @@ const uploadVoice = async () => {
   uploadDialog.value.uploading = true;
   try {
     const buffer = await readFileAsArrayBuffer(uploadDialog.value.file);
-    await window.electronAPI.mulmoHandler(
-      "uploadVoiceClone",
-      uploadDialog.value.name,
-      buffer,
-      uploadDialog.value.fileName,
-    );
+    await voiceCloneStore.uploadVoice(uploadDialog.value.name, buffer, uploadDialog.value.fileName);
     notifySuccess(t("voiceClone.uploadSuccess"));
     uploadDialog.value.open = false;
-    // Reload to show new voice
-    await loadClonedVoices();
   } catch (error) {
     console.error("Failed to upload voice:", error);
     notifyError(error);
   } finally {
     uploadDialog.value.uploading = false;
+  }
+};
+
+const openDeleteDialog = (voice: VoiceItem) => {
+  deleteDialog.value = {
+    open: true,
+    voiceId: voice.voice_id,
+    voiceName: voice.name,
+    deleting: false,
+  };
+};
+
+const confirmDelete = async () => {
+  if (!deleteDialog.value.voiceId) return;
+
+  deleteDialog.value.deleting = true;
+  try {
+    await voiceCloneStore.deleteVoice(deleteDialog.value.voiceId);
+    notifySuccess(t("voiceClone.deleteSuccess"));
+    deleteDialog.value.open = false;
+  } catch (error) {
+    console.error("Failed to delete voice:", error);
+    notifyError(error);
+  } finally {
+    deleteDialog.value.deleting = false;
   }
 };
 

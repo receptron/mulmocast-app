@@ -149,6 +149,7 @@ const lang = {
       generatingThing: "Generating {thing}...",
       creating: "Creating...",
       saving: "Saving...",
+      deleting: "Deleting...",
       processing: "Processing...",
 
       // Completion states
@@ -1487,6 +1488,10 @@ const lang = {
     fileRequirements: "Audio file up to {maxSizeMB}MB",
     fileTooLarge: "File size exceeds {maxSizeMB}MB limit",
     uploadSuccess: "Voice clone uploaded successfully",
+    nameUpdated: "Voice name updated successfully",
+    deleteConfirmTitle: "Delete Voice Clone",
+    deleteConfirmDescription: "Are you sure you want to delete this voice clone? This action cannot be undone.",
+    deleteSuccess: "Voice clone deleted successfully",
   },
   nativeMenu: {
     fileMenu: "File",

@@ -149,6 +149,7 @@ const lang = {
       generatingThing: "{thing}生成中...",
       creating: "作成中...",
       saving: "保存中...",
+      deleting: "削除中...",
       processing: "処理中...",
 
       // Completion states
@@ -1493,6 +1494,10 @@ const lang = {
     fileRequirements: "{maxSizeMB}MBまでの音声ファイル",
     fileTooLarge: "ファイルサイズが{maxSizeMB}MBの制限を超えています",
     uploadSuccess: "音声クローンをアップロードしました",
+    nameUpdated: "音声名を更新しました",
+    deleteConfirmTitle: "音声クローンを削除",
+    deleteConfirmDescription: "この音声クローンを削除してもよろしいですか？この操作は元に戻せません。",
+    deleteSuccess: "音声クローンを削除しました",
   },
   nativeMenu: {
     fileMenu: "ファイル",
