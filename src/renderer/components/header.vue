@@ -54,6 +54,19 @@
           </Button>
         </RouterLink>
 
+        <!-- Voice Clone Button -->
+        <RouterLink :to="voiceCloneItem.path">
+          <Button
+            :variant="isVoiceCloneActive ? 'default' : 'ghost'"
+            size="sm"
+            class="relative transition-transform duration-200 hover:scale-105"
+            data-testid="voice-clone-button"
+          >
+            <component :is="voiceCloneItem.icon" :size="16" class="mr-1" />
+            {{ t("menu." + voiceCloneItem.key) }}
+          </Button>
+        </RouterLink>
+
         <!-- Settings Button -->
         <Button
           variant="ghost"
@@ -76,7 +89,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { Home, Settings, Activity, Music } from "lucide-vue-next";
+import { Home, Settings, Activity, Music, Mic } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 
 import { Button } from "@/components/ui/button";
@@ -92,7 +105,9 @@ const mulmoEventStore = useMulmoEventStore();
 
 const dashboardItem = { path: "/", icon: Home, key: "top" };
 const bgmItem = { path: "/bgm", icon: Music, key: "bgm" };
+const voiceCloneItem = { path: "/voice-clone", icon: Mic, key: "voiceClone" };
 
 const isDashboardActive = computed(() => route.path === dashboardItem.path);
 const isBgmActive = computed(() => route.path === bgmItem.path);
+const isVoiceCloneActive = computed(() => route.path === voiceCloneItem.path);
 </script>

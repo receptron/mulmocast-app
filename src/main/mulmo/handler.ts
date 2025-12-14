@@ -53,6 +53,7 @@ import { mulmoAudioBgmUpload, mulmoAudioBgmGet, mulmoBeatAudioUpload, mulmoBeatA
 import { graphaiPuppeteerAgent } from "./handler_graphai";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 import { bgmList, bgmAudioFile, bgmGenerate, bgmUpdateTitle, bgmDelete } from "./handler_bgm";
+import { getClonedVoices } from "./handler_voice_clone";
 import type { ChatMessage } from "../../types";
 
 const isDev = !app.isPackaged;
@@ -255,6 +256,8 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await bgmUpdateTitle(args[0] as string, args[1] as string);
       case "bgmDelete":
         return await bgmDelete(args[0] as string);
+      case "getClonedVoices":
+        return await getClonedVoices();
       default:
         throw new Error(`Unknown method: ${method}`);
     }

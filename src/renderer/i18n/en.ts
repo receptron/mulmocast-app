@@ -269,6 +269,7 @@ const lang = {
   menu: {
     top: "Dashboard",
     bgm: "BGM",
+    voiceClone: "Voice Clone",
     settings: "Settings",
     mypage: "MyPage",
     signin: "SignIn",
@@ -1466,6 +1467,14 @@ const lang = {
       permissionDenied: "API Permission Error",
       permissionDescription:
         "Your ElevenLabs API key does not have the 'music_generation' permission. Please upgrade your API plan or use a different API key with music generation enabled.",
+    },
+  },
+  voiceClone: {
+    title: "Voice Clone",
+    description: "View and manage your cloned voices from ElevenLabs",
+    empty: {
+      title: "No Cloned Voices Found",
+      description: "Create cloned voices in your ElevenLabs account to see them here",
     },
   },
   nativeMenu: {

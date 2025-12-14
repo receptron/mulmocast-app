@@ -270,6 +270,7 @@ const lang = {
   menu: {
     top: "ホーム",
     bgm: "BGM",
+    voiceClone: "音声クローン",
     settings: "設定",
     mypage: "マイページ",
     signin: "ログイン",
@@ -1472,6 +1473,14 @@ const lang = {
       permissionDenied: "API権限エラー",
       permissionDescription:
         "お使いのElevenLabs APIキーに「music_generation」の権限がありません。APIプランをアップグレードするか、音楽生成が有効な別のAPIキーを使用してください。",
+    },
+  },
+  voiceClone: {
+    title: "音声クローン",
+    description: "ElevenLabsでクローンした音声を表示・管理します",
+    empty: {
+      title: "クローン音声が見つかりません",
+      description: "ElevenLabsアカウントでクローン音声を作成すると、ここに表示されます",
     },
   },
   nativeMenu: {
