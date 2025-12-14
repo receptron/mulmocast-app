@@ -44,8 +44,19 @@
               <Mic v-else class="text-muted-foreground h-5 w-5" />
 
               <div class="flex-1">
-                <div class="flex items-center space-x-2">
+                <input
+                  v-if="voice.editing"
+                  v-model="voice.name"
+                  @blur="saveNameEdit(voice)"
+                  @keyup.enter="saveNameEdit(voice)"
+                  class="bg-background border-border w-full rounded border px-2 py-1 text-sm"
+                  type="text"
+                />
+                <div v-else class="flex items-center space-x-2">
                   <span class="font-medium">{{ voice.name }}</span>
+                  <Button variant="ghost" size="icon" class="h-6 w-6" @click="startNameEdit(voice)">
+                    <Pencil class="h-3 w-3" />
+                  </Button>
                   <Badge v-if="voice.category" variant="secondary" class="text-xs">{{ voice.category }}</Badge>
                 </div>
                 <p class="text-muted-foreground text-xs">{{ voice.voice_id }}</p>
@@ -60,7 +71,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { Mic, Loader2, Play, Pause } from "lucide-vue-next";
+import { Mic, Loader2, Play, Pause, Pencil } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 
 import Layout from "@/components/layout.vue";
@@ -81,6 +92,7 @@ interface ClonedVoice {
 
 interface VoiceItem extends ClonedVoice {
   playing: boolean;
+  editing: boolean;
 }
 
 const voices = ref<VoiceItem[]>([]);
@@ -94,6 +106,7 @@ const loadClonedVoices = async () => {
     voices.value = result.map((voice) => ({
       ...voice,
       playing: false,
+      editing: false,
     }));
   } catch (error) {
     console.error("Failed to load cloned voices:", error);
@@ -136,6 +149,24 @@ const togglePlay = (voiceId: string) => {
         voice.playing = false;
       };
     }
+  }
+};
+
+const startNameEdit = (voice: VoiceItem) => {
+  voice.editing = true;
+};
+
+const saveNameEdit = async (voice: VoiceItem) => {
+  voice.editing = false;
+  try {
+    await window.electronAPI.mulmoHandler("updateVoiceName", voice.voice_id, voice.name);
+    // Reload the list to reflect changes from API
+    await loadClonedVoices();
+  } catch (error) {
+    console.error("Failed to update voice name:", error);
+    notifyError(error);
+    // Reload to restore original name
+    await loadClonedVoices();
   }
 };
 

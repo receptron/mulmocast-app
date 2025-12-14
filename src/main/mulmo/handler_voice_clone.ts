@@ -35,3 +35,21 @@ export const getClonedVoices = async (): Promise<ClonedVoice[]> => {
 
   return voices;
 };
+
+// Update voice name
+export const updateVoiceName = async (voiceId: string, name: string): Promise<void> => {
+  const settings = await loadSettings();
+  const apiKey = settings.APIKEY["ELEVENLABS_API_KEY"];
+
+  if (!apiKey) {
+    throw new Error("ElevenLabs API Key is not set");
+  }
+
+  const client = new ElevenLabsClient({
+    apiKey,
+  });
+
+  await client.voices.update(voiceId, {
+    name,
+  });
+};
