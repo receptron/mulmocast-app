@@ -15,11 +15,14 @@ export const useImageFiles = () => {
   const lipSyncFiles = ref<Record<string, string | null>>({});
 
   const downloadImageFiles = async (projectId: string) => {
+    console.log("downloadImageFiles called for projectId:", projectId);
     const res = (await window.electronAPI.mulmoHandler("mulmoImageFiles", projectId)) as MulmoImagesResponse;
+    console.log("downloadImageFiles response:", Object.keys(res));
     Object.keys(res).forEach((id) => {
       const data = res[id];
       if (data.imageData) {
         imageFiles.value[id] = bufferToUrl(data.imageData, "image/png");
+        console.log("Image loaded for id:", id);
       }
       if (data.movieData) {
         movieFiles.value[id] = bufferToUrl(data.movieData, "video/mp4");
@@ -28,6 +31,7 @@ export const useImageFiles = () => {
         lipSyncFiles.value[id] = bufferToUrl(data.lipSyncData, "video/mp4");
       }
     });
+    console.log("imageFiles.value after download:", Object.keys(imageFiles.value));
   };
   const downloadImageFile = async (projectId: string, index: number, beatId: string) => {
     const data = (await window.electronAPI.mulmoHandler("mulmoImageFile", projectId, index)) as MulmoImageResponse;

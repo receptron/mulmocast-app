@@ -405,8 +405,12 @@ onUnmounted(() => {
 
 watch(
   () => mulmoScriptHistoryStore.isValidScript,
-  (newVal, oldVal) => {
+  async (newVal, oldVal) => {
+    console.log("watch isValidScript:", { newVal, oldVal });
     if (newVal && !oldVal) {
+      console.log("Reloading images and audio...");
+      // Save script first to ensure the file is up-to-date before downloading
+      await saveMulmoScript();
       downloadAudioFiles(projectId.value, mulmoScriptHistoryStore.lang);
       downloadImageFiles(projectId.value);
     }
