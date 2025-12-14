@@ -8,6 +8,10 @@
             <h1 class="text-2xl font-bold">{{ t("voiceClone.title") }}</h1>
             <p class="text-muted-foreground mt-1 text-sm">{{ t("voiceClone.description") }}</p>
           </div>
+          <Button @click="openUploadDialog" class="flex items-center space-x-2">
+            <Plus class="h-5 w-5" />
+            <span>{{ t("voiceClone.upload") }}</span>
+          </Button>
         </div>
 
         <!-- ElevenLabs API Key Alert -->
@@ -66,18 +70,80 @@
         </div>
       </div>
     </div>
+
+    <!-- Upload Voice Clone Dialog -->
+    <Dialog v-model:open="uploadDialog.open">
+      <DialogContent class="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle>{{ t("voiceClone.upload") }}</DialogTitle>
+          <DialogDescription>{{ t("voiceClone.uploadDescription") }}</DialogDescription>
+        </DialogHeader>
+
+        <div class="space-y-4 py-4">
+          <div class="space-y-2">
+            <label class="text-sm font-medium">{{ t("voiceClone.voiceName") }}</label>
+            <Input v-model="uploadDialog.name" :placeholder="t('voiceClone.voiceNamePlaceholder')" />
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-sm font-medium">{{ t("voiceClone.audioFile") }}</label>
+            <div
+              @dragover.prevent="handleDragOver"
+              @dragleave.prevent="handleDragLeave"
+              @drop.prevent="handleDrop"
+              :class="[
+                'border-border bg-card relative cursor-pointer rounded-md border-2 border-dashed p-8 text-center shadow-sm transition-colors',
+                uploadDialog.uploading ? 'cursor-not-allowed opacity-50' : 'hover:bg-muted/50',
+                isDragging ? 'border-primary bg-primary/5' : '',
+              ]"
+            >
+              <div v-if="uploadDialog.fileName" class="space-y-2">
+                <div class="text-primary font-medium">{{ uploadDialog.fileName }}</div>
+                <p class="text-muted-foreground text-xs">
+                  {{ t("voiceClone.fileRequirements", { maxSizeMB: 10 }) }}
+                </p>
+              </div>
+              <div v-else class="text-muted-foreground space-y-1">
+                <div class="text-sm whitespace-pre-line">{{ t("ui.common.drophere", { maxSizeMB: 10 }) }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" @click="uploadDialog.open = false" :disabled="uploadDialog.uploading">
+            {{ t("ui.actions.cancel") }}
+          </Button>
+          <Button @click="uploadVoice" :disabled="uploadDialog.uploading || !uploadDialog.name || !uploadDialog.file">
+            <span v-if="!uploadDialog.uploading">{{ t("ui.actions.upload") }}</span>
+            <span v-else class="flex items-center space-x-2">
+              <Loader2 class="h-4 w-4 animate-spin" />
+              <span>{{ t("ui.actions.uploading") }}</span>
+            </span>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </Layout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { Mic, Loader2, Play, Pause, Pencil } from "lucide-vue-next";
+import { Mic, Loader2, Play, Pause, Pencil, Plus } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 
 import Layout from "@/components/layout.vue";
 import SettingsAlert from "@/pages/project/script_editor/settings_alert.vue";
-import { Badge, Button } from "@/components/ui";
-import { notifyError } from "@/lib/notification";
+import { Badge, Button, Input } from "@/components/ui";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { notifyError, notifySuccess } from "@/lib/notification";
 import { useMulmoGlobalStore } from "@/store";
 
 const { t } = useI18n();
@@ -98,6 +164,15 @@ interface VoiceItem extends ClonedVoice {
 const voices = ref<VoiceItem[]>([]);
 const loading = ref(false);
 const audioElement = ref<HTMLAudioElement | null>(null);
+
+const uploadDialog = ref({
+  open: false,
+  name: "",
+  file: null as File | null,
+  fileName: "",
+  uploading: false,
+});
+const isDragging = ref(false);
 
 const loadClonedVoices = async () => {
   loading.value = true;
@@ -167,6 +242,79 @@ const saveNameEdit = async (voice: VoiceItem) => {
     notifyError(error);
     // Reload to restore original name
     await loadClonedVoices();
+  }
+};
+
+const openUploadDialog = () => {
+  uploadDialog.value = {
+    open: true,
+    name: "",
+    file: null,
+    fileName: "",
+    uploading: false,
+  };
+  isDragging.value = false;
+};
+
+const readFileAsArrayBuffer = (file: File): Promise<ArrayBuffer> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as ArrayBuffer);
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
+};
+
+const handleFileUpload = (file: File) => {
+  if (!file) return;
+
+  const maxSize = 10 * 1024 * 1024; // 10MB
+  if (file.size > maxSize) {
+    notifyError(t("voiceClone.fileTooLarge", { maxSizeMB: 10 }));
+    return;
+  }
+
+  uploadDialog.value.file = file;
+  uploadDialog.value.fileName = file.name;
+};
+
+const handleDragOver = () => {
+  isDragging.value = true;
+};
+
+const handleDragLeave = () => {
+  isDragging.value = false;
+};
+
+const handleDrop = (event: DragEvent) => {
+  isDragging.value = false;
+  const files = event.dataTransfer?.files;
+  if (files && files.length > 0) {
+    handleFileUpload(files[0]);
+  }
+};
+
+const uploadVoice = async () => {
+  if (!uploadDialog.value.file || !uploadDialog.value.name) return;
+
+  uploadDialog.value.uploading = true;
+  try {
+    const buffer = await readFileAsArrayBuffer(uploadDialog.value.file);
+    await window.electronAPI.mulmoHandler(
+      "uploadVoiceClone",
+      uploadDialog.value.name,
+      buffer,
+      uploadDialog.value.fileName,
+    );
+    notifySuccess(t("voiceClone.uploadSuccess"));
+    uploadDialog.value.open = false;
+    // Reload to show new voice
+    await loadClonedVoices();
+  } catch (error) {
+    console.error("Failed to upload voice:", error);
+    notifyError(error);
+  } finally {
+    uploadDialog.value.uploading = false;
   }
 };
 

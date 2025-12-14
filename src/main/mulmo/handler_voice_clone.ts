@@ -53,3 +53,37 @@ export const updateVoiceName = async (voiceId: string, name: string): Promise<vo
     name,
   });
 };
+
+// Upload voice clone
+export const uploadVoiceClone = async (
+  name: string,
+  fileBuffer: ArrayBuffer,
+  fileName: string,
+): Promise<{ voice_id: string }> => {
+  const settings = await loadSettings();
+  const apiKey = settings.APIKEY["ELEVENLABS_API_KEY"];
+
+  if (!apiKey) {
+    throw new Error("ElevenLabs API Key is not set");
+  }
+
+  const client = new ElevenLabsClient({
+    apiKey,
+  });
+
+  // Convert ArrayBuffer to File
+  const blob = new Blob([fileBuffer]);
+  const file = new File([blob], fileName, {
+    type: "audio/mpeg", // Default to mp3, could be detected from fileName
+  });
+
+  const result = await client.voices.ivc.create({
+    name,
+    files: [file],
+    remove_background_noise: false,
+  });
+
+  return {
+    voice_id: result.voice_id,
+  };
+};

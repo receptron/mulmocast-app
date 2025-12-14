@@ -53,7 +53,7 @@ import { mulmoAudioBgmUpload, mulmoAudioBgmGet, mulmoBeatAudioUpload, mulmoBeatA
 import { graphaiPuppeteerAgent } from "./handler_graphai";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 import { bgmList, bgmAudioFile, bgmGenerate, bgmUpdateTitle, bgmDelete } from "./handler_bgm";
-import { getClonedVoices, updateVoiceName } from "./handler_voice_clone";
+import { getClonedVoices, updateVoiceName, uploadVoiceClone } from "./handler_voice_clone";
 import type { ChatMessage } from "../../types";
 
 const isDev = !app.isPackaged;
@@ -260,6 +260,8 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         return await getClonedVoices();
       case "updateVoiceName":
         return await updateVoiceName(args[0] as string, args[1] as string);
+      case "uploadVoiceClone":
+        return await uploadVoiceClone(args[0] as string, args[1] as ArrayBuffer, args[2] as string);
       default:
         throw new Error(`Unknown method: ${method}`);
     }
