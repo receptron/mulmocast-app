@@ -119,8 +119,7 @@
     </Select>
     <!-- play - placed after decoration selector since decoration affects the audio -->
     <audio
-      v-if="kotodamaVoiceKey"
-      :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${kotodamaVoiceKey}_${currentDecoration}.mp3`"
+      :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${getVoiceList(localizedSpeaker.provider).find((a) => a.id === localizedSpeaker.voiceId).key}_${currentDecoration}.mp3`"
       controls
       volume="0.3"
       class="mt-2"
@@ -262,14 +261,6 @@ const currentModel = computed(() => {
 
 const currentDecoration = computed(() => {
   return props.speaker?.speechOptions?.decoration ?? defaultDecoration;
-});
-
-// Computed property to get kotodama voice key safely
-const kotodamaVoiceKey = computed(() => {
-  if (!localizedSpeaker.value || localizedSpeaker.value.provider !== "kotodama") return null;
-  const voiceList = getVoiceList("kotodama") as readonly { id: string; key?: string }[];
-  const voice = voiceList.find((v) => v.id === localizedSpeaker.value?.voiceId);
-  return voice?.key || null;
 });
 
 const handleSpeakerVoiceChange = (voiceId: string) => {
