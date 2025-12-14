@@ -122,7 +122,6 @@
       :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${getVoiceList(localizedSpeaker.provider).find((a) => a.id === localizedSpeaker.voiceId).key}_${currentDecoration}.mp3`"
       controls
       volume="0.3"
-      class="mt-2"
     />
   </div>
   <div v-if="localizedSpeaker.provider === 'openai' || !localizedSpeaker.provider">
