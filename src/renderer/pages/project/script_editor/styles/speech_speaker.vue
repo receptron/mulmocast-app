@@ -112,7 +112,7 @@
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem v-for="decoration in filteredDecorationList" :key="decoration.id" :value="decoration.id">
+        <SelectItem v-for="decoration in getDecorationList('kotodama')" :key="decoration.id" :value="decoration.id">
           {{ t(["decorationList", "kotodama", decoration.key ?? decoration.id].join(".")) }}
         </SelectItem>
       </SelectContent>
@@ -270,20 +270,6 @@ const kotodamaVoiceKey = computed(() => {
   const voiceList = getVoiceList("kotodama") as readonly { id: string; key?: string }[];
   const voice = voiceList.find((v) => v.id === localizedSpeaker.value?.voiceId);
   return voice?.key || null;
-});
-
-// Filter decoration list based on current language (Japanese or English)
-const filteredDecorationList = computed(() => {
-  const decorations = getDecorationList("kotodama") as readonly { id: string; key?: string }[];
-  const lang = mulmoScriptHistoryStore.lang;
-
-  // Filter by language: keep only decorations matching the current language
-  // Japanese decorations don't have _en suffix, English ones have _en suffix
-  if (lang === "ja") {
-    return decorations.filter((d) => !d.id.endsWith("_en"));
-  } else {
-    return decorations.filter((d) => d.id.endsWith("_en"));
-  }
 });
 
 const handleSpeakerVoiceChange = (voiceId: string) => {
