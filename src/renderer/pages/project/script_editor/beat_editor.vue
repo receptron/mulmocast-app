@@ -489,8 +489,8 @@
             />
           </template>
 
-          <!-- Transition Settings (only for beat 2 and onwards) -->
-          <template v-if="index > 0">
+          <!-- Transition Settings (only for beat 2 and onwards, not for voice_over) -->
+          <template v-if="index > 0 && !isVoiceOver">
             <div class="mb-3 flex items-center gap-2">
               <Checkbox
                 variant="ghost"
