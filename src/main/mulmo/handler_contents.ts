@@ -2,7 +2,6 @@ import {
   getBeatAudioPathOrUrl,
   MulmoPresentationStyleMethods,
   MulmoMediaSourceMethods,
-  MulmoStudioContextMethods,
   imagePreprocessAgent,
   getReferenceImagePath,
   getMultiLingual,
@@ -12,8 +11,6 @@ import {
   listLocalizedAudioPaths,
   defaultBGMPath,
   resolveAssetPath,
-  getAudioFilePath,
-  hashSHA256,
   type MulmoStudioContext,
   type MulmoStudioMultiLingual,
   type MulmoBeat,
@@ -103,22 +100,11 @@ export const mulmoGeneratedAudioFile = async (projectId: string, index: number) 
     }
 
     const lang = context.lang ?? context.studio.script?.lang ?? "en";
-    const { voiceId, provider, speechOptions, model } = MulmoStudioContextMethods.getAudioParam(context, beat, lang);
-    const audioDirPath = MulmoStudioContextMethods.getAudioDirPath(context);
 
-    // Calculate TTS file path using hash
-    const hash_string = [
-      text,
-      voiceId,
-      speechOptions?.instruction ?? "",
-      speechOptions?.speed ?? 1.0,
-      provider,
-      model ?? "",
-    ].join(":");
-    const audioFileName = `${context.studio.filename}_${hashSHA256(hash_string)}`;
-    const fileName = getAudioFilePath(audioDirPath, context.studio.filename, audioFileName, lang);
+    // Use getBeatAudioPathOrUrl which matches the actual file generation logic
+    const fileName = getBeatAudioPathOrUrl(text, context, beat, lang);
 
-    if (fileExstsSync(fileName)) {
+    if (fileName && fileExstsSync(fileName)) {
       const buffer = fs.readFileSync(fileName);
       return buffer.buffer;
     }

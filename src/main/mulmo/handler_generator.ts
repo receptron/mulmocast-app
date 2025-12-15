@@ -203,9 +203,21 @@ export const mulmoGenerateBeatAudio = async (projectId: string, index: number, w
     if (!context) {
       return { result: false, noContext: true };
     }
-    //await generateBeatAudio(index, context, { settings: settings.APIKEY ?? {}, langs: ["de", "fr"] });
+    const beat = context.studio.script.beats[0];
     await generateBeatAudio(0, context, { settings: settings.APIKEY ?? {}, langs: [context.lang] });
     removeSessionProgressCallback(mulmoCallback);
+
+    // Notify renderer that audio generation is complete
+    webContents.send("progress-update", {
+      projectId,
+      type: "mulmo",
+      data: {
+        kind: "beat",
+        sessionType: "audio",
+        id: beat.id,
+        inSession: false,
+      },
+    });
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);
     webContents.send("progress-update", {

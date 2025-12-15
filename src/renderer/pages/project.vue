@@ -405,8 +405,10 @@ onUnmounted(() => {
 
 watch(
   () => mulmoScriptHistoryStore.isValidScript,
-  (newVal, oldVal) => {
+  async (newVal, oldVal) => {
     if (newVal && !oldVal) {
+      // Save script first to ensure the file is up-to-date before downloading
+      await saveMulmoScript();
       downloadAudioFiles(projectId.value, mulmoScriptHistoryStore.lang);
       downloadImageFiles(projectId.value);
     }
