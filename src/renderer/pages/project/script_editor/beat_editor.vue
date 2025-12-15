@@ -690,7 +690,7 @@ const beatTransitionDuration = computed(() => {
 
 // Show BeatStyle settings only for imagePrompt beats in Pro mode
 const showBeatStyleSettings = computed(() => {
-  return beatType.value === 'imagePrompt' && props.isPro;
+  return beatType.value === "imagePrompt" && props.isPro;
 });
 
 // Show Transition settings for beat 2 onwards, but not for voice_over type
