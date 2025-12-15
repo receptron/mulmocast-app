@@ -465,7 +465,7 @@
     </div>
 
     <!-- Advanced Beat Settings -->
-    <template v-if="(beatType === 'imagePrompt' && isPro) || index > 0">
+    <template v-if="showAdvancedSettings">
       <hr class="m-2" />
       <Collapsible v-model:open="beatAdvancedSettingsOpen" class="mt-4">
         <CollapsibleTrigger as-child>
@@ -478,7 +478,7 @@
         </CollapsibleTrigger>
         <CollapsibleContent class="space-y-3">
           <!-- Image Generation Override Settings (only for imagePrompt beats) -->
-          <template v-if="beatType === 'imagePrompt' && isPro">
+          <template v-if="showBeatStyleSettings">
             <BeatStyle
               :beat="beat"
               @update="update"
@@ -489,8 +489,8 @@
             />
           </template>
 
-          <!-- Transition Settings (only for beat 2 and onwards) -->
-          <template v-if="index > 0">
+          <!-- Transition Settings (only for beat 2 and onwards, not for voice_over) -->
+          <template v-if="showTransitionSettings">
             <div class="mb-3 flex items-center gap-2">
               <Checkbox
                 variant="ghost"
@@ -686,6 +686,21 @@ const beatTransitionType = computed(() => {
 
 const beatTransitionDuration = computed(() => {
   return props.beat.movieParams?.transition?.duration ?? DEFAULT_TRANSITION_DURATION;
+});
+
+// Show BeatStyle settings only for imagePrompt beats in Pro mode
+const showBeatStyleSettings = computed(() => {
+  return beatType.value === "imagePrompt" && props.isPro;
+});
+
+// Show Transition settings for beat 2 onwards, but not for voice_over type
+const showTransitionSettings = computed(() => {
+  return props.index > 0 && !isVoiceOver.value;
+});
+
+// Show Advanced Settings section if any subsection should be visible
+const showAdvancedSettings = computed(() => {
+  return showBeatStyleSettings.value || showTransitionSettings.value;
 });
 
 const showSpeakerSelector = () => {
