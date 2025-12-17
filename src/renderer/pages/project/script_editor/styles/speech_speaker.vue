@@ -59,48 +59,6 @@
       </SelectContent>
     </Select>
   </div>
-  <div v-if="localizedSpeaker.provider === 'openai' || localizedSpeaker.provider === undefined">
-    <!-- play -->
-    <audio
-      :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${localizedSpeaker.voiceId}.mp3`"
-      controls
-      volume="0.3"
-    />
-  </div>
-  <div v-if="localizedSpeaker.provider === 'gemini'">
-    <!-- play -->
-    <audio
-      :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${currentModel}/${localizedSpeaker.voiceId}.mp3`"
-      controls
-      volume="0.3"
-    />
-  </div>
-  <div v-if="localizedSpeaker.provider === 'elevenlabs'">
-    <!-- play -->
-    <audio
-      :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${currentModel}/${getVoiceList(localizedSpeaker.provider).find((a) => a.id === localizedSpeaker.voiceId)?.key}.mp3`"
-      controls
-      volume="0.3"
-    />
-  </div>
-  <div v-if="localizedSpeaker.provider === 'nijivoice'">
-    <audio
-      :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${getVoiceList(localizedSpeaker.provider).find((a) => a.id === localizedSpeaker.voiceId)?.key}.mp3`"
-      controls
-      volume="0.3"
-    />
-  </div>
-  <div v-if="localizedSpeaker.provider === 'nijivoice'">
-    <!-- speed -->
-    <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
-    <Input
-      :model-value="speaker.speed || ''"
-      @update:model-value="(value) => handleSpeechOptionsChange('speed', value)"
-      class="h-8"
-      type="number"
-      :placeholder="t('parameters.speechParams.speedPlaceholder')"
-    />
-  </div>
   <div v-if="localizedSpeaker.provider === 'kotodama'">
     <!-- decoration -->
     <Label class="text-xs">{{ t("parameters.speechParams.decoration") }}</Label>
@@ -118,11 +76,18 @@
       </SelectContent>
     </Select>
   </div>
-  <div v-if="localizedSpeaker.provider === 'kotodama'">
-    <audio
-      :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${getVoiceList(localizedSpeaker.provider).find((a) => a.id === localizedSpeaker.voiceId)?.key}_${currentDecoration}.mp3`"
-      controls
-      volume="0.3"
+  <div v-if="audioPreviewUrl">
+    <audio :src="audioPreviewUrl" controls @loadedmetadata="(e) => (e.target.volume = 0.3)" />
+  </div>
+  <div v-if="localizedSpeaker.provider === 'nijivoice'">
+    <!-- speed -->
+    <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
+    <Input
+      :model-value="speaker.speed || ''"
+      @update:model-value="(value) => handleSpeechOptionsChange('speed', value)"
+      class="h-8"
+      type="number"
+      :placeholder="t('parameters.speechParams.speedPlaceholder')"
     />
   </div>
   <div v-if="localizedSpeaker.provider === 'openai' || !localizedSpeaker.provider">
@@ -261,6 +226,43 @@ const currentModel = computed(() => {
 
 const currentDecoration = computed(() => {
   return props.speaker?.speechOptions?.decoration ?? defaultDecoration;
+});
+
+const audioPreviewUrl = computed(() => {
+  const provider = localizedSpeaker.value.provider || defaultSpeechProvider;
+  const voiceId = localizedSpeaker.value.voiceId;
+  const baseUrl = "https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice";
+
+  if (!voiceId) return null;
+
+  switch (provider) {
+    case "openai":
+      return `${baseUrl}/${provider}/${voiceId}.mp3`;
+
+    case "gemini":
+      return `${baseUrl}/${provider}/${currentModel.value}/${voiceId}.mp3`;
+
+    case "elevenlabs": {
+      const voice = getVoiceList(provider).find((a) => a.id === voiceId);
+      if (!voice?.key) return null;
+      return `${baseUrl}/${provider}/${currentModel.value}/${voice.key}.mp3`;
+    }
+
+    case "nijivoice": {
+      const voice = getVoiceList(provider).find((a) => a.id === voiceId);
+      if (!voice?.key) return null;
+      return `${baseUrl}/${provider}/${voice.key}.mp3`;
+    }
+
+    case "kotodama": {
+      const voice = getVoiceList(provider).find((a) => a.id === voiceId);
+      if (!voice?.key) return null;
+      return `${baseUrl}/${provider}/${voice.key}_${currentDecoration.value}.mp3`;
+    }
+
+    default:
+      return null;
+  }
 });
 
 const handleSpeakerVoiceChange = (voiceId: string) => {
