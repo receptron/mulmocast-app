@@ -78,14 +78,14 @@
   <div v-if="localizedSpeaker.provider === 'elevenlabs'">
     <!-- play -->
     <audio
-      :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${currentModel}/${getVoiceList(localizedSpeaker.provider).find((a) => a.id === localizedSpeaker.voiceId).key}.mp3`"
+      :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${currentModel}/${getVoiceList(localizedSpeaker.provider).find((a) => a.id === localizedSpeaker.voiceId)?.key}.mp3`"
       controls
       volume="0.3"
     />
   </div>
   <div v-if="localizedSpeaker.provider === 'nijivoice'">
     <audio
-      :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${getVoiceList(localizedSpeaker.provider).find((a) => a.id === localizedSpeaker.voiceId).key}.mp3`"
+      :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${getVoiceList(localizedSpeaker.provider).find((a) => a.id === localizedSpeaker.voiceId)?.key}.mp3`"
       controls
       volume="0.3"
     />
@@ -120,7 +120,7 @@
   </div>
   <div v-if="localizedSpeaker.provider === 'kotodama'">
     <audio
-      :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${getVoiceList(localizedSpeaker.provider).find((a) => a.id === localizedSpeaker.voiceId).key}_${currentDecoration}.mp3`"
+      :src="`https://github.com/receptron/mulmocast-media/raw/refs/heads/main/voice/${localizedSpeaker.provider}/${getVoiceList(localizedSpeaker.provider).find((a) => a.id === localizedSpeaker.voiceId)?.key}_${currentDecoration}.mp3`"
       controls
       volume="0.3"
     />
