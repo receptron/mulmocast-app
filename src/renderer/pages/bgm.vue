@@ -156,7 +156,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { Plus, Music, Play, Pause, Pencil, Trash2, Loader2 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
@@ -419,5 +419,17 @@ const formatDate = (dateString: string) => {
 
 onMounted(() => {
   loadBgmList();
+});
+
+onBeforeUnmount(() => {
+  // Stop audio playback when leaving the page
+  if (audioElement.value) {
+    audioElement.value.pause();
+    audioElement.value.src = "";
+  }
+  // Reset playing state
+  bgmList.value.forEach((bgm) => {
+    bgm.playing = false;
+  });
 });
 </script>
