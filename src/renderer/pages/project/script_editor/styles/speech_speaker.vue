@@ -77,7 +77,7 @@
     </Select>
   </div>
   <div v-if="audioPreviewUrl">
-    <audio :src="audioPreviewUrl" controls volume="0.3" />
+    <audio :src="audioPreviewUrl" controls @loadedmetadata="(e) => e.target.volume = 0.3" />
   </div>
   <div v-if="localizedSpeaker.provider === 'nijivoice'">
     <!-- speed -->
