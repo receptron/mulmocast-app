@@ -94,6 +94,8 @@ const lang = {
       playThing: "{thing}を再生",
       download: "ダウンロード",
       downloadThing: "{thing}をダウンロード",
+      upload: "アップロード",
+      uploading: "アップロード中",
       view: "表示",
       viewThing: "{thing}を表示",
       viewDetails: "詳細を見る",
@@ -147,6 +149,7 @@ const lang = {
       generatingThing: "{thing}生成中...",
       creating: "作成中...",
       saving: "保存中...",
+      deleting: "削除中...",
       processing: "処理中...",
 
       // Completion states
@@ -270,6 +273,7 @@ const lang = {
   menu: {
     top: "ホーム",
     bgm: "BGM",
+    voiceClone: "音声クローン",
     settings: "設定",
     mypage: "マイページ",
     signin: "ログイン",
@@ -1473,6 +1477,27 @@ const lang = {
       permissionDescription:
         "お使いのElevenLabs APIキーに「music_generation」の権限がありません。APIプランをアップグレードするか、音楽生成が有効な別のAPIキーを使用してください。",
     },
+  },
+  voiceClone: {
+    title: "音声クローン",
+    description: "ElevenLabsでクローンした音声を表示・管理します",
+    empty: {
+      title: "クローン音声が見つかりません",
+      description: "ElevenLabsアカウントでクローン音声を作成すると、ここに表示されます",
+    },
+    upload: "音声クローンをアップロード",
+    uploadDescription: "音声ファイルをアップロードしてクローン音声を作成します",
+    voiceName: "音声名",
+    voiceNamePlaceholder: "クローン音声の名前を入力",
+    audioFile: "音声ファイル",
+    selectFile: "ファイルを選択",
+    fileRequirements: "{maxSizeMB}MBまでの音声ファイル",
+    fileTooLarge: "ファイルサイズが{maxSizeMB}MBの制限を超えています",
+    uploadSuccess: "音声クローンをアップロードしました",
+    nameUpdated: "音声名を更新しました",
+    deleteConfirmTitle: "音声クローンを削除",
+    deleteConfirmDescription: "この音声クローンを削除してもよろしいですか？この操作は元に戻せません。",
+    deleteSuccess: "音声クローンを削除しました",
   },
   nativeMenu: {
     fileMenu: "ファイル",

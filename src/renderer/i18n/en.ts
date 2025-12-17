@@ -94,6 +94,8 @@ const lang = {
       playThing: "Play {thing}",
       download: "Download",
       downloadThing: "Download {thing}",
+      upload: "Upload",
+      uploading: "Uploading",
       view: "View",
       viewThing: "View {thing}",
       viewDetails: "View Details",
@@ -147,6 +149,7 @@ const lang = {
       generatingThing: "Generating {thing}...",
       creating: "Creating...",
       saving: "Saving...",
+      deleting: "Deleting...",
       processing: "Processing...",
 
       // Completion states
@@ -269,6 +272,7 @@ const lang = {
   menu: {
     top: "Dashboard",
     bgm: "BGM",
+    voiceClone: "Voice Clone",
     settings: "Settings",
     mypage: "MyPage",
     signin: "SignIn",
@@ -1467,6 +1471,27 @@ const lang = {
       permissionDescription:
         "Your ElevenLabs API key does not have the 'music_generation' permission. Please upgrade your API plan or use a different API key with music generation enabled.",
     },
+  },
+  voiceClone: {
+    title: "Voice Clone",
+    description: "View and manage your cloned voices from ElevenLabs",
+    empty: {
+      title: "No Cloned Voices Found",
+      description: "Create cloned voices in your ElevenLabs account to see them here",
+    },
+    upload: "Upload Voice Clone",
+    uploadDescription: "Upload an audio file to create a cloned voice",
+    voiceName: "Voice Name",
+    voiceNamePlaceholder: "Enter a name for the cloned voice",
+    audioFile: "Audio File",
+    selectFile: "Select File",
+    fileRequirements: "Audio file up to {maxSizeMB}MB",
+    fileTooLarge: "File size exceeds {maxSizeMB}MB limit",
+    uploadSuccess: "Voice clone uploaded successfully",
+    nameUpdated: "Voice name updated successfully",
+    deleteConfirmTitle: "Delete Voice Clone",
+    deleteConfirmDescription: "Are you sure you want to delete this voice clone? This action cannot be undone.",
+    deleteSuccess: "Voice clone deleted successfully",
   },
   nativeMenu: {
     fileMenu: "File",
