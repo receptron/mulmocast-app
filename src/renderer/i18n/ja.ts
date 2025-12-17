@@ -321,6 +321,8 @@ const lang = {
         webSearch: "AIチャットWeb検索",
         soundEffects: "効果音生成",
         lipSync: "リップシンク",
+        bgmGeneration: "BGM生成",
+        voiceCloning: "音声クローン",
       },
     },
     notifications: {

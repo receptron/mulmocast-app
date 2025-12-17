@@ -321,6 +321,8 @@ const lang = {
         webSearch: "Web Search",
         soundEffects: "Sound Effects",
         lipSync: "Lip Sync",
+        bgmGeneration: "BGM Generation",
+        voiceCloning: "Voice Cloning",
       },
     },
     notifications: {
