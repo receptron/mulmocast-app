@@ -13,6 +13,8 @@ export const FEATURE_KEYS = [
   "webSearch",
   "soundEffects",
   "lipSync",
+  "bgmGeneration",
+  "voiceCloning",
 ] as const;
 
 // Create a union type from the tuple for type safety
@@ -35,7 +37,7 @@ export const ENV_KEYS = {
     title: "Gemini API Key",
     placeholder: "AI...",
     url: "https://aistudio.google.com/app/apikey",
-    features: ["llmChat", "imageGeneration", "videoGeneration"] as FeatureKey[],
+    features: ["llmChat", "tts", "imageGeneration", "videoGeneration"] as FeatureKey[],
   },
   NIJIVOICE_API_KEY: {
     title: "NijiVoice API Key",
@@ -47,7 +49,7 @@ export const ENV_KEYS = {
     title: "ElevenLabs API Key",
     placeholder: "el_...",
     url: "https://elevenlabs.io/app/settings/api-keys",
-    features: ["tts"] as FeatureKey[],
+    features: ["tts", "bgmGeneration", "voiceCloning"] as FeatureKey[],
   },
   KOTODAMA_API_KEY: {
     title: "Kotodama API Key",
