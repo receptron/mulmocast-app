@@ -257,13 +257,29 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
       case "bgmDelete":
         return await bgmDelete(args[0] as string);
       case "getClonedVoices":
-        return await getClonedVoices();
+        try {
+          return await getClonedVoices();
+        } catch (error) {
+          return { error, cause: error?.cause };
+        }
       case "updateVoiceName":
-        return await updateVoiceName(args[0] as string, args[1] as string);
+        try {
+          return await updateVoiceName(args[0] as string, args[1] as string);
+        } catch (error) {
+          return { error, cause: error?.cause };
+        }
       case "uploadVoiceClone":
-        return await uploadVoiceClone(args[0] as string, args[1] as ArrayBuffer, args[2] as string);
+        try {
+          return await uploadVoiceClone(args[0] as string, args[1] as ArrayBuffer, args[2] as string);
+        } catch (error) {
+          return { error, cause: error?.cause };
+        }
       case "deleteVoice":
-        return await deleteVoice(args[0] as string);
+        try {
+          return await deleteVoice(args[0] as string);
+        } catch (error) {
+          return { error, cause: error?.cause };
+        }
       default:
         throw new Error(`Unknown method: ${method}`);
     }

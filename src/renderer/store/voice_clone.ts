@@ -15,10 +15,31 @@ export const useVoiceCloneStore = defineStore("voiceClone", () => {
   const loadVoices = async () => {
     loading.value = true;
     try {
-      const result = (await window.electronAPI.mulmoHandler("getClonedVoices")) as ClonedVoice[];
-      voices.value = result;
+      const result = await window.electronAPI.mulmoHandler("getClonedVoices");
+
+      // Check if result is an error object
+      if (result && typeof result === "object" && "error" in result) {
+        const errorResult = result as { error: Error; cause?: { type: string; agentName: string } };
+
+        // If cause exists, throw error with cause
+        if (errorResult.cause) {
+          const newError = new Error(errorResult.error.message);
+          (newError as Error & { cause?: unknown }).cause = errorResult.cause;
+          throw newError;
+        }
+
+        throw errorResult.error;
+      }
+
+      // Check if result is an array
+      if (!Array.isArray(result)) {
+        throw new Error("Invalid response: expected array of voices");
+      }
+
+      voices.value = result as ClonedVoice[];
     } catch (error) {
       console.error("Failed to load cloned voices:", error);
+      voices.value = []; // Reset to empty array on error
       throw error;
     } finally {
       loading.value = false;
