@@ -8,7 +8,7 @@
             <h1 class="text-2xl font-bold">{{ t("voiceClone.title") }}</h1>
             <p class="text-muted-foreground mt-1 text-sm">{{ t("voiceClone.description") }}</p>
           </div>
-          <Button @click="openUploadDialog" class="flex items-center space-x-2">
+          <Button v-if="hasApiKey" @click="openUploadDialog" class="flex items-center space-x-2">
             <Plus class="h-5 w-5" />
             <span>{{ t("voiceClone.upload") }}</span>
           </Button>
@@ -17,8 +17,17 @@
         <!-- ElevenLabs API Key Alert -->
         <SettingsAlert provider="elevenlabs" :setting-presence="globalStore.settingPresence" class="mb-4" />
 
+        <!-- API Key Not Set -->
+        <div v-if="!hasApiKey" class="py-16 text-center">
+          <div class="space-y-4">
+            <Mic class="text-muted-foreground mx-auto h-16 w-16" />
+            <h2 class="text-foreground text-xl font-semibold">{{ t("voiceClone.apiKeyRequired.title") }}</h2>
+            <p class="text-muted-foreground">{{ t("voiceClone.apiKeyRequired.description") }}</p>
+          </div>
+        </div>
+
         <!-- Loading State -->
-        <div v-if="loading" class="flex items-center justify-center py-16">
+        <div v-else-if="loading" class="flex items-center justify-center py-16">
           <div class="flex items-center space-x-2">
             <Loader2 class="text-primary h-8 w-8 animate-spin" />
             <span class="text-muted-foreground">{{ t("ui.status.loading") }}</span>
@@ -210,25 +219,54 @@ const deleteDialog = ref({
   deleting: false,
 });
 
-const voices = computed<VoiceItem[]>(() =>
-  voiceCloneStore.voices.map((voice) => ({
+const voices = computed<VoiceItem[]>(() => {
+  if (!Array.isArray(voiceCloneStore.voices)) {
+    return [];
+  }
+  return voiceCloneStore.voices.map((voice) => ({
     ...voice,
     playing: playingVoiceId.value === voice.voice_id,
     editing: editingVoiceId.value === voice.voice_id,
-  })),
-);
+  }));
+});
 const loading = computed(() => voiceCloneStore.loading);
 
 const playingVoiceId = ref<string | null>(null);
 const editingVoiceId = ref<string | null>(null);
 const editingVoiceName = ref("");
 
+const hasApiKey = computed(() => {
+  return globalStore.settingPresence["ELEVENLABS_API_KEY"] === true;
+});
+
 const loadClonedVoices = async () => {
+  if (!hasApiKey.value) {
+    return;
+  }
   try {
     await voiceCloneStore.loadVoices();
   } catch (error) {
     console.error("Failed to load cloned voices:", error);
-    notifyError(error);
+
+    // Check if error has cause for structured error handling
+    const errorWithCause = error as Error & { cause?: { type: string; agentName: string } };
+
+    if (errorWithCause?.cause) {
+      const { type, agentName } = errorWithCause.cause;
+
+      // Build i18n key based on cause
+      const i18nKey = `notify.error.${type}.${agentName}`;
+
+      // Check if translation exists
+      if (t(i18nKey) !== i18nKey) {
+        notifyError(t(i18nKey));
+        return;
+      }
+    }
+
+    // Fallback to generic error message
+    console.log(error);
+    notifyError(t("voiceClone.errors.loadFailed"));
   }
 };
 
