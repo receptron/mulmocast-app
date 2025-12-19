@@ -54,7 +54,10 @@
           :key="voice.id"
           :value="voice.id"
         >
-          {{ t(["voiceList", localizedSpeaker?.provider || defaultSpeechProvider, voice.key ?? voice.id].join(".")) }}
+          {{
+            voice.name ||
+            t(["voiceList", localizedSpeaker?.provider || defaultSpeechProvider, voice.key ?? voice.id].join("."))
+          }}
         </SelectItem>
       </SelectContent>
     </Select>
@@ -155,7 +158,7 @@ import {
   DECORATION_LISTS,
   defaultSpeechProvider,
 } from "@/../shared/constants";
-import { useMulmoScriptHistoryStore } from "@/store";
+import { useMulmoScriptHistoryStore, useVoiceCloneStore } from "@/store";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label, Input } from "@/components/ui";
@@ -188,7 +191,18 @@ const defaultDecoration = "neutral";
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
 const getVoiceList = (provider: string) => {
-  return VOICE_LISTS[provider as Provider] || VOICE_LISTS.openai;
+  const baseVoices = VOICE_LISTS[provider as Provider] || VOICE_LISTS.openai;
+
+  // Add voice clone voices for elevenlabs
+  if (provider === "elevenlabs" && Array.isArray(voiceCloneStore.voices)) {
+    const clonedVoices = voiceCloneStore.voices.map((voice) => ({
+      id: voice.voice_id,
+      name: voice.name,
+    }));
+    return [...baseVoices, ...clonedVoices];
+  }
+
+  return baseVoices;
 };
 
 type DecorationProvider = keyof typeof DECORATION_LISTS;
@@ -198,6 +212,8 @@ const getDecorationList = (provider: string) => {
 };
 
 type TTSProvider = keyof typeof provider2TTSAgent;
+
+const voiceCloneStore = useVoiceCloneStore();
 
 // const selectedLanguages = ref<Record<string, string>>({});
 // const handleLanguageChange = (language: string) => {
@@ -243,6 +259,15 @@ const audioPreviewUrl = computed(() => {
       return `${baseUrl}/${provider}/${currentModel.value}/${voiceId}.mp3`;
 
     case "elevenlabs": {
+      // Check if this is a cloned voice first
+      if (Array.isArray(voiceCloneStore.voices)) {
+        const clonedVoice = voiceCloneStore.voices.find((v) => v.voice_id === voiceId);
+        if (clonedVoice?.previewUrl) {
+          return clonedVoice.previewUrl;
+        }
+      }
+
+      // Fall back to built-in voices
       const voice = getVoiceList(provider).find((a) => a.id === voiceId);
       if (!voice?.key) return null;
       return `${baseUrl}/${provider}/${currentModel.value}/${voice.key}.mp3`;
