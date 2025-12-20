@@ -157,6 +157,7 @@ export const en_notify = {
       ttsKotodamaAgent: "The Kotodama API Key is invalid",
       bgmElevenlabsAgent: "The ElevenLabs API Key is invalid",
       voiceCloneElevenlabsAgent: "The ElevenLabs API Key is invalid",
+      mulmoMediaAgent: "The Mulmo Media API Key is invalid",
       openaiAgent: "The OpenAI API Key is invalid",
       openAIAgent: "The OpenAI API Key is invalid",
       anthropicAgent: "Anthropic API Key is invalid",
@@ -194,6 +195,7 @@ export const en_notify = {
       ANTHROPIC_API_KEY: "Anthropic API key is not set",
       GROQ_API_KEY: "GROQ API key is not set",
       EXA_API_KEY: "EXA API key is not set",
+      mulmoMediaAgent: "Mulmo Media API key is not set",
     },
   },
 };

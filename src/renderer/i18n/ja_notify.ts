@@ -158,6 +158,7 @@ export const ja_notify = {
       ttsKotodamaAgent: "KotodamaのAPI Keyが正しくありません",
       bgmElevenlabsAgent: "ElevenLabsのAPI Keyが正しくありません",
       voiceCloneElevenlabsAgent: "ElevenLabsのAPI Keyが正しくありません",
+      mulmoMediaAgent: "Mulmo MediaのAPI Keyが正しくありません",
       openaiAgent: "OpenAIのAPI Keyが正しくありません",
       openAIAgent: "OpenAIのAPI Keyが正しくありません",
       anthropicAgent: "AnthropicのAPI Keyが正しくありません",
@@ -199,6 +200,7 @@ export const ja_notify = {
       ANTHROPIC_API_KEY: "AnthropicのAPI Keyが設定されていません",
       GROQ_API_KEY: "GROQのAPI Keyが設定されていません",
       EXA_API_KEY: "EXAのAPI Keyが設定されていません",
+      mulmoMediaAgent: "Mulmo MediaのAPI Keyが設定されていません",
     },
   },
 };

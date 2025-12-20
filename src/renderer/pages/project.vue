@@ -243,6 +243,27 @@
                 <DebugLog />
               </CardContent>
             </Card>
+
+            <!-- Publish Section -->
+            <Card v-if="hasMulmoMediaApiKey">
+              <CardContent class="space-y-4 p-4">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h3 class="text-sm font-medium">{{ t("project.publish.title") }}</h3>
+                    <p class="text-muted-foreground text-xs">{{ t("project.publish.description") }}</p>
+                  </div>
+                  <Button @click="handlePublish" :disabled="isPublishing">
+                    <span v-if="!isPublishing">{{ t("project.publish.button") }}</span>
+                    <span v-else class="flex items-center space-x-2">
+                      <span
+                        class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+                      ></span>
+                      <span>{{ t("project.publish.publishing") }}</span>
+                    </span>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
           <!-- Right Column - Collapsed State -->
           <div v-if="!isRightColumnOpen" class="border-border bg-muted hidden h-full w-[48px] border-l lg:flex">
@@ -719,6 +740,44 @@ watch(
   },
   { immediate: true },
 );
+
+// Publish functionality
+const isPublishing = ref(false);
+const hasMulmoMediaApiKey = import.meta.env.VITE_MULMO_MEDIA_API_KEY;
+
+const handlePublish = async () => {
+  if (!projectId.value) return;
+
+  isPublishing.value = true;
+  try {
+    const result = await window.electronAPI.mulmoHandler("publishMulmoView", projectId.value);
+
+    if (result && typeof result === "object" && "error" in result) {
+      const errorResult = result as { error: Error; cause?: { type: string; agentName: string } };
+
+      if (errorResult.cause) {
+        const { type, agentName } = errorResult.cause;
+        const i18nKey = `notify.errors.${type}.${agentName}`;
+
+        if (t(i18nKey) !== i18nKey) {
+          notifyError(t(i18nKey));
+          return;
+        }
+      }
+
+      throw errorResult.error;
+    }
+
+    notifySuccess(t("project.publish.success"));
+  } catch (error) {
+    console.error("Failed to publish:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    notifyError(t("project.publish.failed"), errorMessage);
+  } finally {
+    isPublishing.value = false;
+  }
+};
+
 onUnmounted(() => {
   if (toastId.value) {
     toast.dismiss(toastId.value);

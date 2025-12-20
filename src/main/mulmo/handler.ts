@@ -54,6 +54,7 @@ import { graphaiPuppeteerAgent } from "./handler_graphai";
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 import { bgmList, bgmAudioFile, bgmGenerate, bgmUpdateTitle, bgmDelete } from "./handler_bgm";
 import { getClonedVoices, updateVoiceName, uploadVoiceClone, deleteVoice } from "./handler_voice_clone";
+import { publishMulmoView } from "./handler_media";
 import type { ChatMessage } from "../../types";
 
 const isDev = !app.isPackaged;
@@ -277,6 +278,12 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
       case "deleteVoice":
         try {
           return await deleteVoice(args[0] as string);
+        } catch (error) {
+          return { error, cause: error?.cause };
+        }
+      case "publishMulmoView":
+        try {
+          return await publishMulmoView(args[0] as string);
         } catch (error) {
           return { error, cause: error?.cause };
         }
