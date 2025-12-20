@@ -1024,9 +1024,9 @@
   optionalDependencies:
     global-agent "^3.0.0"
 
-"@electron/node-gyp@git+https://github.com/electron/node-gyp.git#06b29aafb7708acef8b3669835c8a7857ebc92d2":
+"@electron/node-gyp@https://github.com/electron/node-gyp#06b29aafb7708acef8b3669835c8a7857ebc92d2":
   version "10.2.0-electron.1"
-  resolved "git+https://github.com/electron/node-gyp.git#06b29aafb7708acef8b3669835c8a7857ebc92d2"
+  resolved "https://github.com/electron/node-gyp#06b29aafb7708acef8b3669835c8a7857ebc92d2"
   dependencies:
     env-paths "^2.2.0"
     exponential-backoff "^3.1.1"
@@ -3193,24 +3193,24 @@
   dependencies:
     "@rolldown/pluginutils" "1.0.0-beta.53"
 
-"@volar/language-core@2.4.26":
-  version "2.4.26"
-  resolved "https://registry.yarnpkg.com/@volar/language-core/-/language-core-2.4.26.tgz#ce2a2d6100e33906f48a4ece9211f17f42ad4c8d"
-  integrity sha512-hH0SMitMxnB43OZpyF1IFPS9bgb2I3bpCh76m2WEK7BE0A0EzpYsRp0CCH2xNKshr7kacU5TQBLYn4zj7CG60A==
+"@volar/language-core@2.4.27":
+  version "2.4.27"
+  resolved "https://registry.yarnpkg.com/@volar/language-core/-/language-core-2.4.27.tgz#c66d44cd22a914384d238bbcd0f621ecc57e3618"
+  integrity sha512-DjmjBWZ4tJKxfNC1F6HyYERNHPYS7L7OPFyCrestykNdUZMFYzI9WTyvwPcaNaHlrEUwESHYsfEw3isInncZxQ==
   dependencies:
-    "@volar/source-map" "2.4.26"
+    "@volar/source-map" "2.4.27"
 
-"@volar/source-map@2.4.26":
-  version "2.4.26"
-  resolved "https://registry.yarnpkg.com/@volar/source-map/-/source-map-2.4.26.tgz#b89b3663669f4eea448f8ff517b909beee354933"
-  integrity sha512-JJw0Tt/kSFsIRmgTQF4JSt81AUSI1aEye5Zl65EeZ8H35JHnTvFGmpDOBn5iOxd48fyGE+ZvZBp5FcgAy/1Qhw==
+"@volar/source-map@2.4.27":
+  version "2.4.27"
+  resolved "https://registry.yarnpkg.com/@volar/source-map/-/source-map-2.4.27.tgz#8ce6f16e207987078fd866e2faf65c35c4d15987"
+  integrity sha512-ynlcBReMgOZj2i6po+qVswtDUeeBRCTgDurjMGShbm8WYZgJ0PA4RmtebBJ0BCYol1qPv3GQF6jK7C9qoVc7lg==
 
-"@volar/typescript@2.4.26":
-  version "2.4.26"
-  resolved "https://registry.yarnpkg.com/@volar/typescript/-/typescript-2.4.26.tgz#1928f2a206d7040949b9f021a9eb7c228752cd32"
-  integrity sha512-N87ecLD48Sp6zV9zID/5yuS1+5foj0DfuYGdQ6KHj/IbKvyKv1zNX6VCmnKYwtmHadEO6mFc2EKISiu3RDPAvA==
+"@volar/typescript@2.4.27":
+  version "2.4.27"
+  resolved "https://registry.yarnpkg.com/@volar/typescript/-/typescript-2.4.27.tgz#8950318a33d5dfcdc4b0e5bbe5a38c1b8383eae6"
+  integrity sha512-eWaYCcl/uAPInSK2Lze6IqVWaBu/itVqR5InXcHXFyles4zO++Mglt3oxdgj75BDcv1Knr9Y93nowS8U3wqhxg==
   dependencies:
-    "@volar/language-core" "2.4.26"
+    "@volar/language-core" "2.4.27"
     path-browserify "^1.0.1"
     vscode-uri "^3.0.8"
 
@@ -3303,12 +3303,12 @@
     typescript-eslint "^8.35.1"
     vue-eslint-parser "^10.2.0"
 
-"@vue/language-core@3.1.8":
-  version "3.1.8"
-  resolved "https://registry.yarnpkg.com/@vue/language-core/-/language-core-3.1.8.tgz#997a0bfc6e5b13bb41e7579092a4a2826f2dc78d"
-  integrity sha512-PfwAW7BLopqaJbneChNL6cUOTL3GL+0l8paYP5shhgY5toBNidWnMXWM+qDwL7MC9+zDtzCF2enT8r6VPu64iw==
+"@vue/language-core@3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@vue/language-core/-/language-core-3.2.0.tgz#ab7b7ec5be795c715956ad19cab3c6b05239c2d8"
+  integrity sha512-CHIuDtZ04CIElAgEuLbwmq3p7QcmYoVPmBPqtdvWJCflZE5W3KHT/5DRBvDv1r2TteCjN02uYHiaAEWq9hQNiA==
   dependencies:
-    "@volar/language-core" "2.4.26"
+    "@volar/language-core" "2.4.27"
     "@vue/compiler-dom" "^3.5.0"
     "@vue/shared" "^3.5.0"
     alien-signals "^3.0.0"
@@ -8382,10 +8382,10 @@ punycode@^2.1.0, punycode@^2.3.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.1.tgz#027422e2faec0b25e1549c3e1bd8309b9133b6e5"
   integrity sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==
 
-puppeteer-core@24.33.1:
-  version "24.33.1"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-24.33.1.tgz#80b9d79dd0597fd2b1de265aae4dd0d95df81c66"
-  integrity sha512-MZjFLeGMBFbSkc1xKfcv6hjFlfNi1bmQly++HyqxGPYzLIMY0mSYyjqkAzT1PtomTYHq7SEonciIKkeyHExA1g==
+puppeteer-core@24.34.0:
+  version "24.34.0"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-24.34.0.tgz#00c7f63b4a83d4ca2ec5ea3a234588fb2ce7c994"
+  integrity sha512-24evawO+mUGW4mvS2a2ivwLdX3gk8zRLZr9HP+7+VT2vBQnm0oh9jJEZmUE3ePJhRkYlZ93i7OMpdcoi2qNCLg==
   dependencies:
     "@puppeteer/browsers" "2.11.0"
     chromium-bidi "12.0.1"
@@ -8395,16 +8395,16 @@ puppeteer-core@24.33.1:
     webdriver-bidi-protocol "0.3.10"
     ws "^8.18.3"
 
-puppeteer@24.33.1, puppeteer@^24.32.0, puppeteer@^24.33.0:
-  version "24.33.1"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-24.33.1.tgz#c84c9545633bc731b92caead463e77928dcf183e"
-  integrity sha512-2KiSIXk+zFzmYsScv+hx/I3TODFGPcNpyJsWMQk1EQ2y8KZ2X6225/NingyqYxekzceSUnq5qX39dUezVDZ9EQ==
+puppeteer@24.34.0, puppeteer@^24.32.0, puppeteer@^24.33.0:
+  version "24.34.0"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-24.34.0.tgz#061f6e97ce9511863ec83cd6f17a27253c68b5e9"
+  integrity sha512-Sdpl/zsYOsagZ4ICoZJPGZw8d9gZmK5DcxVal11dXi/1/t2eIXHjCf5NfmhDg5XnG9Nye+yo/LqMzIxie2rHTw==
   dependencies:
     "@puppeteer/browsers" "2.11.0"
     chromium-bidi "12.0.1"
     cosmiconfig "^9.0.0"
     devtools-protocol "0.0.1534754"
-    puppeteer-core "24.33.1"
+    puppeteer-core "24.34.0"
     typed-query-selector "^2.12.0"
 
 qs@^6.14.0:
@@ -9950,13 +9950,13 @@ vue-sonner@^2.0.9:
   resolved "https://registry.yarnpkg.com/vue-sonner/-/vue-sonner-2.0.9.tgz#32ec9a394eb8903bb40e48d974ce55ffa6be8dc4"
   integrity sha512-i6BokNlNDL93fpzNxN/LZSn6D6MzlO+i3qXt6iVZne3x1k7R46d5HlFB4P8tYydhgqOrRbIZEsnRd3kG7qGXyw==
 
-vue-tsc@^3.1.8:
-  version "3.1.8"
-  resolved "https://registry.yarnpkg.com/vue-tsc/-/vue-tsc-3.1.8.tgz#75abc3161f0f0a5b35a30a4e96057c46402c0578"
-  integrity sha512-deKgwx6exIHeZwF601P1ktZKNF0bepaSN4jBU3AsbldPx9gylUc1JDxYppl82yxgkAgaz0Y0LCLOi+cXe9HMYA==
+vue-tsc@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/vue-tsc/-/vue-tsc-3.2.0.tgz#1db02f58480d85b56ef0a889a758027e910e43ca"
+  integrity sha512-NFhcKKQZeTuG8/gc8XwFANx/lC0Dd3dCZ97TWh1a63PcD22KkFy4QLeT8JMtduaQT1NzySWmx3qXm16Hj1Xsxg==
   dependencies:
-    "@volar/typescript" "2.4.26"
-    "@vue/language-core" "3.1.8"
+    "@volar/typescript" "2.4.27"
+    "@vue/language-core" "3.2.0"
 
 vue@^3.5.13, vue@^3.5.26:
   version "3.5.26"
