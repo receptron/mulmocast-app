@@ -537,6 +537,14 @@ const lang = {
     download: {
       mulmoScript: "MulmoScriptをダウンロード",
     },
+    publish: {
+      title: "公開",
+      description: "Mulmo Mediaにプレゼンテーションを公開します",
+      button: "公開",
+      publishing: "公開中...",
+      success: "公開に成功しました",
+      failed: "公開に失敗しました",
+    },
     chat: {
       openPanel: "AIチャットを開く",
       title: "AIチャットでストーリー作り",

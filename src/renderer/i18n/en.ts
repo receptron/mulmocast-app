@@ -540,6 +540,14 @@ const lang = {
     download: {
       mulmoScript: "Download MulmoScript",
     },
+    publish: {
+      title: "Publish",
+      description: "Publish your presentation to Mulmo Media",
+      button: "Publish",
+      publishing: "Publishing...",
+      success: "Published successfully",
+      failed: "Failed to publish",
+    },
     chat: {
       openPanel: "Open AI Assistant Chat panel",
       title: "Story Creation with AI Chat",

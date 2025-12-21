@@ -17,6 +17,8 @@ import {
   translate,
   removeSessionProgressCallback,
   MulmoStudioContextMethods,
+  mulmoViewerBundle,
+  bundleTargetLang,
   type MulmoStudioContext,
   type MulmoImagePromptMedia,
   type MulmoBeat,
@@ -46,13 +48,20 @@ export const mulmoActionRunner = async (
 
     const actionNames = Array.isArray(actionName) ? actionName : [actionName];
     const enables = {
-      audio: hasMatchingAction(["audio", "movie"], actionNames),
-      image: hasMatchingAction(["image", "movie", "pdf", "pdfSlide", "pdfHandout"], actionNames),
+      audio: hasMatchingAction(["audio", "movie", "bundle"], actionNames),
+      image: hasMatchingAction(["image", "movie", "pdf", "pdfSlide", "pdfHandout", "bundle"], actionNames),
       movie: hasMatchingAction(["movie"], actionNames),
       pdfSlide: hasMatchingAction(["pdfSlide", "pdf"], actionNames),
       pdfHandout: hasMatchingAction(["pdfHandout", "pdf"], actionNames),
+      bundle: hasMatchingAction(["bundle"], actionNames),
     };
     const args = { settings: settings.APIKEY ?? {} };
+    if (enables.bundle) {
+      await translate(context, { settings: settings.APIKEY ?? {}, targetLangs: bundleTargetLang });
+      for (const lang of bundleTargetLang.filter((_lang) => _lang !== context.lang)) {
+        await audio({ ...context, lang });
+      }
+    }
     const audioContext = enables.audio ? await audio(context, args) : context;
     const imageContext = enables.image ? await images(audioContext, args) : audioContext;
     if (enables.movie) {
@@ -66,6 +75,19 @@ export const mulmoActionRunner = async (
     }
     if (enables.pdfHandout) {
       await pdf(imageContext, "handout", "a4");
+    }
+    if (enables.bundle) {
+      // Set absolute path for bundle output
+      const outputDir = MulmoStudioContextMethods.getOutDirPath(imageContext);
+      const bundleDir = outputDir; // Use output directory directly
+
+      // Override fileDirs.fileName to ensure absolute path
+      imageContext.fileDirs = {
+        ...imageContext.fileDirs,
+        fileName: bundleDir,
+      };
+
+      await mulmoViewerBundle(imageContext);
     }
     removeSessionProgressCallback(mulmoCallback);
 
