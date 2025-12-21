@@ -117,6 +117,27 @@ async function uploadBundleToServer(
       }
     }
 
+    // contentIdを取得
+    const contentId = data.uploadPath.split("/").pop();
+    if (!contentId) {
+      throw new Error("Failed to extract contentId from uploadPath");
+    }
+
+    // 完了APIを叩く
+    const completeResponse = await fetch(`${API_BASE_URL}/me/uploads/${contentId}/complete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({ contentId }),
+    });
+
+    if (!completeResponse.ok) {
+      const errorText = await completeResponse.text();
+      throw new Error(`Failed to complete upload: ${completeResponse.status} ${errorText}`);
+    }
+
     // 展開したディレクトリを削除
     fs.rmSync(extractDir, { recursive: true, force: true });
 
