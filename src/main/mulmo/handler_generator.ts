@@ -18,6 +18,7 @@ import {
   removeSessionProgressCallback,
   MulmoStudioContextMethods,
   mulmoViewerBundle,
+  bundleTargetLang,
   type MulmoStudioContext,
   type MulmoImagePromptMedia,
   type MulmoBeat,
@@ -55,6 +56,12 @@ export const mulmoActionRunner = async (
       bundle: hasMatchingAction(["bundle"], actionNames),
     };
     const args = { settings: settings.APIKEY ?? {} };
+    if (enables.bundle) {
+      await translate(context, { settings: settings.APIKEY ?? {}, targetLangs: bundleTargetLang });
+      for (const lang of bundleTargetLang.filter((_lang) => _lang !== context.lang)) {
+        await audio({ ...context, lang });
+      }
+    }
     const audioContext = enables.audio ? await audio(context, args) : context;
     const imageContext = enables.image ? await images(audioContext, args) : audioContext;
     if (enables.movie) {
@@ -70,8 +77,6 @@ export const mulmoActionRunner = async (
       await pdf(imageContext, "handout", "a4");
     }
     if (enables.bundle) {
-      imageContext.multiLingual = [];
-
       // Set absolute path for bundle output
       const outputDir = MulmoStudioContextMethods.getOutDirPath(imageContext);
       const bundleDir = outputDir; // Use output directory directly
