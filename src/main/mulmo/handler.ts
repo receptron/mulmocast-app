@@ -283,7 +283,7 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         }
       case "publishMulmoView":
         try {
-          return await publishMulmoView(args[0] as string);
+          return await publishMulmoView(args[0] as string, webContents);
         } catch (error) {
           return { error, cause: error?.cause };
         }

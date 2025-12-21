@@ -1,3 +1,4 @@
+import { WebContents } from "electron";
 import { loadSettings } from "../settings_manager";
 import { mulmoActionRunner } from "./handler_generator";
 import { getProjectPath } from "../project_manager";
@@ -156,7 +157,7 @@ async function uploadBundleToServer(
 
 export const publishMulmoView = async (
   projectId: string,
-  webContents?: { send: (channel: string, ...args: unknown[]) => void },
+  webContents: WebContents,
 ): Promise<{ success: boolean; message?: string; uploadPath?: string }> => {
   try {
     const settings = await loadSettings();
@@ -172,15 +173,7 @@ export const publishMulmoView = async (
       });
     }
 
-    // Use mulmoActionRunner to run bundle action
-    // Create a minimal webContents if not provided
-    const dummyWebContents = webContents || {
-      send: () => {
-        // no-op
-      },
-    };
-
-    const result = await mulmoActionRunner(projectId, "bundle", undefined, dummyWebContents as never);
+    const result = await mulmoActionRunner(projectId, "bundle", undefined, webContents);
 
     if (!result.result) {
       throw new Error("Failed to generate bundle");
