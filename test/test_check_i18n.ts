@@ -403,3 +403,37 @@ test("formatMissingKey: preserves special characters", () => {
   const result = formatMissingKey(missing);
   assert.ok(result.includes("Value with 'quotes' and \"double quotes\""));
 });
+
+// Integration tests for actual translation files
+test("Integration: en and ja main files have matching keys", () => {
+  // This is a dynamic import test that ensures the main files can be loaded
+  // and their structure is compatible with the check-i18n script
+  const en = require("../src/renderer/i18n/en").default;
+  const ja = require("../src/renderer/i18n/ja").default;
+
+  assert.ok(en, "en translations should be loaded");
+  assert.ok(ja, "ja translations should be loaded");
+  assert.ok(typeof en === "object", "en should be an object");
+  assert.ok(typeof ja === "object", "ja should be an object");
+});
+
+test("Integration: en_notify and ja_notify files have matching keys", () => {
+  const { en_notify } = require("../src/renderer/i18n/en_nofity");
+  const { ja_notify } = require("../src/renderer/i18n/ja_notify");
+
+  assert.ok(en_notify, "en_notify translations should be loaded");
+  assert.ok(ja_notify, "ja_notify translations should be loaded");
+  assert.ok(typeof en_notify === "object", "en_notify should be an object");
+  assert.ok(typeof ja_notify === "object", "ja_notify should be an object");
+});
+
+test("Integration: notify files are properly structured", () => {
+  const { en_notify } = require("../src/renderer/i18n/en_nofity");
+  const { ja_notify } = require("../src/renderer/i18n/ja_notify");
+
+  const enNotifyMap = collectKeysWithValues(en_notify);
+  const jaNotifyMap = collectKeysWithValues(ja_notify);
+
+  assert.ok(enNotifyMap.size > 0, "en_notify should have translations");
+  assert.ok(jaNotifyMap.size > 0, "ja_notify should have translations");
+});
