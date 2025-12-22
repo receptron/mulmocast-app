@@ -93,7 +93,7 @@
       :placeholder="t('parameters.speechParams.speedPlaceholder')"
     />
   </div>
-  <div v-if="localizedSpeaker.provider === 'openai' || localizedSpeaker.provider === 'gemini' || !localizedSpeaker.provider">
+  <div v-if="supportsInstruction">
     <!-- instruction -->
     <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
     <Input
@@ -242,6 +242,11 @@ const currentModel = computed(() => {
 
 const currentDecoration = computed(() => {
   return props.speaker?.speechOptions?.decoration ?? defaultDecoration;
+});
+
+const supportsInstruction = computed(() => {
+  const provider = localizedSpeaker.value?.provider;
+  return provider === 'openai' || provider === 'gemini' || !provider;
 });
 
 const audioPreviewUrl = computed(() => {
