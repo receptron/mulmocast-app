@@ -730,9 +730,21 @@ const showTransitionSettings = computed(() => {
   return props.index > 0 && !isVoiceOver.value;
 });
 
-// Show Speech Options settings for all beats with text
+// Show Speech Options settings for supported providers
 const showSpeechOptionsSettings = computed(() => {
-  return props.beat.text && props.beat.text.trim().length > 0;
+  // Check if the speaker's provider supports instruction
+  const speaker = props.beat.speaker;
+  if (!speaker || !props.mulmoScript.speechParams?.speakers) {
+    return true; // Show by default if no speaker data
+  }
+
+  const speakerData = props.mulmoScript.speechParams.speakers[speaker];
+  if (!speakerData) {
+    return true; // Show by default if speaker not found
+  }
+
+  const provider = speakerData.provider;
+  return provider === "openai" || provider === "gemini" || !provider;
 });
 
 // Show Advanced Settings section if any subsection should be visible
