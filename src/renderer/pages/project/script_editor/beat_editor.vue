@@ -732,18 +732,11 @@ const showTransitionSettings = computed(() => {
 
 // Show Speech Options settings for supported providers
 const showSpeechOptionsSettings = computed(() => {
-  // Check if the speaker's provider supports instruction
   const speaker = props.beat.speaker;
-  if (!speaker || !props.mulmoScript.speechParams?.speakers) {
-    return true; // Show by default if no speaker data
-  }
+  if (!speaker) return false;
 
-  const speakerData = props.mulmoScript.speechParams.speakers[speaker];
-  if (!speakerData) {
-    return true; // Show by default if speaker not found
-  }
-
-  const provider = speakerData.provider;
+  const speakerData = props.mulmoScript.speechParams?.speakers?.[speaker];
+  const provider = speakerData?.provider;
   return provider === "openai" || provider === "gemini" || !provider;
 });
 
