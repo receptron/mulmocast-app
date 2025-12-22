@@ -24,7 +24,7 @@ if (missingKeysMain.length === 0) {
 }
 
 // Check notify translation files
-console.log("Checking: en_nofity.ts <-> ja_notify.ts");
+console.log("Checking: en_notify.ts <-> ja_notify.ts");
 const enNotifyMap = collectKeysWithValues(en_notify);
 const jaNotifyMap = collectKeysWithValues(ja_notify);
 const missingKeysNotify = findMissingKeys(enNotifyMap, jaNotifyMap);
