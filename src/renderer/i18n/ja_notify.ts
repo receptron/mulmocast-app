@@ -40,6 +40,7 @@ export const ja_notify = {
     image: "画像",
     pdf: "PDF",
     caption: "Caption",
+    multiLingual: "多言語",
   },
   apiKey: {
     error: "{keyName} を設定してください",

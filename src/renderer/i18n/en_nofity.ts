@@ -39,6 +39,7 @@ export const en_notify = {
     image: "Image",
     pdf: "PDF",
     caption: "Caption",
+    multiLingual: "Multilingual",
   },
   apiKey: {
     error: "You need setup {keyName}.",
