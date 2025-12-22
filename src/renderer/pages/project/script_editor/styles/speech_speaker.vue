@@ -246,7 +246,7 @@ const currentDecoration = computed(() => {
 
 const supportsInstruction = computed(() => {
   const provider = localizedSpeaker.value?.provider;
-  return provider === 'openai' || provider === 'gemini' || !provider;
+  return provider === "openai" || provider === "gemini" || !provider;
 });
 
 const audioPreviewUrl = computed(() => {
