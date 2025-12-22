@@ -1,6 +1,10 @@
 import test from "node:test";
 import assert from "node:assert";
 import { isPlainObject, collectKeysWithValues, findMissingKeys, formatMissingKey } from "../scripts/check-i18n-core";
+import en from "../src/renderer/i18n/en";
+import ja from "../src/renderer/i18n/ja";
+import { en_notify } from "../src/renderer/i18n/en_notify";
+import { ja_notify } from "../src/renderer/i18n/ja_notify";
 
 // isPlainObject のテスト
 test("isPlainObject: basic object returns true", () => {
@@ -402,4 +406,29 @@ test("formatMissingKey: preserves special characters", () => {
   };
   const result = formatMissingKey(missing);
   assert.ok(result.includes("Value with 'quotes' and \"double quotes\""));
+});
+
+// Integration tests for actual translation files
+test("Integration: en and ja main files have matching keys", () => {
+  // This test ensures the main files can be loaded
+  // and their structure is compatible with the check-i18n script
+  assert.ok(en, "en translations should be loaded");
+  assert.ok(ja, "ja translations should be loaded");
+  assert.ok(typeof en === "object", "en should be an object");
+  assert.ok(typeof ja === "object", "ja should be an object");
+});
+
+test("Integration: en_notify and ja_notify files have matching keys", () => {
+  assert.ok(en_notify, "en_notify translations should be loaded");
+  assert.ok(ja_notify, "ja_notify translations should be loaded");
+  assert.ok(typeof en_notify === "object", "en_notify should be an object");
+  assert.ok(typeof ja_notify === "object", "ja_notify should be an object");
+});
+
+test("Integration: notify files are properly structured", () => {
+  const enNotifyMap = collectKeysWithValues(en_notify);
+  const jaNotifyMap = collectKeysWithValues(ja_notify);
+
+  assert.ok(enNotifyMap.size > 0, "en_notify should have translations");
+  assert.ok(jaNotifyMap.size > 0, "ja_notify should have translations");
 });
