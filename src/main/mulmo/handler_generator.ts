@@ -86,6 +86,12 @@ export const mulmoActionRunner = async (
         ...imageContext.fileDirs,
         fileName: bundleDir,
       };
+      if (!context.studio.script.audioParams.bgm) {
+        context.studio.script.audioParams["bgm"] = {
+          kind: "url",
+          url: "https://github.com/receptron/mulmocast-media/raw/refs/heads/main/bgms/story002.mp3",
+        };
+      }
 
       await mulmoViewerBundle(imageContext);
     }
