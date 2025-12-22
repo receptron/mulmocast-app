@@ -1,6 +1,6 @@
 import en from "../src/renderer/i18n/en";
 import ja from "../src/renderer/i18n/ja";
-import { en_notify } from "../src/renderer/i18n/en_nofity";
+import { en_notify } from "../src/renderer/i18n/en_notify";
 import { ja_notify } from "../src/renderer/i18n/ja_notify";
 import { collectKeysWithValues, findMissingKeys, formatMissingKey } from "./check-i18n-core";
 

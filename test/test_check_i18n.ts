@@ -418,7 +418,7 @@ test("Integration: en and ja main files have matching keys", () => {
 });
 
 test("Integration: en_notify and ja_notify files have matching keys", () => {
-  const { en_notify } = require("../src/renderer/i18n/en_nofity");
+  const { en_notify } = require("../src/renderer/i18n/en_notify");
   const { ja_notify } = require("../src/renderer/i18n/ja_notify");
 
   assert.ok(en_notify, "en_notify translations should be loaded");
@@ -428,7 +428,7 @@ test("Integration: en_notify and ja_notify files have matching keys", () => {
 });
 
 test("Integration: notify files are properly structured", () => {
-  const { en_notify } = require("../src/renderer/i18n/en_nofity");
+  const { en_notify } = require("../src/renderer/i18n/en_notify");
   const { ja_notify } = require("../src/renderer/i18n/ja_notify");
 
   const enNotifyMap = collectKeysWithValues(en_notify);

@@ -1,5 +1,5 @@
 import { commonLanguages } from "./common";
-import { en_notify } from "./en_nofity";
+import { en_notify } from "./en_notify";
 
 const lang = {
   message: {
