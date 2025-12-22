@@ -93,7 +93,7 @@
       :placeholder="t('parameters.speechParams.speedPlaceholder')"
     />
   </div>
-  <div v-if="localizedSpeaker.provider === 'openai' || !localizedSpeaker.provider">
+  <div v-if="localizedSpeaker.provider === 'openai' || localizedSpeaker.provider === 'gemini' || !localizedSpeaker.provider">
     <!-- instruction -->
     <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
     <Input
