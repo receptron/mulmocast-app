@@ -100,6 +100,7 @@
           <div class="space-y-2">
             <label class="text-sm font-medium">{{ t("voiceClone.audioFile") }}</label>
             <div
+              @click="triggerFileInput"
               @dragover.prevent="handleDragOver"
               @dragleave.prevent="handleDragLeave"
               @drop.prevent="handleDrop"
@@ -109,6 +110,14 @@
                 isDragging ? 'border-primary bg-primary/5' : '',
               ]"
             >
+              <input
+                ref="fileInputRef"
+                type="file"
+                accept="audio/*"
+                class="hidden"
+                @change="handleFileInputChange"
+                :disabled="uploadDialog.uploading"
+              />
               <div v-if="uploadDialog.fileName" class="space-y-2">
                 <div class="text-primary font-medium">{{ uploadDialog.fileName }}</div>
                 <p class="text-muted-foreground text-xs">
@@ -202,6 +211,7 @@ interface VoiceItem {
 }
 
 const audioElement = ref<HTMLAudioElement | null>(null);
+const fileInputRef = ref<HTMLInputElement | null>(null);
 
 const uploadDialog = ref({
   open: false,
@@ -371,6 +381,19 @@ const handleFileUpload = (file: File) => {
 
   uploadDialog.value.file = file;
   uploadDialog.value.fileName = file.name;
+};
+
+const triggerFileInput = () => {
+  if (uploadDialog.value.uploading) return;
+  fileInputRef.value?.click();
+};
+
+const handleFileInputChange = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const files = target.files;
+  if (files && files.length > 0) {
+    handleFileUpload(files[0]);
+  }
 };
 
 const handleDragOver = () => {
