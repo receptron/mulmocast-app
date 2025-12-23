@@ -581,6 +581,7 @@ const lang = {
         ghost_comic: "攻殻機動隊風",
         html: "HTMLプレゼン",
         image_prompt: "画像生成プロンプト",
+        leda: "レダ",
         onepiece_comic: "ワンピース風",
         portrait_movie: "リアルなポートレート動画",
         realistic_movie: "リアル動画テンプレ",

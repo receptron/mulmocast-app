@@ -584,6 +584,7 @@ const lang = {
         ghost_comic: "Ghost in the shell style",
         html: "Business presentation in HTML",
         image_prompt: "Plain Image Prompt",
+        leda: "Leda",
         onepiece_comic: "One Piece style",
         portrait_movie: "Photo realistic movie (portrait)",
         realistic_movie: "Photo realistic movie template",
