@@ -328,7 +328,8 @@ const saveNameEdit = async (voice: VoiceItem) => {
     notifySuccess(t("voiceClone.nameUpdated"));
   } catch (error) {
     console.error("Failed to update voice name:", error);
-    notifyError(error);
+    const errorMessage = error instanceof Error ? error.message : "Failed to update voice name";
+    notifyError(errorMessage);
   }
 };
 
@@ -405,7 +406,8 @@ const uploadVoice = async () => {
     uploadDialog.value.open = false;
   } catch (error) {
     console.error("Failed to upload voice:", error);
-    notifyError(error);
+    const errorMessage = error instanceof Error ? error.message : "Failed to upload voice";
+    notifyError(errorMessage);
   } finally {
     uploadDialog.value.uploading = false;
   }
@@ -430,7 +432,8 @@ const confirmDelete = async () => {
     deleteDialog.value.open = false;
   } catch (error) {
     console.error("Failed to delete voice:", error);
-    notifyError(error);
+    const errorMessage = error instanceof Error ? error.message : "Failed to delete voice";
+    notifyError(errorMessage);
   } finally {
     deleteDialog.value.deleting = false;
   }
