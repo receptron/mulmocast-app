@@ -7758,10 +7758,10 @@ mulmocast-vision@^1.0.8:
     pdfkit "^0.17.2"
     puppeteer "^24.32.0"
 
-mulmocast@^2.1.12:
-  version "2.1.12"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.1.12.tgz#32156ffea815e957a2bb8e8ba1e6a0f2505d9ad0"
-  integrity sha512-IfDpo8xNSXG8M9KPNPGEAr6bes8BQ5Rdd0CANQEh60/lRySDfMyvElJlq8dTl4F0EJpIj2XL8iu9vU95vuScRQ==
+mulmocast@^2.1.13:
+  version "2.1.13"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.1.13.tgz#6c18ac0409caad1ff0b036bd1e1f6430f3740165"
+  integrity sha512-i+cDr7dAmQrRVWk5m04p/5EpIlJ0r6dgNx4PZtTq9OTttp+qFQBczxuxQqKNbz1acG1j31OVyBW6AGE59lxuHQ==
   dependencies:
     "@google-cloud/text-to-speech" "^6.4.0"
     "@google/genai" "^1.34.0"
@@ -8779,10 +8779,10 @@ regexp.prototype.flags@^1.5.1, regexp.prototype.flags@^1.5.4:
     gopd "^1.2.0"
     set-function-name "^2.0.2"
 
-reka-ui@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/reka-ui/-/reka-ui-2.6.1.tgz#08f6b8a8ee774887b6bcde3d8ea54b608acfe82c"
-  integrity sha512-XK7cJDQoNuGXfCNzBBo/81Yg/OgjPwvbabnlzXG2VsdSgNsT6iIkuPBPr+C0Shs+3bb0x0lbPvgQAhMSCKm5Ww==
+reka-ui@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/reka-ui/-/reka-ui-2.7.0.tgz#906697e744e9a9682f89372a46ef384d4500eae7"
+  integrity sha512-m+XmxQN2xtFzBP3OAdIafKq7C8OETo2fqfxcIIxYmNN2Ch3r5oAf6yEYCIJg5tL/yJU2mHqF70dCCekUkrAnXA==
   dependencies:
     "@floating-ui/dom" "^1.6.13"
     "@floating-ui/vue" "^1.1.6"
