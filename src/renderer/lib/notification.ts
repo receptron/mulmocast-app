@@ -13,14 +13,24 @@ export const notifyInfo = (message: string, description?: string) => {
 };
 
 export const notifyError = (
-  message: string,
+  message: string | Error | unknown,
   description?: string,
   action?: {
     label: string;
     onClick: () => void;
   },
 ) => {
-  toast.error(message, {
+  // Extract error message if an Error object is passed
+  let errorMessage: string;
+  if (message instanceof Error) {
+    errorMessage = message.message || "Unknown error";
+  } else if (typeof message === "string") {
+    errorMessage = message;
+  } else {
+    errorMessage = String(message) || "Unknown error";
+  }
+
+  toast.error(errorMessage, {
     description,
     action,
     duration: Infinity,

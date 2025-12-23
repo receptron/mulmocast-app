@@ -328,25 +328,7 @@ const saveNameEdit = async (voice: VoiceItem) => {
     notifySuccess(t("voiceClone.nameUpdated"));
   } catch (error) {
     console.error("Failed to update voice name:", error);
-
-    // Check if error has cause for structured error handling
-    const errorWithCause = error as Error & { cause?: { type: string; agentName: string } };
-
-    if (errorWithCause?.cause) {
-      const { type, agentName } = errorWithCause.cause;
-
-      // Build i18n key based on cause
-      const i18nKey = `notify.error.${type}.${agentName}`;
-
-      // Check if translation exists
-      if (t(i18nKey) !== i18nKey) {
-        notifyError(t(i18nKey));
-        return;
-      }
-    }
-
-    // Fallback to error message from error object
-    notifyError(errorWithCause?.message || "Failed to update voice name");
+    notifyError(error);
   }
 };
 
@@ -423,25 +405,7 @@ const uploadVoice = async () => {
     uploadDialog.value.open = false;
   } catch (error) {
     console.error("Failed to upload voice:", error);
-
-    // Check if error has cause for structured error handling
-    const errorWithCause = error as Error & { cause?: { type: string; agentName: string } };
-
-    if (errorWithCause?.cause) {
-      const { type, agentName } = errorWithCause.cause;
-
-      // Build i18n key based on cause
-      const i18nKey = `notify.error.${type}.${agentName}`;
-
-      // Check if translation exists
-      if (t(i18nKey) !== i18nKey) {
-        notifyError(t(i18nKey));
-        return;
-      }
-    }
-
-    // Fallback to generic error message or error message from error object
-    notifyError(errorWithCause?.message || t("voiceClone.errors.uploadFailed"));
+    notifyError(error);
   } finally {
     uploadDialog.value.uploading = false;
   }
@@ -466,25 +430,7 @@ const confirmDelete = async () => {
     deleteDialog.value.open = false;
   } catch (error) {
     console.error("Failed to delete voice:", error);
-
-    // Check if error has cause for structured error handling
-    const errorWithCause = error as Error & { cause?: { type: string; agentName: string } };
-
-    if (errorWithCause?.cause) {
-      const { type, agentName } = errorWithCause.cause;
-
-      // Build i18n key based on cause
-      const i18nKey = `notify.error.${type}.${agentName}`;
-
-      // Check if translation exists
-      if (t(i18nKey) !== i18nKey) {
-        notifyError(t(i18nKey));
-        return;
-      }
-    }
-
-    // Fallback to error message from error object
-    notifyError(errorWithCause?.message || "Failed to delete voice");
+    notifyError(error);
   } finally {
     deleteDialog.value.deleting = false;
   }
