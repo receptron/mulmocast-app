@@ -47,17 +47,62 @@ export const useVoiceCloneStore = defineStore("voiceClone", () => {
   };
 
   const updateVoiceName = async (voiceId: string, name: string) => {
-    await window.electronAPI.mulmoHandler("updateVoiceName", voiceId, name);
+    const result = await window.electronAPI.mulmoHandler("updateVoiceName", voiceId, name);
+
+    // Check if result is an error object
+    if (result && typeof result === "object" && "error" in result) {
+      const errorResult = result as { error: Error; cause?: { type: string; agentName: string } };
+
+      // If cause exists, throw error with cause
+      if (errorResult.cause) {
+        const newError = new Error(errorResult.error.message);
+        (newError as Error & { cause?: unknown }).cause = errorResult.cause;
+        throw newError;
+      }
+
+      throw errorResult.error;
+    }
+
     await loadVoices();
   };
 
   const uploadVoice = async (name: string, fileBuffer: ArrayBuffer, fileName: string) => {
-    await window.electronAPI.mulmoHandler("uploadVoiceClone", name, fileBuffer, fileName);
+    const result = await window.electronAPI.mulmoHandler("uploadVoiceClone", name, fileBuffer, fileName);
+
+    // Check if result is an error object
+    if (result && typeof result === "object" && "error" in result) {
+      const errorResult = result as { error: Error; cause?: { type: string; agentName: string } };
+
+      // If cause exists, throw error with cause
+      if (errorResult.cause) {
+        const newError = new Error(errorResult.error.message);
+        (newError as Error & { cause?: unknown }).cause = errorResult.cause;
+        throw newError;
+      }
+
+      throw errorResult.error;
+    }
+
     await loadVoices();
   };
 
   const deleteVoice = async (voiceId: string) => {
-    await window.electronAPI.mulmoHandler("deleteVoice", voiceId);
+    const result = await window.electronAPI.mulmoHandler("deleteVoice", voiceId);
+
+    // Check if result is an error object
+    if (result && typeof result === "object" && "error" in result) {
+      const errorResult = result as { error: Error; cause?: { type: string; agentName: string } };
+
+      // If cause exists, throw error with cause
+      if (errorResult.cause) {
+        const newError = new Error(errorResult.error.message);
+        (newError as Error & { cause?: unknown }).cause = errorResult.cause;
+        throw newError;
+      }
+
+      throw errorResult.error;
+    }
+
     await loadVoices();
   };
 
