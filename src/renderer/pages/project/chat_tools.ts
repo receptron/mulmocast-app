@@ -59,6 +59,7 @@ type CreateBeatOnMulmoScript = {
   func: "createBeatsOnMulmoScript";
   arg: {
     beats: MulmoBeat[];
+    title: string;
   };
 };
 
