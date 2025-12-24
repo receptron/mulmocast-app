@@ -565,7 +565,7 @@
                   <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
                   <Input
                     :model-value="beat.speechOptions?.instruction || ''"
-                    @update:model-value="(value) => handleInstructionChange(value || undefined)"
+                    @update:model-value="handleInstructionChange"
                     class="h-8"
                     :placeholder="t('parameters.speechParams.instructionPlaceholder')"
                   />
