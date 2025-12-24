@@ -879,6 +879,7 @@ const lang = {
       noSpeakersDefined: "No speakers defined",
       initializeSpeechParameters: "Initialize Speech Parameters",
       displayNameDescription: "Please set the {displayName} to use for each {language}.",
+      overrideTitle: "Override speech options for this beat",
     },
     canvasSizeParams: {
       title: "Canvas Size",

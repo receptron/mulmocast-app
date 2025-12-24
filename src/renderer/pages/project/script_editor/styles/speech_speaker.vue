@@ -93,7 +93,7 @@
       :placeholder="t('parameters.speechParams.speedPlaceholder')"
     />
   </div>
-  <div v-if="localizedSpeaker.provider === 'openai' || !localizedSpeaker.provider">
+  <div v-if="supportsInstruction">
     <!-- instruction -->
     <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
     <Input
@@ -164,6 +164,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label, Input } from "@/components/ui";
 
 import SettingsAlert from "../settings_alert.vue";
+import { providerSupportsInstruction } from "../../../utils";
 
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
@@ -242,6 +243,10 @@ const currentModel = computed(() => {
 
 const currentDecoration = computed(() => {
   return props.speaker?.speechOptions?.decoration ?? defaultDecoration;
+});
+
+const supportsInstruction = computed(() => {
+  return providerSupportsInstruction(localizedSpeaker.value?.provider);
 });
 
 const audioPreviewUrl = computed(() => {
@@ -334,7 +339,15 @@ const handleProviderChange = async (provider: string) => {
 };
 
 const handleSpeechOptionsChange = (key: string, value: string) => {
-  emit("updateSpeakerData", { speechOptions: { [key]: key === "speed" ? Number(value) : value } });
+  const processedValue = key === "speed" ? Number(value) : value;
+
+  if (processedValue === undefined || processedValue === null || processedValue === "") {
+    const newSpeechOptions = { ...props.speaker?.speechOptions };
+    delete (newSpeechOptions as Record<string, unknown>)[key];
+    emit("updateSpeakerData", { speechOptions: newSpeechOptions });
+  } else {
+    emit("updateSpeakerData", { speechOptions: { [key]: processedValue } });
+  }
 };
 
 const handleModelChange = (model: string) => {

@@ -879,6 +879,7 @@ const lang = {
       noSpeakersDefined: "登場人物が定義されていません",
       initializeSpeechParameters: "音声パラメータを初期化",
       displayNameDescription: "各{language}で使用する{displayName}を設定してください。",
+      overrideTitle: "このビートの音声オプションを上書きする",
     },
     canvasSizeParams: {
       title: "キャンバスサイズ",

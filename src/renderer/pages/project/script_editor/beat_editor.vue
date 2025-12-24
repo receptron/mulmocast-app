@@ -541,6 +541,38 @@
               </div>
             </Card>
           </template>
+
+          <!-- Speech Options Settings -->
+          <template v-if="showSpeechOptionsSettings">
+            <div class="mb-3 flex items-center gap-2">
+              <Checkbox
+                variant="ghost"
+                size="icon"
+                :modelValue="!!beat.speechOptions"
+                @update:model-value="handleSpeechOptionsToggle"
+              />
+              <Label
+                class="cursor-pointer"
+                :class="!beat.speechOptions ? 'text-muted-foreground' : ''"
+                @click="handleSpeechOptionsToggle(!beat.speechOptions)"
+              >
+                {{ t("parameters.speechParams.overrideTitle") }}
+              </Label>
+            </div>
+            <Card v-if="beat.speechOptions" class="mt-4 p-4">
+              <div class="space-y-3">
+                <div>
+                  <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
+                  <Input
+                    :model-value="beat.speechOptions?.instruction || ''"
+                    @update:model-value="handleInstructionChange"
+                    class="h-8"
+                    :placeholder="t('parameters.speechParams.instructionPlaceholder')"
+                  />
+                </div>
+              </div>
+            </Card>
+          </template>
         </CollapsibleContent>
       </Collapsible>
     </template>
@@ -599,6 +631,7 @@ import {
 import { mediaUri } from "@/lib/utils";
 import { notifyProgress, notifyError } from "@/lib/notification";
 import type { MulmoTransition } from "@/types";
+import { providerSupportsInstruction } from "../../utils";
 
 import Markdown from "./beat_editors/markdown.vue";
 import Chart from "./beat_editors/chart.vue";
@@ -698,9 +731,18 @@ const showTransitionSettings = computed(() => {
   return props.index > 0 && !isVoiceOver.value;
 });
 
+// Show Speech Options settings for supported providers
+const showSpeechOptionsSettings = computed(() => {
+  const speaker = props.beat.speaker;
+  if (!speaker) return false;
+
+  const speakerData = props.mulmoScript.speechParams?.speakers?.[speaker];
+  return providerSupportsInstruction(speakerData?.provider);
+});
+
 // Show Advanced Settings section if any subsection should be visible
 const showAdvancedSettings = computed(() => {
-  return showBeatStyleSettings.value || showTransitionSettings.value;
+  return showBeatStyleSettings.value || showTransitionSettings.value || showSpeechOptionsSettings.value;
 });
 
 const showSpeakerSelector = () => {
@@ -1090,6 +1132,33 @@ const handleBeatTransitionDurationChange = (value: string | number) => {
     },
   };
   update("movieParams", movieParams);
+};
+
+// Speech Options handlers
+const handleSpeechOptionsToggle = async (checked: boolean) => {
+  if (checked) {
+    // Initialize empty speechOptions when enabled
+    update("speechOptions", {});
+  } else {
+    // Remove speechOptions when disabled
+    update("speechOptions", undefined);
+  }
+  await nextTick();
+  emit("justSaveAndPushToHistory");
+};
+
+const handleInstructionChange = (value: string | undefined) => {
+  const speechOptions = {
+    ...props.beat.speechOptions,
+  };
+
+  if (value === undefined || value === null || value === "") {
+    delete speechOptions.instruction;
+  } else {
+    speechOptions.instruction = value;
+  }
+
+  update("speechOptions", speechOptions);
 };
 
 const update = (path: string, value: unknown) => {
