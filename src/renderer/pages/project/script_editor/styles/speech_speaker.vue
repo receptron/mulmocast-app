@@ -339,7 +339,15 @@ const handleProviderChange = async (provider: string) => {
 };
 
 const handleSpeechOptionsChange = (key: string, value: string) => {
-  emit("updateSpeakerData", { speechOptions: { [key]: key === "speed" ? Number(value) : value } });
+  const processedValue = key === "speed" ? Number(value) : value;
+
+  if (processedValue === undefined || processedValue === null || processedValue === "") {
+    const newSpeechOptions = { ...props.speaker?.speechOptions } as any;
+    delete newSpeechOptions[key];
+    emit("updateSpeakerData", { speechOptions: newSpeechOptions });
+  } else {
+    emit("updateSpeakerData", { speechOptions: { [key]: processedValue } });
+  }
 };
 
 const handleModelChange = (model: string) => {

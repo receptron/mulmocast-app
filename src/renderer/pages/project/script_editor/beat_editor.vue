@@ -1156,10 +1156,10 @@ const handleInstructionChange = (value: string | undefined) => {
     ...props.beat.speechOptions,
   };
 
-  if (value) {
-    speechOptions.instruction = value;
-  } else {
+  if (value === undefined || value === null || value === "") {
     delete speechOptions.instruction;
+  } else {
+    speechOptions.instruction = value;
   }
 
   update("speechOptions", speechOptions);
