@@ -342,8 +342,8 @@ const handleSpeechOptionsChange = (key: string, value: string) => {
   const processedValue = key === "speed" ? Number(value) : value;
 
   if (processedValue === undefined || processedValue === null || processedValue === "") {
-    const newSpeechOptions = { ...props.speaker?.speechOptions } as any;
-    delete newSpeechOptions[key];
+    const newSpeechOptions = { ...props.speaker?.speechOptions };
+    delete (newSpeechOptions as Record<string, unknown>)[key];
     emit("updateSpeakerData", { speechOptions: newSpeechOptions });
   } else {
     emit("updateSpeakerData", { speechOptions: { [key]: processedValue } });
