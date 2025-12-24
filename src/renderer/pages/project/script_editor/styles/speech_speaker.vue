@@ -164,6 +164,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label, Input } from "@/components/ui";
 
 import SettingsAlert from "../settings_alert.vue";
+import { providerSupportsInstruction } from "../../../utils";
 
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
@@ -245,8 +246,7 @@ const currentDecoration = computed(() => {
 });
 
 const supportsInstruction = computed(() => {
-  const provider = localizedSpeaker.value?.provider;
-  return provider === "openai" || provider === "gemini" || !provider;
+  return providerSupportsInstruction(localizedSpeaker.value?.provider);
 });
 
 const audioPreviewUrl = computed(() => {

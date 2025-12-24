@@ -1,5 +1,9 @@
 import { type MulmoScript } from "mulmocast/browser";
 
+export const providerSupportsInstruction = (provider: string | undefined): boolean => {
+  return provider === "openai" || provider === "gemini" || !provider;
+};
+
 export const insertSpeakers = (data: MulmoScript) => {
   const existsSpeakersOnBeats = data.beats.reduce((speakers, beat) => {
     if (beat.speaker && !speakers.has(beat.speaker)) {

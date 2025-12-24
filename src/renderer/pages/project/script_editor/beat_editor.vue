@@ -631,6 +631,7 @@ import {
 import { mediaUri } from "@/lib/utils";
 import { notifyProgress, notifyError } from "@/lib/notification";
 import type { MulmoTransition } from "@/types";
+import { providerSupportsInstruction } from "../../utils";
 
 import Markdown from "./beat_editors/markdown.vue";
 import Chart from "./beat_editors/chart.vue";
@@ -729,11 +730,6 @@ const showBeatStyleSettings = computed(() => {
 const showTransitionSettings = computed(() => {
   return props.index > 0 && !isVoiceOver.value;
 });
-
-// Check if provider supports instruction field
-const providerSupportsInstruction = (provider: string | undefined): boolean => {
-  return provider === "openai" || provider === "gemini" || !provider;
-};
 
 // Show Speech Options settings for supported providers
 const showSpeechOptionsSettings = computed(() => {
