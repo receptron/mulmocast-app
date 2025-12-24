@@ -76,8 +76,9 @@ export const mulmoScriptTools = (namedInputs: FuncNamedInput, script: MulmoScrip
   const { arg, func } = namedInputs;
 
   if (func === "createBeatsOnMulmoScript") {
-    const { beats } = arg;
+    const { beats, title } = arg;
     script.beats = beats;
+    script.title = title;
     return script;
   }
   if (func === "updateBeatOnMulmoScript") {
