@@ -339,7 +339,21 @@ const handleProviderChange = async (provider: string) => {
 };
 
 const handleSpeechOptionsChange = (key: string, value: string) => {
-  emit("updateSpeakerData", { speechOptions: { [key]: key === "speed" ? Number(value) : value } });
+  if (key === "speed") {
+    emit("updateSpeakerData", { speechOptions: { [key]: Number(value) } });
+  } else if (key === "instruction") {
+    // Remove instruction if empty string
+    if (value) {
+      emit("updateSpeakerData", { speechOptions: { [key]: value } });
+    } else {
+      // Need to delete the instruction property
+      const newSpeechOptions = { ...props.speaker?.speechOptions };
+      delete newSpeechOptions.instruction;
+      emit("updateSpeakerData", { speechOptions: newSpeechOptions });
+    }
+  } else {
+    emit("updateSpeakerData", { speechOptions: { [key]: value } });
+  }
 };
 
 const handleModelChange = (model: string) => {

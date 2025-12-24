@@ -1154,12 +1154,15 @@ const handleSpeechOptionsToggle = async (checked: boolean) => {
 const handleInstructionChange = (value: string | undefined) => {
   const speechOptions = {
     ...props.beat.speechOptions,
-    instruction: value,
   };
-  if (!speechOptions.instruction) {
+
+  if (value) {
+    speechOptions.instruction = value;
+  } else {
     delete speechOptions.instruction;
   }
-  update("speechOptions", Object.keys(speechOptions).length > 0 ? speechOptions : undefined);
+
+  update("speechOptions", speechOptions);
 };
 
 const update = (path: string, value: unknown) => {
