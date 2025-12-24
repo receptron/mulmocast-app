@@ -47,8 +47,12 @@ export const mulmoScriptAgentInfo: AgentFunctionInfo = {
                 },
               },
             },
+            title: {
+              type: "string",
+              description: "The title of this mulmo script.",
+            },
           },
-          required: ["beats"],
+          required: ["beats", "title"],
         },
       },
     },
