@@ -730,14 +730,18 @@ const showTransitionSettings = computed(() => {
   return props.index > 0 && !isVoiceOver.value;
 });
 
+// Check if provider supports instruction field
+const providerSupportsInstruction = (provider: string | undefined): boolean => {
+  return provider === "openai" || provider === "gemini" || !provider;
+};
+
 // Show Speech Options settings for supported providers
 const showSpeechOptionsSettings = computed(() => {
   const speaker = props.beat.speaker;
   if (!speaker) return false;
 
   const speakerData = props.mulmoScript.speechParams?.speakers?.[speaker];
-  const provider = speakerData?.provider;
-  return provider === "openai" || provider === "gemini" || !provider;
+  return providerSupportsInstruction(speakerData?.provider);
 });
 
 // Show Advanced Settings section if any subsection should be visible
