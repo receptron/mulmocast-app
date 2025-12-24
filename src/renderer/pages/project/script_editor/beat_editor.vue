@@ -565,7 +565,7 @@
                   <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
                   <Input
                     :model-value="beat.speechOptions?.instruction || ''"
-                    @update:model-value="handleInstructionChange"
+                    @update:model-value="(value) => handleInstructionChange(value || undefined)"
                     class="h-8"
                     :placeholder="t('parameters.speechParams.instructionPlaceholder')"
                   />
@@ -1151,17 +1151,14 @@ const handleSpeechOptionsToggle = async (checked: boolean) => {
   emit("justSaveAndPushToHistory");
 };
 
-const handleInstructionChange = (value: string) => {
+const handleInstructionChange = (value: string | undefined) => {
   const speechOptions = {
     ...props.beat.speechOptions,
+    instruction: value,
   };
-
-  if (value.trim()) {
-    speechOptions.instruction = value;
-  } else {
+  if (!speechOptions.instruction) {
     delete speechOptions.instruction;
   }
-
   update("speechOptions", Object.keys(speechOptions).length > 0 ? speechOptions : undefined);
 };
 
