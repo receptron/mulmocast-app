@@ -144,21 +144,24 @@ function formatTypescriptObject(obj: Record<string, unknown>, indent = 0): strin
   const spaces = "  ".repeat(indent);
   const innerSpaces = "  ".repeat(indent + 1);
 
-  const entries = Object.entries(obj).map(([key, value]) => {
-    const safeKey = /^[a-zA-Z_]\w*$/.test(key) ? key : `"${key}"`;
+  // Sort keys alphabetically to maintain consistent order
+  const sortedEntries = Object.entries(obj)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, value]) => {
+      const safeKey = /^[a-zA-Z_]\w*$/.test(key) ? key : `"${key}"`;
 
-    if (value && typeof value === "object" && !Array.isArray(value)) {
-      return `${innerSpaces}${safeKey}: ${formatTypescriptObject(value as Record<string, unknown>, indent + 1)}`;
-    } else if (typeof value === "string") {
-      // Escape special characters in string values
-      const escapedValue = value.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n");
-      return `${innerSpaces}${safeKey}: "${escapedValue}"`;
-    } else {
-      return `${innerSpaces}${safeKey}: ${JSON.stringify(value)}`;
-    }
-  });
+      if (value && typeof value === "object" && !Array.isArray(value)) {
+        return `${innerSpaces}${safeKey}: ${formatTypescriptObject(value as Record<string, unknown>, indent + 1)}`;
+      } else if (typeof value === "string") {
+        // Escape special characters in string values
+        const escapedValue = value.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n");
+        return `${innerSpaces}${safeKey}: "${escapedValue}"`;
+      } else {
+        return `${innerSpaces}${safeKey}: ${JSON.stringify(value)}`;
+      }
+    });
 
-  return `{\n${entries.join(",\n")}\n${spaces}}`;
+  return `{\n${sortedEntries.join(",\n")}\n${spaces}}`;
 }
 
 async function generateTranslations() {
