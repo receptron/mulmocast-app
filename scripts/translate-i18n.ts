@@ -6,7 +6,7 @@ import en from "../src/renderer/i18n/en";
 import ja from "../src/renderer/i18n/ja";
 import { en_notify } from "../src/renderer/i18n/en_notify";
 import { ja_notify } from "../src/renderer/i18n/ja_notify";
-import { collectKeysWithValues, findMissingKeys, type MissingKey } from "./check-i18n-core";
+import { collectKeysWithValues, findMissingKeys } from "./check-i18n-core";
 
 // Load .env file if it exists (for local development)
 dotenv.config();
@@ -68,7 +68,7 @@ Requirements:
     const translation = response.text().trim();
 
     // Remove quotes if the model added them
-    return translation.replace(/^["']|["']$/g, "");
+    return translation.replace(/^(["'])|["']$/g, "");
   } catch (error) {
     const geminiError = error as GoogleGenerativeAIError;
 
@@ -145,7 +145,7 @@ function formatTypescriptObject(obj: Record<string, unknown>, indent = 0): strin
   const innerSpaces = "  ".repeat(indent + 1);
 
   const entries = Object.entries(obj).map(([key, value]) => {
-    const safeKey = /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(key) ? key : `"${key}"`;
+    const safeKey = /^[a-zA-Z_]\w*$/.test(key) ? key : `"${key}"`;
 
     if (value && typeof value === "object" && !Array.isArray(value)) {
       return `${innerSpaces}${safeKey}: ${formatTypescriptObject(value as Record<string, unknown>, indent + 1)}`;
