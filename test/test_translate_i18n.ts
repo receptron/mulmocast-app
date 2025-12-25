@@ -33,7 +33,11 @@ test("buildObjectFromKey: rejects prototype pollution", () => {
 });
 
 test("buildObjectFromKey: rejects empty key segment", () => {
-  assert.throws(() => buildObjectFromKey("key..nested", "value"), /Invalid key segment: ""/, "Should reject empty segment");
+  assert.throws(
+    () => buildObjectFromKey("key..nested", "value"),
+    /Invalid key segment: ""/,
+    "Should reject empty segment",
+  );
 });
 
 test("buildObjectFromKey: rejects key starting with empty segment", () => {
