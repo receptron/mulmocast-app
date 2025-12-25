@@ -177,7 +177,9 @@ async function generateTranslations() {
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
   if (!GEMINI_API_KEY) {
-    throw new Error("GEMINI_API_KEY environment variable is not set. Please set it with: export GEMINI_API_KEY=your_api_key");
+    throw new Error(
+      "GEMINI_API_KEY environment variable is not set. Please set it with: export GEMINI_API_KEY=your_api_key",
+    );
   }
 
   const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
