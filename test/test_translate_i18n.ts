@@ -1,69 +1,47 @@
 import test from "node:test";
 import assert from "node:assert";
-
-// Helper functions that we'll test
-// These are extracted/reimplemented from translate-i18n.ts for testing purposes
-
-function buildObjectFromKey(key: string, value: string): Record<string, unknown> {
-  const parts = key.split(".");
-  const result: Record<string, unknown> = {};
-
-  let current: Record<string, unknown> = result;
-  for (let i = 0; i < parts.length - 1; i++) {
-    current[parts[i]] = {};
-    current = current[parts[i]] as Record<string, unknown>;
-  }
-
-  current[parts[parts.length - 1]] = value;
-  return result;
-}
-
-function mergeDeep(target: Record<string, unknown>, source: Record<string, unknown>): Record<string, unknown> {
-  const output = { ...target };
-
-  for (const key in source) {
-    if (
-      source[key] &&
-      typeof source[key] === "object" &&
-      !Array.isArray(source[key]) &&
-      target[key] &&
-      typeof target[key] === "object" &&
-      !Array.isArray(target[key])
-    ) {
-      output[key] = mergeDeep(target[key] as Record<string, unknown>, source[key] as Record<string, unknown>);
-    } else {
-      output[key] = source[key];
-    }
-  }
-
-  return output;
-}
-
-function formatTypescriptObject(obj: Record<string, unknown>, indent = 0): string {
-  const spaces = "  ".repeat(indent);
-  const innerSpaces = "  ".repeat(indent + 1);
-
-  const entries = Object.entries(obj).map(([key, value]) => {
-    const safeKey = /^[a-zA-Z_]\w*$/.test(key) ? key : `"${key}"`;
-
-    if (value && typeof value === "object" && !Array.isArray(value)) {
-      return `${innerSpaces}${safeKey}: ${formatTypescriptObject(value as Record<string, unknown>, indent + 1)}`;
-    } else if (typeof value === "string") {
-      // Escape special characters in string values
-      const escapedValue = value.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n");
-      return `${innerSpaces}${safeKey}: "${escapedValue}"`;
-    } else {
-      return `${innerSpaces}${safeKey}: ${JSON.stringify(value)}`;
-    }
-  });
-
-  return `{\n${entries.join(",\n")}\n${spaces}}`;
-}
+import { buildObjectFromKey, mergeDeep, formatTypescriptObject } from "../scripts/translate-i18n";
 
 // Tests for buildObjectFromKey
 test("buildObjectFromKey: single level key", () => {
   const result = buildObjectFromKey("key", "value");
   assert.deepStrictEqual(result, { key: "value" });
+});
+
+test("buildObjectFromKey: rejects __proto__ pollution", () => {
+  assert.throws(
+    () => buildObjectFromKey("__proto__.polluted", "value"),
+    /Invalid key segment: "__proto__"/,
+    "Should reject __proto__ in key",
+  );
+});
+
+test("buildObjectFromKey: rejects constructor pollution", () => {
+  assert.throws(
+    () => buildObjectFromKey("constructor.polluted", "value"),
+    /Invalid key segment: "constructor"/,
+    "Should reject constructor in key",
+  );
+});
+
+test("buildObjectFromKey: rejects prototype pollution", () => {
+  assert.throws(
+    () => buildObjectFromKey("prototype.polluted", "value"),
+    /Invalid key segment: "prototype"/,
+    "Should reject prototype in key",
+  );
+});
+
+test("buildObjectFromKey: rejects empty key segment", () => {
+  assert.throws(() => buildObjectFromKey("key..nested", "value"), /Invalid key segment: ""/, "Should reject empty segment");
+});
+
+test("buildObjectFromKey: rejects key starting with empty segment", () => {
+  assert.throws(() => buildObjectFromKey(".key", "value"), /Invalid key segment: ""/, "Should reject leading dot");
+});
+
+test("buildObjectFromKey: rejects key ending with empty segment", () => {
+  assert.throws(() => buildObjectFromKey("key.", "value"), /Invalid key segment: ""/, "Should reject trailing dot");
 });
 
 test("buildObjectFromKey: two level key", () => {
@@ -125,6 +103,39 @@ test("buildObjectFromKey: empty string value", () => {
 });
 
 // Tests for mergeDeep
+test("mergeDeep: ignores __proto__ in source", () => {
+  const target = { a: "1" };
+  const source = JSON.parse('{"__proto__": {"polluted": "bad"}, "b": "2"}');
+  const result = mergeDeep(target, source);
+  assert.deepStrictEqual(result, { a: "1", b: "2" });
+  // Verify prototype was not polluted
+  assert.strictEqual((Object.prototype as Record<string, unknown>).polluted, undefined);
+});
+
+test("mergeDeep: ignores constructor in source", () => {
+  const target = { a: "1" };
+  const source = { constructor: { polluted: "bad" }, b: "2" };
+  const result = mergeDeep(target, source);
+  assert.deepStrictEqual(result, { a: "1", b: "2" });
+});
+
+test("mergeDeep: ignores prototype in source", () => {
+  const target = { a: "1" };
+  const source = { prototype: { polluted: "bad" }, b: "2" };
+  const result = mergeDeep(target, source);
+  assert.deepStrictEqual(result, { a: "1", b: "2" });
+});
+
+test("mergeDeep: only processes own properties", () => {
+  const target = { a: "1" };
+  const parent = { inherited: "should not appear" };
+  const source = Object.create(parent);
+  source.own = "should appear";
+  const result = mergeDeep(target, source);
+  assert.deepStrictEqual(result, { a: "1", own: "should appear" });
+  assert.strictEqual((result as Record<string, unknown>).inherited, undefined);
+});
+
 test("mergeDeep: merge flat objects", () => {
   const target = { a: "1", b: "2" };
   const source = { c: "3" };

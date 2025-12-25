@@ -109,6 +109,13 @@ function buildObjectFromKey(key: string, value: string): Record<string, unknown>
   const parts = key.split(".");
   const result: Record<string, unknown> = {};
 
+  // Validate key segments to prevent prototype pollution
+  for (const part of parts) {
+    if (!part || part === "__proto__" || part === "constructor" || part === "prototype") {
+      throw new Error(`Invalid key segment: "${part}" in key "${key}"`);
+    }
+  }
+
   let current: Record<string, unknown> = result;
   for (let i = 0; i < parts.length - 1; i++) {
     current[parts[i]] = {};
@@ -123,6 +130,16 @@ function mergeDeep(target: Record<string, unknown>, source: Record<string, unkno
   const output = { ...target };
 
   for (const key in source) {
+    // Only process own properties to prevent prototype pollution
+    if (!Object.prototype.hasOwnProperty.call(source, key)) {
+      continue;
+    }
+
+    // Additional security check for dangerous keys
+    if (key === "__proto__" || key === "constructor" || key === "prototype") {
+      continue;
+    }
+
     if (
       source[key] &&
       typeof source[key] === "object" &&
@@ -302,7 +319,13 @@ async function generateTranslations() {
   console.log("\n✨ Translation generation complete!");
 }
 
-generateTranslations().catch((error) => {
-  console.error("❌ Fatal error:", error);
-  process.exit(1);
-});
+// Export functions for testing
+export { buildObjectFromKey, mergeDeep, formatTypescriptObject };
+
+// Only run main function if this file is executed directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+  generateTranslations().catch((error) => {
+    console.error("❌ Fatal error:", error);
+    process.exit(1);
+  });
+}
