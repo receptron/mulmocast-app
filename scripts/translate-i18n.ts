@@ -368,7 +368,7 @@ async function generateTranslations() {
 }
 
 // Export functions for testing
-export { buildObjectFromKey, mergeDeep, formatTypescriptObject };
+export { buildObjectFromKey, mergeDeep, formatTypescriptObject, updateMainFile, updateNotifyFile };
 
 // Only run main function if this file is executed directly
 if (import.meta.url === `file://${process.argv[1]}`) {

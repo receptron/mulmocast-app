@@ -1,6 +1,15 @@
 import test from "node:test";
 import assert from "node:assert";
-import { buildObjectFromKey, mergeDeep, formatTypescriptObject } from "../scripts/translate-i18n";
+import fs from "fs/promises";
+import path from "path";
+import os from "os";
+import {
+  buildObjectFromKey,
+  mergeDeep,
+  formatTypescriptObject,
+  updateMainFile,
+  updateNotifyFile,
+} from "../scripts/translate-i18n";
 
 // Tests for buildObjectFromKey
 test("buildObjectFromKey: single level key", () => {
@@ -490,4 +499,206 @@ test("Integration: preserve original structure when adding translations", () => 
   const zebraIndex = formatted.indexOf("zebra:");
   const alphaIndex = formatted.indexOf("alpha:");
   assert.ok(zebraIndex < alphaIndex, "Original key order should be preserved");
+});
+
+// File structure preservation tests
+test("updateMainFile: preserves imports", async () => {
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "i18n-test-"));
+  const testFile = path.join(tmpDir, "test.ts");
+
+  const originalContent = `import { commonLanguages } from "./common";
+import { ja_notify } from "./ja_notify";
+
+const lang = {
+  message: {
+    hello: "こんにちは",
+  },
+};
+
+export default lang;`;
+
+  await fs.writeFile(testFile, originalContent, "utf-8");
+
+  const newTranslations = {
+    message: {
+      hello: "こんにちは",
+      goodbye: "さようなら",
+    },
+  };
+
+  await updateMainFile(testFile, newTranslations);
+
+  const updatedContent = await fs.readFile(testFile, "utf-8");
+
+  // Check that imports are preserved
+  assert.ok(updatedContent.includes('import { commonLanguages } from "./common";'), "Import should be preserved");
+  assert.ok(updatedContent.includes('import { ja_notify } from "./ja_notify";'), "Import should be preserved");
+
+  // Check that export is preserved
+  assert.ok(updatedContent.includes("export default lang;"), "Export statement should be preserved");
+
+  // Check that new translation was added
+  assert.ok(updatedContent.includes("goodbye"), "New translation key should be added");
+
+  // Cleanup
+  await fs.rm(tmpDir, { recursive: true });
+});
+
+test("updateMainFile: preserves comments", async () => {
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "i18n-test-"));
+  const testFile = path.join(tmpDir, "test.ts");
+
+  const originalContent = `import { commonLanguages } from "./common";
+
+// This is a comment
+const lang = {
+  // UI common vocabulary
+  ui: {
+    common: {
+      title: "タイトル",
+    },
+  },
+};
+
+export default lang;`;
+
+  await fs.writeFile(testFile, originalContent, "utf-8");
+
+  const newTranslations = {
+    ui: {
+      common: {
+        title: "タイトル",
+        description: "説明",
+      },
+    },
+  };
+
+  await updateMainFile(testFile, newTranslations);
+
+  const updatedContent = await fs.readFile(testFile, "utf-8");
+
+  // Check that comment before const is preserved
+  assert.ok(updatedContent.includes("// This is a comment"), "Comment before const should be preserved");
+
+  // Note: Comments inside the object will be lost, which is expected
+  // as we're replacing the entire object content
+
+  // Cleanup
+  await fs.rm(tmpDir, { recursive: true });
+});
+
+test("updateMainFile: preserves const/export structure", async () => {
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "i18n-test-"));
+  const testFile = path.join(tmpDir, "test.ts");
+
+  const originalContent = `const lang = {
+  key1: "value1",
+};
+
+export default lang;`;
+
+  await fs.writeFile(testFile, originalContent, "utf-8");
+
+  const newTranslations = {
+    key1: "value1",
+    key2: "value2",
+  };
+
+  await updateMainFile(testFile, newTranslations);
+
+  const updatedContent = await fs.readFile(testFile, "utf-8");
+
+  // Should NOT be converted to "export default { ... }"
+  assert.ok(!updatedContent.match(/export default \{/), "Should not convert to export default {...}");
+
+  // Should preserve "const lang = { ... }; export default lang;"
+  assert.ok(updatedContent.includes("const lang = {"), "Should preserve const lang pattern");
+  assert.ok(updatedContent.includes("export default lang;"), "Should preserve separate export statement");
+
+  // Cleanup
+  await fs.rm(tmpDir, { recursive: true });
+});
+
+test("updateNotifyFile: preserves export const structure", async () => {
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "i18n-test-"));
+  const testFile = path.join(tmpDir, "test_notify.ts");
+
+  const originalContent = `export const ja_notify = {
+  mulmoScript: {
+    successMessage: "成功!!",
+  },
+};`;
+
+  await fs.writeFile(testFile, originalContent, "utf-8");
+
+  const newTranslations = {
+    mulmoScript: {
+      successMessage: "成功!!",
+      errorMessage: "失敗",
+    },
+  };
+
+  await updateNotifyFile(testFile, newTranslations, "ja_notify");
+
+  const updatedContent = await fs.readFile(testFile, "utf-8");
+
+  // Should preserve "export const ja_notify = { ... };"
+  assert.ok(updatedContent.includes("export const ja_notify = {"), "Should preserve export const pattern");
+
+  // Should NOT have separate export statement
+  assert.ok(!updatedContent.includes("export default"), "Should not have export default");
+
+  // Check new translation was added
+  assert.ok(updatedContent.includes("errorMessage"), "New translation key should be added");
+
+  // Cleanup
+  await fs.rm(tmpDir, { recursive: true });
+});
+
+test("updateMainFile: minimal diff when adding single key", async () => {
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "i18n-test-"));
+  const testFile = path.join(tmpDir, "test.ts");
+
+  const originalContent = `import { commonLanguages } from "./common";
+
+const lang = {
+  ui: {
+    common: {
+      title: "タイトル",
+      description: "説明",
+    },
+  },
+};
+
+export default lang;`;
+
+  await fs.writeFile(testFile, originalContent, "utf-8");
+
+  const newTranslations = {
+    ui: {
+      common: {
+        title: "タイトル",
+        description: "説明",
+        name: "名前",
+      },
+    },
+  };
+
+  await updateMainFile(testFile, newTranslations);
+
+  const updatedContent = await fs.readFile(testFile, "utf-8");
+
+  // Count line differences
+  const originalLines = originalContent.split("\n");
+  const updatedLines = updatedContent.split("\n");
+
+  // Should only have minimal line additions (the new key)
+  const lineDiff = updatedLines.length - originalLines.length;
+  assert.ok(lineDiff <= 2, `Should have minimal line diff (got ${lineDiff} lines added)`);
+
+  // Check that import is still there
+  assert.ok(updatedContent.includes('import { commonLanguages } from "./common";'), "Import should be preserved");
+
+  // Cleanup
+  await fs.rm(tmpDir, { recursive: true });
 });
