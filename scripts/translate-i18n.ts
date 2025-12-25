@@ -170,6 +170,54 @@ function formatTypescriptObject(obj: Record<string, unknown>, indent = 0): strin
   return `{\n${entries.join(",\n")}\n${spaces}}`;
 }
 
+async function updateMainFile(filePath: string, newTranslations: Record<string, unknown>): Promise<void> {
+  // Read the original file
+  const originalContent = await fs.readFile(filePath, "utf-8");
+
+  // Find the object definition pattern: const lang = { ... };
+  const objectPattern = /(const lang = )(\{[\s\S]*?\n\});/;
+  const match = originalContent.match(objectPattern);
+
+  if (!match) {
+    throw new Error(`Could not find 'const lang = {...};' pattern in ${filePath}`);
+  }
+
+  // Generate new object content
+  const newObjectContent = formatTypescriptObject(newTranslations);
+
+  // Replace only the object part, preserving imports and export
+  const updatedContent = originalContent.replace(objectPattern, `$1${newObjectContent};`);
+
+  // Write back
+  await fs.writeFile(filePath, updatedContent, "utf-8");
+}
+
+async function updateNotifyFile(
+  filePath: string,
+  newTranslations: Record<string, unknown>,
+  exportName: string,
+): Promise<void> {
+  // Read the original file
+  const originalContent = await fs.readFile(filePath, "utf-8");
+
+  // Find the object definition pattern: export const en_notify = { ... };
+  const objectPattern = new RegExp(`(export const ${exportName} = )(\\{[\\s\\S]*?\\n\\});`);
+  const match = originalContent.match(objectPattern);
+
+  if (!match) {
+    throw new Error(`Could not find 'export const ${exportName} = {...};' pattern in ${filePath}`);
+  }
+
+  // Generate new object content
+  const newObjectContent = formatTypescriptObject(newTranslations);
+
+  // Replace only the object part
+  const updatedContent = originalContent.replace(objectPattern, `$1${newObjectContent};`);
+
+  // Write back
+  await fs.writeFile(filePath, updatedContent, "utf-8");
+}
+
 async function generateTranslations() {
   console.log("🌍 Starting i18n translation generation...\n");
 
@@ -297,26 +345,22 @@ async function generateTranslations() {
   const i18nDir = path.join(process.cwd(), "src/renderer/i18n");
 
   if (jaMainTasks.length > 0) {
-    const jaContent = `export default ${formatTypescriptObject(translations.ja)} as const;\n`;
-    await fs.writeFile(path.join(i18nDir, "ja.ts"), jaContent, "utf-8");
+    await updateMainFile(path.join(i18nDir, "ja.ts"), translations.ja);
     console.log("  ✅ Updated: ja.ts");
   }
 
   if (enMainTasks.length > 0) {
-    const enContent = `export default ${formatTypescriptObject(translations.en)} as const;\n`;
-    await fs.writeFile(path.join(i18nDir, "en.ts"), enContent, "utf-8");
+    await updateMainFile(path.join(i18nDir, "en.ts"), translations.en);
     console.log("  ✅ Updated: en.ts");
   }
 
   if (jaNotifyTasks.length > 0) {
-    const jaNotifyContent = `export const ja_notify = ${formatTypescriptObject(translations.ja_notify)} as const;\n`;
-    await fs.writeFile(path.join(i18nDir, "ja_notify.ts"), jaNotifyContent, "utf-8");
+    await updateNotifyFile(path.join(i18nDir, "ja_notify.ts"), translations.ja_notify, "ja_notify");
     console.log("  ✅ Updated: ja_notify.ts");
   }
 
   if (enNotifyTasks.length > 0) {
-    const enNotifyContent = `export const en_notify = ${formatTypescriptObject(translations.en_notify)} as const;\n`;
-    await fs.writeFile(path.join(i18nDir, "en_notify.ts"), enNotifyContent, "utf-8");
+    await updateNotifyFile(path.join(i18nDir, "en_notify.ts"), translations.en_notify, "en_notify");
     console.log("  ✅ Updated: en_notify.ts");
   }
 
