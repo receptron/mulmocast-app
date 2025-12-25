@@ -87,7 +87,9 @@ Requirements:
           }
         }
 
-        console.log(`  ⏳ Rate limit reached. Retrying in ${retryDelay / 1000}s... (attempt ${retryCount + 1}/${maxRetries})`);
+        console.log(
+          `  ⏳ Rate limit reached. Retrying in ${retryDelay / 1000}s... (attempt ${retryCount + 1}/${maxRetries})`,
+        );
         await sleep(retryDelay);
         return translateText(task, retryCount + 1);
       } else {
