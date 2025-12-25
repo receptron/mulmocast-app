@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, type GenerativeModel } from "@google/generative-ai";
 import dotenv from "dotenv";
 import fs from "fs/promises";
 import path from "path";
@@ -34,12 +34,7 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function translateText(
-  task: TranslationTask,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  model: any,
-  retryCount = 0,
-): Promise<string> {
+async function translateText(task: TranslationTask, model: GenerativeModel, retryCount = 0): Promise<string> {
   const maxRetries = 3;
   const sourceLang = task.sourceLanguage === "en" ? "English" : "Japanese";
   const targetLang = task.targetLanguage === "en" ? "English" : "Japanese";
@@ -182,9 +177,7 @@ async function generateTranslations() {
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
   if (!GEMINI_API_KEY) {
-    console.error("❌ Error: GEMINI_API_KEY environment variable is not set");
-    console.error("Please set it with: export GEMINI_API_KEY=your_api_key");
-    process.exit(1);
+    throw new Error("GEMINI_API_KEY environment variable is not set. Please set it with: export GEMINI_API_KEY=your_api_key");
   }
 
   const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
@@ -334,7 +327,12 @@ export { buildObjectFromKey, mergeDeep, formatTypescriptObject };
 // Only run main function if this file is executed directly
 if (import.meta.url === `file://${process.argv[1]}`) {
   generateTranslations().catch((error) => {
-    console.error("❌ Fatal error:", error);
+    // Handle errors from generateTranslations
+    if (error instanceof Error) {
+      console.error("❌ Error:", error.message);
+    } else {
+      console.error("❌ Fatal error:", error);
+    }
     process.exit(1);
   });
 }
