@@ -68,7 +68,7 @@ Requirements:
     const translation = response.text().trim();
 
     // Remove quotes if the model added them
-    return translation.replace(/^(["'])|(["'])$/g, "");
+    return translation.replace(/(?:^["'])|(?:["']$)/g, "");
   } catch (error) {
     const geminiError = error as GoogleGenerativeAIError;
 
