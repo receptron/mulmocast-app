@@ -28,7 +28,8 @@
     "type-check": "tsc --noEmit -p ./tsconfig.main.json && tsc --noEmit -p ./tsconfig.renderer.json",
     "type-check:main": "tsc --noEmit -p ./tsconfig.main.json",
     "type-check:renderer": "tsc --noEmit -p ./tsconfig.renderer.json",
-    "i18n:check": "npx tsx scripts/check-i18n.ts"
+    "i18n:check": "npx tsx scripts/check-i18n.ts",
+    "i18n:translate": "npx tsx scripts/translate-i18n.ts"
   },
   "keywords": [],
   "author": {
@@ -47,6 +48,7 @@
     "@electron-forge/publisher-s3": "^7.10.2",
     "@electron/fuses": "^2.0.0",
     "@eslint/js": "^9.39.2",
+    "@google/generative-ai": "^0.24.1",
     "@intlify/eslint-plugin-vue-i18n": "^4.1.0",
     "@types/adm-zip": "^0.5.7",
     "@types/clone-deep": "^4.0.4",
@@ -58,6 +60,7 @@
     "@vitejs/plugin-vue": "^6.0.3",
     "@vue/eslint-config-typescript": "^14.6.0",
     "bufferutil": "^4.1.0",
+    "dotenv": "^17.2.3",
     "electron": "39.2.7",
     "electron-devtools-installer": "^4.0.0",
     "eslint": "^9.39.2",

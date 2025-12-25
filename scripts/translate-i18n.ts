@@ -1,0 +1,257 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import dotenv from "dotenv";
+import fs from "fs/promises";
+import path from "path";
+import en from "../src/renderer/i18n/en";
+import ja from "../src/renderer/i18n/ja";
+import { en_notify } from "../src/renderer/i18n/en_notify";
+import { ja_notify } from "../src/renderer/i18n/ja_notify";
+import { collectKeysWithValues, findMissingKeys, type MissingKey } from "./check-i18n-core";
+
+// Load .env file if it exists (for local development)
+dotenv.config();
+
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+if (!GEMINI_API_KEY) {
+  console.error("❌ Error: GEMINI_API_KEY environment variable is not set");
+  console.error("Please set it with: export GEMINI_API_KEY=your_api_key");
+  process.exit(1);
+}
+
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+
+interface TranslationTask {
+  key: string;
+  sourceValue: string;
+  sourceLanguage: "en" | "ja";
+  targetLanguage: "en" | "ja";
+  fileType: "main" | "notify";
+}
+
+async function translateText(task: TranslationTask): Promise<string> {
+  const sourceLang = task.sourceLanguage === "en" ? "English" : "Japanese";
+  const targetLang = task.targetLanguage === "en" ? "English" : "Japanese";
+
+  const prompt = `You are a professional translator for a software application UI.
+
+Translate the following ${sourceLang} text to ${targetLang}:
+
+"${task.sourceValue}"
+
+Context: This is a UI translation key "${task.key}" in an Electron+Vue.js application called MulmoCast, which is a multimedia presentation creation tool.
+
+Requirements:
+- Provide ONLY the translated text, no explanations
+- Keep the translation concise and natural for UI text
+- Maintain any special formatting like line breaks
+- If there are technical terms, keep them appropriate for the software domain
+- For Japanese: Use appropriate formality level for application UI (です/ます form)`;
+
+  try {
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    const translation = response.text().trim();
+
+    // Remove quotes if the model added them
+    return translation.replace(/^["']|["']$/g, "");
+  } catch (error) {
+    console.error(`  ⚠️  Translation failed for key "${task.key}":`, error);
+    throw error;
+  }
+}
+
+function buildObjectFromKey(key: string, value: string): Record<string, unknown> {
+  const parts = key.split(".");
+  const result: Record<string, unknown> = {};
+
+  let current: Record<string, unknown> = result;
+  for (let i = 0; i < parts.length - 1; i++) {
+    current[parts[i]] = {};
+    current = current[parts[i]] as Record<string, unknown>;
+  }
+
+  current[parts[parts.length - 1]] = value;
+  return result;
+}
+
+function mergeDeep(target: Record<string, unknown>, source: Record<string, unknown>): Record<string, unknown> {
+  const output = { ...target };
+
+  for (const key in source) {
+    if (
+      source[key] &&
+      typeof source[key] === "object" &&
+      !Array.isArray(source[key]) &&
+      target[key] &&
+      typeof target[key] === "object" &&
+      !Array.isArray(target[key])
+    ) {
+      output[key] = mergeDeep(target[key] as Record<string, unknown>, source[key] as Record<string, unknown>);
+    } else {
+      output[key] = source[key];
+    }
+  }
+
+  return output;
+}
+
+function formatTypescriptObject(obj: Record<string, unknown>, indent = 0): string {
+  const spaces = "  ".repeat(indent);
+  const innerSpaces = "  ".repeat(indent + 1);
+
+  const entries = Object.entries(obj).map(([key, value]) => {
+    const safeKey = /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(key) ? key : `"${key}"`;
+
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      return `${innerSpaces}${safeKey}: ${formatTypescriptObject(value as Record<string, unknown>, indent + 1)}`;
+    } else if (typeof value === "string") {
+      // Escape special characters in string values
+      const escapedValue = value.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n");
+      return `${innerSpaces}${safeKey}: "${escapedValue}"`;
+    } else {
+      return `${innerSpaces}${safeKey}: ${JSON.stringify(value)}`;
+    }
+  });
+
+  return `{\n${entries.join(",\n")}\n${spaces}}`;
+}
+
+async function generateTranslations() {
+  console.log("🌍 Starting i18n translation generation...\n");
+
+  // Check main translation files
+  console.log("Checking: en.ts <-> ja.ts");
+  const enMap = collectKeysWithValues(en);
+  const jaMap = collectKeysWithValues(ja);
+  const missingKeysMain = findMissingKeys(enMap, jaMap);
+
+  // Check notify translation files
+  console.log("Checking: en_notify.ts <-> ja_notify.ts");
+  const enNotifyMap = collectKeysWithValues(en_notify);
+  const jaNotifyMap = collectKeysWithValues(ja_notify);
+  const missingKeysNotify = findMissingKeys(enNotifyMap, jaNotifyMap);
+
+  if (missingKeysMain.length === 0 && missingKeysNotify.length === 0) {
+    console.log("\n✅ All translations are complete! No missing keys found.");
+    return;
+  }
+
+  console.log(`\nFound ${missingKeysMain.length + missingKeysNotify.length} missing translation(s)\n`);
+
+  // Prepare translation tasks
+  const tasks: TranslationTask[] = [];
+
+  for (const missing of missingKeysMain) {
+    if (missing.enValue && !missing.jaValue) {
+      tasks.push({
+        key: missing.key,
+        sourceValue: missing.enValue,
+        sourceLanguage: "en",
+        targetLanguage: "ja",
+        fileType: "main",
+      });
+    } else if (missing.jaValue && !missing.enValue) {
+      tasks.push({
+        key: missing.key,
+        sourceValue: missing.jaValue,
+        sourceLanguage: "ja",
+        targetLanguage: "en",
+        fileType: "main",
+      });
+    }
+  }
+
+  for (const missing of missingKeysNotify) {
+    if (missing.enValue && !missing.jaValue) {
+      tasks.push({
+        key: missing.key,
+        sourceValue: missing.enValue,
+        sourceLanguage: "en",
+        targetLanguage: "ja",
+        fileType: "notify",
+      });
+    } else if (missing.jaValue && !missing.enValue) {
+      tasks.push({
+        key: missing.key,
+        sourceValue: missing.jaValue,
+        sourceLanguage: "ja",
+        targetLanguage: "en",
+        fileType: "notify",
+      });
+    }
+  }
+
+  // Group tasks by file type and target language
+  const jaMainTasks = tasks.filter((t) => t.targetLanguage === "ja" && t.fileType === "main");
+  const enMainTasks = tasks.filter((t) => t.targetLanguage === "en" && t.fileType === "main");
+  const jaNotifyTasks = tasks.filter((t) => t.targetLanguage === "ja" && t.fileType === "notify");
+  const enNotifyTasks = tasks.filter((t) => t.targetLanguage === "en" && t.fileType === "notify");
+
+  // Translate and build objects
+  const translations: Record<string, Record<string, unknown>> = {
+    ja: { ...ja },
+    en: { ...en },
+    ja_notify: { ...ja_notify },
+    en_notify: { ...en_notify },
+  };
+
+  const processTaskGroup = async (taskGroup: TranslationTask[], targetKey: string, label: string) => {
+    if (taskGroup.length === 0) return;
+
+    console.log(`\n📝 Translating ${taskGroup.length} key(s) for ${label}...`);
+
+    for (const task of taskGroup) {
+      console.log(`  Translating: ${task.key}`);
+      console.log(`    Source (${task.sourceLanguage}): ${task.sourceValue}`);
+
+      const translated = await translateText(task);
+      console.log(`    Target (${task.targetLanguage}): ${translated}`);
+
+      const newObj = buildObjectFromKey(task.key, translated);
+      translations[targetKey] = mergeDeep(translations[targetKey], newObj);
+    }
+  };
+
+  await processTaskGroup(jaMainTasks, "ja", "ja.ts");
+  await processTaskGroup(enMainTasks, "en", "en.ts");
+  await processTaskGroup(jaNotifyTasks, "ja_notify", "ja_notify.ts");
+  await processTaskGroup(enNotifyTasks, "en_notify", "en_notify.ts");
+
+  // Write updated files
+  console.log("\n💾 Writing updated translation files...");
+
+  const i18nDir = path.join(process.cwd(), "src/renderer/i18n");
+
+  if (jaMainTasks.length > 0) {
+    const jaContent = `export default ${formatTypescriptObject(translations.ja)} as const;\n`;
+    await fs.writeFile(path.join(i18nDir, "ja.ts"), jaContent, "utf-8");
+    console.log("  ✅ Updated: ja.ts");
+  }
+
+  if (enMainTasks.length > 0) {
+    const enContent = `export default ${formatTypescriptObject(translations.en)} as const;\n`;
+    await fs.writeFile(path.join(i18nDir, "en.ts"), enContent, "utf-8");
+    console.log("  ✅ Updated: en.ts");
+  }
+
+  if (jaNotifyTasks.length > 0) {
+    const jaNotifyContent = `export const ja_notify = ${formatTypescriptObject(translations.ja_notify)} as const;\n`;
+    await fs.writeFile(path.join(i18nDir, "ja_notify.ts"), jaNotifyContent, "utf-8");
+    console.log("  ✅ Updated: ja_notify.ts");
+  }
+
+  if (enNotifyTasks.length > 0) {
+    const enNotifyContent = `export const en_notify = ${formatTypescriptObject(translations.en_notify)} as const;\n`;
+    await fs.writeFile(path.join(i18nDir, "en_notify.ts"), enNotifyContent, "utf-8");
+    console.log("  ✅ Updated: en_notify.ts");
+  }
+
+  console.log("\n✨ Translation generation complete!");
+}
+
+generateTranslations().catch((error) => {
+  console.error("❌ Fatal error:", error);
+  process.exit(1);
+});
