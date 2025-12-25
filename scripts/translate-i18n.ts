@@ -30,7 +30,20 @@ interface TranslationTask {
   fileType: "main" | "notify";
 }
 
-async function translateText(task: TranslationTask): Promise<string> {
+interface GoogleGenerativeAIError extends Error {
+  status?: number;
+  errorDetails?: Array<{
+    "@type": string;
+    retryDelay?: string;
+  }>;
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function translateText(task: TranslationTask, retryCount = 0): Promise<string> {
+  const maxRetries = 3;
   const sourceLang = task.sourceLanguage === "en" ? "English" : "Japanese";
   const targetLang = task.targetLanguage === "en" ? "English" : "Japanese";
 
@@ -57,7 +70,35 @@ Requirements:
     // Remove quotes if the model added them
     return translation.replace(/^["']|["']$/g, "");
   } catch (error) {
-    console.error(`  ⚠️  Translation failed for key "${task.key}":`, error);
+    const geminiError = error as GoogleGenerativeAIError;
+
+    // Handle rate limit errors (429)
+    if (geminiError.status === 429) {
+      if (retryCount < maxRetries) {
+        // Extract retry delay from error details
+        let retryDelay = 2000; // default 2 seconds
+        if (geminiError.errorDetails) {
+          const retryInfo = geminiError.errorDetails.find((d) => d["@type"]?.includes("RetryInfo"));
+          if (retryInfo?.retryDelay) {
+            const delayMatch = retryInfo.retryDelay.match(/(\d+(\.\d+)?)/);
+            if (delayMatch) {
+              retryDelay = Math.ceil(parseFloat(delayMatch[1]) * 1000);
+            }
+          }
+        }
+
+        console.log(`  ⏳ Rate limit reached. Retrying in ${retryDelay / 1000}s... (attempt ${retryCount + 1}/${maxRetries})`);
+        await sleep(retryDelay);
+        return translateText(task, retryCount + 1);
+      } else {
+        console.error(`  ❌ Max retries (${maxRetries}) exceeded for key "${task.key}"`);
+        console.error(`  💡 Please wait a moment and run the script again, or check your API quota.`);
+        throw error;
+      }
+    }
+
+    // Handle other errors
+    console.error(`  ⚠️  Translation failed for key "${task.key}":`, geminiError.message);
     throw error;
   }
 }
@@ -202,8 +243,9 @@ async function generateTranslations() {
 
     console.log(`\n📝 Translating ${taskGroup.length} key(s) for ${label}...`);
 
-    for (const task of taskGroup) {
-      console.log(`  Translating: ${task.key}`);
+    for (let i = 0; i < taskGroup.length; i++) {
+      const task = taskGroup[i];
+      console.log(`  [${i + 1}/${taskGroup.length}] Translating: ${task.key}`);
       console.log(`    Source (${task.sourceLanguage}): ${task.sourceValue}`);
 
       const translated = await translateText(task);
@@ -211,6 +253,13 @@ async function generateTranslations() {
 
       const newObj = buildObjectFromKey(task.key, translated);
       translations[targetKey] = mergeDeep(translations[targetKey], newObj);
+
+      // Add delay between requests to avoid rate limiting (except for the last item)
+      if (i < taskGroup.length - 1) {
+        const delay = 1000; // 1 second delay between translations
+        console.log(`    ⏸️  Waiting ${delay / 1000}s before next translation...`);
+        await sleep(delay);
+      }
     }
   };
 
