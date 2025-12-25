@@ -9,18 +9,10 @@ import { ja_notify } from "../src/renderer/i18n/ja_notify";
 import { collectKeysWithValues, findMissingKeys } from "./check-i18n-core";
 
 // Load .env file if it exists (for local development)
-dotenv.config();
-
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-
-if (!GEMINI_API_KEY) {
-  console.error("❌ Error: GEMINI_API_KEY environment variable is not set");
-  console.error("Please set it with: export GEMINI_API_KEY=your_api_key");
-  process.exit(1);
+// Only load when not in test environment
+if (process.env.NODE_ENV !== "test") {
+  dotenv.config();
 }
-
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 interface TranslationTask {
   key: string;
@@ -42,7 +34,12 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function translateText(task: TranslationTask, retryCount = 0): Promise<string> {
+async function translateText(
+  task: TranslationTask,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  model: any,
+  retryCount = 0,
+): Promise<string> {
   const maxRetries = 3;
   const sourceLang = task.sourceLanguage === "en" ? "English" : "Japanese";
   const targetLang = task.targetLanguage === "en" ? "English" : "Japanese";
@@ -91,7 +88,7 @@ Requirements:
           `  ⏳ Rate limit reached. Retrying in ${retryDelay / 1000}s... (attempt ${retryCount + 1}/${maxRetries})`,
         );
         await sleep(retryDelay);
-        return translateText(task, retryCount + 1);
+        return translateText(task, model, retryCount + 1);
       } else {
         console.error(`  ❌ Max retries (${maxRetries}) exceeded for key "${task.key}"`);
         console.error(`  💡 Please wait a moment and run the script again, or check your API quota.`);
@@ -181,6 +178,18 @@ function formatTypescriptObject(obj: Record<string, unknown>, indent = 0): strin
 async function generateTranslations() {
   console.log("🌍 Starting i18n translation generation...\n");
 
+  // Initialize Gemini API client (only when actually running translations)
+  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+  if (!GEMINI_API_KEY) {
+    console.error("❌ Error: GEMINI_API_KEY environment variable is not set");
+    console.error("Please set it with: export GEMINI_API_KEY=your_api_key");
+    process.exit(1);
+  }
+
+  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
   // Check main translation files
   console.log("Checking: en.ts <-> ja.ts");
   const enMap = collectKeysWithValues(en);
@@ -267,7 +276,7 @@ async function generateTranslations() {
       console.log(`  [${i + 1}/${taskGroup.length}] Translating: ${task.key}`);
       console.log(`    Source (${task.sourceLanguage}): ${task.sourceValue}`);
 
-      const translated = await translateText(task);
+      const translated = await translateText(task, model);
       console.log(`    Target (${task.targetLanguage}): ${translated}`);
 
       const newObj = buildObjectFromKey(task.key, translated);
