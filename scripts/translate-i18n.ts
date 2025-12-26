@@ -143,8 +143,8 @@ export function validateKeys(keys: string[]): void {
 export function buildTranslationPrompt(
   originalContent: string,
   sourceKeys: Array<{ key: string; sourceValue: string }>,
-  sourceLang: string,
-  targetLang: string,
+  sourceLang: "English" | "Japanese",
+  targetLang: "English" | "Japanese",
 ): string {
   const keysToTranslate = sourceKeys.map((k) => `  - ${k.key}: "${k.sourceValue}"`).join("\n");
 
@@ -216,7 +216,7 @@ export class GeminiTranslationService implements TranslationService {
 export interface RetryOptions {
   maxRetries: number;
   onRetry?: (attempt: number, delay: number) => void;
-  onMaxRetriesExceeded?: (filePath: string) => void;
+  onMaxRetriesExceeded?: () => void;
 }
 
 export async function withRetry<T>(fn: () => Promise<T>, options: RetryOptions, retryCount = 0): Promise<T> {
@@ -248,7 +248,7 @@ export async function withRetry<T>(fn: () => Promise<T>, options: RetryOptions, 
         return withRetry(fn, options, retryCount + 1);
       } else {
         if (options.onMaxRetriesExceeded) {
-          options.onMaxRetriesExceeded("");
+          options.onMaxRetriesExceeded();
         }
         throw error;
       }

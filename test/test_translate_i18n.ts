@@ -1,10 +1,14 @@
 import test from "node:test";
 import assert from "node:assert";
+import fs from "fs/promises";
+import path from "path";
+import os from "os";
 import {
   validateKeys,
   buildTranslationPrompt,
   cleanLLMResponse,
   withRetry,
+  translateAndUpdateFile,
   type TranslationService,
 } from "../scripts/translate-i18n";
 
@@ -233,4 +237,81 @@ test("withRetry: throws non-429 errors immediately", async () => {
   await assert.rejects(async () => {
     await withRetry(() => service.translate(), { maxRetries: 3 });
   }, /Different error/);
+});
+
+// Integration tests for translateAndUpdateFile
+
+test("translateAndUpdateFile integration: complete flow with mock service", async () => {
+  // Create temporary file
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "i18n-test-"));
+  const testFilePath = path.join(tempDir, "test.ts");
+  const originalContent = `export default {
+  existing: {
+    key: "existing value",
+  },
+};
+`;
+  await fs.writeFile(testFilePath, originalContent, "utf-8");
+
+  // Mock translation service that returns a modified file
+  const mockService: TranslationService = {
+    async translate(prompt: string): Promise<string> {
+      // Verify prompt contains original content
+      assert.ok(prompt.includes(originalContent));
+      assert.ok(prompt.includes('new.key: "New Value"'));
+
+      // Return updated file with new key inserted
+      return `\`\`\`typescript
+export default {
+  existing: {
+    key: "existing value",
+  },
+  new: {
+    key: "新しい値",
+  },
+};
+\`\`\``;
+    },
+  };
+
+  try {
+    // Execute translateAndUpdateFile
+    await translateAndUpdateFile(testFilePath, [{ key: "new.key", sourceValue: "New Value" }], "en", "ja", mockService);
+
+    // Verify file was updated
+    const updatedContent = await fs.readFile(testFilePath, "utf-8");
+    assert.ok(updatedContent.includes("new: {"));
+    assert.ok(updatedContent.includes('key: "新しい値"'));
+    assert.ok(updatedContent.includes("existing: {"));
+    assert.ok(!updatedContent.includes("```")); // Markdown fences should be removed
+  } finally {
+    // Cleanup
+    await fs.rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("translateAndUpdateFile integration: rejects dangerous keys", async () => {
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "i18n-test-"));
+  const testFilePath = path.join(tempDir, "test.ts");
+  await fs.writeFile(testFilePath, "export default {};", "utf-8");
+
+  const mockService: TranslationService = {
+    async translate(): Promise<string> {
+      throw new Error("Should not be called");
+    },
+  };
+
+  try {
+    await assert.rejects(async () => {
+      await translateAndUpdateFile(
+        testFilePath,
+        [{ key: "__proto__.malicious", sourceValue: "bad" }],
+        "en",
+        "ja",
+        mockService,
+      );
+    }, /Dangerous key detected/);
+  } finally {
+    await fs.rm(tempDir, { recursive: true, force: true });
+  }
 });
