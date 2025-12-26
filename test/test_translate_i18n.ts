@@ -1,5 +1,5 @@
 // Note: All unit tests have been removed because the translate-i18n.ts script now uses
-// LLM-based translation and file editing (translateAndUpdateMainFile, translateAndUpdateNotifyFile).
+// LLM-based translation and file editing (translateAndUpdateFile).
 //
 // The previous helper functions (buildObjectFromKey, mergeDeep, formatTypescriptObject) have been
 // removed from the implementation as they are no longer needed with the LLM-based approach.
