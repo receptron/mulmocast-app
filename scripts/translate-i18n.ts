@@ -22,6 +22,96 @@ interface GoogleGenerativeAIError extends Error {
   }>;
 }
 
+async function generateTranslations() {
+  console.log("🌍 Starting i18n translation generation...\n");
+
+  // Initialize Gemini API client (only when actually running translations)
+  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+  if (!GEMINI_API_KEY) {
+    throw new Error(
+      "GEMINI_API_KEY environment variable is not set. Please set it with: export GEMINI_API_KEY=your_api_key",
+    );
+  }
+
+  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+  // Check main translation files
+  console.log("Checking: en.ts <-> ja.ts");
+  const enMap = collectKeysWithValues(en);
+  const jaMap = collectKeysWithValues(ja);
+  const missingKeysMain = findMissingKeys(enMap, jaMap);
+
+  // Check notify translation files
+  console.log("Checking: en_notify.ts <-> ja_notify.ts");
+  const enNotifyMap = collectKeysWithValues(en_notify);
+  const jaNotifyMap = collectKeysWithValues(ja_notify);
+  const missingKeysNotify = findMissingKeys(enNotifyMap, jaNotifyMap);
+
+  if (missingKeysMain.length === 0 && missingKeysNotify.length === 0) {
+    console.log("\n✅ All translations are complete! No missing keys found.");
+    return;
+  }
+
+  console.log(`\nFound ${missingKeysMain.length + missingKeysNotify.length} missing translation(s)\n`);
+
+  // Prepare source keys grouped by file and target language
+  const jaMainKeys: Array<{ key: string; sourceValue: string }> = [];
+  const enMainKeys: Array<{ key: string; sourceValue: string }> = [];
+  const jaNotifyKeys: Array<{ key: string; sourceValue: string }> = [];
+  const enNotifyKeys: Array<{ key: string; sourceValue: string }> = [];
+
+  for (const missing of missingKeysMain) {
+    if (missing.enValue && !missing.jaValue) {
+      jaMainKeys.push({ key: missing.key, sourceValue: missing.enValue });
+    } else if (missing.jaValue && !missing.enValue) {
+      enMainKeys.push({ key: missing.key, sourceValue: missing.jaValue });
+    }
+  }
+
+  for (const missing of missingKeysNotify) {
+    if (missing.enValue && !missing.jaValue) {
+      jaNotifyKeys.push({ key: missing.key, sourceValue: missing.enValue });
+    } else if (missing.jaValue && !missing.enValue) {
+      enNotifyKeys.push({ key: missing.key, sourceValue: missing.jaValue });
+    }
+  }
+
+  // Translate and update files in one step
+  console.log("\n🔄 Translating and updating files...");
+
+  const i18nDir = path.join(process.cwd(), "src/renderer/i18n");
+
+  if (jaMainKeys.length > 0) {
+    console.log(`\n📝 Processing ja.ts (${jaMainKeys.length} key(s) to translate from English)...`);
+    await translateAndUpdateFile(path.join(i18nDir, "ja.ts"), jaMainKeys, "en", "ja", model);
+    console.log("  ✅ Updated: ja.ts");
+  }
+
+  if (enMainKeys.length > 0) {
+    console.log(`\n📝 Processing en.ts (${enMainKeys.length} key(s) to translate from Japanese)...`);
+    await translateAndUpdateFile(path.join(i18nDir, "en.ts"), enMainKeys, "ja", "en", model);
+    console.log("  ✅ Updated: en.ts");
+  }
+
+  if (jaNotifyKeys.length > 0) {
+    console.log(`\n📝 Processing ja_notify.ts (${jaNotifyKeys.length} key(s) to translate from English)...`);
+    await translateAndUpdateFile(path.join(i18nDir, "ja_notify.ts"), jaNotifyKeys, "en", "ja", model);
+    console.log("  ✅ Updated: ja_notify.ts");
+  }
+
+  if (enNotifyKeys.length > 0) {
+    console.log(`\n📝 Processing en_notify.ts (${enNotifyKeys.length} key(s) to translate from Japanese)...`);
+    await translateAndUpdateFile(path.join(i18nDir, "en_notify.ts"), enNotifyKeys, "ja", "en", model);
+    console.log("  ✅ Updated: en_notify.ts");
+  }
+
+  console.log("\n✨ Translation generation complete!");
+}
+
+// Helper functions
+
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -127,94 +217,6 @@ Please provide the complete updated file content:`;
     console.error(`  ⚠️  Failed to update file ${filePath}:`, geminiError.message);
     throw error;
   }
-}
-
-async function generateTranslations() {
-  console.log("🌍 Starting i18n translation generation...\n");
-
-  // Initialize Gemini API client (only when actually running translations)
-  const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-
-  if (!GEMINI_API_KEY) {
-    throw new Error(
-      "GEMINI_API_KEY environment variable is not set. Please set it with: export GEMINI_API_KEY=your_api_key",
-    );
-  }
-
-  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
-  // Check main translation files
-  console.log("Checking: en.ts <-> ja.ts");
-  const enMap = collectKeysWithValues(en);
-  const jaMap = collectKeysWithValues(ja);
-  const missingKeysMain = findMissingKeys(enMap, jaMap);
-
-  // Check notify translation files
-  console.log("Checking: en_notify.ts <-> ja_notify.ts");
-  const enNotifyMap = collectKeysWithValues(en_notify);
-  const jaNotifyMap = collectKeysWithValues(ja_notify);
-  const missingKeysNotify = findMissingKeys(enNotifyMap, jaNotifyMap);
-
-  if (missingKeysMain.length === 0 && missingKeysNotify.length === 0) {
-    console.log("\n✅ All translations are complete! No missing keys found.");
-    return;
-  }
-
-  console.log(`\nFound ${missingKeysMain.length + missingKeysNotify.length} missing translation(s)\n`);
-
-  // Prepare source keys grouped by file and target language
-  const jaMainKeys: Array<{ key: string; sourceValue: string }> = [];
-  const enMainKeys: Array<{ key: string; sourceValue: string }> = [];
-  const jaNotifyKeys: Array<{ key: string; sourceValue: string }> = [];
-  const enNotifyKeys: Array<{ key: string; sourceValue: string }> = [];
-
-  for (const missing of missingKeysMain) {
-    if (missing.enValue && !missing.jaValue) {
-      jaMainKeys.push({ key: missing.key, sourceValue: missing.enValue });
-    } else if (missing.jaValue && !missing.enValue) {
-      enMainKeys.push({ key: missing.key, sourceValue: missing.jaValue });
-    }
-  }
-
-  for (const missing of missingKeysNotify) {
-    if (missing.enValue && !missing.jaValue) {
-      jaNotifyKeys.push({ key: missing.key, sourceValue: missing.enValue });
-    } else if (missing.jaValue && !missing.enValue) {
-      enNotifyKeys.push({ key: missing.key, sourceValue: missing.jaValue });
-    }
-  }
-
-  // Translate and update files in one step
-  console.log("\n🔄 Translating and updating files...");
-
-  const i18nDir = path.join(process.cwd(), "src/renderer/i18n");
-
-  if (jaMainKeys.length > 0) {
-    console.log(`\n📝 Processing ja.ts (${jaMainKeys.length} key(s) to translate from English)...`);
-    await translateAndUpdateFile(path.join(i18nDir, "ja.ts"), jaMainKeys, "en", "ja", model);
-    console.log("  ✅ Updated: ja.ts");
-  }
-
-  if (enMainKeys.length > 0) {
-    console.log(`\n📝 Processing en.ts (${enMainKeys.length} key(s) to translate from Japanese)...`);
-    await translateAndUpdateFile(path.join(i18nDir, "en.ts"), enMainKeys, "ja", "en", model);
-    console.log("  ✅ Updated: en.ts");
-  }
-
-  if (jaNotifyKeys.length > 0) {
-    console.log(`\n📝 Processing ja_notify.ts (${jaNotifyKeys.length} key(s) to translate from English)...`);
-    await translateAndUpdateFile(path.join(i18nDir, "ja_notify.ts"), jaNotifyKeys, "en", "ja", model);
-    console.log("  ✅ Updated: ja_notify.ts");
-  }
-
-  if (enNotifyKeys.length > 0) {
-    console.log(`\n📝 Processing en_notify.ts (${enNotifyKeys.length} key(s) to translate from Japanese)...`);
-    await translateAndUpdateFile(path.join(i18nDir, "en_notify.ts"), enNotifyKeys, "ja", "en", model);
-    console.log("  ✅ Updated: en_notify.ts");
-  }
-
-  console.log("\n✨ Translation generation complete!");
 }
 
 // Export functions for testing
