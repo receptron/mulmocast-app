@@ -184,7 +184,7 @@
 
 <script setup lang="ts">
 // vue
-import { ref, computed, useTemplateRef } from "vue";
+import { ref, computed, useTemplateRef, onMounted, watch } from "vue";
 import { Send, Loader2, FileCode } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 
@@ -579,4 +579,28 @@ const undoMessages = () => {
 const copyMessageToClipboard = async () => {
   await window.electronAPI.writeClipboardText(JSON.stringify(messageHistory.value ?? [], null, 2));
 };
+
+// Load conversation mode and template index from settings
+onMounted(async () => {
+  const settings = await window.electronAPI.settings.get();
+  if (settings.CHAT_CONVERSATION_MODE) {
+    conversationMode.value = settings.CHAT_CONVERSATION_MODE;
+  }
+  if (settings.CHAT_TEMPLATE_INDEX !== undefined) {
+    selectedTemplateIndex.value = settings.CHAT_TEMPLATE_INDEX;
+  }
+});
+
+// Save conversation mode and template index to settings when changed
+watch(conversationMode, async (newValue) => {
+  const settings = await window.electronAPI.settings.get();
+  settings.CHAT_CONVERSATION_MODE = newValue;
+  await window.electronAPI.settings.set(settings);
+});
+
+watch(selectedTemplateIndex, async (newValue) => {
+  const settings = await window.electronAPI.settings.get();
+  settings.CHAT_TEMPLATE_INDEX = newValue;
+  await window.electronAPI.settings.set(settings);
+});
 </script>
