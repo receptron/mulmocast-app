@@ -138,6 +138,13 @@ export function validateKeys(keys: string[]): void {
 }
 
 /**
+ * Escapes special characters in translation values to prevent prompt structure breakage
+ */
+export function escapeValue(value: string): string {
+  return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n");
+}
+
+/**
  * Builds translation prompt (deterministic for testing)
  */
 export function buildTranslationPrompt(
@@ -146,7 +153,7 @@ export function buildTranslationPrompt(
   sourceLang: "English" | "Japanese",
   targetLang: "English" | "Japanese",
 ): string {
-  const keysToTranslate = sourceKeys.map((k) => `  - ${k.key}: "${k.sourceValue}"`).join("\n");
+  const keysToTranslate = sourceKeys.map((k) => `  - ${k.key}: "${escapeValue(k.sourceValue)}"`).join("\n");
 
   return `You are a TypeScript code editor and professional translator for a software application UI.
 

@@ -5,6 +5,7 @@ import path from "path";
 import os from "os";
 import {
   validateKeys,
+  escapeValue,
   buildTranslationPrompt,
   cleanLLMResponse,
   withRetry,
@@ -65,6 +66,32 @@ test("validateKeys: handles multiple keys with mixed validity", () => {
   assert.throws(() => validateKeys(["valid.key", "__proto__", "another.valid"]), /Dangerous key detected/);
 });
 
+// escapeValue tests
+
+test("escapeValue: escapes double quotes", () => {
+  assert.strictEqual(escapeValue('Say "Hello"'), 'Say \\"Hello\\"');
+});
+
+test("escapeValue: escapes backslashes", () => {
+  assert.strictEqual(escapeValue("C:\\Users\\name"), "C:\\\\Users\\\\name");
+});
+
+test("escapeValue: escapes newlines", () => {
+  assert.strictEqual(escapeValue("Line 1\nLine 2"), "Line 1\\nLine 2");
+});
+
+test("escapeValue: escapes all special characters together", () => {
+  assert.strictEqual(escapeValue('Path: "C:\\test"\nDone'), 'Path: \\"C:\\\\test\\"\\nDone');
+});
+
+test("escapeValue: handles empty string", () => {
+  assert.strictEqual(escapeValue(""), "");
+});
+
+test("escapeValue: handles string with no special characters", () => {
+  assert.strictEqual(escapeValue("Hello World"), "Hello World");
+});
+
 // buildTranslationPrompt tests
 
 test("buildTranslationPrompt: generates deterministic output", () => {
@@ -120,15 +147,25 @@ test("buildTranslationPrompt: formats multiple keys correctly", () => {
   assert.ok(prompt.includes('key3: "value3"'));
 });
 
-test("buildTranslationPrompt: preserves special characters in values", () => {
+test("buildTranslationPrompt: escapes special characters in values", () => {
   const prompt = buildTranslationPrompt(
     "",
-    [{ key: "message", sourceValue: "Line 1\nLine 2\nLine 3" }],
+    [{ key: "message", sourceValue: 'Line 1\nLine 2\nLine 3 with "quotes"' }],
     "English",
     "Japanese",
   );
 
-  assert.ok(prompt.includes('message: "Line 1\nLine 2\nLine 3"'));
+  // Special characters should be escaped
+  assert.ok(prompt.includes('message: "Line 1\\nLine 2\\nLine 3 with \\"quotes\\""'));
+  // Raw newlines and quotes should not be in the prompt
+  assert.ok(!prompt.includes("Line 1\nLine 2"));
+  assert.ok(!prompt.includes('with "quotes"'));
+});
+
+test("buildTranslationPrompt: escapes backslashes in values", () => {
+  const prompt = buildTranslationPrompt("", [{ key: "path", sourceValue: "C:\\Users\\name" }], "English", "Japanese");
+
+  assert.ok(prompt.includes('path: "C:\\\\Users\\\\name"'));
 });
 
 // cleanLLMResponse tests
