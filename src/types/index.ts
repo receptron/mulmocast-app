@@ -76,6 +76,8 @@ export type Settings = {
   USER_LEVEL: string;
   onboardProject: number;
   DARK_MODE?: string; // Backward compatible
+  CHAT_CONVERSATION_MODE?: string;
+  CHAT_TEMPLATE_INDEX?: number;
 };
 
 export type MediaType = "image" | "movie";
