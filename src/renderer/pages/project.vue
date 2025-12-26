@@ -39,7 +39,9 @@
                 <Chat
                   :mulmoScript="mulmoScriptHistoryStore.currentMulmoScript"
                   :messages="projectMetadata?.chatMessages"
+                  :projectMetadata="projectMetadata"
                   @update:updateChatMessages="handleUpdateChatMessages"
+                  @update:projectMetadata="handleUpdateProjectMetadata"
                   @updateMulmoScript="handleUpdateMulmoScriptWithNotify"
                   @resetMediaFiles="resetMediaFiles"
                   class="flex h-full flex-col"
@@ -513,6 +515,11 @@ const saveProjectMetadataDebounced = useDebounceFn(saveProjectMetadata, 1000);
 const handleUpdateChatMessages = (messages: ChatMessage[]) => {
   projectMetadata.value.chatMessages = messages;
   saveProjectMetadataDebounced();
+};
+
+const handleUpdateProjectMetadata = (updatedMetadata: ProjectMetadata) => {
+  projectMetadata.value = updatedMetadata;
+  saveProjectMetadata({ updateTimestamp: false });
 };
 
 const handleUpdateScriptEditorActiveTab = async (tab: ScriptEditorTab) => {
