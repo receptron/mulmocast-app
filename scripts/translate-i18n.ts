@@ -26,79 +26,6 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function buildObjectFromKey(key: string, value: string): Record<string, unknown> {
-  const parts = key.split(".");
-  const result: Record<string, unknown> = {};
-
-  // Validate key segments to prevent prototype pollution
-  for (const part of parts) {
-    if (!part || part === "__proto__" || part === "constructor" || part === "prototype") {
-      throw new Error(`Invalid key segment: "${part}" in key "${key}"`);
-    }
-  }
-
-  let current: Record<string, unknown> = result;
-  for (let i = 0; i < parts.length - 1; i++) {
-    current[parts[i]] = {};
-    current = current[parts[i]] as Record<string, unknown>;
-  }
-
-  current[parts[parts.length - 1]] = value;
-  return result;
-}
-
-function mergeDeep(target: Record<string, unknown>, source: Record<string, unknown>): Record<string, unknown> {
-  const output = { ...target };
-
-  for (const key in source) {
-    // Only process own properties to prevent prototype pollution
-    if (!Object.prototype.hasOwnProperty.call(source, key)) {
-      continue;
-    }
-
-    // Additional security check for dangerous keys
-    if (key === "__proto__" || key === "constructor" || key === "prototype") {
-      continue;
-    }
-
-    if (
-      source[key] &&
-      typeof source[key] === "object" &&
-      !Array.isArray(source[key]) &&
-      target[key] &&
-      typeof target[key] === "object" &&
-      !Array.isArray(target[key])
-    ) {
-      output[key] = mergeDeep(target[key] as Record<string, unknown>, source[key] as Record<string, unknown>);
-    } else {
-      output[key] = source[key];
-    }
-  }
-
-  return output;
-}
-
-function formatTypescriptObject(obj: Record<string, unknown>, indent = 0): string {
-  const spaces = "  ".repeat(indent);
-  const innerSpaces = "  ".repeat(indent + 1);
-
-  const entries = Object.entries(obj).map(([key, value]) => {
-    const safeKey = /^[a-zA-Z_]\w*$/.test(key) ? key : `"${key}"`;
-
-    if (value && typeof value === "object" && !Array.isArray(value)) {
-      return `${innerSpaces}${safeKey}: ${formatTypescriptObject(value as Record<string, unknown>, indent + 1)}`;
-    } else if (typeof value === "string") {
-      // Escape special characters in string values
-      const escapedValue = value.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n");
-      return `${innerSpaces}${safeKey}: "${escapedValue}"`;
-    } else {
-      return `${innerSpaces}${safeKey}: ${JSON.stringify(value)}`;
-    }
-  });
-
-  return `{\n${entries.join(",\n")}\n${spaces}}`;
-}
-
 async function translateAndUpdateMainFile(
   filePath: string,
   sourceKeys: Array<{ key: string; sourceValue: string }>,
@@ -401,13 +328,7 @@ async function generateTranslations() {
 }
 
 // Export functions for testing
-export {
-  buildObjectFromKey,
-  mergeDeep,
-  formatTypescriptObject,
-  translateAndUpdateMainFile,
-  translateAndUpdateNotifyFile,
-};
+export { translateAndUpdateMainFile, translateAndUpdateNotifyFile };
 
 // Only run main function if this file is executed directly
 if (import.meta.url === `file://${process.argv[1]}`) {
