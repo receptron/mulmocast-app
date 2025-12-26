@@ -36,6 +36,7 @@ async function generateTranslations() {
 
   const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
   const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+  const translationService = new GeminiTranslationService(model);
 
   // Check main translation files
   console.log("Checking: en.ts <-> ja.ts");
@@ -85,58 +86,69 @@ async function generateTranslations() {
 
   if (jaMainKeys.length > 0) {
     console.log(`\n📝 Processing ja.ts (${jaMainKeys.length} key(s) to translate from English)...`);
-    await translateAndUpdateFile(path.join(i18nDir, "ja.ts"), jaMainKeys, "en", "ja", model);
+    await translateAndUpdateFile(path.join(i18nDir, "ja.ts"), jaMainKeys, "en", "ja", translationService);
     console.log("  ✅ Updated: ja.ts");
   }
 
   if (enMainKeys.length > 0) {
     console.log(`\n📝 Processing en.ts (${enMainKeys.length} key(s) to translate from Japanese)...`);
-    await translateAndUpdateFile(path.join(i18nDir, "en.ts"), enMainKeys, "ja", "en", model);
+    await translateAndUpdateFile(path.join(i18nDir, "en.ts"), enMainKeys, "ja", "en", translationService);
     console.log("  ✅ Updated: en.ts");
   }
 
   if (jaNotifyKeys.length > 0) {
     console.log(`\n📝 Processing ja_notify.ts (${jaNotifyKeys.length} key(s) to translate from English)...`);
-    await translateAndUpdateFile(path.join(i18nDir, "ja_notify.ts"), jaNotifyKeys, "en", "ja", model);
+    await translateAndUpdateFile(path.join(i18nDir, "ja_notify.ts"), jaNotifyKeys, "en", "ja", translationService);
     console.log("  ✅ Updated: ja_notify.ts");
   }
 
   if (enNotifyKeys.length > 0) {
     console.log(`\n📝 Processing en_notify.ts (${enNotifyKeys.length} key(s) to translate from Japanese)...`);
-    await translateAndUpdateFile(path.join(i18nDir, "en_notify.ts"), enNotifyKeys, "ja", "en", model);
+    await translateAndUpdateFile(path.join(i18nDir, "en_notify.ts"), enNotifyKeys, "ja", "en", translationService);
     console.log("  ✅ Updated: en_notify.ts");
   }
 
   console.log("\n✨ Translation generation complete!");
 }
 
-// Helper functions
+// Pure functions (unit testable)
 
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+/**
+ * Validates translation keys for security and format
+ * @throws Error if any key is invalid
+ */
+export function validateKeys(keys: string[]): void {
+  const dangerousKeys = ["__proto__", "constructor", "prototype"];
+
+  for (const key of keys) {
+    // Check for dangerous keys
+    const segments = key.split(".");
+    for (const segment of segments) {
+      if (dangerousKeys.includes(segment)) {
+        throw new Error(`Dangerous key detected: "${key}" contains forbidden segment "${segment}"`);
+      }
+      // Check for empty segments (consecutive dots or leading/trailing dots)
+      if (segment === "") {
+        throw new Error(
+          `Invalid key format: "${key}" contains empty segment (consecutive dots or leading/trailing dot)`,
+        );
+      }
+    }
+  }
 }
 
-async function translateAndUpdateFile(
-  filePath: string,
+/**
+ * Builds translation prompt (deterministic for testing)
+ */
+export function buildTranslationPrompt(
+  originalContent: string,
   sourceKeys: Array<{ key: string; sourceValue: string }>,
-  sourceLanguage: "en" | "ja",
-  targetLanguage: "en" | "ja",
-  model: GenerativeModel,
-  retryCount = 0,
-): Promise<void> {
-  if (sourceKeys.length === 0) return;
-
-  const maxRetries = 3;
-  const sourceLang = sourceLanguage === "en" ? "English" : "Japanese";
-  const targetLang = targetLanguage === "en" ? "English" : "Japanese";
-
-  // Read the original file
-  const originalContent = await fs.readFile(filePath, "utf-8");
-
-  // Build the list of missing keys to translate
+  sourceLang: string,
+  targetLang: string,
+): string {
   const keysToTranslate = sourceKeys.map((k) => `  - ${k.key}: "${k.sourceValue}"`).join("\n");
 
-  const prompt = `You are a TypeScript code editor and professional translator for a software application UI.
+  return `You are a TypeScript code editor and professional translator for a software application UI.
 
 I need you to:
 1. Translate missing keys from ${sourceLang} to ${targetLang}
@@ -171,24 +183,51 @@ FILE EDITING REQUIREMENTS:
 9. Return ONLY the complete updated file content, nothing else
 
 Please provide the complete updated file content:`;
+}
 
-  try {
-    const result = await model.generateContent(prompt);
+/**
+ * Removes markdown code fences from LLM response
+ */
+export function cleanLLMResponse(response: string): string {
+  let cleaned = response.trim();
+  cleaned = cleaned.replace(/^```typescript\n/, "").replace(/\n```$/, "");
+  cleaned = cleaned.replace(/^```\n/, "").replace(/\n```$/, "");
+  return cleaned;
+}
+
+// Abstraction layer (mockable)
+
+export interface TranslationService {
+  translate(prompt: string): Promise<string>;
+}
+
+export class GeminiTranslationService implements TranslationService {
+  constructor(private model: GenerativeModel) {}
+
+  async translate(prompt: string): Promise<string> {
+    const result = await this.model.generateContent(prompt);
     const response = result.response;
-    let updatedContent = response.text().trim();
+    return response.text();
+  }
+}
 
-    // Remove markdown code fences if the model added them
-    updatedContent = updatedContent.replace(/^```typescript\n/, "").replace(/\n```$/, "");
-    updatedContent = updatedContent.replace(/^```\n/, "").replace(/\n```$/, "");
+// Retry policy (pure function)
 
-    // Write back
-    await fs.writeFile(filePath, updatedContent, "utf-8");
+export interface RetryOptions {
+  maxRetries: number;
+  onRetry?: (attempt: number, delay: number) => void;
+  onMaxRetriesExceeded?: (filePath: string) => void;
+}
+
+export async function withRetry<T>(fn: () => Promise<T>, options: RetryOptions, retryCount = 0): Promise<T> {
+  try {
+    return await fn();
   } catch (error) {
     const geminiError = error as GoogleGenerativeAIError;
 
     // Handle rate limit errors (429)
     if (geminiError.status === 429) {
-      if (retryCount < maxRetries) {
+      if (retryCount < options.maxRetries) {
         // Extract retry delay from error details
         let retryDelay = 2000; // default 2 seconds
         if (geminiError.errorDetails) {
@@ -201,22 +240,69 @@ Please provide the complete updated file content:`;
           }
         }
 
-        console.log(
-          `  ⏳ Rate limit reached. Retrying in ${retryDelay / 1000}s... (attempt ${retryCount + 1}/${maxRetries})`,
-        );
+        if (options.onRetry) {
+          options.onRetry(retryCount + 1, retryDelay);
+        }
+
         await sleep(retryDelay);
-        return translateAndUpdateFile(filePath, sourceKeys, sourceLanguage, targetLanguage, model, retryCount + 1);
+        return withRetry(fn, options, retryCount + 1);
       } else {
-        console.error(`  ❌ Max retries (${maxRetries}) exceeded for file "${filePath}"`);
-        console.error(`  💡 Please wait a moment and run the script again, or check your API quota.`);
+        if (options.onMaxRetriesExceeded) {
+          options.onMaxRetriesExceeded("");
+        }
         throw error;
       }
     }
 
-    // Handle other errors
-    console.error(`  ⚠️  Failed to update file ${filePath}:`, geminiError.message);
     throw error;
   }
+}
+
+// Helper functions
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function translateAndUpdateFile(
+  filePath: string,
+  sourceKeys: Array<{ key: string; sourceValue: string }>,
+  sourceLanguage: "en" | "ja",
+  targetLanguage: "en" | "ja",
+  translationService: TranslationService,
+): Promise<void> {
+  if (sourceKeys.length === 0) return;
+
+  // Validate keys
+  const keys = sourceKeys.map((k) => k.key);
+  validateKeys(keys);
+
+  const sourceLang = sourceLanguage === "en" ? "English" : "Japanese";
+  const targetLang = targetLanguage === "en" ? "English" : "Japanese";
+
+  // Read the original file
+  const originalContent = await fs.readFile(filePath, "utf-8");
+
+  // Build prompt
+  const prompt = buildTranslationPrompt(originalContent, sourceKeys, sourceLang, targetLang);
+
+  // Translate with retry
+  const rawResponse = await withRetry(() => translationService.translate(prompt), {
+    maxRetries: 3,
+    onRetry: (attempt, delay) => {
+      console.log(`  ⏳ Rate limit reached. Retrying in ${delay / 1000}s... (attempt ${attempt}/3)`);
+    },
+    onMaxRetriesExceeded: () => {
+      console.error(`  ❌ Max retries (3) exceeded for file "${filePath}"`);
+      console.error(`  💡 Please wait a moment and run the script again, or check your API quota.`);
+    },
+  });
+
+  // Clean response
+  const updatedContent = cleanLLMResponse(rawResponse);
+
+  // Write back
+  await fs.writeFile(filePath, updatedContent, "utf-8");
 }
 
 // Export functions for testing
