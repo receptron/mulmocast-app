@@ -593,6 +593,7 @@ const lang = {
         sifi_story: "Multi-character Story",
         trailer: "Movie Trailer template",
         vision: "Business Analysis",
+        vertical_short_nano: "Vertical Short (Nano Banana)",
       },
       prompt: {
         generatePrompt:
@@ -602,10 +603,19 @@ const lang = {
         presentation: "Presentation",
         dialogue: "Dialogue",
         story: "Story",
+        shortForm: "Short Form (5 beats)",
       },
       continue: "continue",
       styleTemplateNote:
         "Select a style and press '{createScriptButton}' to generate a script based on the selected style.",
+      quickGenerate: {
+        title: "Quick Generate",
+        verticalShort: "Vertical Short (5 beats)",
+        description: "Enter a topic and click the button to generate a vertical short video script",
+        error: {
+          noTopic: "Please enter a topic first",
+        },
+      },
     },
   },
   beat: {

@@ -100,6 +100,17 @@
         </div>
       </div>
 
+      <!-- Quick Generate Section -->
+      <div class="border-border bg-muted/30 rounded-lg border p-3">
+        <h3 class="mb-2 text-sm font-medium">{{ t("project.chat.quickGenerate.title") }}</h3>
+        <div class="flex gap-2">
+          <Button size="sm" @click="generateVerticalShort" :disabled="isRunning || noChatText" class="flex items-center gap-2">
+            📱 {{ t("project.chat.quickGenerate.verticalShort") }}
+          </Button>
+        </div>
+        <p class="text-muted-foreground mt-2 text-xs">{{ t("project.chat.quickGenerate.description") }}</p>
+      </div>
+
       <div class="flex flex-wrap items-start gap-4" v-if="messages.length > 0">
         <div class="flex gap-2">
           <StyleTemplate :isPro="globalStore.userIsPro" v-model="selectedTemplateIndex" ref="styleTemplate" />
@@ -226,6 +237,7 @@ import ToolsMessage from "./chat/tools_message.vue";
 import StyleTemplate from "./chat/style_template.vue";
 
 import { graphChatWithSearch } from "./chat/graph";
+import { customPromptTemplates } from "@/data/custom_templates";
 import mulmoScriptValidatorAgent from "../../agents/mulmo_script_validator";
 import mulmoVisionAgent from "../../agents/mulmo_vision_agent";
 import mulmoScriptAgent from "../../agents/mulmo_script";
@@ -603,4 +615,39 @@ watch(selectedTemplateIndex, async (newValue) => {
   settings.CHAT_TEMPLATE_INDEX = newValue;
   await window.electronAPI.settings.set(settings);
 });
+
+// Generate vertical short video
+const allTemplates = [...promptTemplates, ...customPromptTemplates];
+
+const generateVerticalShort = async () => {
+  if (!userInput.value.trim()) {
+    notifyError(t("project.chat.quickGenerate.error.noTopic"));
+    return;
+  }
+
+  // Find and select vertical short template
+  const verticalShortIndex = allTemplates.findIndex((t) => t.filename === "vertical_short_nano");
+
+  if (verticalShortIndex !== -1) {
+    selectedTemplateIndex.value = verticalShortIndex;
+  }
+
+  // Set conversation mode to shortForm
+  conversationMode.value = "shortForm";
+
+  // Enhance prompt for vertical short video
+  const enhancedPrompt = `Create a compelling 5-beat vertical short-form video script about: ${userInput.value}
+
+Requirements:
+- EXACTLY 5 beats (no more, no less)
+- Each beat: 10-15 seconds of speech
+- Simple, visual image prompts (no Japanese text)
+- Engaging for social media audience
+- Optimized for 9:16 vertical format`;
+
+  userInput.value = enhancedPrompt;
+
+  // Execute script generation
+  await run(true); // isScript = true
+};
 </script>
