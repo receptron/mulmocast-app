@@ -212,7 +212,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ConfirmDialog from "@/components/ui/confirm-dialog/ConfirmDialog.vue";
 
-import { ChatMessage } from "@/types";
+import { ChatMessage, ProjectMetadata } from "@/types";
 import { useStreamData } from "@/lib/stream";
 import { setRandomBeatId } from "@/lib/beat_util.js";
 
@@ -254,9 +254,10 @@ const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
 const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 
-const { messages = [] } = defineProps<{
+const props = defineProps<{
   messages: ChatMessage[];
   mulmoScript?: MulmoScript;
+  projectMetadata: ProjectMetadata;
 }>();
 
 const isDevelopment = import.meta.env.DEV;
@@ -267,6 +268,7 @@ const llmAgent = computed(() => {
 const emit = defineEmits<{
   updateMulmoScript: [value: MulmoScript];
   "update:updateChatMessages": [value: ChatMessage[]];
+  "update:projectMetadata": [value: ProjectMetadata];
   resetMediaFiles: [];
 }>();
 
@@ -296,7 +298,7 @@ const agentFilters = [
 ];
 // end of running
 
-const chatHistoryRef = useAutoScroll([streamData, userInput, messages]);
+const chatHistoryRef = useAutoScroll(computed(() => props.messages));
 
 const clearChat = () => {
   emit("update:updateChatMessages", []);
@@ -405,7 +407,7 @@ const run = async (isScript: false) => {
         role: "system",
         content: systemPrompt,
       },
-      ...messages
+      ...props.messages
         .map(filterMessage())
         .filter((message) => message.role !== "system")
         .filter((message) => {
@@ -490,7 +492,7 @@ const run = async (isScript: false) => {
       tools.push(...exaToolsAgent.tools);
       graphai.injectValue("passthrough", {
         exaToolsAgent: {
-          messages: messages.map(filterMessage()),
+          messages: props.messages.map(filterMessage()),
         },
       });
     }
@@ -544,7 +546,7 @@ const copyScript = async () => {
   userInput.value = head + " " + template;
 };
 
-const noChatMessages = computed(() => messages.length === 0);
+const noChatMessages = computed(() => props.messages.length === 0);
 const noChatText = computed(() => userInput.value.length === 0);
 
 const handleKeydown = (e: KeyboardEvent) => {
@@ -557,15 +559,15 @@ const handleKeydown = (e: KeyboardEvent) => {
   }
 };
 
-const messageHistory = ref([]); // For undo when editUser.
+const messageHistory = ref<ChatMessage[]>([]); // For undo when editUser.
 
 const editUser = (index: number) => {
   textareaRef.value.focus();
-  userInput.value = messages[index].content;
+  userInput.value = props.messages[index].content;
 
-  messageHistory.value = [...messages];
+  messageHistory.value = [...props.messages];
 
-  const newMessages = [...messages];
+  const newMessages = [...props.messages];
   newMessages.length = index;
   emit("update:updateChatMessages", newMessages);
 };
@@ -580,27 +582,40 @@ const copyMessageToClipboard = async () => {
   await window.electronAPI.writeClipboardText(JSON.stringify(messageHistory.value ?? [], null, 2));
 };
 
-// Load conversation mode and template index from settings
+// Hybrid approach: Load from project metadata first, then fall back to global settings
 onMounted(async () => {
   const settings = await window.electronAPI.settings.get();
-  if (settings.CHAT_CONVERSATION_MODE) {
+
+  // Priority: Project metadata > Global settings
+  if (props.projectMetadata.chatConversationMode) {
+    conversationMode.value = props.projectMetadata.chatConversationMode;
+  } else if (settings.CHAT_CONVERSATION_MODE) {
     conversationMode.value = settings.CHAT_CONVERSATION_MODE;
   }
-  if (settings.CHAT_TEMPLATE_INDEX !== undefined) {
+
+  if (props.projectMetadata.chatTemplateIndex !== undefined) {
+    selectedTemplateIndex.value = props.projectMetadata.chatTemplateIndex;
+  } else if (settings.CHAT_TEMPLATE_INDEX !== undefined) {
     selectedTemplateIndex.value = settings.CHAT_TEMPLATE_INDEX;
   }
 });
 
-// Save conversation mode and template index to settings when changed
+// Save to project metadata (per-project settings)
+const updateProjectMetadataSettings = (updates: Partial<ProjectMetadata>) => {
+  const updatedMetadata = {
+    ...props.projectMetadata,
+    ...updates,
+  };
+  emit("update:projectMetadata", updatedMetadata);
+};
+
+// Watch conversation mode and save to project metadata
 watch(conversationMode, async (newValue) => {
-  const settings = await window.electronAPI.settings.get();
-  settings.CHAT_CONVERSATION_MODE = newValue;
-  await window.electronAPI.settings.set(settings);
+  updateProjectMetadataSettings({ chatConversationMode: newValue });
 });
 
+// Watch template index and save to project metadata
 watch(selectedTemplateIndex, async (newValue) => {
-  const settings = await window.electronAPI.settings.get();
-  settings.CHAT_TEMPLATE_INDEX = newValue;
-  await window.electronAPI.settings.set(settings);
+  updateProjectMetadataSettings({ chatTemplateIndex: newValue });
 });
 </script>
