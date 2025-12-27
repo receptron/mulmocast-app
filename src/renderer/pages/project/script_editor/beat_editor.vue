@@ -561,9 +561,7 @@
             </div>
             <Card v-if="beat.speechOptions" class="mt-4 p-4">
               <div class="space-y-3">
-                <div
-                  v-if="providerSupportsInstruction(mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider)"
-                >
+                <div v-if="providerSupportsInstruction(mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider)">
                   <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
                   <Input
                     :model-value="beat.speechOptions?.instruction || ''"
