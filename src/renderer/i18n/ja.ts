@@ -486,6 +486,13 @@ const lang = {
         },
       },
       validationStatus: "検証ステータス",
+      styleInfo: {
+        speech: "音声",
+        image: "画像",
+        movie: "動画",
+        bgm: "BGM",
+        size: "サイズ",
+      },
     },
     productTabs: {
       tabs: {

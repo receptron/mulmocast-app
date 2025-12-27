@@ -489,6 +489,13 @@ const lang = {
         },
       },
       validationStatus: "Validation Status",
+      styleInfo: {
+        speech: "Speech",
+        image: "Image",
+        movie: "Movie",
+        bgm: "BGM",
+        size: "Size",
+      },
     },
     productTabs: {
       tabs: {
