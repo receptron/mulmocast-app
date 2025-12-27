@@ -1217,60 +1217,34 @@ const handleSpeechOptionsToggle = async (checked: boolean) => {
   emit("justSaveAndPushToHistory");
 };
 
-const handleInstructionChange = (value: string | undefined) => {
+const handleSpeechOptionChange = (key: string, value: string | undefined, isNumeric = false) => {
   const speechOptions = {
     ...props.beat.speechOptions,
   };
 
   if (isNull(value) || value === "") {
-    delete speechOptions.instruction;
+    delete (speechOptions as Record<string, unknown>)[key];
   } else {
-    speechOptions.instruction = value;
+    (speechOptions as Record<string, unknown>)[key] = isNumeric ? Number(value) : value;
   }
 
   update("speechOptions", speechOptions);
+};
+
+const handleInstructionChange = (value: string | undefined) => {
+  handleSpeechOptionChange("instruction", value);
 };
 
 const handleSpeedChange = (value: string | undefined) => {
-  const speechOptions = {
-    ...props.beat.speechOptions,
-  };
-
-  if (isNull(value) || value === "") {
-    delete speechOptions.speed;
-  } else {
-    speechOptions.speed = Number(value);
-  }
-
-  update("speechOptions", speechOptions);
+  handleSpeechOptionChange("speed", value, true);
 };
 
 const handleStabilityChange = (value: string | undefined) => {
-  const speechOptions = {
-    ...props.beat.speechOptions,
-  };
-
-  if (isNull(value) || value === "") {
-    delete speechOptions.stability;
-  } else {
-    speechOptions.stability = Number(value);
-  }
-
-  update("speechOptions", speechOptions);
+  handleSpeechOptionChange("stability", value, true);
 };
 
 const handleSimilarityBoostChange = (value: string | undefined) => {
-  const speechOptions = {
-    ...props.beat.speechOptions,
-  };
-
-  if (isNull(value) || value === "") {
-    delete speechOptions.similarity_boost;
-  } else {
-    speechOptions.similarity_boost = Number(value);
-  }
-
-  update("speechOptions", speechOptions);
+  handleSpeechOptionChange("similarity_boost", value, true);
 };
 
 const update = (path: string, value: unknown) => {
