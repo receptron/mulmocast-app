@@ -1,23 +1,23 @@
 <template>
   <div class="bg-muted/30 border-border mt-2 flex flex-wrap gap-2 rounded border p-2 text-xs">
     <div v-if="styleInfo.speech" class="flex items-center gap-1">
-      <span class="text-muted-foreground">Speech:</span>
+      <span class="text-muted-foreground">{{ t("project.scriptEditor.styleInfo.speech") }}:</span>
       <span class="font-medium">{{ styleInfo.speech }}</span>
     </div>
     <div v-if="styleInfo.image" class="flex items-center gap-1">
-      <span class="text-muted-foreground">Image:</span>
+      <span class="text-muted-foreground">{{ t("project.scriptEditor.styleInfo.image") }}:</span>
       <span class="font-medium">{{ styleInfo.image }}</span>
     </div>
     <div v-if="styleInfo.movie" class="flex items-center gap-1">
-      <span class="text-muted-foreground">Movie:</span>
+      <span class="text-muted-foreground">{{ t("project.scriptEditor.styleInfo.movie") }}:</span>
       <span class="font-medium">{{ styleInfo.movie }}</span>
     </div>
     <div v-if="styleInfo.bgm" class="flex items-center gap-1">
-      <span class="text-muted-foreground">BGM:</span>
+      <span class="text-muted-foreground">{{ t("project.scriptEditor.styleInfo.bgm") }}:</span>
       <span class="font-medium">{{ styleInfo.bgm }}</span>
     </div>
     <div v-if="styleInfo.orientation" class="flex items-center gap-1">
-      <span class="text-muted-foreground">Size:</span>
+      <span class="text-muted-foreground">{{ t("project.scriptEditor.styleInfo.size") }}:</span>
       <span class="font-medium">{{ styleInfo.orientation }}</span>
     </div>
   </div>
@@ -25,8 +25,11 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import type { MulmoScript } from "mulmocast/browser";
 import { bgmAssets } from "mulmocast/data";
+
+const { t } = useI18n();
 
 const props = defineProps<{
   mulmoScript: MulmoScript;
