@@ -215,6 +215,7 @@ import {
   defaultSpeechProvider,
 } from "@/../shared/constants";
 import { useMulmoScriptHistoryStore, useVoiceCloneStore } from "@/store";
+import { isNull } from "graphai";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label, Input } from "@/components/ui";
@@ -396,7 +397,7 @@ const handleProviderChange = async (provider: string) => {
 
 const handleSpeechOptionsChange = (key: string, value: string) => {
   // 空文字列の場合は削除
-  if (value === undefined || value === null || value === "") {
+  if (isNull(value) || value === "") {
     const newSpeechOptions = { ...props.speaker?.speechOptions };
     delete (newSpeechOptions as Record<string, unknown>)[key];
     emit("updateSpeakerData", { speechOptions: newSpeechOptions });

@@ -668,6 +668,7 @@ import {
   MEDIA_FILE_EXTENSIONS,
   type AudioExtension,
 } from "../../../../shared/constants";
+import { isNull } from "graphai";
 
 // components
 import MediaModal from "@/components/media_modal.vue";
@@ -1221,7 +1222,7 @@ const handleInstructionChange = (value: string | undefined) => {
     ...props.beat.speechOptions,
   };
 
-  if (value === undefined || value === null || value === "") {
+  if (isNull(value) || value === "") {
     delete speechOptions.instruction;
   } else {
     speechOptions.instruction = value;
@@ -1235,7 +1236,7 @@ const handleSpeedChange = (value: string | undefined) => {
     ...props.beat.speechOptions,
   };
 
-  if (value === undefined || value === null || value === "") {
+  if (isNull(value) || value === "") {
     delete speechOptions.speed;
   } else {
     speechOptions.speed = Number(value);
@@ -1249,7 +1250,7 @@ const handleStabilityChange = (value: string | undefined) => {
     ...props.beat.speechOptions,
   };
 
-  if (value === undefined || value === null || value === "") {
+  if (isNull(value) || value === "") {
     delete speechOptions.stability;
   } else {
     speechOptions.stability = Number(value);
@@ -1263,7 +1264,7 @@ const handleSimilarityBoostChange = (value: string | undefined) => {
     ...props.beat.speechOptions,
   };
 
-  if (value === undefined || value === null || value === "") {
+  if (isNull(value) || value === "") {
     delete speechOptions.similarity_boost;
   } else {
     speechOptions.similarity_boost = Number(value);
