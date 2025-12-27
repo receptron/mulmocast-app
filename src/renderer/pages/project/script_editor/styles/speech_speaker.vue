@@ -97,7 +97,7 @@
     <!-- speed -->
     <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
     <Input
-      :model-value="speaker?.speechOptions?.speed || ''"
+      :model-value="speaker?.speechOptions?.speed ?? ''"
       @update:model-value="(value) => handleSpeechOptionsChange('speed', value)"
       class="h-8"
       type="number"
@@ -128,7 +128,7 @@
       </span>
     </div>
     <Input
-      :model-value="speaker?.speechOptions?.stability || ''"
+      :model-value="speaker?.speechOptions?.stability ?? ''"
       @update:model-value="(value) => handleSpeechOptionsChange('stability', value)"
       class="h-8"
       type="number"
@@ -149,7 +149,7 @@
       </span>
     </div>
     <Input
-      :model-value="speaker?.speechOptions?.similarity_boost || ''"
+      :model-value="speaker?.speechOptions?.similarity_boost ?? ''"
       @update:model-value="(value) => handleSpeechOptionsChange('similarity_boost', value)"
       class="h-8"
       type="number"
@@ -395,14 +395,15 @@ const handleProviderChange = async (provider: string) => {
 };
 
 const handleSpeechOptionsChange = (key: string, value: string) => {
-  const processedValue = key === "speed" ? Number(value) : value;
-
-  if (processedValue === undefined || processedValue === null || processedValue === "") {
+  // 空文字列の場合は削除
+  if (value === undefined || value === null || value === "") {
     const newSpeechOptions = { ...props.speaker?.speechOptions };
     delete (newSpeechOptions as Record<string, unknown>)[key];
     emit("updateSpeakerData", { speechOptions: newSpeechOptions });
   } else {
-    emit("updateSpeakerData", { speechOptions: { [key]: processedValue } });
+    // 数値型のフィールドは Number に変換
+    const processedValue = key === "speed" || key === "stability" || key === "similarity_boost" ? Number(value) : value;
+    emit("updateSpeakerData", { speechOptions: { ...props.speaker?.speechOptions, [key]: processedValue } });
   }
 };
 

@@ -575,7 +575,7 @@
                 >
                   <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
                   <Input
-                    :model-value="beat.speechOptions?.speed || ''"
+                    :model-value="beat.speechOptions?.speed !== undefined ? String(beat.speechOptions.speed) : ''"
                     @update:model-value="handleSpeedChange"
                     class="h-8"
                     type="number"
@@ -597,7 +597,9 @@
                     </span>
                   </div>
                   <Input
-                    :model-value="beat.speechOptions?.stability || ''"
+                    :model-value="
+                      beat.speechOptions?.stability !== undefined ? String(beat.speechOptions.stability) : ''
+                    "
                     @update:model-value="handleStabilityChange"
                     class="h-8"
                     type="number"
@@ -619,7 +621,11 @@
                     </span>
                   </div>
                   <Input
-                    :model-value="beat.speechOptions?.similarity_boost || ''"
+                    :model-value="
+                      beat.speechOptions?.similarity_boost !== undefined
+                        ? String(beat.speechOptions.similarity_boost)
+                        : ''
+                    "
                     @update:model-value="handleSimilarityBoostChange"
                     class="h-8"
                     type="number"
