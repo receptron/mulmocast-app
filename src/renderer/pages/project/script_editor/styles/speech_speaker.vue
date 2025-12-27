@@ -86,11 +86,25 @@
     <!-- speed -->
     <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
     <Input
-      :model-value="speaker.speed || ''"
+      :model-value="speaker?.speechOptions?.speed || ''"
       @update:model-value="(value) => handleSpeechOptionsChange('speed', value)"
       class="h-8"
       type="number"
       :placeholder="t('parameters.speechParams.speedPlaceholder')"
+    />
+  </div>
+  <div v-if="providerSupportsElevenLabsOptions(localizedSpeaker.provider)">
+    <!-- speed -->
+    <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
+    <Input
+      :model-value="speaker?.speechOptions?.speed ?? ''"
+      @update:model-value="(value) => handleSpeechOptionsChange('speed', value)"
+      class="h-8"
+      type="number"
+      step="0.1"
+      min="0.7"
+      max="1.2"
+      :placeholder="t('parameters.speechParams.speedPlaceholderElevenlabs')"
     />
   </div>
   <div v-if="supportsInstruction">
@@ -101,6 +115,48 @@
       @update:model-value="(value) => handleSpeechOptionsChange('instruction', value)"
       class="h-8"
       :placeholder="t('parameters.speechParams.instructionPlaceholder')"
+    />
+  </div>
+  <div v-if="providerSupportsElevenLabsOptions(localizedSpeaker.provider)">
+    <!-- stability -->
+    <div class="group relative inline-block">
+      <Label class="text-xs">{{ t("parameters.speechParams.stability") }}</Label>
+      <span
+        class="bg-popover text-muted-foreground border-border pointer-events-none absolute bottom-full left-0 mb-2 w-80 rounded border px-2 py-1 text-xs opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+      >
+        {{ t("parameters.speechParams.stabilityTooltip") }}
+      </span>
+    </div>
+    <Input
+      :model-value="speaker?.speechOptions?.stability ?? ''"
+      @update:model-value="(value) => handleSpeechOptionsChange('stability', value)"
+      class="h-8"
+      type="number"
+      step="0.1"
+      min="0"
+      max="1"
+      :placeholder="t('parameters.speechParams.stabilityPlaceholder')"
+    />
+  </div>
+  <div v-if="providerSupportsElevenLabsOptions(localizedSpeaker.provider)">
+    <!-- similarity_boost -->
+    <div class="group relative inline-block">
+      <Label class="text-xs">{{ t("parameters.speechParams.similarityBoost") }}</Label>
+      <span
+        class="bg-popover text-muted-foreground border-border pointer-events-none absolute bottom-full left-0 mb-2 w-80 rounded border px-2 py-1 text-xs opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+      >
+        {{ t("parameters.speechParams.similarityBoostTooltip") }}
+      </span>
+    </div>
+    <Input
+      :model-value="speaker?.speechOptions?.similarity_boost ?? ''"
+      @update:model-value="(value) => handleSpeechOptionsChange('similarity_boost', value)"
+      class="h-8"
+      type="number"
+      step="0.1"
+      min="0"
+      max="1"
+      :placeholder="t('parameters.speechParams.similarityBoostPlaceholder')"
     />
   </div>
   <div v-if="false">
@@ -159,12 +215,13 @@ import {
   defaultSpeechProvider,
 } from "@/../shared/constants";
 import { useMulmoScriptHistoryStore, useVoiceCloneStore } from "@/store";
+import { isNull } from "graphai";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label, Input } from "@/components/ui";
 
 import SettingsAlert from "../settings_alert.vue";
-import { providerSupportsInstruction } from "../../../utils";
+import { providerSupportsInstruction, providerSupportsElevenLabsOptions } from "../../../utils";
 
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
@@ -339,14 +396,15 @@ const handleProviderChange = async (provider: string) => {
 };
 
 const handleSpeechOptionsChange = (key: string, value: string) => {
-  const processedValue = key === "speed" ? Number(value) : value;
-
-  if (processedValue === undefined || processedValue === null || processedValue === "") {
+  // 空文字列の場合は削除
+  if (isNull(value) || value === "") {
     const newSpeechOptions = { ...props.speaker?.speechOptions };
     delete (newSpeechOptions as Record<string, unknown>)[key];
     emit("updateSpeakerData", { speechOptions: newSpeechOptions });
   } else {
-    emit("updateSpeakerData", { speechOptions: { [key]: processedValue } });
+    // 数値型のフィールドは Number に変換
+    const processedValue = key === "speed" || key === "stability" || key === "similarity_boost" ? Number(value) : value;
+    emit("updateSpeakerData", { speechOptions: { ...props.speaker?.speechOptions, [key]: processedValue } });
   }
 };
 

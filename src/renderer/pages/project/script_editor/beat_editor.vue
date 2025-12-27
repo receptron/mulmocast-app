@@ -561,13 +561,78 @@
             </div>
             <Card v-if="beat.speechOptions" class="mt-4 p-4">
               <div class="space-y-3">
-                <div>
+                <div v-if="providerSupportsInstruction(mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider)">
                   <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
                   <Input
                     :model-value="beat.speechOptions?.instruction || ''"
                     @update:model-value="handleInstructionChange"
                     class="h-8"
                     :placeholder="t('parameters.speechParams.instructionPlaceholder')"
+                  />
+                </div>
+                <div
+                  v-if="providerSupportsElevenLabsOptions(mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider)"
+                >
+                  <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
+                  <Input
+                    :model-value="beat.speechOptions?.speed !== undefined ? String(beat.speechOptions.speed) : ''"
+                    @update:model-value="handleSpeedChange"
+                    class="h-8"
+                    type="number"
+                    step="0.1"
+                    min="0.7"
+                    max="1.2"
+                    :placeholder="t('parameters.speechParams.speedPlaceholderElevenlabs')"
+                  />
+                </div>
+                <div
+                  v-if="providerSupportsElevenLabsOptions(mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider)"
+                >
+                  <div class="group relative inline-block">
+                    <Label class="text-xs">{{ t("parameters.speechParams.stability") }}</Label>
+                    <span
+                      class="bg-popover text-muted-foreground border-border pointer-events-none absolute bottom-full left-0 mb-2 w-80 rounded border px-2 py-1 text-xs opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                    >
+                      {{ t("parameters.speechParams.stabilityTooltip") }}
+                    </span>
+                  </div>
+                  <Input
+                    :model-value="
+                      beat.speechOptions?.stability !== undefined ? String(beat.speechOptions.stability) : ''
+                    "
+                    @update:model-value="handleStabilityChange"
+                    class="h-8"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="1"
+                    :placeholder="t('parameters.speechParams.stabilityPlaceholder')"
+                  />
+                </div>
+                <div
+                  v-if="providerSupportsElevenLabsOptions(mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider)"
+                >
+                  <div class="group relative inline-block">
+                    <Label class="text-xs">{{ t("parameters.speechParams.similarityBoost") }}</Label>
+                    <span
+                      class="bg-popover text-muted-foreground border-border pointer-events-none absolute bottom-full left-0 mb-2 w-80 rounded border px-2 py-1 text-xs opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                    >
+                      {{ t("parameters.speechParams.similarityBoostTooltip") }}
+                    </span>
+                  </div>
+                  <Input
+                    :model-value="
+                      beat.speechOptions?.similarity_boost !== undefined
+                        ? String(beat.speechOptions.similarity_boost)
+                        : ''
+                    "
+                    @update:model-value="handleSimilarityBoostChange"
+                    class="h-8"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="1"
+                    :placeholder="t('parameters.speechParams.similarityBoostPlaceholder')"
                   />
                 </div>
               </div>
@@ -603,6 +668,7 @@ import {
   MEDIA_FILE_EXTENSIONS,
   type AudioExtension,
 } from "../../../../shared/constants";
+import { isNull } from "graphai";
 
 // components
 import MediaModal from "@/components/media_modal.vue";
@@ -631,7 +697,11 @@ import {
 import { mediaUri } from "@/lib/utils";
 import { notifyProgress, notifyError } from "@/lib/notification";
 import type { MulmoTransition } from "@/types";
-import { providerSupportsInstruction } from "../../utils";
+import {
+  providerSupportsInstruction,
+  providerSupportsElevenLabsOptions,
+  providerSupportsSpeechOptions,
+} from "../../utils";
 
 import Markdown from "./beat_editors/markdown.vue";
 import Chart from "./beat_editors/chart.vue";
@@ -736,8 +806,8 @@ const showSpeechOptionsSettings = computed(() => {
   const speaker = props.beat.speaker;
   if (!speaker) return false;
 
-  const speakerData = props.mulmoScript.speechParams?.speakers?.[speaker];
-  return providerSupportsInstruction(speakerData?.provider);
+  const provider = props.mulmoScript.speechParams?.speakers?.[speaker]?.provider;
+  return providerSupportsSpeechOptions(provider);
 });
 
 // Show Advanced Settings section if any subsection should be visible
@@ -1147,18 +1217,34 @@ const handleSpeechOptionsToggle = async (checked: boolean) => {
   emit("justSaveAndPushToHistory");
 };
 
-const handleInstructionChange = (value: string | undefined) => {
+const handleSpeechOptionChange = (key: string, value: string | undefined, isNumeric = false) => {
   const speechOptions = {
     ...props.beat.speechOptions,
   };
 
-  if (value === undefined || value === null || value === "") {
-    delete speechOptions.instruction;
+  if (isNull(value) || value === "") {
+    delete (speechOptions as Record<string, unknown>)[key];
   } else {
-    speechOptions.instruction = value;
+    (speechOptions as Record<string, unknown>)[key] = isNumeric ? Number(value) : value;
   }
 
   update("speechOptions", speechOptions);
+};
+
+const handleInstructionChange = (value: string | undefined) => {
+  handleSpeechOptionChange("instruction", value);
+};
+
+const handleSpeedChange = (value: string | undefined) => {
+  handleSpeechOptionChange("speed", value, true);
+};
+
+const handleStabilityChange = (value: string | undefined) => {
+  handleSpeechOptionChange("stability", value, true);
+};
+
+const handleSimilarityBoostChange = (value: string | undefined) => {
+  handleSpeechOptionChange("similarity_boost", value, true);
 };
 
 const update = (path: string, value: unknown) => {
