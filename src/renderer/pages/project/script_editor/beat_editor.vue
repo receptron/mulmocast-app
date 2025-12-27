@@ -561,7 +561,9 @@
             </div>
             <Card v-if="beat.speechOptions" class="mt-4 p-4">
               <div class="space-y-3">
-                <div>
+                <div
+                  v-if="providerSupportsInstruction(mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider)"
+                >
                   <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
                   <Input
                     :model-value="beat.speechOptions?.instruction || ''"
@@ -570,7 +572,9 @@
                     :placeholder="t('parameters.speechParams.instructionPlaceholder')"
                   />
                 </div>
-                <div v-if="mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider === 'elevenlabs'">
+                <div
+                  v-if="providerSupportsElevenLabsOptions(mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider)"
+                >
                   <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
                   <Input
                     :model-value="beat.speechOptions?.speed || ''"
@@ -583,7 +587,9 @@
                     :placeholder="t('parameters.speechParams.speedPlaceholderElevenlabs')"
                   />
                 </div>
-                <div v-if="mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider === 'elevenlabs'">
+                <div
+                  v-if="providerSupportsElevenLabsOptions(mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider)"
+                >
                   <div class="group relative inline-block">
                     <Label class="text-xs">{{ t("parameters.speechParams.stability") }}</Label>
                     <span
@@ -603,7 +609,9 @@
                     :placeholder="t('parameters.speechParams.stabilityPlaceholder')"
                   />
                 </div>
-                <div v-if="mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider === 'elevenlabs'">
+                <div
+                  v-if="providerSupportsElevenLabsOptions(mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider)"
+                >
                   <div class="group relative inline-block">
                     <Label class="text-xs">{{ t("parameters.speechParams.similarityBoost") }}</Label>
                     <span
@@ -684,7 +692,11 @@ import {
 import { mediaUri } from "@/lib/utils";
 import { notifyProgress, notifyError } from "@/lib/notification";
 import type { MulmoTransition } from "@/types";
-import { providerSupportsInstruction } from "../../utils";
+import {
+  providerSupportsInstruction,
+  providerSupportsElevenLabsOptions,
+  providerSupportsSpeechOptions,
+} from "../../utils";
 
 import Markdown from "./beat_editors/markdown.vue";
 import Chart from "./beat_editors/chart.vue";
@@ -789,8 +801,8 @@ const showSpeechOptionsSettings = computed(() => {
   const speaker = props.beat.speaker;
   if (!speaker) return false;
 
-  const speakerData = props.mulmoScript.speechParams?.speakers?.[speaker];
-  return providerSupportsInstruction(speakerData?.provider);
+  const provider = props.mulmoScript.speechParams?.speakers?.[speaker]?.provider;
+  return providerSupportsSpeechOptions(provider);
 });
 
 // Show Advanced Settings section if any subsection should be visible

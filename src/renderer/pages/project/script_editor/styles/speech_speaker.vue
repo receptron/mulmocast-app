@@ -93,7 +93,7 @@
       :placeholder="t('parameters.speechParams.speedPlaceholder')"
     />
   </div>
-  <div v-if="localizedSpeaker.provider === 'elevenlabs'">
+  <div v-if="providerSupportsElevenLabsOptions(localizedSpeaker.provider)">
     <!-- speed -->
     <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
     <Input
@@ -117,7 +117,7 @@
       :placeholder="t('parameters.speechParams.instructionPlaceholder')"
     />
   </div>
-  <div v-if="localizedSpeaker.provider === 'elevenlabs'">
+  <div v-if="providerSupportsElevenLabsOptions(localizedSpeaker.provider)">
     <!-- stability -->
     <div class="group relative inline-block">
       <Label class="text-xs">{{ t("parameters.speechParams.stability") }}</Label>
@@ -138,7 +138,7 @@
       :placeholder="t('parameters.speechParams.stabilityPlaceholder')"
     />
   </div>
-  <div v-if="localizedSpeaker.provider === 'elevenlabs'">
+  <div v-if="providerSupportsElevenLabsOptions(localizedSpeaker.provider)">
     <!-- similarity_boost -->
     <div class="group relative inline-block">
       <Label class="text-xs">{{ t("parameters.speechParams.similarityBoost") }}</Label>
@@ -220,7 +220,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label, Input } from "@/components/ui";
 
 import SettingsAlert from "../settings_alert.vue";
-import { providerSupportsInstruction } from "../../../utils";
+import { providerSupportsInstruction, providerSupportsElevenLabsOptions } from "../../../utils";
 
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
