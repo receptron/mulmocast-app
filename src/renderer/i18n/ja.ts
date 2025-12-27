@@ -874,9 +874,12 @@ const lang = {
       speedPlaceholderElevenlabs: "例）1.0（0.7〜1.2、標準は1.0）",
       stability: "安定性",
       stabilityPlaceholder: "例）0.5（0.0〜1.0、標準は0.5）",
-      stabilityTooltip: "音声の安定性と生成ごとのランダム性を決定します。値を低くすると、音声の感情表現の幅が広がります。値を高くすると、感情表現が限られた単調な音声になる可能性があります。",
+      stabilityTooltip:
+        "音声の安定性と生成ごとのランダム性を決定します。値を低くすると、音声の感情表現の幅が広がります。値を高くすると、感情表現が限られた単調な音声になる可能性があります。",
       similarityBoost: "類似度",
       similarityBoostPlaceholder: "例）0.75（0.0〜1.0、標準は0.75）",
+      similarityBoostTooltip:
+        "高い値にすると、音声の明瞭さとターゲット話者との類似性が向上します。非常に高い値にするとアーティファクトが発生する可能性があるため、最適な値を見つけるために調整することをお勧めします。",
       instruction: "読み上げスタイル",
       instructionPlaceholder: "例）ゆっくりと優しく読んで",
       decoration: "音声スタイル",

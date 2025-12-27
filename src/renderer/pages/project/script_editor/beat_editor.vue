@@ -587,7 +587,7 @@
                   <div class="group relative inline-block">
                     <Label class="text-xs">{{ t("parameters.speechParams.stability") }}</Label>
                     <span
-                      class="bg-popover text-muted-foreground border-border pointer-events-none absolute bottom-full left-0 mb-2 rounded border px-2 py-1 text-xs w-80 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                      class="bg-popover text-muted-foreground border-border pointer-events-none absolute bottom-full left-0 mb-2 w-80 rounded border px-2 py-1 text-xs opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                     >
                       {{ t("parameters.speechParams.stabilityTooltip") }}
                     </span>
@@ -604,7 +604,14 @@
                   />
                 </div>
                 <div v-if="mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider === 'elevenlabs'">
-                  <Label class="text-xs">{{ t("parameters.speechParams.similarityBoost") }}</Label>
+                  <div class="group relative inline-block">
+                    <Label class="text-xs">{{ t("parameters.speechParams.similarityBoost") }}</Label>
+                    <span
+                      class="bg-popover text-muted-foreground border-border pointer-events-none absolute bottom-full left-0 mb-2 w-80 rounded border px-2 py-1 text-xs opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                    >
+                      {{ t("parameters.speechParams.similarityBoostTooltip") }}
+                    </span>
+                  </div>
                   <Input
                     :model-value="beat.speechOptions?.similarity_boost || ''"
                     @update:model-value="handleSimilarityBoostChange"
