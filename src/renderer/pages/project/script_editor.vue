@@ -33,6 +33,9 @@
       }}</TabsTrigger>
     </TabsList>
 
+    <!-- Style Info Display -->
+    <StyleInfoDisplay v-if="globalStore.userIsPro" :mulmoScript="mulmoScript" />
+
     <TabsList class="grid w-full grid-cols-3" v-if="!globalStore.userIsPro">
       <TabsTrigger :value="SCRIPT_EDITOR_TABS.MEDIA" data-testid="script-editor-tab-media">{{
         t("project.scriptEditor.media.tabLabel", { beats: countOfBeats })
@@ -352,6 +355,7 @@ import BeatSelector from "./script_editor/beat_selector.vue";
 import PresentationStyle from "./script_editor/presentation_style.vue";
 import Charactor from "./script_editor/charactor.vue";
 import TextEditor from "./script_editor/text_editor.vue";
+import StyleInfoDisplay from "./script_editor/style_info_display.vue";
 
 import { MulmoError } from "../../../types";
 import { arrayPositionUp, arrayInsertAfter } from "@/lib/array";
