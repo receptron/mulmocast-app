@@ -570,6 +570,52 @@
                     :placeholder="t('parameters.speechParams.instructionPlaceholder')"
                   />
                 </div>
+                <div v-if="mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider === 'elevenlabs'">
+                  <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
+                  <Input
+                    :model-value="beat.speechOptions?.speed || ''"
+                    @update:model-value="handleSpeedChange"
+                    class="h-8"
+                    type="number"
+                    step="0.1"
+                    min="0.7"
+                    max="1.2"
+                    :placeholder="t('parameters.speechParams.speedPlaceholderElevenlabs')"
+                  />
+                </div>
+                <div v-if="mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider === 'elevenlabs'">
+                  <div class="group relative inline-block">
+                    <Label class="text-xs">{{ t("parameters.speechParams.stability") }}</Label>
+                    <span
+                      class="bg-popover text-muted-foreground border-border pointer-events-none absolute bottom-full left-0 mb-2 rounded border px-2 py-1 text-xs w-80 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                    >
+                      {{ t("parameters.speechParams.stabilityTooltip") }}
+                    </span>
+                  </div>
+                  <Input
+                    :model-value="beat.speechOptions?.stability || ''"
+                    @update:model-value="handleStabilityChange"
+                    class="h-8"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="1"
+                    :placeholder="t('parameters.speechParams.stabilityPlaceholder')"
+                  />
+                </div>
+                <div v-if="mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider === 'elevenlabs'">
+                  <Label class="text-xs">{{ t("parameters.speechParams.similarityBoost") }}</Label>
+                  <Input
+                    :model-value="beat.speechOptions?.similarity_boost || ''"
+                    @update:model-value="handleSimilarityBoostChange"
+                    class="h-8"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="1"
+                    :placeholder="t('parameters.speechParams.similarityBoostPlaceholder')"
+                  />
+                </div>
               </div>
             </Card>
           </template>
@@ -1156,6 +1202,48 @@ const handleInstructionChange = (value: string | undefined) => {
     delete speechOptions.instruction;
   } else {
     speechOptions.instruction = value;
+  }
+
+  update("speechOptions", speechOptions);
+};
+
+const handleSpeedChange = (value: string | undefined) => {
+  const speechOptions = {
+    ...props.beat.speechOptions,
+  };
+
+  if (value === undefined || value === null || value === "") {
+    delete speechOptions.speed;
+  } else {
+    speechOptions.speed = Number(value);
+  }
+
+  update("speechOptions", speechOptions);
+};
+
+const handleStabilityChange = (value: string | undefined) => {
+  const speechOptions = {
+    ...props.beat.speechOptions,
+  };
+
+  if (value === undefined || value === null || value === "") {
+    delete speechOptions.stability;
+  } else {
+    speechOptions.stability = Number(value);
+  }
+
+  update("speechOptions", speechOptions);
+};
+
+const handleSimilarityBoostChange = (value: string | undefined) => {
+  const speechOptions = {
+    ...props.beat.speechOptions,
+  };
+
+  if (value === undefined || value === null || value === "") {
+    delete speechOptions.similarity_boost;
+  } else {
+    speechOptions.similarity_boost = Number(value);
   }
 
   update("speechOptions", speechOptions);

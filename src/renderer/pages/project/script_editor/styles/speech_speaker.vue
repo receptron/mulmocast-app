@@ -86,11 +86,25 @@
     <!-- speed -->
     <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
     <Input
-      :model-value="speaker.speed || ''"
+      :model-value="speaker?.speechOptions?.speed || ''"
       @update:model-value="(value) => handleSpeechOptionsChange('speed', value)"
       class="h-8"
       type="number"
       :placeholder="t('parameters.speechParams.speedPlaceholder')"
+    />
+  </div>
+  <div v-if="localizedSpeaker.provider === 'elevenlabs'">
+    <!-- speed -->
+    <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
+    <Input
+      :model-value="speaker?.speechOptions?.speed || ''"
+      @update:model-value="(value) => handleSpeechOptionsChange('speed', value)"
+      class="h-8"
+      type="number"
+      step="0.1"
+      min="0.7"
+      max="1.2"
+      :placeholder="t('parameters.speechParams.speedPlaceholderElevenlabs')"
     />
   </div>
   <div v-if="supportsInstruction">
@@ -101,6 +115,41 @@
       @update:model-value="(value) => handleSpeechOptionsChange('instruction', value)"
       class="h-8"
       :placeholder="t('parameters.speechParams.instructionPlaceholder')"
+    />
+  </div>
+  <div v-if="localizedSpeaker.provider === 'elevenlabs'">
+    <!-- stability -->
+    <div class="group relative inline-block">
+      <Label class="text-xs">{{ t("parameters.speechParams.stability") }}</Label>
+      <span
+        class="bg-popover text-muted-foreground border-border pointer-events-none absolute bottom-full left-0 mb-2 rounded border px-2 py-1 text-xs w-80 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+      >
+        {{ t("parameters.speechParams.stabilityTooltip") }}
+      </span>
+    </div>
+    <Input
+      :model-value="speaker?.speechOptions?.stability || ''"
+      @update:model-value="(value) => handleSpeechOptionsChange('stability', value)"
+      class="h-8"
+      type="number"
+      step="0.1"
+      min="0"
+      max="1"
+      :placeholder="t('parameters.speechParams.stabilityPlaceholder')"
+    />
+  </div>
+  <div v-if="localizedSpeaker.provider === 'elevenlabs'">
+    <!-- similarity_boost -->
+    <Label class="text-xs">{{ t("parameters.speechParams.similarityBoost") }}</Label>
+    <Input
+      :model-value="speaker?.speechOptions?.similarity_boost || ''"
+      @update:model-value="(value) => handleSpeechOptionsChange('similarity_boost', value)"
+      class="h-8"
+      type="number"
+      step="0.1"
+      min="0"
+      max="1"
+      :placeholder="t('parameters.speechParams.similarityBoostPlaceholder')"
     />
   </div>
   <div v-if="false">
