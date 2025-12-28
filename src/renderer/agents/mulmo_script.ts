@@ -6,7 +6,7 @@ const mulmoScriptAgent: AgentFunction = async () => {
   };
 };
 
-const generateTools = (speakers?: string[], imageNames?: string[]) => {
+export const generateTools = (speakers?: string[], imageNames?: string[]) => {
   const itemRequired = ["text"];
   const itemProperties = {
     id: {
