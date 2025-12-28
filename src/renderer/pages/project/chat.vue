@@ -661,6 +661,6 @@ Requirements:
   userInput.value = enhancedPrompt;
 
   // Execute script generation
-  await run(true); // isScript = true
+  await run(false); // isScript = false to use userInput.value
 };
 </script>
