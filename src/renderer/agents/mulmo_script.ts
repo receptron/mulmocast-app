@@ -8,7 +8,8 @@ const mulmoScriptAgent: AgentFunction = async () => {
 
 export const generateTools = (speakers?: string[], imageNames?: string[]) => {
   const itemRequired = ["text"];
-  const itemProperties = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const itemProperties: Record<string, any> = {
     id: {
       type: "string",
       description: "Unique beat id. It is automatically assigned when creating, so there is no need to specify it.",

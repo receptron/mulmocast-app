@@ -614,7 +614,7 @@ const lang = {
         "スタイルを選択して「{createScriptButton}」を押すと、選択したスタイルに合わせてスクリプトが生成されます。",
       quickGenerate: {
         title: "クイック生成",
-        verticalShort: "縦型ショート（5 beats）",
+        verticalShort: "📱 縦型ショート（5 beats）",
         description: "トピックを入力してボタンをクリックすると、縦型ショート動画のスクリプトが生成されます",
         error: {
           noTopic: "トピックを入力してください",

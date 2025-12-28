@@ -110,7 +110,7 @@
             :disabled="isRunning || noChatText"
             class="flex items-center gap-2"
           >
-            📱 {{ t("project.chat.quickGenerate.verticalShort") }}
+            {{ t("project.chat.quickGenerate.verticalShort") }}
           </Button>
         </div>
         <p class="text-muted-foreground mt-2 text-xs">{{ t("project.chat.quickGenerate.description") }}</p>

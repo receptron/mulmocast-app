@@ -617,7 +617,7 @@ const lang = {
         "Select a style and press '{createScriptButton}' to generate a script based on the selected style.",
       quickGenerate: {
         title: "Quick Generate",
-        verticalShort: "Vertical Short (5 beats)",
+        verticalShort: "📱 Vertical Short (5 beats)",
         description: "Enter a topic and click the button to generate a vertical short video script",
         error: {
           noTopic: "Please enter a topic first",
