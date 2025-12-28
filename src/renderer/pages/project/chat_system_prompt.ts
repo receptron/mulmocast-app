@@ -16,7 +16,7 @@ export const conversationModes = [
 ];
 
 export const useSystemPrompt = () => {
-  const conversationMode = ref<ConversationMode>("dialogue");
+  const conversationMode = ref<ConversationMode>("presentation");
   const conversationSystemPrompt = computed(() => {
     const conversationSystemPrompts = {
       presentation:
