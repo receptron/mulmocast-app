@@ -57,7 +57,7 @@ Use the JSON below as a template.`,
         suppressSpeech: false,
         bgm: {
           kind: "url",
-          url: "https://github.com/receptron/mulmocast-media/raw/refs/heads/main/bgms/theme001.mp3"
+          url: "https://github.com/receptron/mulmocast-media/raw/refs/heads/main/bgms/theme001.mp3",
         },
       },
       movieParams: {

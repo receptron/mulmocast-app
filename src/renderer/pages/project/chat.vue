@@ -104,7 +104,12 @@
       <div class="border-border bg-muted/30 rounded-lg border p-3">
         <h3 class="mb-2 text-sm font-medium">{{ t("project.chat.quickGenerate.title") }}</h3>
         <div class="flex gap-2">
-          <Button size="sm" @click="generateVerticalShort" :disabled="isRunning || noChatText" class="flex items-center gap-2">
+          <Button
+            size="sm"
+            @click="generateVerticalShort"
+            :disabled="isRunning || noChatText"
+            class="flex items-center gap-2"
+          >
             📱 {{ t("project.chat.quickGenerate.verticalShort") }}
           </Button>
         </div>
@@ -240,7 +245,7 @@ import { graphChatWithSearch } from "./chat/graph";
 import { customPromptTemplates } from "@/data/custom_templates";
 import mulmoScriptValidatorAgent from "../../agents/mulmo_script_validator";
 import mulmoVisionAgent from "../../agents/mulmo_vision_agent";
-import mulmoScriptAgent from "../../agents/mulmo_script";
+import mulmoScriptAgent, { generateTools as mulmoScriptGenerateTools } from "../../agents/mulmo_script";
 // presentation manuscript
 
 import { insertSpeakers } from "../utils";
@@ -396,12 +401,20 @@ const run = async (isScript: false) => {
     const config = await getGraphConfig();
     const llmModel = config[llmAgent.value]?.model || ""; // The model setting in config can be overridden by params.model (even if it is a blank string).
 
+    // Get current speakers and imageNames from script
+    const currentScript = mulmoScriptHistoryStore.currentMulmoScript;
+    const speakers = currentScript?.speechParams?.speakers ? Object.keys(currentScript.speechParams.speakers) : [];
+    const imageNames = currentScript?.imageParams?.images ? Object.keys(currentScript.imageParams.images) : [];
+
+    const mulmoScriptTool = mulmoScriptGenerateTools(speakers, imageNames);
+
     const tools = [
       // ...mulmoScriptValidatorAgent.tools,
       ...puppeteerAgent.tools,
       // ...mulmoVisionAgent.tools,
       ...mulmoCastHelpAgent.tools,
-      ...mulmoScriptAgent.tools,
+      // ...mulmoScriptAgent.tools,
+      mulmoScriptTool,
     ];
 
     const templateSystemPrompt = styleTemplate.value?.currentTemplate?.systemPrompt;

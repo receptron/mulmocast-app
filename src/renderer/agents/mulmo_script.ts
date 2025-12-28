@@ -6,6 +6,76 @@ const mulmoScriptAgent: AgentFunction = async () => {
   };
 };
 
+const generateTools = (speakers?: string[], imageNames?: string[]) => {
+  const itemRequired = ["text"];
+  const itemProperties = {
+    id: {
+      type: "string",
+      description: "Unique beat id. It is automatically assigned when creating, so there is no need to specify it.",
+    },
+    text: { type: "string", description: "talk script for each beat" },
+    imagePrompt: {
+      type: "string",
+      description: "prompt to generate image. It is exclusive to the image object element in this object.",
+    },
+    moviePrompt: {
+      type: "string",
+      description: "prompt to generate image. It is exclusive to the movie object element in this object.",
+    },
+  };
+  if (speakers && speakers.length > 0) {
+    itemProperties.speaker = {
+      type: "string",
+      description: "speaker role",
+      enum: speakers,
+    };
+    itemRequired.push("speaker");
+  } else {
+    itemProperties.speaker = { type: "string", description: "speaker" };
+  }
+  if (imageNames && imageNames.length > 0) {
+    itemProperties.imageNames = {
+      type: "array",
+      description: "Image names referenced during image generation",
+      items: {
+        type: "string",
+        enum: imageNames,
+      },
+      minItems: 0,
+      maxItems: imageNames.length,
+      uniqueItems: true,
+    };
+    itemRequired.push("imageNames");
+  }
+
+  return {
+    type: "function",
+    function: {
+      name: "mulmoScriptAgent--createBeatsOnMulmoScript",
+      description: "create mulmo script with beats.",
+      parameters: {
+        type: "object",
+        properties: {
+          beats: {
+            type: "array",
+            description: "current list of beats",
+            items: {
+              type: "object",
+              required: itemRequired,
+              properties: itemProperties,
+            },
+          },
+          title: {
+            type: "string",
+            description: "The title of this mulmo script.",
+          },
+        },
+        required: ["beats", "title"],
+      },
+    },
+  };
+};
+
 export const mulmoScriptAgentInfo: AgentFunctionInfo = {
   name: "mulmoScriptAgent",
   agent: mulmoScriptAgent,
