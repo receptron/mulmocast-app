@@ -19,6 +19,8 @@ export type ProjectMetadata = {
   presentationStyle?: MulmoPresentationStyle;
   scriptEditorActiveTab: ScriptEditorTab;
   mulmoViewerActiveTab?: MulmoViewerTab;
+  chatConversationMode?: string;
+  chatTemplateIndex?: number;
 };
 export type Project = {
   metadata: ProjectMetadata;

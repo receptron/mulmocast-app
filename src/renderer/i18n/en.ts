@@ -489,6 +489,13 @@ const lang = {
         },
       },
       validationStatus: "Validation Status",
+      styleInfo: {
+        speech: "Speech",
+        image: "Image",
+        movie: "Movie",
+        bgm: "BGM",
+        size: "Size",
+      },
     },
     productTabs: {
       tabs: {
@@ -882,6 +889,15 @@ const lang = {
       modelDefault: "Default",
       speed: "Reading Speed",
       speedPlaceholder: "e.g., 1.2 (range: 0.4-3.0, default: 1.0)",
+      speedPlaceholderElevenlabs: "e.g., 1.0 (range: 0.7-1.2, default: 1.0)",
+      stability: "Stability",
+      stabilityPlaceholder: "e.g., 0.5 (range: 0.0-1.0, default: 0.5)",
+      stabilityTooltip:
+        "Determines how stable the voice is and the randomness between each generation. Lower values introduce broader emotional range for the voice. Higher values can result in a monotonous voice with limited emotion.",
+      similarityBoost: "Similarity Boost",
+      similarityBoostPlaceholder: "e.g., 0.75 (range: 0.0-1.0, default: 0.75)",
+      similarityBoostTooltip:
+        "High enhancement boosts overall voice clarity and target speaker similarity. Very high values can cause artifacts, so adjusting this setting to find the optimal value is encouraged.",
       instruction: "Reading Style",
       instructionPlaceholder: "e.g., Read slowly and gently",
       decoration: "Voice Style",
