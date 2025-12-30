@@ -241,11 +241,12 @@ import UserMessage from "./chat/user_message.vue";
 import ToolsMessage from "./chat/tools_message.vue";
 import StyleTemplate from "./chat/style_template.vue";
 
-import { graphChatWithSearch } from "./chat/graph";
+import { graphChatWithSearchLoop } from "./chat/graph";
 import { customPromptTemplates } from "@/data/custom_templates";
 import mulmoScriptValidatorAgent from "../../agents/mulmo_script_validator";
 import mulmoVisionAgent from "../../agents/mulmo_vision_agent";
 import mulmoScriptAgent, { generateTools as mulmoScriptGenerateTools } from "../../agents/mulmo_script";
+import attemptCompletionAgent from "../../agents/attempt_completion";
 // presentation manuscript
 
 import { insertSpeakers } from "../utils";
@@ -417,6 +418,7 @@ const run = async (isScript: false) => {
       ...mulmoCastHelpAgent.tools,
       // ...mulmoScriptAgent.tools,
       mulmoScriptTool,
+      ...attemptCompletionAgent.tools, // Always add attempt_completion for loop termination
     ];
 
     const templateSystemPrompt = styleTemplate.value?.currentTemplate?.systemPrompt;
@@ -456,7 +458,8 @@ const run = async (isScript: false) => {
       mulmoScriptAgent,
     };
 
-    const graphai = new GraphAI(graphChatWithSearch(isScript && isOpenAI.value, isOpenAI.value), graphAIAgents, {
+    // Always use loop graph with attempt_completion for flexible multi-step execution
+    const graphai = new GraphAI(graphChatWithSearchLoop(isScript && isOpenAI.value, isOpenAI.value), graphAIAgents, {
       agentFilters,
       config,
     });
@@ -663,7 +666,7 @@ const generateVerticalShort = async () => {
   // Set conversation mode to shortForm
   conversationMode.value = "shortForm";
 
-  // Enhance prompt for vertical short video
+  // Simple prompt - LLM will determine if URL fetching is needed
   const enhancedPrompt = `Create a compelling 5-beat vertical short-form video script about: ${userInput.value}
 
 Requirements:
@@ -671,7 +674,9 @@ Requirements:
 - Each beat: 10-15 seconds of speech
 - Simple, visual image prompts (no Japanese text)
 - Engaging for social media audience
-- Optimized for 9:16 vertical format`;
+- Optimized for 9:16 vertical format
+
+IMPORTANT: After creating the script, call the attempt_completion tool to signal that you are done.`;
 
   userInput.value = enhancedPrompt;
 
