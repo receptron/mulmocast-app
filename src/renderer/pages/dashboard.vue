@@ -1,6 +1,53 @@
 <template>
   <Layout>
     <div class="mx-auto max-w-7xl space-y-6 p-6">
+      <!-- Quick Create Section -->
+      <div class="border-border bg-card rounded-lg border p-6 shadow-sm">
+        <div class="mb-4 flex items-center space-x-2">
+          <Sparkles class="text-primary h-6 w-6" />
+          <h2 class="text-xl font-bold">{{ t("dashboard.quickCreate.sectionTitle") }}</h2>
+        </div>
+        <p class="text-muted-foreground mb-4 text-sm">{{ t("dashboard.quickCreate.sectionDescription") }}</p>
+
+        <!-- Template Selection -->
+        <div class="mb-3 flex flex-wrap gap-3">
+          <label
+            v-for="template in customPromptTemplates"
+            :key="template.filename"
+            class="border-border flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 transition-colors hover:bg-muted"
+            :class="{ 'bg-primary/10 border-primary': selectedTemplateFilename === template.filename }"
+          >
+            <input
+              type="radio"
+              :value="template.filename"
+              v-model="selectedTemplateFilename"
+              class="text-primary focus:ring-primary"
+            />
+            <span class="text-sm font-medium">{{ template.title }}</span>
+          </label>
+        </div>
+
+        <!-- URL Input -->
+        <div class="flex gap-2">
+          <Input
+            v-model="quickCreateUrl"
+            type="url"
+            :placeholder="t('dashboard.quickCreate.urlPlaceholder')"
+            class="flex-1"
+            @keydown.enter="handleQuickCreate"
+          />
+          <Button @click="handleQuickCreate" :disabled="!quickCreateUrl.trim() || !selectedTemplate">
+            <Sparkles class="mr-2 h-4 w-4" />
+            {{ t("ui.actions.create") }}
+          </Button>
+        </div>
+
+        <!-- Template Settings Display -->
+        <StyleInfoDisplay v-if="selectedTemplate" :mulmoScript="selectedTemplate.presentationStyle" />
+
+        <p v-if="quickCreateError" class="text-destructive mt-2 text-sm">{{ quickCreateError }}</p>
+      </div>
+
       <!-- Main Content -->
       <div class="border-border bg-card rounded-lg border p-6 shadow-sm">
         <div class="mb-6 flex items-center justify-between">
@@ -110,7 +157,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
-import { Plus, List, Grid } from "lucide-vue-next";
+import { Plus, List, Grid, Sparkles } from "lucide-vue-next";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { mulmoScriptSchema } from "mulmocast/browser";
@@ -118,14 +165,17 @@ import dayjs from "dayjs";
 
 import Layout from "@/components/layout.vue";
 import ProjectItems from "./dashboard/project_items.vue";
+import StyleInfoDisplay from "./project/script_editor/style_info_display.vue";
 
-import { Button, ConfirmDialog } from "@/components/ui";
+import { Button, ConfirmDialog, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import { useMulmoGlobalStore } from "@/store";
 
 import { projectApi, type Project } from "@/lib/project_api";
 import { SORT_BY, SORT_ORDER, VIEW_MODE } from "../../shared/constants";
+import { customPromptTemplates } from "@/data/custom_templates";
+import { notifyError } from "@/lib/notification";
 
 const globalStore = useMulmoGlobalStore();
 const router = useRouter();
@@ -148,6 +198,16 @@ const loading = ref(true);
 const creating = ref(false);
 const projectThumbnails = ref<Record<string, ArrayBuffer | string | null>>({});
 const thumbnailsLoading = ref<Record<string, boolean>>({});
+
+// Quick create section state
+const quickCreateUrl = ref("");
+const quickCreateError = ref("");
+const selectedTemplateFilename = ref("vertical_short_nano");
+
+// Selected template computed
+const selectedTemplate = computed(() => {
+  return customPromptTemplates.find((t) => t.filename === selectedTemplateFilename.value);
+});
 
 const loadProjects = async () => {
   projects.value = await projectApi.list();
@@ -228,6 +288,50 @@ const handleCreateProject = async () => {
     alert(t("dashboard.errors.createProjectFailed"));
   } finally {
     creating.value = false;
+  }
+};
+
+const handleQuickCreate = async () => {
+  if (!quickCreateUrl.value.trim()) {
+    quickCreateError.value = t("dashboard.quickCreate.urlRequired");
+    return;
+  }
+
+  if (!selectedTemplate.value) {
+    quickCreateError.value = t("dashboard.quickCreate.templateRequired");
+    return;
+  }
+
+  try {
+    quickCreateError.value = "";
+    const settings = await window.electronAPI.settings.get();
+    const title = selectedTemplate.value.title;
+    const project = await projectApi.create(title, settings.APP_LANGUAGE ?? "en", 999);
+
+    // Apply selected template to the project script
+    const scriptWithTemplate = {
+      ...(project.script ?? {}),
+      ...selectedTemplate.value.presentationStyle,
+    };
+
+    await projectApi.saveProjectScript(project.metadata.id, scriptWithTemplate);
+
+    // Clear the URL input
+    const urlToPass = quickCreateUrl.value;
+    quickCreateUrl.value = "";
+
+    // Navigate to the project with URL in query parameter for auto-execution
+    router.push({
+      path: `/project/${project.metadata.id}`,
+      query: { quickCreateUrl: urlToPass, templateFilename: selectedTemplateFilename.value },
+    });
+  } catch (error) {
+    console.error("Failed to create quick project:", error);
+    quickCreateError.value = t("dashboard.quickCreate.createFailed");
+    notifyError(
+      t("dashboard.quickCreate.createFailed"),
+      error instanceof Error ? error.message : String(error),
+    );
   }
 };
 

@@ -416,6 +416,14 @@ const lang = {
       noPreview: "プレビュー表示不可: プロジェクトを開いてエラー箇所を確認してください",
       noPreviewInProject: "プレビュー表示不可: エラー箇所を確認してください",
     },
+    quickCreate: {
+      sectionTitle: "クイック作成",
+      sectionDescription: "テンプレートを選択してURLから素早くプロジェクトを作成します",
+      urlPlaceholder: "URLを入力 (YouTube、記事など)",
+      urlRequired: "URLを入力してください",
+      templateRequired: "テンプレートを選択してください",
+      createFailed: "プロジェクトの作成に失敗しました",
+    },
   },
   project: {
     newProject: {

@@ -417,6 +417,14 @@ const lang = {
       noPreview: "Preview unavailable: Please open project to check errors",
       noPreviewInProject: "Preview unavailable: Please check errors",
     },
+    quickCreate: {
+      sectionTitle: "Quick Create",
+      sectionDescription: "Select a template and create a project quickly from a URL",
+      urlPlaceholder: "Enter URL (YouTube, article, etc.)",
+      urlRequired: "URL is required",
+      templateRequired: "Please select a template",
+      createFailed: "Failed to create project",
+    },
   },
   project: {
     newProject: {
