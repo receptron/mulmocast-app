@@ -104,8 +104,14 @@
       <div class="border-border bg-muted/30 rounded-lg border p-3">
         <h3 class="mb-2 text-sm font-medium">{{ t("project.chat.quickGenerate.title") }}</h3>
         <div class="flex gap-2">
-          <Button size="sm" @click="generateVerticalShort" :disabled="isRunning || noChatText" class="flex items-center gap-2">
-            📱 {{ t("project.chat.quickGenerate.verticalShort") }}
+          <Button
+            size="sm"
+            @click="generateVerticalShort"
+            :disabled="isRunning || noChatText"
+            class="flex items-center gap-2"
+          >
+            <Smartphone class="h-4 w-4" />
+            {{ t("project.chat.quickGenerate.verticalShort") }}
           </Button>
         </div>
         <p class="text-muted-foreground mt-2 text-xs">{{ t("project.chat.quickGenerate.description") }}</p>
@@ -196,7 +202,7 @@
 <script setup lang="ts">
 // vue
 import { ref, computed, useTemplateRef, onMounted, watch } from "vue";
-import { Send, Loader2, FileCode } from "lucide-vue-next";
+import { Send, Loader2, FileCode, Smartphone } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 
 // graphai

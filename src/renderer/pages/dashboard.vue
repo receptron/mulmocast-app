@@ -14,7 +14,7 @@
           <label
             v-for="template in customPromptTemplates"
             :key="template.filename"
-            class="border-border flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 transition-colors hover:bg-muted"
+            class="border-border hover:bg-muted flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 transition-colors"
             :class="{ 'bg-primary/10 border-primary': selectedTemplateFilename === template.filename }"
           >
             <input
@@ -328,10 +328,7 @@ const handleQuickCreate = async () => {
   } catch (error) {
     console.error("Failed to create quick project:", error);
     quickCreateError.value = t("dashboard.quickCreate.createFailed");
-    notifyError(
-      t("dashboard.quickCreate.createFailed"),
-      error instanceof Error ? error.message : String(error),
-    );
+    notifyError(t("dashboard.quickCreate.createFailed"), error instanceof Error ? error.message : String(error));
   }
 };
 
