@@ -204,6 +204,7 @@
 import { ref, computed, useTemplateRef, onMounted, watch } from "vue";
 import { Send, Loader2, FileCode, Smartphone } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
+import { useRoute, useRouter } from "vue-router";
 
 // graphai
 import { GraphAI } from "graphai";
@@ -267,6 +268,8 @@ import {
 import { notifyError, notifySuccess } from "@/lib/notification";
 
 const { t } = useI18n();
+const route = useRoute();
+const router = useRouter();
 const globalStore = useMulmoGlobalStore();
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
@@ -615,6 +618,35 @@ onMounted(async () => {
     selectedTemplateIndex.value = props.projectMetadata.chatTemplateIndex;
   } else if (settings.CHAT_TEMPLATE_INDEX !== undefined) {
     selectedTemplateIndex.value = settings.CHAT_TEMPLATE_INDEX;
+  }
+
+  // Check for quick create from dashboard
+  const quickCreateUrl = route.query.quickCreateUrl as string | undefined;
+  const templateFilename = route.query.templateFilename as string | undefined;
+
+  if (quickCreateUrl && templateFilename) {
+    // Set user input
+    userInput.value = quickCreateUrl;
+
+    // Find and select the specified template
+    const templateIndex = allTemplates.findIndex((t) => t.filename === templateFilename);
+    if (templateIndex !== -1) {
+      selectedTemplateIndex.value = templateIndex;
+    }
+
+    // Set conversation mode based on template
+    if (templateFilename === "vertical_short_nano") {
+      conversationMode.value = "shortForm";
+    }
+
+    // Wait a tick for UI to update
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    // Execute generation
+    await generateVerticalShort();
+
+    // Clear query parameters
+    router.replace({ query: {} });
   }
 });
 
