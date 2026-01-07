@@ -1959,9 +1959,9 @@
     cross-spawn "^7.0.1"
 
 "@modelcontextprotocol/sdk@^1.24.3", "@modelcontextprotocol/sdk@^1.25.1":
-  version "1.25.1"
-  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.25.1.tgz#2522d6776ca983a2f6dfc2eb106b89b5be9e072e"
-  integrity sha512-yO28oVFFC7EBoiKdAn+VqRm+plcfv4v0xp6osG/VsCB0NlPZWi87ajbCZZ8f/RvOFLEu7//rSRmuZZ7lMoe3gQ==
+  version "1.25.2"
+  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.25.2.tgz#2284560b4e044b4ce5f328ee180931110cb8c5cf"
+  integrity sha512-LZFeo4F9M5qOhC/Uc1aQSrBHxMrvxett+9KLHt7OhcExtoiRN9DKgbZffMP/nxjutWDQpfMDfP3nkHI4X9ijww==
   dependencies:
     "@hono/node-server" "^1.19.7"
     ajv "^8.17.1"
