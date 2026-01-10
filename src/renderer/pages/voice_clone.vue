@@ -259,16 +259,40 @@ const loadClonedVoices = async () => {
     console.error("Failed to load cloned voices:", error);
 
     // Check if error has cause for structured error handling
-    const errorWithCause = error as Error & { cause?: { type: string; agentName: string } };
+    const errorWithCause = error as Error & {
+      cause?: {
+        action: string;
+        type: string;
+        agentName: string;
+      };
+    };
 
     if (errorWithCause?.cause) {
-      const { type, agentName } = errorWithCause.cause;
+      const { action, type, agentName } = errorWithCause.cause;
 
       // Build i18n key based on cause
-      const i18nKey = `notify.error.${type}.${agentName}`;
+      const i18nKey = `notify.error.${action}.${type}.${agentName}`;
 
       // Check if translation exists
       if (t(i18nKey) !== i18nKey) {
+        // Special handling for voice_limit_reached to show action button
+        if (type === "voice_limit_reached") {
+          const actionKey = `${i18nKey}Action`;
+          const urlKey = `${i18nKey}Url`;
+          const actionLabel = t(actionKey);
+          const url = t(urlKey);
+
+          if (actionLabel !== actionKey && url !== urlKey) {
+            notifyError(t(i18nKey), undefined, {
+              label: actionLabel,
+              onClick: () => {
+                window.open(url, "_blank");
+              },
+            });
+            return;
+          }
+        }
+
         notifyError(t(i18nKey));
         return;
       }
@@ -328,6 +352,48 @@ const saveNameEdit = async (voice: VoiceItem) => {
     notifySuccess(t("voiceClone.nameUpdated"));
   } catch (error) {
     console.error("Failed to update voice name:", error);
+
+    // Check if error has cause for structured error handling
+    const errorWithCause = error as Error & {
+      cause?: {
+        action: string;
+        type: string;
+        agentName: string;
+      };
+    };
+
+    if (errorWithCause?.cause) {
+      const { action, type, agentName } = errorWithCause.cause;
+
+      // Build i18n key based on cause
+      const i18nKey = `notify.error.${action}.${type}.${agentName}`;
+
+      // Check if translation exists
+      if (t(i18nKey) !== i18nKey) {
+        // Special handling for voice_limit_reached to show action button
+        if (type === "voice_limit_reached") {
+          const actionKey = `${i18nKey}Action`;
+          const urlKey = `${i18nKey}Url`;
+          const actionLabel = t(actionKey);
+          const url = t(urlKey);
+
+          if (actionLabel !== actionKey && url !== urlKey) {
+            notifyError(t(i18nKey), undefined, {
+              label: actionLabel,
+              onClick: () => {
+                window.open(url, "_blank");
+              },
+            });
+            return;
+          }
+        }
+
+        notifyError(t(i18nKey));
+        return;
+      }
+    }
+
+    // Fallback to generic error message
     const errorMessage = error instanceof Error ? error.message : "Failed to update voice name";
     notifyError(errorMessage);
   }
@@ -406,6 +472,48 @@ const uploadVoice = async () => {
     uploadDialog.value.open = false;
   } catch (error) {
     console.error("Failed to upload voice:", error);
+
+    // Check if error has cause for structured error handling
+    const errorWithCause = error as Error & {
+      cause?: {
+        action: string;
+        type: string;
+        agentName: string;
+      };
+    };
+
+    if (errorWithCause?.cause) {
+      const { action, type, agentName } = errorWithCause.cause;
+
+      // Build i18n key based on cause
+      const i18nKey = `notify.error.${action}.${type}.${agentName}`;
+
+      // Check if translation exists
+      if (t(i18nKey) !== i18nKey) {
+        // Special handling for voice_limit_reached to show action button
+        if (type === "voice_limit_reached") {
+          const actionKey = `${i18nKey}Action`;
+          const urlKey = `${i18nKey}Url`;
+          const actionLabel = t(actionKey);
+          const url = t(urlKey);
+
+          if (actionLabel !== actionKey && url !== urlKey) {
+            notifyError(t(i18nKey), undefined, {
+              label: actionLabel,
+              onClick: () => {
+                window.open(url, "_blank");
+              },
+            });
+            return;
+          }
+        }
+
+        notifyError(t(i18nKey));
+        return;
+      }
+    }
+
+    // Fallback to generic error message
     const errorMessage = error instanceof Error ? error.message : "Failed to upload voice";
     notifyError(errorMessage);
   } finally {
@@ -432,6 +540,48 @@ const confirmDelete = async () => {
     deleteDialog.value.open = false;
   } catch (error) {
     console.error("Failed to delete voice:", error);
+
+    // Check if error has cause for structured error handling
+    const errorWithCause = error as Error & {
+      cause?: {
+        action: string;
+        type: string;
+        agentName: string;
+      };
+    };
+
+    if (errorWithCause?.cause) {
+      const { action, type, agentName } = errorWithCause.cause;
+
+      // Build i18n key based on cause
+      const i18nKey = `notify.error.${action}.${type}.${agentName}`;
+
+      // Check if translation exists
+      if (t(i18nKey) !== i18nKey) {
+        // Special handling for voice_limit_reached to show action button
+        if (type === "voice_limit_reached") {
+          const actionKey = `${i18nKey}Action`;
+          const urlKey = `${i18nKey}Url`;
+          const actionLabel = t(actionKey);
+          const url = t(urlKey);
+
+          if (actionLabel !== actionKey && url !== urlKey) {
+            notifyError(t(i18nKey), undefined, {
+              label: actionLabel,
+              onClick: () => {
+                window.open(url, "_blank");
+              },
+            });
+            return;
+          }
+        }
+
+        notifyError(t(i18nKey));
+        return;
+      }
+    }
+
+    // Fallback to generic error message
     const errorMessage = error instanceof Error ? error.message : "Failed to delete voice";
     notifyError(errorMessage);
   } finally {

@@ -135,6 +135,17 @@ export const ja_notify = {
         ttsElevenlabsAgent: "ElevenLabsのカスタムボイスの上限に達しました。",
       },
     },
+    voiceClone: {
+      voice_limit_reached: {
+        voiceCloneElevenlabsAgent:
+          "カスタムボイスの登録上限に達しました。新しいボイスを追加するには、プランの見直しまたは既存ボイスの削除が必要です。",
+        voiceCloneElevenlabsAgentAction: "音声管理ページを開く",
+        voiceCloneElevenlabsAgentUrl: "https://elevenlabs.io/app/voice-lab",
+      },
+      badRequest: {
+        voiceCloneElevenlabsAgent: "音声クローンの操作に失敗しました。ファイルを確認して再度お試しください。",
+      },
+    },
     music: {
       badPrompt: {
         bgmElevenlabsAgent:
