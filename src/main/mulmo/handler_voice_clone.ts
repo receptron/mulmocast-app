@@ -19,20 +19,18 @@ interface ApiError {
   };
 }
 
-// Helper function to handle ElevenLabs API errors
-const handleElevenLabsError = (error: unknown, operationName: string): never => {
+// Helper function to handle ElevenLabs 400 errors
+const handleBadRequestError = (error: unknown, operationName: string): void => {
   const apiError = error as ApiError;
 
-  console.error("ElevenLabs API error:", {
-    status: apiError?.status,
-    statusCode: apiError?.statusCode,
-    body: apiError?.body,
-  });
-
-  // Handle 400 errors with detailed status checking
   if (apiError?.status === 400 || apiError?.statusCode === 400) {
     const status = apiError?.body?.detail?.status;
     const message = apiError?.body?.detail?.message;
+
+    console.error("ElevenLabs API 400 error:", {
+      status,
+      message,
+    });
 
     if (status === "voice_limit_reached") {
       throw new Error("Voice clone limit reached", {
@@ -53,31 +51,6 @@ const handleElevenLabsError = (error: unknown, operationName: string): never => 
       },
     });
   }
-
-  // Handle 401 errors
-  if (apiError?.status === 401 || apiError?.statusCode === 401) {
-    throw new Error(`${operationName}: Invalid API key`, {
-      cause: {
-        action: "voiceClone",
-        type: "apiKeyInvalid",
-        agentName: "voiceCloneElevenlabsAgent",
-      },
-    });
-  }
-
-  // Handle 403 errors
-  if (apiError?.status === 403 || apiError?.statusCode === 403) {
-    throw new Error(`${operationName}: Permission denied`, {
-      cause: {
-        action: "voiceClone",
-        type: "permissionDenied",
-        agentName: "voiceCloneElevenlabsAgent",
-      },
-    });
-  }
-
-  // Re-throw other errors as-is
-  throw error;
 };
 
 // Get cloned voices from ElevenLabs
@@ -105,7 +78,49 @@ export const getClonedVoices = async (): Promise<ClonedVoice[]> => {
       category: "cloned",
     });
   } catch (error: unknown) {
-    handleElevenLabsError(error, "Failed to get cloned voices");
+    // Handle 400 errors first
+    handleBadRequestError(error, "Failed to get cloned voices");
+
+    // Handle ElevenLabs API errors with structured cause
+    const apiError = error as {
+      status?: number;
+      statusCode?: number;
+      body?: {
+        detail?: {
+          status?: string;
+          message?: string;
+        };
+      };
+    };
+
+    console.error("ElevenLabs API error:", {
+      status: apiError?.status,
+      statusCode: apiError?.statusCode,
+      body: apiError?.body,
+    });
+
+    if (apiError?.status === 401 || apiError?.statusCode === 401) {
+      throw new Error("Failed to get cloned voices: Invalid API key", {
+        cause: {
+          action: "voiceClone",
+          type: "apiKeyInvalid",
+          agentName: "voiceCloneElevenlabsAgent",
+        },
+      });
+    }
+
+    if (apiError?.status === 403 || apiError?.statusCode === 403) {
+      throw new Error("Failed to get cloned voices: Permission denied", {
+        cause: {
+          action: "voiceClone",
+          type: "permissionDenied",
+          agentName: "voiceCloneElevenlabsAgent",
+        },
+      });
+    }
+
+    // Re-throw other errors as-is
+    throw error;
   }
 
   // Extract relevant voice information
@@ -141,7 +156,25 @@ export const updateVoiceName = async (voiceId: string, name: string): Promise<vo
   try {
     await client.voices.update(voiceId, { name });
   } catch (error: unknown) {
-    handleElevenLabsError(error, "Failed to update voice name");
+    // Handle 400 errors first
+    handleBadRequestError(error, "Failed to update voice name");
+
+    const apiError = error as {
+      status?: number;
+      statusCode?: number;
+    };
+
+    if (apiError?.status === 401 || apiError?.statusCode === 401) {
+      throw new Error("Failed to update voice name: Invalid API key", {
+        cause: {
+          action: "voiceClone",
+          type: "apiKeyInvalid",
+          agentName: "voiceCloneElevenlabsAgent",
+        },
+      });
+    }
+
+    throw error;
   }
 };
 
@@ -182,7 +215,25 @@ export const uploadVoiceClone = async (
       removeBackgroundNoise: false,
     });
   } catch (error: unknown) {
-    handleElevenLabsError(error, "Voice clone operation failed");
+    // Handle 400 errors first
+    handleBadRequestError(error, "Voice clone operation failed");
+
+    const apiError = error as {
+      status?: number;
+      statusCode?: number;
+    };
+
+    if (apiError?.status === 401 || apiError?.statusCode === 401) {
+      throw new Error("Failed to upload voice clone: Invalid API key", {
+        cause: {
+          action: "voiceClone",
+          type: "apiKeyInvalid",
+          agentName: "voiceCloneElevenlabsAgent",
+        },
+      });
+    }
+
+    throw error;
   }
 
   return {
@@ -212,6 +263,24 @@ export const deleteVoice = async (voiceId: string): Promise<void> => {
   try {
     await client.voices.delete(voiceId);
   } catch (error: unknown) {
-    handleElevenLabsError(error, "Failed to delete voice clone");
+    // Handle 400 errors first
+    handleBadRequestError(error, "Failed to delete voice clone");
+
+    const apiError = error as {
+      status?: number;
+      statusCode?: number;
+    };
+
+    if (apiError?.status === 401 || apiError?.statusCode === 401) {
+      throw new Error("Failed to delete voice clone: Invalid API key", {
+        cause: {
+          action: "voiceClone",
+          type: "apiKeyInvalid",
+          agentName: "voiceCloneElevenlabsAgent",
+        },
+      });
+    }
+
+    throw error;
   }
 };
