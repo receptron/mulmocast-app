@@ -8,6 +8,78 @@ export interface ClonedVoice {
   previewUrl?: string;
 }
 
+interface ApiError {
+  status?: number;
+  statusCode?: number;
+  body?: {
+    detail?: {
+      status?: string;
+      message?: string;
+    };
+  };
+}
+
+// Helper function to handle ElevenLabs API errors
+const handleElevenLabsError = (error: unknown, operationName: string): never => {
+  const apiError = error as ApiError;
+
+  console.error("ElevenLabs API error:", {
+    status: apiError?.status,
+    statusCode: apiError?.statusCode,
+    body: apiError?.body,
+  });
+
+  // Handle 400 errors with detailed status checking
+  if (apiError?.status === 400 || apiError?.statusCode === 400) {
+    const status = apiError?.body?.detail?.status;
+    const message = apiError?.body?.detail?.message;
+
+    if (status === "voice_limit_reached") {
+      throw new Error("Voice clone limit reached", {
+        cause: {
+          action: "voiceClone",
+          type: "voice_limit_reached",
+          agentName: "voiceCloneElevenlabsAgent",
+        },
+      });
+    }
+
+    // Handle other 400 errors generically
+    throw new Error(`${operationName}: ${message || "Bad request"}`, {
+      cause: {
+        action: "voiceClone",
+        type: status || "badRequest",
+        agentName: "voiceCloneElevenlabsAgent",
+      },
+    });
+  }
+
+  // Handle 401 errors
+  if (apiError?.status === 401 || apiError?.statusCode === 401) {
+    throw new Error(`${operationName}: Invalid API key`, {
+      cause: {
+        action: "voiceClone",
+        type: "apiKeyInvalid",
+        agentName: "voiceCloneElevenlabsAgent",
+      },
+    });
+  }
+
+  // Handle 403 errors
+  if (apiError?.status === 403 || apiError?.statusCode === 403) {
+    throw new Error(`${operationName}: Permission denied`, {
+      cause: {
+        action: "voiceClone",
+        type: "permissionDenied",
+        agentName: "voiceCloneElevenlabsAgent",
+      },
+    });
+  }
+
+  // Re-throw other errors as-is
+  throw error;
+};
+
 // Get cloned voices from ElevenLabs
 export const getClonedVoices = async (): Promise<ClonedVoice[]> => {
   const settings = await loadSettings();
@@ -33,71 +105,7 @@ export const getClonedVoices = async (): Promise<ClonedVoice[]> => {
       category: "cloned",
     });
   } catch (error: unknown) {
-    // Handle ElevenLabs API errors with structured cause
-    const apiError = error as {
-      status?: number;
-      statusCode?: number;
-      body?: {
-        detail?: {
-          status?: string;
-          message?: string;
-        };
-      };
-    };
-
-    console.error("ElevenLabs API error:", {
-      status: apiError?.status,
-      statusCode: apiError?.statusCode,
-      body: apiError?.body,
-    });
-
-    // Handle 400 errors with detailed status checking
-    if (apiError?.status === 400 || apiError?.statusCode === 400) {
-      const status = apiError?.body?.detail?.status;
-      const message = apiError?.body?.detail?.message;
-
-      if (status === "voice_limit_reached") {
-        throw new Error("Voice clone limit reached", {
-          cause: {
-            action: "voiceClone",
-            type: "voice_limit_reached",
-            agentName: "voiceCloneElevenlabsAgent",
-          },
-        });
-      }
-
-      // Handle other 400 errors generically
-      throw new Error(`Failed to get cloned voices: ${message || "Bad request"}`, {
-        cause: {
-          action: "voiceClone",
-          type: status || "badRequest",
-          agentName: "voiceCloneElevenlabsAgent",
-        },
-      });
-    }
-
-    if (apiError?.status === 401 || apiError?.statusCode === 401) {
-      throw new Error("Failed to get cloned voices: Invalid API key", {
-        cause: {
-          action: "voiceClone",
-          type: "apiKeyInvalid",
-          agentName: "voiceCloneElevenlabsAgent",
-        },
-      });
-    }
-
-    if (apiError?.status === 403 || apiError?.statusCode === 403) {
-      throw new Error("Failed to get cloned voices: Permission denied", {
-        cause: {
-          action: "voiceClone",
-          type: "permissionDenied",
-          agentName: "voiceCloneElevenlabsAgent",
-        },
-      });
-    }
-
-    // Re-throw other errors as-is
-    throw error;
+    handleElevenLabsError(error, "Failed to get cloned voices");
   }
 
   // Extract relevant voice information
@@ -133,53 +141,7 @@ export const updateVoiceName = async (voiceId: string, name: string): Promise<vo
   try {
     await client.voices.update(voiceId, { name });
   } catch (error: unknown) {
-    const apiError = error as {
-      status?: number;
-      statusCode?: number;
-      body?: {
-        detail?: {
-          status?: string;
-          message?: string;
-        };
-      };
-    };
-
-    // Handle 400 errors with detailed status checking
-    if (apiError?.status === 400 || apiError?.statusCode === 400) {
-      const status = apiError?.body?.detail?.status;
-      const message = apiError?.body?.detail?.message;
-
-      if (status === "voice_limit_reached") {
-        throw new Error("Voice clone limit reached", {
-          cause: {
-            action: "voiceClone",
-            type: "voice_limit_reached",
-            agentName: "voiceCloneElevenlabsAgent",
-          },
-        });
-      }
-
-      // Handle other 400 errors generically
-      throw new Error(`Failed to update voice name: ${message || "Bad request"}`, {
-        cause: {
-          action: "voiceClone",
-          type: status || "badRequest",
-          agentName: "voiceCloneElevenlabsAgent",
-        },
-      });
-    }
-
-    if (apiError?.status === 401 || apiError?.statusCode === 401) {
-      throw new Error("Failed to update voice name: Invalid API key", {
-        cause: {
-          action: "voiceClone",
-          type: "apiKeyInvalid",
-          agentName: "voiceCloneElevenlabsAgent",
-        },
-      });
-    }
-
-    throw error;
+    handleElevenLabsError(error, "Failed to update voice name");
   }
 };
 
@@ -220,53 +182,7 @@ export const uploadVoiceClone = async (
       removeBackgroundNoise: false,
     });
   } catch (error: unknown) {
-    const apiError = error as {
-      status?: number;
-      statusCode?: number;
-      body?: {
-        detail?: {
-          status?: string;
-          message?: string;
-        };
-      };
-    };
-
-    // Handle 400 errors with detailed status checking
-    if (apiError?.status === 400 || apiError?.statusCode === 400) {
-      const status = apiError?.body?.detail?.status;
-      const message = apiError?.body?.detail?.message;
-
-      if (status === "voice_limit_reached") {
-        throw new Error("Voice clone limit reached", {
-          cause: {
-            action: "voiceClone",
-            type: "voice_limit_reached",
-            agentName: "voiceCloneElevenlabsAgent",
-          },
-        });
-      }
-
-      // Handle other 400 errors generically
-      throw new Error(`Voice clone operation failed: ${message || "Bad request"}`, {
-        cause: {
-          action: "voiceClone",
-          type: status || "badRequest",
-          agentName: "voiceCloneElevenlabsAgent",
-        },
-      });
-    }
-
-    if (apiError?.status === 401 || apiError?.statusCode === 401) {
-      throw new Error("Failed to upload voice clone: Invalid API key", {
-        cause: {
-          action: "voiceClone",
-          type: "apiKeyInvalid",
-          agentName: "voiceCloneElevenlabsAgent",
-        },
-      });
-    }
-
-    throw error;
+    handleElevenLabsError(error, "Voice clone operation failed");
   }
 
   return {
@@ -296,52 +212,6 @@ export const deleteVoice = async (voiceId: string): Promise<void> => {
   try {
     await client.voices.delete(voiceId);
   } catch (error: unknown) {
-    const apiError = error as {
-      status?: number;
-      statusCode?: number;
-      body?: {
-        detail?: {
-          status?: string;
-          message?: string;
-        };
-      };
-    };
-
-    // Handle 400 errors with detailed status checking
-    if (apiError?.status === 400 || apiError?.statusCode === 400) {
-      const status = apiError?.body?.detail?.status;
-      const message = apiError?.body?.detail?.message;
-
-      if (status === "voice_limit_reached") {
-        throw new Error("Voice clone limit reached", {
-          cause: {
-            action: "voiceClone",
-            type: "voice_limit_reached",
-            agentName: "voiceCloneElevenlabsAgent",
-          },
-        });
-      }
-
-      // Handle other 400 errors generically
-      throw new Error(`Failed to delete voice clone: ${message || "Bad request"}`, {
-        cause: {
-          action: "voiceClone",
-          type: status || "badRequest",
-          agentName: "voiceCloneElevenlabsAgent",
-        },
-      });
-    }
-
-    if (apiError?.status === 401 || apiError?.statusCode === 401) {
-      throw new Error("Failed to delete voice clone: Invalid API key", {
-        cause: {
-          action: "voiceClone",
-          type: "apiKeyInvalid",
-          agentName: "voiceCloneElevenlabsAgent",
-        },
-      });
-    }
-
-    throw error;
+    handleElevenLabsError(error, "Failed to delete voice clone");
   }
 };
