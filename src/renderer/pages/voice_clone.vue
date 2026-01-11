@@ -258,18 +258,15 @@ const handleVoiceCloneError = (error: unknown, fallbackMessage: string) => {
     const i18nKey = action ? `notify.error.${action}.${type}.${agentName}` : `notify.error.${type}.${agentName}`;
 
     if (type === "voice_limit_reached") {
-      const descriptionKey = `${i18nKey}Description`;
       const actionKey = `${i18nKey}Action`;
       const urlKey = `${i18nKey}Url`;
 
-      const title = t(i18nKey);
-      const description = t(descriptionKey);
+      const message = t(i18nKey);
       const actionLabel = t(actionKey);
       const url = t(urlKey);
 
-      if (title !== i18nKey && description !== descriptionKey && actionLabel !== actionKey && url !== urlKey) {
-        const fullMessage = `${title}\n${description}`;
-        notifyError("", fullMessage, {
+      if (message !== i18nKey && actionLabel !== actionKey && url !== urlKey) {
+        notifyError("", message, {
           label: actionLabel,
           onClick: () => {
             window.open(url, "_blank");

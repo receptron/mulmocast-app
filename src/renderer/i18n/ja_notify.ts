@@ -137,9 +137,8 @@ export const ja_notify = {
     },
     voiceClone: {
       voice_limit_reached: {
-        voiceCloneElevenlabsAgent: "カスタムボイスの登録上限に達しました",
-        voiceCloneElevenlabsAgentDescription:
-          "新しいボイスを追加するには、プランの見直しまたは既存ボイスの削除が必要です。",
+        voiceCloneElevenlabsAgent:
+          "カスタムボイスの登録上限に達しました。新しいボイスを追加するには、プランの見直しまたは既存ボイスの削除が必要です。",
         voiceCloneElevenlabsAgentAction: "詳細を見る",
         voiceCloneElevenlabsAgentUrl: "https://elevenlabs.io/app/voice-lab",
       },

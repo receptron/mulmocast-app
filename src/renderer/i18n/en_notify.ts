@@ -136,8 +136,8 @@ export const en_notify = {
     },
     voiceClone: {
       voice_limit_reached: {
-        voiceCloneElevenlabsAgent: "Custom voice registration limit reached",
-        voiceCloneElevenlabsAgentDescription: "To add a new voice, please upgrade your plan or delete existing voices.",
+        voiceCloneElevenlabsAgent:
+          "Custom voice registration limit reached. To add a new voice, please upgrade your plan or delete existing voices.",
         voiceCloneElevenlabsAgentAction: "View Details",
         voiceCloneElevenlabsAgentUrl: "https://elevenlabs.io/app/voice-lab",
       },
