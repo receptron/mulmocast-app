@@ -277,13 +277,18 @@ const loadClonedVoices = async () => {
       if (t(i18nKey) !== i18nKey) {
         // Special handling for voice_limit_reached to show action button
         if (type === "voice_limit_reached") {
+          const descriptionKey = `${i18nKey}Description`;
           const actionKey = `${i18nKey}Action`;
           const urlKey = `${i18nKey}Url`;
+          const title = t(i18nKey);
+          const description = t(descriptionKey);
           const actionLabel = t(actionKey);
           const url = t(urlKey);
 
-          if (actionLabel !== actionKey && url !== urlKey) {
-            notifyError(t(i18nKey), undefined, {
+          if (title !== i18nKey && description !== descriptionKey && actionLabel !== actionKey && url !== urlKey) {
+            // Combine title and description, pass as first param only
+            const fullMessage = `${title}\n${description}`;
+            notifyError(fullMessage, undefined, {
               label: actionLabel,
               onClick: () => {
                 window.open(url, "_blank");
@@ -372,13 +377,18 @@ const saveNameEdit = async (voice: VoiceItem) => {
       if (t(i18nKey) !== i18nKey) {
         // Special handling for voice_limit_reached to show action button
         if (type === "voice_limit_reached") {
+          const descriptionKey = `${i18nKey}Description`;
           const actionKey = `${i18nKey}Action`;
           const urlKey = `${i18nKey}Url`;
+          const title = t(i18nKey);
+          const description = t(descriptionKey);
           const actionLabel = t(actionKey);
           const url = t(urlKey);
 
-          if (actionLabel !== actionKey && url !== urlKey) {
-            notifyError(t(i18nKey), undefined, {
+          if (title !== i18nKey && description !== descriptionKey && actionLabel !== actionKey && url !== urlKey) {
+            // Combine title and description, pass as first param only
+            const fullMessage = `${title}\n${description}`;
+            notifyError(fullMessage, undefined, {
               label: actionLabel,
               onClick: () => {
                 window.open(url, "_blank");
@@ -492,13 +502,18 @@ const uploadVoice = async () => {
       if (t(i18nKey) !== i18nKey) {
         // Special handling for voice_limit_reached to show action button
         if (type === "voice_limit_reached") {
+          const descriptionKey = `${i18nKey}Description`;
           const actionKey = `${i18nKey}Action`;
           const urlKey = `${i18nKey}Url`;
+          const title = t(i18nKey);
+          const description = t(descriptionKey);
           const actionLabel = t(actionKey);
           const url = t(urlKey);
 
-          if (actionLabel !== actionKey && url !== urlKey) {
-            notifyError(t(i18nKey), undefined, {
+          if (title !== i18nKey && description !== descriptionKey && actionLabel !== actionKey && url !== urlKey) {
+            // Combine title and description, pass as first param only
+            const fullMessage = `${title}\n${description}`;
+            notifyError(fullMessage, undefined, {
               label: actionLabel,
               onClick: () => {
                 window.open(url, "_blank");
@@ -560,13 +575,18 @@ const confirmDelete = async () => {
       if (t(i18nKey) !== i18nKey) {
         // Special handling for voice_limit_reached to show action button
         if (type === "voice_limit_reached") {
+          const descriptionKey = `${i18nKey}Description`;
           const actionKey = `${i18nKey}Action`;
           const urlKey = `${i18nKey}Url`;
+          const title = t(i18nKey);
+          const description = t(descriptionKey);
           const actionLabel = t(actionKey);
           const url = t(urlKey);
 
-          if (actionLabel !== actionKey && url !== urlKey) {
-            notifyError(t(i18nKey), undefined, {
+          if (title !== i18nKey && description !== descriptionKey && actionLabel !== actionKey && url !== urlKey) {
+            // Combine title and description, pass as first param only
+            const fullMessage = `${title}\n${description}`;
+            notifyError(fullMessage, undefined, {
               label: actionLabel,
               onClick: () => {
                 window.open(url, "_blank");
