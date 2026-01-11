@@ -249,51 +249,42 @@ const hasApiKey = computed(() => {
   return globalStore.settingPresence["ELEVENLABS_API_KEY"] === true;
 });
 
-// Helper function to handle voice clone errors with structured cause
+// Helper function to handle voice clone errors with voice_limit_reached support
 const handleVoiceCloneError = (error: unknown, fallbackMessage: string) => {
-  console.error("Voice clone error:", error);
-
-  const errorWithCause = error as Error & {
-    cause?: {
-      action: string;
-      type: string;
-      agentName: string;
-    };
-  };
+  const errorWithCause = error as Error & { cause?: { type: string; agentName: string; action?: string } };
 
   if (errorWithCause?.cause) {
-    const { action, type, agentName } = errorWithCause.cause;
-    const i18nKey = `notify.error.${action}.${type}.${agentName}`;
+    const { type, agentName, action } = errorWithCause.cause;
+    const i18nKey = action ? `notify.error.${action}.${type}.${agentName}` : `notify.error.${type}.${agentName}`;
+
+    if (type === "voice_limit_reached") {
+      const descriptionKey = `${i18nKey}Description`;
+      const actionKey = `${i18nKey}Action`;
+      const urlKey = `${i18nKey}Url`;
+
+      const title = t(i18nKey);
+      const description = t(descriptionKey);
+      const actionLabel = t(actionKey);
+      const url = t(urlKey);
+
+      if (title !== i18nKey && description !== descriptionKey && actionLabel !== actionKey && url !== urlKey) {
+        const fullMessage = `${title}\n${description}`;
+        notifyError("", fullMessage, {
+          label: actionLabel,
+          onClick: () => {
+            window.open(url, "_blank");
+          },
+        });
+        return;
+      }
+    }
 
     if (t(i18nKey) !== i18nKey) {
-      // Special handling for voice_limit_reached to show action button
-      if (type === "voice_limit_reached") {
-        const descriptionKey = `${i18nKey}Description`;
-        const actionKey = `${i18nKey}Action`;
-        const urlKey = `${i18nKey}Url`;
-        const title = t(i18nKey);
-        const description = t(descriptionKey);
-        const actionLabel = t(actionKey);
-        const url = t(urlKey);
-
-        if (title !== i18nKey && description !== descriptionKey && actionLabel !== actionKey && url !== urlKey) {
-          const fullMessage = `${title}\n${description}`;
-          notifyError(fullMessage, undefined, {
-            label: actionLabel,
-            onClick: () => {
-              window.open(url, "_blank");
-            },
-          });
-          return;
-        }
-      }
-
       notifyError(t(i18nKey));
       return;
     }
   }
 
-  // Fallback to generic error message
   const errorMessage = error instanceof Error ? error.message : fallbackMessage;
   notifyError(errorMessage);
 };
@@ -305,6 +296,8 @@ const loadClonedVoices = async () => {
   try {
     await voiceCloneStore.loadVoices();
   } catch (error) {
+    console.error("Failed to load cloned voices:", error);
+    console.log(error);
     handleVoiceCloneError(error, t("voiceClone.errors.loadFailed"));
   }
 };
@@ -356,6 +349,7 @@ const saveNameEdit = async (voice: VoiceItem) => {
     await voiceCloneStore.updateVoiceName(voice.voice_id, newName);
     notifySuccess(t("voiceClone.nameUpdated"));
   } catch (error) {
+    console.error("Failed to update voice name:", error);
     handleVoiceCloneError(error, "Failed to update voice name");
   }
 };
@@ -432,6 +426,7 @@ const uploadVoice = async () => {
     notifySuccess(t("voiceClone.uploadSuccess"));
     uploadDialog.value.open = false;
   } catch (error) {
+    console.error("Failed to upload voice:", error);
     handleVoiceCloneError(error, "Failed to upload voice");
   } finally {
     uploadDialog.value.uploading = false;
@@ -456,6 +451,7 @@ const confirmDelete = async () => {
     notifySuccess(t("voiceClone.deleteSuccess"));
     deleteDialog.value.open = false;
   } catch (error) {
+    console.error("Failed to delete voice:", error);
     handleVoiceCloneError(error, "Failed to delete voice");
   } finally {
     deleteDialog.value.deleting = false;
