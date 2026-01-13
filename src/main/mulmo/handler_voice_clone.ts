@@ -42,6 +42,16 @@ const handleBadRequestError = (error: unknown, operationName: string): void => {
       });
     }
 
+    if (status === "can_not_use_instant_voice_cloning") {
+      throw new Error("Instant voice cloning not available", {
+        cause: {
+          action: "voiceClone",
+          type: "can_not_use_instant_voice_cloning",
+          agentName: "voiceCloneElevenlabsAgent",
+        },
+      });
+    }
+
     // Handle other 400 errors generically
     throw new Error(`${operationName}: ${message || "Bad request"}`, {
       cause: {
