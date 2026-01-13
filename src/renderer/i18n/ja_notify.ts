@@ -142,6 +142,12 @@ export const ja_notify = {
         voiceCloneElevenlabsAgentAction: "詳細を見る",
         voiceCloneElevenlabsAgentUrl: "https://elevenlabs.io/app/voice-lab",
       },
+      can_not_use_instant_voice_cloning: {
+        voiceCloneElevenlabsAgent:
+          "ご契約のプランでは音声クローン機能を利用できません。ElevenLabsのプランをアップグレードしてこの機能をご利用ください。",
+        voiceCloneElevenlabsAgentAction: "詳細を見る",
+        voiceCloneElevenlabsAgentUrl: "https://elevenlabs.io/app/subscription",
+      },
       badRequest: {
         voiceCloneElevenlabsAgent: "音声クローンの操作に失敗しました。ファイルを確認して再度お試しください。",
       },

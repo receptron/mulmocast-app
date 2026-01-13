@@ -141,6 +141,12 @@ export const en_notify = {
         voiceCloneElevenlabsAgentAction: "View Details",
         voiceCloneElevenlabsAgentUrl: "https://elevenlabs.io/app/voice-lab",
       },
+      can_not_use_instant_voice_cloning: {
+        voiceCloneElevenlabsAgent:
+          "Your subscription does not have access to instant voice cloning. Please upgrade your ElevenLabs plan to use this feature.",
+        voiceCloneElevenlabsAgentAction: "View Details",
+        voiceCloneElevenlabsAgentUrl: "https://elevenlabs.io/app/subscription",
+      },
       badRequest: {
         voiceCloneElevenlabsAgent: "Voice clone operation failed. Please check your file and try again.",
       },

@@ -249,7 +249,7 @@ const hasApiKey = computed(() => {
   return globalStore.settingPresence["ELEVENLABS_API_KEY"] === true;
 });
 
-// Helper function to handle voice clone errors with voice_limit_reached support
+// Helper function to handle voice clone errors with voice_limit_reached and can_not_use_instant_voice_cloning support
 const handleVoiceCloneError = (error: unknown, fallbackMessage: string) => {
   const errorWithCause = error as Error & { cause?: { type: string; agentName: string; action?: string } };
 
@@ -257,7 +257,8 @@ const handleVoiceCloneError = (error: unknown, fallbackMessage: string) => {
     const { type, agentName, action } = errorWithCause.cause;
     const i18nKey = action ? `notify.error.${action}.${type}.${agentName}` : `notify.error.${type}.${agentName}`;
 
-    if (type === "voice_limit_reached") {
+    // Handle errors with action buttons (voice_limit_reached, can_not_use_instant_voice_cloning)
+    if (type === "voice_limit_reached" || type === "can_not_use_instant_voice_cloning") {
       const actionKey = `${i18nKey}Action`;
       const urlKey = `${i18nKey}Url`;
 
