@@ -119,7 +119,7 @@
                 :disabled="uploadDialog.uploading"
               />
               <div v-if="uploadDialog.fileName" class="space-y-2">
-                <div class="text-primary font-medium">{{ uploadDialog.fileName }}</div>
+                <p class="text-primary line-clamp-3 text-sm font-medium break-all">{{ uploadDialog.fileName }}</p>
                 <p class="text-muted-foreground text-xs">
                   {{ t("voiceClone.fileRequirements", { maxSizeMB: 10 }) }}
                 </p>
@@ -179,7 +179,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import { Mic, Loader2, Play, Pause, Pencil, Plus, Trash2 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 
@@ -459,5 +459,15 @@ const confirmDelete = async () => {
 onMounted(() => {
   audioElement.value = new Audio();
   loadClonedVoices();
+});
+
+onBeforeUnmount(() => {
+  // Stop audio playback when leaving the page
+  if (audioElement.value) {
+    audioElement.value.pause();
+    audioElement.value.src = "";
+  }
+  // Reset playing state
+  playingVoiceId.value = null;
 });
 </script>
