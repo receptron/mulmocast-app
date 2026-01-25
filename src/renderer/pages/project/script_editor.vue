@@ -137,7 +137,7 @@
                   @emitBeat="(beat, beatType) => addBeat(beat, index, beatType)"
                   buttonKey="insert"
                   :isPro="globalStore.userIsPro"
-                  :defaultBeatType="beat?.id === lastInsertedBeatId ? lastSelectedBeatType : undefined"
+                  :lastSelectedBeatType="beat?.id === lastInsertedBeatId ? lastSelectedBeatType : undefined"
                 />
               </div>
             </div>
@@ -277,7 +277,7 @@
                   @emitBeat="(beat, beatType) => addBeat(beat, index, beatType)"
                   buttonKey="insert"
                   :isPro="globalStore.userIsPro"
-                  :defaultBeatType="beat?.id === lastInsertedBeatId ? lastSelectedBeatType : undefined"
+                  :lastSelectedBeatType="beat?.id === lastInsertedBeatId ? lastSelectedBeatType : undefined"
                 />
               </div>
             </div>

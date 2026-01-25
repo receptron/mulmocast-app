@@ -26,7 +26,7 @@ interface Props {
   buttonKey: string;
   currentBeatType?: string;
   isPro: boolean;
-  defaultBeatType?: string;
+  lastSelectedBeatType?: string;
 }
 const props = defineProps<Props>();
 
@@ -50,9 +50,9 @@ const syncSelectedBeat = (useDefault: boolean) => {
   if (!useDefault) {
     return;
   }
-  // 次にdefaultBeatType（追加ボタン用）
-  if (props.defaultBeatType) {
-    const index = templates.value.findIndex((beat) => beat.key === props.defaultBeatType);
+  // 次にlastSelectedBeatType（追加ボタン用）
+  if (props.lastSelectedBeatType) {
+    const index = templates.value.findIndex((beat) => beat.key === props.lastSelectedBeatType);
     if (index !== -1) {
       selectedBeat.value = index;
       return;
