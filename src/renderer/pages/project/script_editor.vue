@@ -73,7 +73,12 @@
         </p>
         <div class="mx-auto space-y-2">
           <div class="px-2 py-1">
-            <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" :isPro="globalStore.userIsPro" />
+            <BeatSelector
+              @emitBeat="(beat, beatType) => addBeat(beat, -1, beatType)"
+              buttonKey="insert"
+              :isPro="globalStore.userIsPro"
+              :defaultBeatType="lastSelectedBeatType"
+            />
           </div>
 
           <TransitionGroup
@@ -130,9 +135,10 @@
               </div>
               <div class="px-4 pt-2">
                 <BeatSelector
-                  @emitBeat="(beat) => addBeat(beat, index)"
+                  @emitBeat="(beat, beatType) => addBeat(beat, index, beatType)"
                   buttonKey="insert"
                   :isPro="globalStore.userIsPro"
+                  :defaultBeatType="lastSelectedBeatType"
                 />
               </div>
             </div>
@@ -194,7 +200,12 @@
 
         <div class="mx-auto space-y-2">
           <div class="px-2 py-1">
-            <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" :isPro="globalStore.userIsPro" />
+            <BeatSelector
+              @emitBeat="(beat, beatType) => addBeat(beat, -1, beatType)"
+              buttonKey="insert"
+              :isPro="globalStore.userIsPro"
+              :defaultBeatType="lastSelectedBeatType"
+            />
           </div>
 
           <TransitionGroup
@@ -265,9 +276,10 @@
               </div>
               <div class="px-4 pt-2">
                 <BeatSelector
-                  @emitBeat="(beat) => addBeat(beat, index)"
+                  @emitBeat="(beat, beatType) => addBeat(beat, index, beatType)"
                   buttonKey="insert"
                   :isPro="globalStore.userIsPro"
+                  :defaultBeatType="lastSelectedBeatType"
                 />
               </div>
             </div>
@@ -404,6 +416,7 @@ const globalStore = useMulmoGlobalStore();
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
 const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
+const lastSelectedBeatType = ref<string | undefined>(undefined);
 
 const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
   /*
@@ -600,7 +613,10 @@ const changeBeat = (beat: MulmoBeat, index: number) => {
   });
 };
 
-const addBeat = (beat: MulmoBeat, index: number) => {
+const addBeat = (beat: MulmoBeat, index: number, beatType?: string) => {
+  if (beatType) {
+    lastSelectedBeatType.value = beatType;
+  }
   beat.speaker = props.mulmoScript?.speechParams?.speakers
     ? MulmoPresentationStyleMethods.getDefaultSpeaker(props.mulmoScript)
     : defaultSpeaker;

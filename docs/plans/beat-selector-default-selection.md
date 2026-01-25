@@ -1,0 +1,95 @@
+# Beat追加時のドロップダウンデフォルト選択を記憶する機能
+
+## 概要
+Beat / Text タブでbeatを追加した後、新しく表示される追加ボタンのドロップダウンで、直前に選択したbeatタイプがデフォルトで選択された状態にする。
+
+## 現状の動作
+- `BeatSelector`コンポーネント（`src/renderer/pages/project/script_editor/beat_selector.vue`）がドロップダウンを管理
+- `selectedBeat`は`ref(0)`で初期化され、常にインデックス0（image prompt）がデフォルト選択される
+- 各`BeatSelector`インスタンスは独立しており、選択状態を共有していない
+
+## 実装計画
+
+### 修正ファイル
+1. **[beat_selector.vue](src/renderer/pages/project/script_editor/beat_selector.vue)** - 主要な変更
+
+### 変更内容
+
+#### 1. script_editor.vue
+- `lastSelectedBeatType`というrefを追加して、最後に選択されたbeatタイプを保持
+- `addBeat`関数内で選択されたbeatタイプを記憶
+- `BeatSelector`に`defaultBeatType` propsを渡す
+
+#### 2. beat_selector.vue
+- 新しいprops `defaultBeatType?: string` を追加
+- `onMounted`のロジックを修正：
+  - `currentBeatType`（既存beat変更用）がある場合はそれを使用
+  - `defaultBeatType`（追加ボタン用）がある場合はそれを使用
+  - どちらもない場合はインデックス0（image prompt）をデフォルト
+
+### 具体的なコード変更
+
+**script_editor.vue:**
+```typescript
+// 追加
+const lastSelectedBeatType = ref<string | undefined>(undefined);
+
+const addBeat = (beat: MulmoBeat, index: number, beatType: string) => {
+  lastSelectedBeatType.value = beatType;  // 追加
+  // 既存のロジック...
+};
+```
+
+```vue
+<!-- BeatSelectorにdefaultBeatTypeを追加 -->
+<BeatSelector
+  @emitBeat="(beat, beatType) => addBeat(beat, index, beatType)"
+  :defaultBeatType="lastSelectedBeatType"
+  buttonKey="insert"
+  :isPro="globalStore.userIsPro"
+/>
+```
+
+**beat_selector.vue:**
+```typescript
+interface Props {
+  buttonKey: string;
+  currentBeatType?: string;
+  isPro: boolean;
+  defaultBeatType?: string;  // 追加
+}
+
+onMounted(() => {
+  // currentBeatTypeが優先（beat変更時）
+  if (props.currentBeatType) {
+    const index = templates.value.findIndex((beat) => beat.key === props.currentBeatType);
+    if (index !== -1) {
+      selectedBeat.value = index;
+      return;
+    }
+  }
+  // 次にdefaultBeatType（追加ボタン用）
+  if (props.defaultBeatType) {
+    const index = templates.value.findIndex((beat) => beat.key === props.defaultBeatType);
+    if (index !== -1) {
+      selectedBeat.value = index;
+      return;
+    }
+  }
+  // デフォルトは0
+});
+
+const emitBeat = () => {
+  const template = templates.value[selectedBeat.value];
+  const beat = { ...template.beat };
+  emit("emitBeat", beat, template.key);  // keyも一緒にemit
+};
+```
+
+## 検証方法
+1. アプリを起動して、プロジェクトを開く
+2. Beat / Text タブまたは Media タブを開く
+3. ドロップダウンで「markdown」などimage prompt以外を選択してInsertをクリック
+4. 新しく表示された追加ボタンのドロップダウンが「markdown」で選択されていることを確認
+5. 別のタイプ（例：textSlide）を選んでInsertをクリック
+6. 新しく表示された追加ボタンのドロップダウンが「textSlide」で選択されていることを確認

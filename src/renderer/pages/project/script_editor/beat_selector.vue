@@ -26,6 +26,7 @@ interface Props {
   buttonKey: string;
   currentBeatType?: string;
   isPro: boolean;
+  defaultBeatType?: string;
 }
 const props = defineProps<Props>();
 
@@ -38,12 +39,23 @@ const templates = computed(() => {
   return props.isPro ? beatTemplates : simpleTemplates;
 });
 onMounted(() => {
+  // currentBeatTypeが優先（beat変更時）
   if (props.currentBeatType) {
     const index = templates.value.findIndex((beat) => beat.key === props.currentBeatType);
     if (index !== -1) {
       selectedBeat.value = index;
+      return;
     }
   }
+  // 次にdefaultBeatType（追加ボタン用）
+  if (props.defaultBeatType) {
+    const index = templates.value.findIndex((beat) => beat.key === props.defaultBeatType);
+    if (index !== -1) {
+      selectedBeat.value = index;
+      return;
+    }
+  }
+  // デフォルトは0
 });
 
 const disableChange = computed(() => {
@@ -51,7 +63,8 @@ const disableChange = computed(() => {
 });
 
 const emitBeat = () => {
-  const beat = { ...templates.value[selectedBeat.value].beat };
-  emit("emitBeat", beat);
+  const template = templates.value[selectedBeat.value];
+  const beat = { ...template.beat };
+  emit("emitBeat", beat, template.key);
 };
 </script>
