@@ -77,7 +77,6 @@
               @emitBeat="(beat, beatType) => addBeat(beat, -1, beatType)"
               buttonKey="insert"
               :isPro="globalStore.userIsPro"
-              :defaultBeatType="lastSelectedBeatType"
             />
           </div>
 
@@ -138,7 +137,7 @@
                   @emitBeat="(beat, beatType) => addBeat(beat, index, beatType)"
                   buttonKey="insert"
                   :isPro="globalStore.userIsPro"
-                  :defaultBeatType="lastSelectedBeatType"
+                  :defaultBeatType="beat?.id === lastInsertedBeatId ? lastSelectedBeatType : undefined"
                 />
               </div>
             </div>
@@ -204,7 +203,6 @@
               @emitBeat="(beat, beatType) => addBeat(beat, -1, beatType)"
               buttonKey="insert"
               :isPro="globalStore.userIsPro"
-              :defaultBeatType="lastSelectedBeatType"
             />
           </div>
 
@@ -279,7 +277,7 @@
                   @emitBeat="(beat, beatType) => addBeat(beat, index, beatType)"
                   buttonKey="insert"
                   :isPro="globalStore.userIsPro"
-                  :defaultBeatType="lastSelectedBeatType"
+                  :defaultBeatType="beat?.id === lastInsertedBeatId ? lastSelectedBeatType : undefined"
                 />
               </div>
             </div>
@@ -417,6 +415,7 @@ const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
 const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
 const lastSelectedBeatType = ref<string | undefined>(undefined);
+const lastInsertedBeatId = ref<string | undefined>(undefined);
 
 const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
   /*
@@ -424,6 +423,9 @@ const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
     return;
   }
   */
+  if (tab !== currentTab.value) {
+    lastInsertedBeatId.value = undefined;
+  }
   emit("formatAndPushHistoryMulmoScript");
   emit("update:scriptEditorActiveTab", tab);
 };
@@ -472,6 +474,7 @@ watch(
   () => props.scriptEditorActiveTab,
   (newTab) => {
     if (newTab && newTab !== currentTab.value) {
+      lastInsertedBeatId.value = undefined;
       currentTab.value = newTab;
     }
   },
@@ -620,7 +623,9 @@ const addBeat = (beat: MulmoBeat, index: number, beatType?: string) => {
   beat.speaker = props.mulmoScript?.speechParams?.speakers
     ? MulmoPresentationStyleMethods.getDefaultSpeaker(props.mulmoScript)
     : defaultSpeaker;
-  const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, setRandomBeatId(beat));
+  const beatWithId = setRandomBeatId(beat);
+  lastInsertedBeatId.value = beatWithId.id;
+  const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, beatWithId);
   emit("updateMulmoScriptAndPushToHistory", {
     ...props.mulmoScript,
     beats: newBeats,

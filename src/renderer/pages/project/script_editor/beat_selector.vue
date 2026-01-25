@@ -15,7 +15,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, onMounted, watch } from "vue";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ref } from "vue";
@@ -38,14 +38,17 @@ const selectedBeat = ref(0);
 const templates = computed(() => {
   return props.isPro ? beatTemplates : simpleTemplates;
 });
-onMounted(() => {
+const syncSelectedBeat = (useDefault: boolean) => {
   // currentBeatTypeが優先（beat変更時）
   if (props.currentBeatType) {
     const index = templates.value.findIndex((beat) => beat.key === props.currentBeatType);
     if (index !== -1) {
       selectedBeat.value = index;
-      return;
     }
+    return;
+  }
+  if (!useDefault) {
+    return;
   }
   // 次にdefaultBeatType（追加ボタン用）
   if (props.defaultBeatType) {
@@ -56,6 +59,15 @@ onMounted(() => {
     }
   }
   // デフォルトは0
+  selectedBeat.value = 0;
+};
+
+onMounted(() => {
+  syncSelectedBeat(true);
+});
+
+watch([() => props.currentBeatType, templates], () => {
+  syncSelectedBeat(false);
 });
 
 const disableChange = computed(() => {
