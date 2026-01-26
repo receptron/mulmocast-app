@@ -26,7 +26,6 @@ interface Props {
   buttonKey: string;
   currentBeatType?: string;
   isPro: boolean;
-  lastSelectedBeatType?: string;
 }
 const props = defineProps<Props>();
 
@@ -38,45 +37,36 @@ const selectedBeat = ref(0);
 const templates = computed(() => {
   return props.isPro ? beatTemplates : simpleTemplates;
 });
-const syncSelectedBeat = (useDefault: boolean) => {
-  // currentBeatTypeが優先（beat変更時）
+const initSelectedBeat = () => {
   if (props.currentBeatType) {
     const index = templates.value.findIndex((beat) => beat.key === props.currentBeatType);
-    if (index !== -1) {
-      selectedBeat.value = index;
-    }
-    return;
-  }
-  if (!useDefault) {
-    return;
-  }
-  // 次にlastSelectedBeatType（追加ボタン用）
-  if (props.lastSelectedBeatType) {
-    const index = templates.value.findIndex((beat) => beat.key === props.lastSelectedBeatType);
     if (index !== -1) {
       selectedBeat.value = index;
       return;
     }
   }
-  // デフォルトは0
   selectedBeat.value = 0;
 };
 
 onMounted(() => {
-  syncSelectedBeat(true);
+  initSelectedBeat();
 });
 
 watch([() => props.currentBeatType, templates], () => {
-  syncSelectedBeat(false);
+  initSelectedBeat();
 });
 
 const disableChange = computed(() => {
-  return props.currentBeatType && props.currentBeatType === templates.value[selectedBeat.value]?.key;
+  return (
+    props.buttonKey === "change" &&
+    props.currentBeatType &&
+    props.currentBeatType === templates.value[selectedBeat.value]?.key
+  );
 });
 
 const emitBeat = () => {
   const template = templates.value[selectedBeat.value];
   const beat = { ...template.beat };
-  emit("emitBeat", beat, template.key);
+  emit("emitBeat", beat);
 };
 </script>

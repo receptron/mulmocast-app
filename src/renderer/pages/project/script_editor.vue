@@ -73,11 +73,7 @@
         </p>
         <div class="mx-auto space-y-2">
           <div class="px-2 py-1">
-            <BeatSelector
-              @emitBeat="(beat, beatType) => addBeat(beat, -1, beatType)"
-              buttonKey="insert"
-              :isPro="globalStore.userIsPro"
-            />
+            <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" :isPro="globalStore.userIsPro" />
           </div>
 
           <TransitionGroup
@@ -134,10 +130,10 @@
               </div>
               <div class="px-4 pt-2">
                 <BeatSelector
-                  @emitBeat="(beat, beatType) => addBeat(beat, index, beatType)"
+                  @emitBeat="(beat) => addBeat(beat, index)"
                   buttonKey="insert"
                   :isPro="globalStore.userIsPro"
-                  :lastSelectedBeatType="beat?.id === lastInsertedBeatId ? lastSelectedBeatType : undefined"
+                  :currentBeatType="getBeatType(beat)"
                 />
               </div>
             </div>
@@ -199,11 +195,7 @@
 
         <div class="mx-auto space-y-2">
           <div class="px-2 py-1">
-            <BeatSelector
-              @emitBeat="(beat, beatType) => addBeat(beat, -1, beatType)"
-              buttonKey="insert"
-              :isPro="globalStore.userIsPro"
-            />
+            <BeatSelector @emitBeat="(beat) => addBeat(beat, -1)" buttonKey="insert" :isPro="globalStore.userIsPro" />
           </div>
 
           <TransitionGroup
@@ -274,10 +266,10 @@
               </div>
               <div class="px-4 pt-2">
                 <BeatSelector
-                  @emitBeat="(beat, beatType) => addBeat(beat, index, beatType)"
+                  @emitBeat="(beat) => addBeat(beat, index)"
                   buttonKey="insert"
                   :isPro="globalStore.userIsPro"
-                  :lastSelectedBeatType="beat?.id === lastInsertedBeatId ? lastSelectedBeatType : undefined"
+                  :currentBeatType="getBeatType(beat)"
                 />
               </div>
             </div>
@@ -371,7 +363,7 @@ import { MulmoError } from "../../../types";
 import { arrayPositionUp, arrayInsertAfter } from "@/lib/array";
 import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
 
-import { setRandomBeatId } from "@/lib/beat_util";
+import { getBeatType, setRandomBeatId } from "@/lib/beat_util";
 import { projectApi } from "@/lib/project_api";
 import { useMulmoGlobalStore, useMulmoScriptHistoryStore } from "@/store";
 import { notifySuccess } from "@/lib/notification";
@@ -414,8 +406,6 @@ const globalStore = useMulmoGlobalStore();
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
 const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
-const lastSelectedBeatType = ref<string | undefined>(undefined);
-const lastInsertedBeatId = ref<string | undefined>(undefined);
 
 const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
   /*
@@ -423,9 +413,6 @@ const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
     return;
   }
   */
-  if (tab !== currentTab.value) {
-    lastInsertedBeatId.value = undefined;
-  }
   emit("formatAndPushHistoryMulmoScript");
   emit("update:scriptEditorActiveTab", tab);
 };
@@ -474,7 +461,6 @@ watch(
   () => props.scriptEditorActiveTab,
   (newTab) => {
     if (newTab && newTab !== currentTab.value) {
-      lastInsertedBeatId.value = undefined;
       currentTab.value = newTab;
     }
   },
@@ -616,16 +602,11 @@ const changeBeat = (beat: MulmoBeat, index: number) => {
   });
 };
 
-const addBeat = (beat: MulmoBeat, index: number, beatType?: string) => {
-  if (beatType) {
-    lastSelectedBeatType.value = beatType;
-  }
+const addBeat = (beat: MulmoBeat, index: number) => {
   beat.speaker = props.mulmoScript?.speechParams?.speakers
     ? MulmoPresentationStyleMethods.getDefaultSpeaker(props.mulmoScript)
     : defaultSpeaker;
-  const beatWithId = setRandomBeatId(beat);
-  lastInsertedBeatId.value = beatWithId.id;
-  const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, beatWithId);
+  const newBeats = arrayInsertAfter(props.mulmoScript.beats, index, setRandomBeatId(beat));
   emit("updateMulmoScriptAndPushToHistory", {
     ...props.mulmoScript,
     beats: newBeats,
