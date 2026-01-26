@@ -55,8 +55,8 @@
     "@types/deep-equal": "^1.0.4",
     "@types/electron-squirrel-startup": "^1.0.2",
     "@types/node": "^25.0.10",
-    "@typescript-eslint/eslint-plugin": "^8.53.1",
-    "@typescript-eslint/parser": "^8.53.1",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
     "@vitejs/plugin-vue": "^6.0.3",
     "@vue/eslint-config-typescript": "^14.6.0",
     "bufferutil": "^4.1.0",
@@ -82,7 +82,7 @@
     "vite": "^7.3.1",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vue-eslint-parser": "^10.2.0",
-    "vue-tsc": "^3.2.3",
+    "vue-tsc": "^3.2.4",
     "yaml-eslint-parser": "^2.0.0"
   },
   "resolutions": {
