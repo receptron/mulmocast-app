@@ -19,7 +19,7 @@
 
 **通常、TTSプロバイダーはvoiceIdのみを設定すれば十分です。**
 
-一部のプロバイダー（nijivoiceのspeed、openaiのinstruction、kotodamaのdecorationなど）は追加の設定（speechOptions）を必要としますが、これはプロバイダー固有の機能です。新しいプロバイダーを追加する際は、まず基本的な実装（voiceIdのみ）を行い、必要に応じてTTS固有設定を追加してください。
+一部のプロバイダー（openaiのinstruction、kotodamaのdecorationなど）は追加の設定（speechOptions）を必要としますが、これはプロバイダー固有の機能です。新しいプロバイダーを追加する際は、まず基本的な実装（voiceIdのみ）を行い、必要に応じてTTS固有設定を追加してください。
 
 ## 実装手順
 
@@ -89,7 +89,6 @@ export const DECORATION_LISTS = {
 
 #### 他のプロバイダーの例
 
-- **nijivoice**: `speed`（数値入力、範囲: 0.4-3.0）
 - **openai**: `instruction`（テキスト入力、読み上げスタイルの指示）
 - **elevenlabs**: `model`（モデル選択）
 
@@ -102,7 +101,6 @@ export const DECORATION_LISTS = {
 ```typescript
 const provider2ApiKey = {
   openai: "OPENAI_API_KEY",
-  nijivoice: "NIJIVOICE_API_KEY",
   google: "GEMINI_API_KEY",
   gemini: "GEMINI_API_KEY",
   replicate: "REPLICATE_API_TOKEN",
@@ -249,22 +247,7 @@ const getDecorationList = (provider: string) => {
 </script>
 ```
 
-#### 例2: Nijivoice（数値入力のspeed）
-
-```vue
-<div v-if="localizedSpeaker.provider === 'nijivoice'">
-  <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
-  <Input
-    :model-value="speaker.speed || ''"
-    @update:model-value="(value) => handleSpeechOptionsChange('speed', value)"
-    class="h-8"
-    type="number"
-    :placeholder="t('parameters.speechParams.speedPlaceholder')"
-  />
-</div>
-```
-
-#### 例3: OpenAI（テキスト入力のinstruction）
+#### 例2: OpenAI（テキスト入力のinstruction）
 
 ```vue
 <div v-if="localizedSpeaker.provider === 'openai' || !localizedSpeaker.provider">
@@ -361,15 +344,6 @@ const handleProviderChange = async (provider: string) => {
 #### その他の例
 
 ```json
-// Nijivoice (speed)
-{
-  "provider": "nijivoice",
-  "voiceId": "hanamura_honoka",
-  "speechOptions": {
-    "speed": 1.2
-  }
-}
-
 // OpenAI (instruction)
 {
   "provider": "openai",
@@ -382,7 +356,6 @@ const handleProviderChange = async (provider: string) => {
 
 ### 既存プロバイダーの参考実装
 
-- **nijivoice**: `speed`パラメータの実装例
 - **openai**: `instruction`パラメータの実装例
 - **kotodama**: `decoration`パラメータの実装例
 

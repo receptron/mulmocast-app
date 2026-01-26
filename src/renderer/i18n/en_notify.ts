@@ -125,7 +125,6 @@ export const en_notify = {
         ttsGoogleAgent: "An error occurred with speech synthesis (Google TTS).",
         ttsOpenaiAgent: "An error occurred with speech synthesis (OpenAI TTS).",
         ttsGeminiAgent: "An error occurred with speech synthesis (Gemini TTS).",
-        ttsNijivoiceAgent: "An error occurred with speech synthesis (Nijivoice).",
         ttsElevenlabsAgent: "An error occurred with speech synthesis (ElevenLabs).",
         ttsKotodamaAgent: "An error occurred with speech synthesis (Kotodama).",
       },
@@ -170,7 +169,6 @@ export const en_notify = {
       ttsOpenaiAgent: "The OpenAI API Key is invalid",
       ttsGoogleAgent: "The Gemini API Key is invalid",
       ttsGeminiAgent: "The Gemini API Key is invalid",
-      ttsNijivoiceAgent: "The NijiVoice API Key is invalid",
       ttsElevenlabsAgent: "The ElevenLabs API Key is invalid",
       ttsKotodamaAgent: "The Kotodama API Key is invalid",
       bgmElevenlabsAgent: "The ElevenLabs API Key is invalid",
@@ -204,7 +202,6 @@ export const en_notify = {
     },
     apiKeyMissing: {
       OPENAI_API_KEY: "OpenAI API key is not set",
-      NIJIVOICE_API_KEY: "NijiVoice API key is not set",
       TAVILY_API_KEY: "Tavily API key is not set",
       ELEVENLABS_API_KEY: "ElevenLabs API key is not set",
       KOTODAMA_API_KEY: "Kotodama API key is not set",
