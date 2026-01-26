@@ -7904,10 +7904,10 @@ mulmocast-vision@^1.0.8:
     pdfkit "^0.17.2"
     puppeteer "^24.32.0"
 
-mulmocast@^2.1.20:
-  version "2.1.20"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.1.20.tgz#3197578b47226b2f85a657b44e53db58ade9b079"
-  integrity sha512-/ZJYXDho5ZVRYJnWmV2Cn5Iqk5iFhsT/J8PGlzZRwnvAVcVOtyPXghopnQJPSCSbKobIe6nsCPefYuZ1yDf5Qg==
+mulmocast@^2.1.21:
+  version "2.1.21"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.1.21.tgz#f8a4c2e883d4a999568fffc1eacb68a6805221e2"
+  integrity sha512-MVU8zzUdrKEYpfHKxGS1fZaTyeo3NCJSRbHZS+8Y82SkTXCnQxd4imayNHAuPbwZrvDg2WY0KRr8bzq9GP2VlQ==
   dependencies:
     "@google-cloud/text-to-speech" "^6.4.0"
     "@google/genai" "^1.38.0"
