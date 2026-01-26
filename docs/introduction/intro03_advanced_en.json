@@ -158,7 +158,7 @@
     {
       "id": "d05e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       "speaker": "tech_guide",
-      "text": "You also want to be particular about the voice, right? You can use various voice providers, not just OpenAI, but also Nijivoice, which is good at Japanese, and ElevenLabs, known for high-quality speech synthesis.",
+      "text": "You also want to be particular about the voice, right? You can use various voice providers, not just OpenAI, but also Gemini, Kotodama which is good at Japanese, and ElevenLabs, known for high-quality speech synthesis.",
       "image": {
         "type": "markdown",
         "markdown": [
@@ -167,7 +167,8 @@
           "## Bring Characters to Life",
           "",
           "- **OpenAI**",
-          "- **Nijivoice**",
+          "- **Gemini**",
+          "- **Kotodama**",
           "- **ElevenLabs**",
           "",
           "> Choose a voice that matches your character settings!",
