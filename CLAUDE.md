@@ -109,7 +109,6 @@ API keys and settings are managed through:
 - Settings UI accessible from app menu
 - Available keys defined in `src/shared/constants.ts`:
   - `OPENAI_API_KEY`: OpenAI services (GPT, DALL-E, TTS)
-  - `NIJIVOICE_API_KEY`: Japanese TTS service
   - `TAVILY_API_KEY`: Web search functionality
   - `ELEVENLABS_API_KEY`: High-quality TTS
   - `GOOGLE_PROJECT_ID`: Google Cloud services

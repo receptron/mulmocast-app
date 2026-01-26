@@ -82,17 +82,6 @@
   <div v-if="audioPreviewUrl">
     <audio :src="audioPreviewUrl" controls @loadedmetadata="(e) => (e.target.volume = 0.3)" />
   </div>
-  <div v-if="localizedSpeaker.provider === 'nijivoice'">
-    <!-- speed -->
-    <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
-    <Input
-      :model-value="speaker?.speechOptions?.speed || ''"
-      @update:model-value="(value) => handleSpeechOptionsChange('speed', value)"
-      class="h-8"
-      type="number"
-      :placeholder="t('parameters.speechParams.speedPlaceholder')"
-    />
-  </div>
   <div v-if="providerSupportsElevenLabsOptions(localizedSpeaker.provider)">
     <!-- speed -->
     <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
@@ -333,12 +322,6 @@ const audioPreviewUrl = computed(() => {
       const voice = getVoiceList(provider).find((a) => a.id === voiceId);
       if (!voice?.key) return null;
       return `${baseUrl}/${provider}/${currentModel.value}/${voice.key}.mp3`;
-    }
-
-    case "nijivoice": {
-      const voice = getVoiceList(provider).find((a) => a.id === voiceId);
-      if (!voice?.key) return null;
-      return `${baseUrl}/${provider}/${voice.key}.mp3`;
     }
 
     case "kotodama": {

@@ -126,7 +126,6 @@ export const ja_notify = {
         ttsGoogleAgent: "音声合成（Google TTS）でエラーが発生しました。",
         ttsOpenaiAgent: "音声合成（OpenAI TTS）でエラーが発生しました。",
         ttsGeminiAgent: "音声合成（Gemini TTS）でエラーが発生しました。",
-        ttsNijivoiceAgent: "音声合成（Nijivoice）でエラーが発生しました。",
         ttsElevenlabsAgent: "音声合成（ElevenLabs）でエラーが発生しました。",
         ttsKotodamaAgent: "音声合成（Kotodama）でエラーが発生しました。",
       },
@@ -171,7 +170,6 @@ export const ja_notify = {
       ttsOpenaiAgent: "OpenAIのAPI Keyが正しくありません",
       ttsGoogleAgent: "GeminiのAPI Keyが正しくありません",
       ttsGeminiAgent: "GeminiのAPI Keyが正しくありません",
-      ttsNijivoiceAgent: "NijiVoiceのAPI Keyが正しくありません",
       ttsElevenlabsAgent: "ElevenLabsのAPI Keyが正しくありません",
       ttsKotodamaAgent: "KotodamaのAPI Keyが正しくありません",
       bgmElevenlabsAgent: "ElevenLabsのAPI Keyが正しくありません",
@@ -209,7 +207,6 @@ export const ja_notify = {
     },
     apiKeyMissing: {
       OPENAI_API_KEY: "OpenAIのAPI Keyが設定されていません",
-      NIJIVOICE_API_KEY: "NijiVoiceのAPI Keyが設定されていません",
       TAVILY_API_KEY: "TavilyのAPI Keyが設定されていません",
       ELEVENLABS_API_KEY: "ElevenLabsのAPI Keyが設定されていません",
       KOTODAMA_API_KEY: "KotodamaのAPI Keyが設定されていません",
