@@ -136,7 +136,7 @@ AI機能を使用するために、各種サービス（画像/動画/音声生�
     - Canvas Size: コンテンツのサイズ
     - Speech Parameters: 音声生成に必要な情報
       - 話者の名前（Presenter、太郎くんなど）
-      - どのプロバイダ（OpenAI、ニジボイスなど）の、どの声を、何語で生成する
+      - どのプロバイダ（OpenAI、Gemini、コトダマ、ElevenLabsなど）の、どの声を、何語で生成する
     - Image Parameters: 画像生成に必要な情報
       - どのプロバイダ（OpenAI、Googleなど）の、どのモデルを利用するか
     - Movie Parameters: 動画生成に必要な情報

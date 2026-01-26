@@ -159,7 +159,7 @@ export const intro03_ja = {
     {
       id: "d05e8a0c1-f2d3-4a5b-8c9e-1f2a3b4c5d6e",
       speaker: "tech_guide",
-      text: "声にもこだわりたいですよね。OpenAIだけでなく、日本語が得意なニジボイスや、高品質な音声合成で知られるElevenLabsなど、様々な声のプロバイダーを利用できます。",
+      text: "声にもこだわりたいですよね。OpenAIやGeminiだけでなく、日本語が得意なコトダマや、高品質な音声合成で知られるElevenLabsなど、様々な声のプロバイダーを利用できます。",
       image: {
         type: "markdown",
         markdown: [
@@ -168,7 +168,8 @@ export const intro03_ja = {
           "## キャラクターに命を吹き込む",
           "",
           "- **OpenAI**",
-          "- **Nijivoice**",
+          "- **Gemini**",
+          "- **Kotodama**",
           "- **ElevenLabs**",
           "",
           "> キャラクター設定に合わせて声を選ぼう！",
