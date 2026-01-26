@@ -1131,10 +1131,10 @@
     minimist "^1.2.8"
     postject "^1.0.0-alpha.6"
 
-"@elevenlabs/elevenlabs-js@^2.32.0":
-  version "2.32.0"
-  resolved "https://registry.yarnpkg.com/@elevenlabs/elevenlabs-js/-/elevenlabs-js-2.32.0.tgz#ed089f5935070a76da27680a6183ce64815711b3"
-  integrity sha512-zg9QohCTp6cgELsASZMpzggdrlI6gM0U+AOghrVGpSZNi/dELow1/Z7u3AtvYf7ElfGvYqR3CNM6+6ERKvHKsg==
+"@elevenlabs/elevenlabs-js@^2.33.0":
+  version "2.33.0"
+  resolved "https://registry.yarnpkg.com/@elevenlabs/elevenlabs-js/-/elevenlabs-js-2.33.0.tgz#884f16d44ef444eadad9f15eba8489ea961a13cb"
+  integrity sha512-cWUkm39kLW+Nbl+NZ51/0GUfqGvSTbzR0zFRq5Asvu7Dm9eFfMVjkRXGezgNo7gzxhX3WbqTAfP9X3BL5vgUqA==
   dependencies:
     command-exists "^1.2.9"
     node-fetch "^2.7.0"
@@ -5069,9 +5069,9 @@ dfa@^1.2.0:
   integrity sha512-ED3jP8saaweFTjeGX8HQPjeC1YYyZs98jGNZx6IiBvxW7JG5v492kamAQB3m2wop07CvU/RQmzcKr6bgcC5D/Q==
 
 diff@^4.0.1:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/diff/-/diff-4.0.2.tgz#60f3aecb89d5fae520c11aa19efc2bb982aade7d"
-  integrity sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/diff/-/diff-4.0.4.tgz#7a6dbfda325f25f07517e9b518f897c08332e07d"
+  integrity sha512-X07nttJQkwkfKfvTPG/KSnE2OMdcUCao6+eXF3wmnIQRn2aPAHH3VxDbDOdegkd6JbPsXqShpvEOHfAT+nCNwQ==
 
 dir-compare@^4.2.0:
   version "4.2.0"

@@ -89,7 +89,7 @@
     "unicorn-magic": "0.2.0"
   },
   "dependencies": {
-    "@elevenlabs/elevenlabs-js": "^2.32.0",
+    "@elevenlabs/elevenlabs-js": "^2.33.0",
     "@graphai/llm_agents": "^2.0.12",
     "@graphai/stream_agent_filter": "^2.0.2",
     "@graphai/vanilla": "^2.0.12",
