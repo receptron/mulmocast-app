@@ -133,6 +133,7 @@
                   @emitBeat="(beat) => addBeat(beat, index)"
                   buttonKey="insert"
                   :isPro="globalStore.userIsPro"
+                  :currentBeatType="getBeatType(beat)"
                 />
               </div>
             </div>
@@ -268,6 +269,7 @@
                   @emitBeat="(beat) => addBeat(beat, index)"
                   buttonKey="insert"
                   :isPro="globalStore.userIsPro"
+                  :currentBeatType="getBeatType(beat)"
                 />
               </div>
             </div>
@@ -361,7 +363,7 @@ import { MulmoError } from "../../../types";
 import { arrayPositionUp, arrayInsertAfter } from "@/lib/array";
 import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
 
-import { setRandomBeatId } from "@/lib/beat_util";
+import { getBeatType, setRandomBeatId } from "@/lib/beat_util";
 import { projectApi } from "@/lib/project_api";
 import { useMulmoGlobalStore, useMulmoScriptHistoryStore } from "@/store";
 import { notifySuccess } from "@/lib/notification";

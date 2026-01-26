@@ -15,7 +15,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, onMounted, watch } from "vue";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ref } from "vue";
@@ -37,21 +37,36 @@ const selectedBeat = ref(0);
 const templates = computed(() => {
   return props.isPro ? beatTemplates : simpleTemplates;
 });
-onMounted(() => {
+const initSelectedBeat = () => {
   if (props.currentBeatType) {
     const index = templates.value.findIndex((beat) => beat.key === props.currentBeatType);
     if (index !== -1) {
       selectedBeat.value = index;
+      return;
     }
   }
+  selectedBeat.value = 0;
+};
+
+onMounted(() => {
+  initSelectedBeat();
+});
+
+watch([() => props.currentBeatType, templates], () => {
+  initSelectedBeat();
 });
 
 const disableChange = computed(() => {
-  return props.currentBeatType && props.currentBeatType === templates.value[selectedBeat.value]?.key;
+  return (
+    props.buttonKey === "change" &&
+    props.currentBeatType &&
+    props.currentBeatType === templates.value[selectedBeat.value]?.key
+  );
 });
 
 const emitBeat = () => {
-  const beat = { ...templates.value[selectedBeat.value].beat };
+  const template = templates.value[selectedBeat.value];
+  const beat = { ...template.beat };
   emit("emitBeat", beat);
 };
 </script>
