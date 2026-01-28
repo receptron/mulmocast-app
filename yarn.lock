@@ -1445,20 +1445,20 @@
   resolved "https://registry.yarnpkg.com/@graphai/browserless_agent/-/browserless_agent-2.0.1.tgz#951e9800ef7c3d696f3b829347ac9d05ba4e4dc5"
   integrity sha512-Uq7gikcA7lrK3xyZwKPx6au0VcMKXDHbzHjOkuBV/I0RDNWo3qApmF6pTVBVR49WtrKKloN2/a48+8IzPGefLg==
 
-"@graphai/gemini_agent@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@graphai/gemini_agent/-/gemini_agent-2.0.1.tgz#6c87df4548cd32e57888673afa564cd8e4b06c3f"
-  integrity sha512-muQVRMTXHwcbEvVIDXVjurdoeT+V0HCElemkDDopYPbXfqLduWV1FyQ2jZaG3jlZHxp9owrUxFMb5jbt/pG24A==
-  dependencies:
-    "@google/generative-ai" "^0.24.1"
-    "@graphai/llm_utils" "^2.0.3"
-
 "@graphai/gemini_agent@^2.0.4":
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/@graphai/gemini_agent/-/gemini_agent-2.0.4.tgz#6499e0e1a3e4286dac5c03258c56845c777710d8"
   integrity sha512-KoaODcyYkpZKjVFN6mFimQk4rulZob1oV3igqhPw7waZJMIGC0biCYkzEdLtW+8PIM8cibcB1Roznm34Jsr4AA==
   dependencies:
     "@google/genai" "^1.37.0"
+    "@graphai/llm_utils" "^2.0.3"
+
+"@graphai/gemini_agent@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@graphai/gemini_agent/-/gemini_agent-2.0.5.tgz#5bddac854e5943348e939e1755b00ee92624454f"
+  integrity sha512-8JHB+1LSRiJJGeLts0KqQJt3rjFIuK0dL98jGxBH799Kr8ETaY2yyUMewewmH53NRfietp4zKGH/Ph2e9q7ssQ==
+  dependencies:
+    "@google/genai" "^1.38.0"
     "@graphai/llm_utils" "^2.0.3"
 
 "@graphai/groq_agent@^2.0.2":
@@ -1476,15 +1476,15 @@
   dependencies:
     "@inquirer/input" "^4.2.1"
 
-"@graphai/llm_agents@^2.0.12":
-  version "2.0.12"
-  resolved "https://registry.yarnpkg.com/@graphai/llm_agents/-/llm_agents-2.0.12.tgz#7fb5e40b194a0abd192b190d35c8f37bef2d93ec"
-  integrity sha512-mZxk5gSit24abuPTm4JaicE1N3Dxyg8d5GglXOV84i6MJnq4Jh65cuqzcbktRl1r1oN5jApspQncu3z+Cm6FnA==
+"@graphai/llm_agents@^2.0.14":
+  version "2.0.14"
+  resolved "https://registry.yarnpkg.com/@graphai/llm_agents/-/llm_agents-2.0.14.tgz#19623466a4113f16dab3ddd6dc60b38b91c657f7"
+  integrity sha512-2xUZyYWsCDLSBASJk3PAY3t8ulmWg1MeN9XYhCc4PS1Ks7wucb2dVkvWAuaHKVsHA7c2C1ykoB+9gJ7fHAnjwA==
   dependencies:
     "@graphai/anthropic_agent" "^2.0.12"
-    "@graphai/gemini_agent" "^2.0.1"
+    "@graphai/gemini_agent" "^2.0.5"
     "@graphai/groq_agent" "^2.0.2"
-    "@graphai/openai_agent" "^2.0.8"
+    "@graphai/openai_agent" "^2.0.9"
     "@graphai/openai_fetch_agent" "^1.0.1"
     "@graphai/replicate_agent" "^2.0.1"
     "@graphai/tools_agent" "^1.0.4"
@@ -1494,13 +1494,13 @@
   resolved "https://registry.yarnpkg.com/@graphai/llm_utils/-/llm_utils-2.0.3.tgz#abdb91d606c2ca304aeeacc67e33255a543c4488"
   integrity sha512-ardK9+E/I2jUQKjOXJ+IaVPW5tAN1Yk8LhjUf/PYm7DmeLdcsq4/TMLo7PbHlvwgOymd66OFe8CGjZ0epvN3+w==
 
-"@graphai/openai_agent@^2.0.8":
-  version "2.0.8"
-  resolved "https://registry.yarnpkg.com/@graphai/openai_agent/-/openai_agent-2.0.8.tgz#474958971c4b5462066d3b549e30cd137ec3e90a"
-  integrity sha512-jJ/G6TwPSPJjmaCx6kLXWEwlGOL4AEJkDV96D8oZ+U07JclXkf1gBEKkp4jnzW5FbNtvW3KY7a7tlmsjtxjLhQ==
+"@graphai/openai_agent@^2.0.9":
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/@graphai/openai_agent/-/openai_agent-2.0.9.tgz#737d7c980a820aeced3bc5478b7b5df0671f3add"
+  integrity sha512-7leOE1NKUF1xYPJpmcYVQ5Z4SveUuTZxSPKjMXgmKZuIODboILhFOxlYc1N1lEQcCWU3EYUS9hqw2PE1Lq+RUg==
   dependencies:
     "@graphai/llm_utils" "^2.0.3"
-    openai "^6.9.1"
+    openai "^6.16.0"
 
 "@graphai/openai_fetch_agent@^1.0.1":
   version "1.0.1"
@@ -3170,10 +3170,10 @@
   dependencies:
     undici-types "~6.21.0"
 
-"@types/node@^25.0.10":
-  version "25.0.10"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-25.0.10.tgz#4864459c3c9459376b8b75fd051315071c8213e7"
-  integrity sha512-zWW5KPngR/yvakJgGOmZ5vTBemDoSqF3AcV/LrO5u5wTWyEAVVh+IT39G4gtyAkh3CtTZs8aX/yRM82OfzHJRg==
+"@types/node@^25.1.0":
+  version "25.1.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-25.1.0.tgz#95cc584f1f478301efc86de4f1867e5875e83571"
+  integrity sha512-t7frlewr6+cbx+9Ohpl0NOTKXZNV9xHRmNOvql47BFJKcEG1CxtxlPEEe+gR9uhVWM4DwhnvTF110mIL4yP9RA==
   dependencies:
     undici-types "~7.16.0"
 
@@ -3458,14 +3458,6 @@
     estree-walker "^2.0.2"
     source-map-js "^1.2.1"
 
-"@vue/compiler-dom@3.5.26", "@vue/compiler-dom@^3.5.0":
-  version "3.5.26"
-  resolved "https://registry.yarnpkg.com/@vue/compiler-dom/-/compiler-dom-3.5.26.tgz#66c36b6ed8bdf43236d7188ea332bc9d078eb286"
-  integrity sha512-y1Tcd3eXs834QjswshSilCBnKGeQjQXB6PqFn/1nxcQw4pmG42G8lwz+FZPAZAby6gZeHSt/8LMPfZ4Rb+Bd/A==
-  dependencies:
-    "@vue/compiler-core" "3.5.26"
-    "@vue/shared" "3.5.26"
-
 "@vue/compiler-dom@3.5.27":
   version "3.5.27"
   resolved "https://registry.yarnpkg.com/@vue/compiler-dom/-/compiler-dom-3.5.27.tgz#32b2bc87f0a652c253986796ace0ed6213093af8"
@@ -3474,20 +3466,13 @@
     "@vue/compiler-core" "3.5.27"
     "@vue/shared" "3.5.27"
 
-"@vue/compiler-sfc@3.5.26":
+"@vue/compiler-dom@^3.5.0":
   version "3.5.26"
-  resolved "https://registry.yarnpkg.com/@vue/compiler-sfc/-/compiler-sfc-3.5.26.tgz#fb1c6c4bf9a9e22bb169e039e19437cb6995917a"
-  integrity sha512-egp69qDTSEZcf4bGOSsprUr4xI73wfrY5oRs6GSgXFTiHrWj4Y3X5Ydtip9QMqiCMCPVwLglB9GBxXtTadJ3mA==
+  resolved "https://registry.yarnpkg.com/@vue/compiler-dom/-/compiler-dom-3.5.26.tgz#66c36b6ed8bdf43236d7188ea332bc9d078eb286"
+  integrity sha512-y1Tcd3eXs834QjswshSilCBnKGeQjQXB6PqFn/1nxcQw4pmG42G8lwz+FZPAZAby6gZeHSt/8LMPfZ4Rb+Bd/A==
   dependencies:
-    "@babel/parser" "^7.28.5"
     "@vue/compiler-core" "3.5.26"
-    "@vue/compiler-dom" "3.5.26"
-    "@vue/compiler-ssr" "3.5.26"
     "@vue/shared" "3.5.26"
-    estree-walker "^2.0.2"
-    magic-string "^0.30.21"
-    postcss "^8.5.6"
-    source-map-js "^1.2.1"
 
 "@vue/compiler-sfc@3.5.27":
   version "3.5.27"
@@ -3503,14 +3488,6 @@
     magic-string "^0.30.21"
     postcss "^8.5.6"
     source-map-js "^1.2.1"
-
-"@vue/compiler-ssr@3.5.26":
-  version "3.5.26"
-  resolved "https://registry.yarnpkg.com/@vue/compiler-ssr/-/compiler-ssr-3.5.26.tgz#f6e94bccbb5339180779036ddfb614f998a197ea"
-  integrity sha512-lZT9/Y0nSIRUPVvapFJEVDbEXruZh2IYHMk2zTtEgJSlP5gVOqeWXH54xDKAaFS4rTnDeDBQUYDtxKyoW9FwDw==
-  dependencies:
-    "@vue/compiler-dom" "3.5.26"
-    "@vue/shared" "3.5.26"
 
 "@vue/compiler-ssr@3.5.27":
   version "3.5.27"
@@ -3575,27 +3552,12 @@
     path-browserify "^1.0.1"
     picomatch "^4.0.2"
 
-"@vue/reactivity@3.5.26":
-  version "3.5.26"
-  resolved "https://registry.yarnpkg.com/@vue/reactivity/-/reactivity-3.5.26.tgz#59a1edf566dc80133c1c26c93711c877e8602c48"
-  integrity sha512-9EnYB1/DIiUYYnzlnUBgwU32NNvLp/nhxLXeWRhHUEeWNTn1ECxX8aGO7RTXeX6PPcxe3LLuNBFoJbV4QZ+CFQ==
-  dependencies:
-    "@vue/shared" "3.5.26"
-
 "@vue/reactivity@3.5.27":
   version "3.5.27"
   resolved "https://registry.yarnpkg.com/@vue/reactivity/-/reactivity-3.5.27.tgz#d870557de1389a27b8abcb7cbfa30978dc69a000"
   integrity sha512-vvorxn2KXfJ0nBEnj4GYshSgsyMNFnIQah/wczXlsNXt+ijhugmW+PpJ2cNPe4V6jpnBcs0MhCODKllWG+nvoQ==
   dependencies:
     "@vue/shared" "3.5.27"
-
-"@vue/runtime-core@3.5.26":
-  version "3.5.26"
-  resolved "https://registry.yarnpkg.com/@vue/runtime-core/-/runtime-core-3.5.26.tgz#3f2c040bcf8018c03a1ab5adb0d788c13c986f0e"
-  integrity sha512-xJWM9KH1kd201w5DvMDOwDHYhrdPTrAatn56oB/LRG4plEQeZRQLw0Bpwih9KYoqmzaxF0OKSn6swzYi84e1/Q==
-  dependencies:
-    "@vue/reactivity" "3.5.26"
-    "@vue/shared" "3.5.26"
 
 "@vue/runtime-core@3.5.27":
   version "3.5.27"
@@ -3604,16 +3566,6 @@
   dependencies:
     "@vue/reactivity" "3.5.27"
     "@vue/shared" "3.5.27"
-
-"@vue/runtime-dom@3.5.26":
-  version "3.5.26"
-  resolved "https://registry.yarnpkg.com/@vue/runtime-dom/-/runtime-dom-3.5.26.tgz#5954848614883948ecc1f631a67b32cc32f81936"
-  integrity sha512-XLLd/+4sPC2ZkN/6+V4O4gjJu6kSDbHAChvsyWgm1oGbdSO3efvGYnm25yCjtFm/K7rrSDvSfPDgN1pHgS4VNQ==
-  dependencies:
-    "@vue/reactivity" "3.5.26"
-    "@vue/runtime-core" "3.5.26"
-    "@vue/shared" "3.5.26"
-    csstype "^3.2.3"
 
 "@vue/runtime-dom@3.5.27":
   version "3.5.27"
@@ -3624,14 +3576,6 @@
     "@vue/runtime-core" "3.5.27"
     "@vue/shared" "3.5.27"
     csstype "^3.2.3"
-
-"@vue/server-renderer@3.5.26":
-  version "3.5.26"
-  resolved "https://registry.yarnpkg.com/@vue/server-renderer/-/server-renderer-3.5.26.tgz#269055497fcc75b3984063f866f17c748b565ef4"
-  integrity sha512-TYKLXmrwWKSodyVuO1WAubucd+1XlLg4set0YoV+Hu8Lo79mp/YMwWV5mC5FgtsDxX3qo1ONrxFaTP1OQgy1uA==
-  dependencies:
-    "@vue/compiler-ssr" "3.5.26"
-    "@vue/shared" "3.5.26"
 
 "@vue/server-renderer@3.5.27":
   version "3.5.27"
@@ -3661,16 +3605,6 @@
     "@vueuse/shared" "10.11.1"
     vue-demi ">=0.14.8"
 
-"@vueuse/core@^12.5.0":
-  version "12.8.2"
-  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-12.8.2.tgz#007c6dd29a7d1f6933e916e7a2f8ef3c3f968eaa"
-  integrity sha512-HbvCmZdzAu3VGi/pWYm5Ut+Kd9mn1ZHnn4L5G8kOQTPs/IwIAmJoBrmYk2ckLArgMXZj0AW3n5CAejLUO+PhdQ==
-  dependencies:
-    "@types/web-bluetooth" "^0.0.21"
-    "@vueuse/metadata" "12.8.2"
-    "@vueuse/shared" "12.8.2"
-    vue "^3.5.13"
-
 "@vueuse/core@^14.1.0":
   version "14.1.0"
   resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-14.1.0.tgz#274e98e591a505333b7dfb2bcaf7b4530a10b9c9"
@@ -3685,11 +3619,6 @@
   resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-10.11.1.tgz#209db7bb5915aa172a87510b6de2ca01cadbd2a7"
   integrity sha512-IGa5FXd003Ug1qAZmyE8wF3sJ81xGLSqTqtQ6jaVfkeZ4i5kS2mwQF61yhVqojRnenVew5PldLyRgvdl4YYuSw==
 
-"@vueuse/metadata@12.8.2":
-  version "12.8.2"
-  resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-12.8.2.tgz#6cb3a4e97cdcf528329eebc1bda73cd7f64318d3"
-  integrity sha512-rAyLGEuoBJ/Il5AmFHiziCPdQzRt88VxR+Y/A/QhJ1EWtWqPBBAxTAFaSkviwEuOEZNtW8pvkPgoCZQ+HxqW1A==
-
 "@vueuse/metadata@14.1.0":
   version "14.1.0"
   resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-14.1.0.tgz#70fc2e94775e4a07369f11f86f6f0a465b04a381"
@@ -3702,14 +3631,7 @@
   dependencies:
     vue-demi ">=0.14.8"
 
-"@vueuse/shared@12.8.2", "@vueuse/shared@^12.5.0":
-  version "12.8.2"
-  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-12.8.2.tgz#b9e4611d0603629c8e151f982459da394e22f930"
-  integrity sha512-dznP38YzxZoNloI0qpEfpkms8knDtaoQ6Y/sfS0L7Yki4zh40LFHEhur0odJC6xTHG5dxWVPiUWBXn+wCG2s5w==
-  dependencies:
-    vue "^3.5.13"
-
-"@vueuse/shared@14.1.0":
+"@vueuse/shared@14.1.0", "@vueuse/shared@^14.1.0":
   version "14.1.0"
   resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-14.1.0.tgz#49b2face86a9c0c52e20eaf4c732a0223276c11f"
   integrity sha512-EcKxtYvn6gx1F8z9J5/rsg3+lTQnvOruQd8fUecW99DCK04BkWD7z5KQ/wTAx+DazyoEE9dJt/zV8OIEQbM6kw==
@@ -7904,10 +7826,10 @@ mulmocast-vision@^1.0.8:
     pdfkit "^0.17.2"
     puppeteer "^24.32.0"
 
-mulmocast@^2.1.21:
-  version "2.1.21"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.1.21.tgz#f8a4c2e883d4a999568fffc1eacb68a6805221e2"
-  integrity sha512-MVU8zzUdrKEYpfHKxGS1fZaTyeo3NCJSRbHZS+8Y82SkTXCnQxd4imayNHAuPbwZrvDg2WY0KRr8bzq9GP2VlQ==
+mulmocast@^2.1.24:
+  version "2.1.24"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.1.24.tgz#e6d64f01c7cfbf09e722dd5bf9a3607880348b0c"
+  integrity sha512-RI5tX3rjCSy0TYQl/bu3WA4vCaISP3PNF7F3VsGqtdWKIpdHpM43KboVFcnvs22a7Ud71opzskbjDzLSLhPRNQ==
   dependencies:
     "@google-cloud/text-to-speech" "^6.4.0"
     "@google/genai" "^1.38.0"
@@ -7916,7 +7838,7 @@ mulmocast@^2.1.21:
     "@graphai/gemini_agent" "^2.0.4"
     "@graphai/groq_agent" "^2.0.2"
     "@graphai/input_agents" "^1.0.2"
-    "@graphai/openai_agent" "^2.0.8"
+    "@graphai/openai_agent" "^2.0.9"
     "@graphai/stream_agent_filter" "^2.0.2"
     "@graphai/vanilla" "^2.0.12"
     "@graphai/vanilla_node_agents" "^2.0.4"
@@ -7934,7 +7856,7 @@ mulmocast@^2.1.21:
     marked "^17.0.1"
     mulmocast-vision "^1.0.8"
     ora "^9.1.0"
-    puppeteer "^24.36.0"
+    puppeteer "^24.36.1"
     replicate "^1.4.0"
     yaml "^2.8.2"
     yargs "^18.0.0"
@@ -8205,10 +8127,10 @@ openai@^5.0.1:
   resolved "https://registry.yarnpkg.com/openai/-/openai-5.23.2.tgz#f13e2dc2ef6b88aab6a9b97cdc68d41a1d083c68"
   integrity sha512-MQBzmTulj+MM5O8SKEk/gL8a7s5mktS9zUtAkU257WjvobGc9nKcBuVwjyEEcb9SI8a8Y2G/mzn3vm9n1Jlleg==
 
-openai@^6.9.1:
-  version "6.14.0"
-  resolved "https://registry.yarnpkg.com/openai/-/openai-6.14.0.tgz#459637e6e09bc14af1392a8dd38b1a64c2cc372a"
-  integrity sha512-ZPD9MG5/sPpyGZ0idRoDK0P5MWEMuXe0Max/S55vuvoxqyEVkN94m9jSpE3YgNgz3WoESFvozs57dxWqAco31w==
+openai@^6.16.0:
+  version "6.16.0"
+  resolved "https://registry.yarnpkg.com/openai/-/openai-6.16.0.tgz#53661d9f6307dc7523e89637ff7c6ccd0be16c67"
+  integrity sha512-fZ1uBqjFUjXzbGc35fFtYKEOxd20kd9fDpFeqWtsOZWiubY8CZ1NAlXHW3iathaFvqmNtCWMIsosCuyeI7Joxg==
 
 optionator@^0.9.3:
   version "0.9.4"
@@ -8767,7 +8689,7 @@ puppeteer-core@24.36.1:
     webdriver-bidi-protocol "0.4.0"
     ws "^8.19.0"
 
-puppeteer@24.36.1:
+puppeteer@24.36.1, puppeteer@^24.36.1:
   version "24.36.1"
   resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-24.36.1.tgz#55b328215090b9617eb71ca541232c14a60c14cb"
   integrity sha512-uPiDUyf7gd7Il1KnqfNUtHqntL0w1LapEw5Zsuh8oCK8GsqdxySX1PzdIHKB2Dw273gWY4MW0zC5gy3Re9XlqQ==
@@ -8779,7 +8701,7 @@ puppeteer@24.36.1:
     puppeteer-core "24.36.1"
     typed-query-selector "^2.12.0"
 
-puppeteer@^24.32.0, puppeteer@^24.36.0:
+puppeteer@^24.32.0:
   version "24.36.0"
   resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-24.36.0.tgz#240813cf24686ef93396a5c0975cd4b336a46f6f"
   integrity sha512-BD/VCyV/Uezvd6o7Fd1DmEJSxTzofAKplzDy6T9d4WbLTQ5A+06zY7VwO91ZlNU22vYE8sidVEsTpTrKc+EEnQ==
@@ -8959,18 +8881,18 @@ regexp.prototype.flags@^1.5.1, regexp.prototype.flags@^1.5.4:
     gopd "^1.2.0"
     set-function-name "^2.0.2"
 
-reka-ui@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/reka-ui/-/reka-ui-2.7.0.tgz#906697e744e9a9682f89372a46ef384d4500eae7"
-  integrity sha512-m+XmxQN2xtFzBP3OAdIafKq7C8OETo2fqfxcIIxYmNN2Ch3r5oAf6yEYCIJg5tL/yJU2mHqF70dCCekUkrAnXA==
+reka-ui@^2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/reka-ui/-/reka-ui-2.8.0.tgz#612023ad40c5c10999aef304f2b828cdd08da6a8"
+  integrity sha512-N4JOyIrmDE7w2i06WytqcV2QICubtS2PsK5Uo8FIMAgmO13KhUAgAByP26cXjjm2oF/w7rTyRs8YaqtvaBT+SA==
   dependencies:
     "@floating-ui/dom" "^1.6.13"
     "@floating-ui/vue" "^1.1.6"
     "@internationalized/date" "^3.5.0"
     "@internationalized/number" "^3.5.0"
     "@tanstack/vue-virtual" "^3.12.0"
-    "@vueuse/core" "^12.5.0"
-    "@vueuse/shared" "^12.5.0"
+    "@vueuse/core" "^14.1.0"
+    "@vueuse/shared" "^14.1.0"
     aria-hidden "^1.2.4"
     defu "^6.1.4"
     ohash "^2.0.11"
@@ -10346,17 +10268,6 @@ vue-tsc@^3.2.4:
   dependencies:
     "@volar/typescript" "2.4.27"
     "@vue/language-core" "3.2.4"
-
-vue@^3.5.13:
-  version "3.5.26"
-  resolved "https://registry.yarnpkg.com/vue/-/vue-3.5.26.tgz#03a0b17311e0e593d34b9358fa249b85e3a6d9fb"
-  integrity sha512-SJ/NTccVyAoNUJmkM9KUqPcYlY+u8OVL1X5EW9RIs3ch5H2uERxyyIUI4MRxVCSOiEcupX9xNGde1tL9ZKpimA==
-  dependencies:
-    "@vue/compiler-dom" "3.5.26"
-    "@vue/compiler-sfc" "3.5.26"
-    "@vue/runtime-dom" "3.5.26"
-    "@vue/server-renderer" "3.5.26"
-    "@vue/shared" "3.5.26"
 
 vue@^3.5.27:
   version "3.5.27"
