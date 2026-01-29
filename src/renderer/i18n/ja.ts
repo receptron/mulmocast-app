@@ -904,6 +904,8 @@ const lang = {
       noLanguage: "なし",
       styles: "スタイル",
       stylesDescription: "CSSスタイルを入力してください(1行に1つずつ)",
+      captionSplit: "字幕分割",
+      captionSplitDescription: "句読点で字幕を分割します（。.！!？?など）",
     },
     textSlideParams: {
       title: "スライド共通設定",
