@@ -1413,7 +1413,7 @@
   dependencies:
     google-gax "^5.0.0"
 
-"@google/genai@^1.37.0", "@google/genai@^1.38.0":
+"@google/genai@^1.38.0":
   version "1.38.0"
   resolved "https://registry.yarnpkg.com/@google/genai/-/genai-1.38.0.tgz#e26b5c269ddd6477ba71c03e829e903910010d02"
   integrity sha512-V/4CQVQGovvGHuS73lwJwHKR9x33kCij3zz/ReEQ4A7RJaV0U7m4k1mvYhFk55cGZdF5JLKu2S9BTaFuEs5xTA==
@@ -1444,14 +1444,6 @@
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@graphai/browserless_agent/-/browserless_agent-2.0.1.tgz#951e9800ef7c3d696f3b829347ac9d05ba4e4dc5"
   integrity sha512-Uq7gikcA7lrK3xyZwKPx6au0VcMKXDHbzHjOkuBV/I0RDNWo3qApmF6pTVBVR49WtrKKloN2/a48+8IzPGefLg==
-
-"@graphai/gemini_agent@^2.0.4":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@graphai/gemini_agent/-/gemini_agent-2.0.4.tgz#6499e0e1a3e4286dac5c03258c56845c777710d8"
-  integrity sha512-KoaODcyYkpZKjVFN6mFimQk4rulZob1oV3igqhPw7waZJMIGC0biCYkzEdLtW+8PIM8cibcB1Roznm34Jsr4AA==
-  dependencies:
-    "@google/genai" "^1.37.0"
-    "@graphai/llm_utils" "^2.0.3"
 
 "@graphai/gemini_agent@^2.0.5":
   version "2.0.5"
@@ -5151,10 +5143,10 @@ electron-winstaller@^5.3.0:
   optionalDependencies:
     "@electron/windows-sign" "^1.1.2"
 
-electron@40.0.0:
-  version "40.0.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-40.0.0.tgz#01b1589ce2619dc7e792b1ca78d3ff1ae2ce05e7"
-  integrity sha512-UyBy5yJ0/wm4gNugCtNPjvddjAknMTuXR2aCHioXicH7aKRKGDBPp4xqTEi/doVcB3R+MN3wfU9o8d/9pwgK2A==
+electron@40.1.0:
+  version "40.1.0"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-40.1.0.tgz#e5c45ecd90bfbaa9dd14db2f7fb5ab730e458a9e"
+  integrity sha512-2j/kvw7uF0H1PnzYBzw2k2Q6q16J8ToKrtQzZfsAoXbbMY0l5gQi2DLOauIZLzwp4O01n8Wt/74JhSRwG0yj9A==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^24.9.0"
@@ -7833,16 +7825,16 @@ mulmocast-vision@^1.0.8:
     pdfkit "^0.17.2"
     puppeteer "^24.32.0"
 
-mulmocast@^2.1.24:
-  version "2.1.24"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.1.24.tgz#e6d64f01c7cfbf09e722dd5bf9a3607880348b0c"
-  integrity sha512-RI5tX3rjCSy0TYQl/bu3WA4vCaISP3PNF7F3VsGqtdWKIpdHpM43KboVFcnvs22a7Ud71opzskbjDzLSLhPRNQ==
+mulmocast@^2.1.27:
+  version "2.1.27"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.1.27.tgz#be5d34c63b86be3a0d821c6c793776009584afcf"
+  integrity sha512-wCOO5d42hBDDqVjR3V9HuXZpG5o4Ou0bYGt5ZjU9jy48lzatFIwqjR5MZ8HhLfcNOWzDFv9ICT+CmtZhviZ6cg==
   dependencies:
     "@google-cloud/text-to-speech" "^6.4.0"
     "@google/genai" "^1.38.0"
     "@graphai/anthropic_agent" "^2.0.12"
     "@graphai/browserless_agent" "^2.0.1"
-    "@graphai/gemini_agent" "^2.0.4"
+    "@graphai/gemini_agent" "^2.0.5"
     "@graphai/groq_agent" "^2.0.2"
     "@graphai/input_agents" "^1.0.2"
     "@graphai/openai_agent" "^2.0.9"
