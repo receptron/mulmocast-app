@@ -590,6 +590,7 @@ const lang = {
         sifi_story: "SFの群像劇",
         trailer: "映画予告テンプレ",
         vision: "ビジネス分析レポート",
+        vertical_short_nano: "縦型ショート（Nano Banana）",
       },
       prompt: {
         generatePrompt:
@@ -599,10 +600,19 @@ const lang = {
         presentation: "プレゼン(1人)",
         dialogue: "２人の会話",
         story: "複数人/物語",
+        shortForm: "ショート動画（5 beats）",
       },
       continue: "続けて",
       styleTemplateNote:
         "スタイルを選択して「{createScriptButton}」を押すと、選択したスタイルに合わせてスクリプトが生成されます。",
+      quickGenerate: {
+        title: "クイック生成",
+        verticalShort: "📱 縦型ショート（5 beats）",
+        description: "トピックを入力してボタンをクリックすると、縦型ショート動画のスクリプトが生成されます",
+        error: {
+          noTopic: "トピックを入力してください",
+        },
+      },
     },
   },
   beat: {
