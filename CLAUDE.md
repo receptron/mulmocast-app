@@ -197,6 +197,62 @@ export class SecureKeyStore {
 2. Main process reads files and returns as ArrayBuffers
 3. Renderer displays assets in UI
 
+## Reka UI Component Patterns
+
+This project uses Reka UI (formerly Radix Vue) for UI components. Important API conventions:
+
+### Switch Component
+
+The Switch component uses `model-value` pattern, NOT `checked`:
+
+```vue
+<!-- CORRECT -->
+<Switch
+  :model-value="isEnabled"
+  @update:model-value="handleToggle"
+/>
+
+<!-- WRONG - will not work -->
+<Switch
+  :checked="isEnabled"
+  @update:checked="handleToggle"
+/>
+```
+
+### General Reka UI Emit Patterns
+
+- Most Reka UI components use `update:model-value` (kebab-case in template)
+- In TypeScript types, it appears as `update:modelValue` (camelCase)
+- Always check the component's emit types when unsure:
+  ```typescript
+  // Example: SwitchRootEmits
+  type SwitchRootEmits = {
+    'update:modelValue': [payload: boolean];
+  };
+  ```
+
+### Common Components and Their Value Props
+
+| Component | Value Prop | Event |
+|-----------|------------|-------|
+| Switch | `model-value` | `@update:model-value` |
+| Select | `model-value` | `@update:model-value` |
+| Checkbox | `model-value` | `@update:model-value` |
+| RadioGroup | `model-value` | `@update:model-value` |
+
+### Vue emit Pattern
+
+When creating custom components, follow Vue's standard pattern:
+
+```typescript
+const emit = defineEmits<{
+  update: [value: SomeType];  // Custom event
+}>();
+
+// Call with:
+emit("update", newValue);
+```
+
 ## Important Patterns
 
 1. **Always use absolute paths** in main process file operations
