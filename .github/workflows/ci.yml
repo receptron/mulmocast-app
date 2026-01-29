@@ -25,7 +25,18 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
 
+      # Puppeteer Chromium cache restore (speeds up downloads)
+      - name: Restore Puppeteer cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.puppeteer-cache
+          key: puppeteer-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            puppeteer-${{ runner.os }}-
+
       - name: Install dependencies
+        env:
+          PUPPETEER_CACHE_DIR: ${{ github.workspace }}/.puppeteer-cache
         run: yarn install --frozen-lockfile
 
       - name: Type check
@@ -64,6 +75,8 @@ jobs:
           node-version: 22.x
           cache: 'yarn'
       - name: Install dependencies
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: true
         run: yarn install --frozen-lockfile
       - run: xvfb-run -a --server-args="-screen 0 1024x768x24" npx ts-node test/automated_serial_generation_e2e_test.ts
         if: false 

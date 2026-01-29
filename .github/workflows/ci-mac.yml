@@ -37,12 +37,7 @@ jobs:
           # Yarnのキャッシュを有効にし、インストールを高速化
           cache: 'yarn'
 
-      # 3. 依存パッケージのインストール
-      # package.jsonとyarn.lockを元に必要なライブラリをインストール
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      # Puppeteer Chromium cache restore (speeds up downloads) and install
+      # Puppeteer Chromium cache restore (speeds up downloads)
       - name: Restore Puppeteer cache
         uses: actions/cache@v4
         with:
@@ -50,6 +45,13 @@ jobs:
           key: puppeteer-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             puppeteer-${{ runner.os }}-
+
+      # 3. 依存パッケージのインストール
+      # package.jsonとyarn.lockを元に必要なライブラリをインストール
+      - name: Install dependencies
+        env:
+          PUPPETEER_CACHE_DIR: ${{ github.workspace }}/.puppeteer-cache
+        run: yarn install --frozen-lockfile
 
       - name: Install Chromium for Puppeteer
         env:
