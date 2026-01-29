@@ -48,9 +48,10 @@ jobs:
 
       # 3. 依存パッケージのインストール
       # package.jsonとyarn.lockを元に必要なライブラリをインストール
+      # PUPPETEER_SKIP_DOWNLOAD: postinstallでのダウンロードをスキップし、後のステップでインストール
       - name: Install dependencies
         env:
-          PUPPETEER_CACHE_DIR: ${{ github.workspace }}/.puppeteer-cache
+          PUPPETEER_SKIP_DOWNLOAD: true
         run: yarn install --frozen-lockfile
 
       - name: Install Chromium for Puppeteer

@@ -34,10 +34,16 @@ jobs:
           restore-keys: |
             puppeteer-${{ runner.os }}-
 
+      # PUPPETEER_SKIP_DOWNLOAD: postinstallでのダウンロードをスキップし、後のステップでインストール
       - name: Install dependencies
         env:
-          PUPPETEER_CACHE_DIR: ${{ github.workspace }}/.puppeteer-cache
+          PUPPETEER_SKIP_DOWNLOAD: true
         run: yarn install --frozen-lockfile
+
+      - name: Install Chromium for Puppeteer
+        env:
+          PUPPETEER_CACHE_DIR: ${{ github.workspace }}/.puppeteer-cache
+        run: npx puppeteer browsers install chrome
 
       - name: Type check
         run: NODE_OPTIONS="--max-old-space-size=8192" yarn type-check

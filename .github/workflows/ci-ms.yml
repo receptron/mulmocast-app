@@ -33,10 +33,11 @@ jobs:
           restore-keys: |
             puppeteer-${{ runner.os }}-
 
+      # PUPPETEER_SKIP_DOWNLOAD: postinstallでのダウンロードをスキップし、後のステップでインストール
       - name: Install dependencies
         shell: powershell
         env:
-          PUPPETEER_CACHE_DIR: ${{ github.workspace }}\\.puppeteer-cache
+          PUPPETEER_SKIP_DOWNLOAD: true
         run: yarn install --frozen-lockfile
 
       - name: Install Chromium for Puppeteer
