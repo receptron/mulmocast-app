@@ -409,12 +409,12 @@ onMounted(async () => {
     updateMultiLingual();
     projectMetadata.value = await projectApi.getProjectMetadata(projectId.value);
     const data = await projectApi.getProjectMulmoScript(projectId.value);
-    if (data.beats) {
-      data.beats.map(setRandomBeatId);
+    const script = data ?? { beats: [], lang: globalStore.settings.APP_LANGUAGE };
+    if (script.beats) {
+      script.beats.map(setRandomBeatId);
     }
-    mulmoScriptHistoryStore.initMulmoScript(data, globalStore.settings.APP_LANGUAGE);
-    // mulmoScriptHistoryStore.lang
-    downloadAudioFiles(projectId.value, data.lang ?? globalStore.settings.APP_LANGUAGE);
+    mulmoScriptHistoryStore.initMulmoScript(script, globalStore.settings.APP_LANGUAGE);
+    downloadAudioFiles(projectId.value, script.lang ?? globalStore.settings.APP_LANGUAGE);
     downloadImageFiles(projectId.value);
   } catch (error) {
     console.error("Failed to load project:", error);
