@@ -904,6 +904,8 @@ const lang = {
       noLanguage: "None",
       styles: "Styles",
       stylesDescription: "Enter CSS styles (one per line)",
+      captionSplit: "Caption Split",
+      captionSplitDescription: "Split captions at punctuation marks (. ! ? etc.)",
     },
     textSlideParams: {
       title: "Common Slide Parameters",

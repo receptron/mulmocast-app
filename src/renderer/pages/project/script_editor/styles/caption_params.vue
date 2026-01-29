@@ -29,16 +29,28 @@
           @change="handleStylesInput"
         />
       </div>
+      <div class="flex items-center space-x-2">
+        <Switch
+          :model-value="captionSplitEnabled"
+          :disabled="!props.captionParams?.lang"
+          @update:model-value="handleCaptionSplitToggle"
+        />
+        <Label>{{ t("parameters.captionParams.captionSplit") }}</Label>
+      </div>
+      <div v-if="captionSplitEnabled" class="text-muted-foreground text-xs">
+        {{ t("parameters.captionParams.captionSplitDescription") }}
+      </div>
       <MulmoError :mulmoError="mulmoError" />
     </div>
   </Card>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { Card, Label, Textarea } from "@/components/ui";
+import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { MulmoPresentationStyle } from "mulmocast/browser";
 import { LANGUAGES } from "../../../../../shared/constants";
@@ -57,6 +69,13 @@ const emit = defineEmits<{
 
 const styles = ref("");
 
+// All delimiters that work across languages
+const universalDelimiters = ["。", "．", ".", "！", "!", "？", "?", "；", ";", "\n"];
+
+const captionSplitEnabled = computed(() => {
+  return props.captionParams?.captionSplit === "estimate";
+});
+
 const handleLangInput = (value: string) => {
   if (value && value !== "__undefined__") {
     emit("update", {
@@ -73,6 +92,23 @@ const handleStylesInput = () => {
     ...props.captionParams,
     styles: styles.value.split("\n").filter((line) => line.trim() !== ""),
   });
+};
+
+const handleCaptionSplitToggle = (enabled: boolean) => {
+  if (enabled) {
+    emit("update", {
+      ...props.captionParams,
+      captionSplit: "estimate",
+      textSplit: {
+        type: "delimiters",
+        delimiters: universalDelimiters,
+      },
+    });
+  } else {
+    // Remove captionSplit and textSplit
+    const { captionSplit: __captionSplit, textSplit: __textSplit, ...rest } = props.captionParams ?? {};
+    emit("update", Object.keys(rest).length > 0 ? rest : undefined);
+  }
 };
 
 watch(
