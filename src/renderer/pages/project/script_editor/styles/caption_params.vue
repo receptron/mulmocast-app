@@ -37,8 +37,17 @@
         />
         <Label>{{ t("parameters.captionParams.captionSplit") }}</Label>
       </div>
-      <div v-if="captionSplitEnabled" class="text-muted-foreground text-xs">
+      <div class="text-muted-foreground text-xs">
         {{ t("parameters.captionParams.captionSplitDescription") }}
+        <div v-if="delimitersCategories.fullWidth.length" class="mt-1 font-mono">
+          {{ t("parameters.captionParams.fullWidth") }}: {{ delimitersCategories.fullWidth.join(" ") }}
+        </div>
+        <div v-if="delimitersCategories.halfWidth.length" class="font-mono">
+          {{ t("parameters.captionParams.halfWidth") }}: {{ delimitersCategories.halfWidth.join(" ") }}
+        </div>
+        <div v-if="delimitersCategories.other.length" class="font-mono">
+          {{ delimitersCategories.other.join(" ") }}
+        </div>
       </div>
       <MulmoError :mulmoError="mulmoError" />
     </div>
@@ -74,6 +83,35 @@ const universalDelimiters = ["。", "．", ".", "！", "!", "？", "?", "；", "
 
 const captionSplitEnabled = computed(() => {
   return props.captionParams?.captionSplit === "estimate";
+});
+
+// Check if character is half-width (ASCII range)
+const isHalfWidth = (char: string) => {
+  const code = char.charCodeAt(0);
+  return code >= 0x0020 && code <= 0x007e;
+};
+
+const delimitersCategories = computed(() => {
+  const delimiters =
+    props.captionParams?.textSplit?.type === "delimiters"
+      ? props.captionParams.textSplit.delimiters
+      : universalDelimiters;
+
+  const fullWidth: string[] = [];
+  const halfWidth: string[] = [];
+  const other: string[] = [];
+
+  for (const delimiter of delimiters ?? []) {
+    if (delimiter === "\n") {
+      other.push(t("parameters.captionParams.newline"));
+    } else if (isHalfWidth(delimiter)) {
+      halfWidth.push(delimiter);
+    } else {
+      fullWidth.push(delimiter);
+    }
+  }
+
+  return { fullWidth, halfWidth, other };
 });
 
 const handleLangInput = (value: string) => {
