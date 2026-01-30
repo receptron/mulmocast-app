@@ -85,10 +85,11 @@ const captionSplitEnabled = computed(() => {
   return props.captionParams?.captionSplit === "estimate";
 });
 
-// Full-width delimiters set
-const fullWidthDelimiters = new Set(["。", "．", "！", "？", "；"]);
-// Half-width delimiters set
-const halfWidthDelimiters = new Set([".", "!", "?", ";"]);
+// Check if character is half-width (ASCII range)
+const isHalfWidth = (char: string) => {
+  const code = char.charCodeAt(0);
+  return code >= 0x0020 && code <= 0x007e;
+};
 
 const delimitersCategories = computed(() => {
   const delims =
@@ -103,12 +104,10 @@ const delimitersCategories = computed(() => {
   for (const d of delims ?? []) {
     if (d === "\n") {
       other.push(t("parameters.captionParams.newline"));
-    } else if (fullWidthDelimiters.has(d)) {
-      fullWidth.push(d);
-    } else if (halfWidthDelimiters.has(d)) {
+    } else if (isHalfWidth(d)) {
       halfWidth.push(d);
     } else {
-      other.push(d);
+      fullWidth.push(d);
     }
   }
 
