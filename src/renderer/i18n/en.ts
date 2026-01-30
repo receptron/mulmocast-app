@@ -905,7 +905,10 @@ const lang = {
       styles: "Styles",
       stylesDescription: "Enter CSS styles (one per line)",
       captionSplit: "Caption Split",
-      captionSplitDescription: "Split captions at punctuation marks (. ! ? etc.)",
+      captionSplitDescription: "Split captions at: ",
+      newline: "newline",
+      fullWidth: "Full-width",
+      halfWidth: "Half-width",
     },
     textSlideParams: {
       title: "Common Slide Parameters",
