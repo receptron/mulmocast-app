@@ -78,6 +78,87 @@ export const graphChatWithSearch = (isChoice = false, isOpenAI = false): GraphDa
   };
 };
 
+// chat with tools and loop support - continues until attempt_completion is called
+export const graphChatWithSearchLoop = (isChoice = false, isOpenAI = false): GraphData => {
+  const tool_choice = (() => {
+    if (isChoice) {
+      return {
+        type: "function",
+        function: {
+          name: "mulmoScriptAgent--createBeatsOnMulmoScript",
+        },
+      };
+    } else {
+      return "auto";
+    }
+  })();
+
+  return {
+    version: graphDataLatestVersion,
+    loop: {
+      while: ":continue",
+    },
+    nodes: {
+      messages: {
+        update: ":llm.messages",
+      },
+      prompt: {
+        update: "",
+      },
+      llmAgent: {},
+      llmModel: {},
+      tools: {
+        value: [],
+      },
+      passthrough: {
+        value: {},
+      },
+      llm: {
+        isResult: true,
+        agent: "toolsAgent",
+        inputs: {
+          llmAgent: ":llmAgent",
+          llmModel: ":llmModel",
+          tools: ":tools",
+          messages: ":messages",
+          passthrough: ":passthrough",
+          userInput: {
+            text: ":prompt",
+            message: {
+              role: "user",
+              content: ":prompt",
+            },
+          },
+          ...(isOpenAI
+            ? {
+                tool_choice,
+              }
+            : {}),
+        },
+      },
+      continue: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        agent: ({ messages, loop }: any) => {
+          // Check if attempt_completion has been called
+          const hasAttemptCompletion = messages.some(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (msg: any) => msg.role === "tool" && msg.name && msg.name.includes("attempt_completion"),
+          );
+
+          // Continue if: loop < 10 AND attempt_completion hasn't been called yet
+          const shouldContinue = loop < 10 && !hasAttemptCompletion;
+
+          return shouldContinue;
+        },
+        inputs: {
+          messages: ":llm.messages",
+          loop: "${@loop}",
+        },
+      },
+    },
+  };
+};
+
 export const graphGenerateMulmoScriptInternal: GraphData = {
   version: graphDataLatestVersion,
   loop: {

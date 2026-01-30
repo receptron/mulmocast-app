@@ -100,6 +100,22 @@
         </div>
       </div>
 
+      <!-- Quick Generate Section -->
+      <div class="border-border bg-muted/30 rounded-lg border p-3">
+        <h3 class="mb-2 text-sm font-medium">{{ t("project.chat.quickGenerate.title") }}</h3>
+        <div class="flex gap-2">
+          <Button
+            size="sm"
+            @click="generateVerticalShort"
+            :disabled="isRunning || noChatText"
+            class="flex items-center gap-2"
+          >
+            {{ t("project.chat.quickGenerate.verticalShort") }}
+          </Button>
+        </div>
+        <p class="text-muted-foreground mt-2 text-xs">{{ t("project.chat.quickGenerate.description") }}</p>
+      </div>
+
       <div class="flex flex-wrap items-start gap-4" v-if="messages.length > 0">
         <div class="flex gap-2">
           <StyleTemplate :isPro="globalStore.userIsPro" v-model="selectedTemplateIndex" ref="styleTemplate" />
@@ -225,10 +241,12 @@ import UserMessage from "./chat/user_message.vue";
 import ToolsMessage from "./chat/tools_message.vue";
 import StyleTemplate from "./chat/style_template.vue";
 
-import { graphChatWithSearch } from "./chat/graph";
+import { graphChatWithSearchLoop } from "./chat/graph";
+import { customPromptTemplates } from "@/data/custom_templates";
 import mulmoScriptValidatorAgent from "../../agents/mulmo_script_validator";
 import mulmoVisionAgent from "../../agents/mulmo_vision_agent";
-import mulmoScriptAgent from "../../agents/mulmo_script";
+import mulmoScriptAgent, { generateTools as mulmoScriptGenerateTools } from "../../agents/mulmo_script";
+import attemptCompletionAgent from "../../agents/attempt_completion";
 // presentation manuscript
 
 import { insertSpeakers } from "../utils";
@@ -386,12 +404,21 @@ const run = async (isScript: false) => {
     const config = await getGraphConfig();
     const llmModel = config[llmAgent.value]?.model || ""; // The model setting in config can be overridden by params.model (even if it is a blank string).
 
+    // Get current speakers and imageNames from script
+    const currentScript = mulmoScriptHistoryStore.currentMulmoScript;
+    const speakers = currentScript?.speechParams?.speakers ? Object.keys(currentScript.speechParams.speakers) : [];
+    const imageNames = currentScript?.imageParams?.images ? Object.keys(currentScript.imageParams.images) : [];
+
+    const mulmoScriptTool = mulmoScriptGenerateTools(speakers, imageNames);
+
     const tools = [
       // ...mulmoScriptValidatorAgent.tools,
       ...puppeteerAgent.tools,
       // ...mulmoVisionAgent.tools,
       ...mulmoCastHelpAgent.tools,
-      ...mulmoScriptAgent.tools,
+      // ...mulmoScriptAgent.tools,
+      mulmoScriptTool,
+      ...attemptCompletionAgent.tools, // Always add attempt_completion for loop termination
     ];
 
     const templateSystemPrompt = styleTemplate.value?.currentTemplate?.systemPrompt;
@@ -431,7 +458,8 @@ const run = async (isScript: false) => {
       mulmoScriptAgent,
     };
 
-    const graphai = new GraphAI(graphChatWithSearch(isScript && isOpenAI.value, isOpenAI.value), graphAIAgents, {
+    // Always use loop graph with attempt_completion for flexible multi-step execution
+    const graphai = new GraphAI(graphChatWithSearchLoop(isScript && isOpenAI.value, isOpenAI.value), graphAIAgents, {
       agentFilters,
       config,
     });
@@ -618,4 +646,41 @@ watch(conversationMode, async (newValue) => {
 watch(selectedTemplateIndex, async (newValue) => {
   updateProjectMetadataSettings({ chatTemplateIndex: newValue });
 });
+
+// Generate vertical short video
+const allTemplates = [...promptTemplates, ...customPromptTemplates];
+
+const generateVerticalShort = async () => {
+  if (!userInput.value.trim()) {
+    notifyError(t("project.chat.quickGenerate.error.noTopic"));
+    return;
+  }
+
+  // Find and select vertical short template
+  const verticalShortIndex = allTemplates.findIndex((t) => t.filename === "vertical_short_nano");
+
+  if (verticalShortIndex !== -1) {
+    selectedTemplateIndex.value = verticalShortIndex;
+  }
+
+  // Set conversation mode to shortForm
+  conversationMode.value = "shortForm";
+
+  // Simple prompt - LLM will determine if URL fetching is needed
+  const enhancedPrompt = `Create a compelling 5-beat vertical short-form video script about: ${userInput.value}
+
+Requirements:
+- EXACTLY 5 beats (no more, no less)
+- Each beat: 10-15 seconds of speech
+- Simple, visual image prompts (no Japanese text)
+- Engaging for social media audience
+- Optimized for 9:16 vertical format
+
+IMPORTANT: After creating the script, call the attempt_completion tool to signal that you are done.`;
+
+  userInput.value = enhancedPrompt;
+
+  // Execute script generation
+  await run(false); // isScript = false to use userInput.value
+};
 </script>
