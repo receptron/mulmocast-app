@@ -37,8 +37,14 @@
         />
         <Label>{{ t("parameters.captionParams.captionSplit") }}</Label>
       </div>
-      <div v-if="captionSplitEnabled" class="text-muted-foreground text-xs">
+      <div class="text-muted-foreground text-xs">
         {{ t("parameters.captionParams.captionSplitDescription") }}
+      </div>
+      <div v-if="captionSplitEnabled">
+        <div class="mb-2 text-xs">
+          {{ t("parameters.captionParams.delimitersDescription") }}
+        </div>
+        <Textarea v-model="delimiters" class="font-mono" rows="3" @change="handleDelimitersInput" />
       </div>
       <MulmoError :mulmoError="mulmoError" />
     </div>
@@ -68,9 +74,10 @@ const emit = defineEmits<{
 }>();
 
 const styles = ref("");
+const delimiters = ref("");
 
-// All delimiters that work across languages
-const universalDelimiters = ["。", "．", ".", "！", "!", "？", "?", "；", ";", "\n"];
+// Default delimiters that work across languages
+const defaultDelimiters = ["。", "．", ".", "！", "!", "？", "?", "；", ";", "\n"];
 
 const captionSplitEnabled = computed(() => {
   return props.captionParams?.captionSplit === "estimate";
@@ -94,17 +101,33 @@ const handleStylesInput = () => {
   });
 };
 
+const handleDelimitersInput = () => {
+  const delimiterArray = delimiters.value
+    .split("\n")
+    .filter((d) => d !== "")
+    .map((d) => (d === "\\n" ? "\n" : d)); // Convert escaped \\n back to actual newline
+  emit("update", {
+    ...props.captionParams,
+    textSplit: {
+      type: "delimiters",
+      delimiters: delimiterArray,
+    },
+  });
+};
+
 const handleCaptionSplitToggle = (enabled: boolean) => {
   if (enabled) {
+    delimiters.value = defaultDelimiters.map((d) => (d === "\n" ? "\\n" : d)).join("\n");
     emit("update", {
       ...props.captionParams,
       captionSplit: "estimate",
       textSplit: {
         type: "delimiters",
-        delimiters: universalDelimiters,
+        delimiters: defaultDelimiters,
       },
     });
   } else {
+    delimiters.value = "";
     // Remove captionSplit and textSplit
     const { captionSplit: __captionSplit, textSplit: __textSplit, ...rest } = props.captionParams ?? {};
     emit("update", Object.keys(rest).length > 0 ? rest : undefined);
@@ -114,9 +137,14 @@ const handleCaptionSplitToggle = (enabled: boolean) => {
 watch(
   () => props.captionParams,
   (newVal) => {
-    // Only set styles if first time
-    if (styles.value) return;
-    styles.value = newVal?.styles?.join("\n") || "";
+    // Sync styles from JSON to UI (only if not already set)
+    if (!styles.value) {
+      styles.value = newVal?.styles?.join("\n") || "";
+    }
+    // Sync delimiters from JSON to UI (only if not already set, escape actual newlines to \\n for display)
+    if (!delimiters.value && newVal?.textSplit?.type === "delimiters" && newVal.textSplit.delimiters) {
+      delimiters.value = newVal.textSplit.delimiters.map((d: string) => (d === "\n" ? "\\n" : d)).join("\n");
+    }
   },
   { immediate: true },
 );

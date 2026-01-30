@@ -906,6 +906,7 @@ const lang = {
       stylesDescription: "CSSスタイルを入力してください(1行に1つずつ)",
       captionSplit: "字幕分割",
       captionSplitDescription: "句読点で字幕を分割します（。.！!？?など）",
+      delimitersDescription: "字幕を分割する文字（1行に1つ、改行は\\nと入力）",
     },
     textSlideParams: {
       title: "スライド共通設定",
