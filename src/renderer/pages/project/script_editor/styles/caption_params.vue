@@ -41,8 +41,7 @@
         {{ t("parameters.captionParams.captionSplitDescription") }}
       </div>
       <div v-if="captionSplitEnabled">
-        <Label>{{ t("parameters.captionParams.delimiters") }}</Label>
-        <div class="text-muted-foreground mb-2 text-xs">
+        <div class="mb-2 text-xs">
           {{ t("parameters.captionParams.delimitersDescription") }}
         </div>
         <Textarea v-model="delimiters" class="font-mono" rows="3" @change="handleDelimitersInput" />
