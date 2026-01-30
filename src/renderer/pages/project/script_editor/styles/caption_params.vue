@@ -92,7 +92,7 @@ const isHalfWidth = (char: string) => {
 };
 
 const delimitersCategories = computed(() => {
-  const delims =
+  const delimiters =
     props.captionParams?.textSplit?.type === "delimiters"
       ? props.captionParams.textSplit.delimiters
       : universalDelimiters;
@@ -101,13 +101,13 @@ const delimitersCategories = computed(() => {
   const halfWidth: string[] = [];
   const other: string[] = [];
 
-  for (const d of delims ?? []) {
-    if (d === "\n") {
+  for (const delimiter of delimiters ?? []) {
+    if (delimiter === "\n") {
       other.push(t("parameters.captionParams.newline"));
-    } else if (isHalfWidth(d)) {
-      halfWidth.push(d);
+    } else if (isHalfWidth(delimiter)) {
+      halfWidth.push(delimiter);
     } else {
-      fullWidth.push(d);
+      fullWidth.push(delimiter);
     }
   }
 
