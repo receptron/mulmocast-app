@@ -142,11 +142,9 @@ watch(
     if (!styles.value) {
       styles.value = newVal?.styles?.join("\n") || "";
     }
-    // Sync delimiters from JSON to UI (escape actual newlines to \\n for display)
-    if (newVal?.textSplit?.type === "delimiters" && newVal.textSplit.delimiters) {
+    // Sync delimiters from JSON to UI (only if not already set, escape actual newlines to \\n for display)
+    if (!delimiters.value && newVal?.textSplit?.type === "delimiters" && newVal.textSplit.delimiters) {
       delimiters.value = newVal.textSplit.delimiters.map((d: string) => (d === "\n" ? "\\n" : d)).join("\n");
-    } else {
-      delimiters.value = "";
     }
   },
   { immediate: true },
