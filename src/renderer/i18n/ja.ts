@@ -220,6 +220,7 @@ const lang = {
       anthropicAgent: "Anthropic",
       replicateAgent: "Replicate",
       groqAgent: "Groq",
+      azureOpenAIAgent: "Azure OpenAI",
     },
     provider: {
       openai: {
@@ -245,6 +246,10 @@ const lang = {
       replicate: {
         name: "Replicate",
         speechName: "Replicate",
+      },
+      azureOpenai: {
+        name: "Azure OpenAI",
+        speechName: "Azure OpenAI",
       },
       alertTemplate: "設定画面で{thing}を設定してください",
     },
@@ -345,6 +350,31 @@ const lang = {
         url: "URL",
       },
       model: "モデル",
+      azureOpenai: {
+        modelDescription: "Azure OpenAIのデプロイメント名を入力してください",
+        modelPlaceholder: "例: gpt-4o-deployment",
+        configRequired: "Azure OpenAI設定セクションでAPI KeyとBase URLを設定してください",
+      },
+    },
+    azureOpenAI: {
+      title: "Azure OpenAI",
+      description: "企業向けAzure OpenAI Serviceの設定",
+      apiKey: "API Key",
+      apiKeyPlaceholder: "Azure OpenAI API Keyを入力",
+      baseUrl: "Base URL",
+      baseUrlPlaceholder: "https://your-resource-name.openai.azure.com/",
+      image: {
+        title: "画像生成",
+      },
+      tts: {
+        title: "音声合成",
+      },
+      llm: {
+        title: "テキスト生成 (LLM)",
+      },
+      deploymentNamePlaceholder: "デプロイメント名を入力",
+      deploymentNameRequired: "Azure OpenAIではデプロイメント名が必須です",
+      voiceIdPlaceholder: "Voice IDを入力",
     },
   },
   onboarding: {

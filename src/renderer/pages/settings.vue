@@ -102,11 +102,18 @@
         </CardContent>
       </Card>
 
+      <!-- Azure OpenAI Settings -->
+      <AzureOpenAISettings
+        :azure-open-a-i-config="azureOpenAIConfig"
+        @update:azure-open-a-i-config="updateAzureOpenAIConfig"
+      />
+
       <!-- llm -->
       <LlmSettings
         :selected-l-l-m="selectedLLM"
         :llm-configs="llmConfigs"
         :api-keys="apiKeys"
+        :azure-open-a-i-config="azureOpenAIConfig"
         @update:selected-l-l-m="updateSelectedLLM"
         @update:llm-configs="updateLlmConfigs"
       />
@@ -142,9 +149,10 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import LlmSettings from "@/components/llm_settings.vue";
 import ApiKeyInput from "@/components/api_key_input.vue";
+import AzureOpenAISettings from "@/components/azure_openai_settings.vue";
 
 import { notifySuccess, notifyError } from "@/lib/notification";
-import { LlmConfigs } from "../../types/index";
+import { LlmConfigs, AzureOpenAIConfig } from "../../types/index";
 import {
   ENV_KEYS,
   languages,
@@ -154,6 +162,7 @@ import {
   LLM_ANTHROPIC_DEFAULT_CONFIG,
   LLM_GROQ_DEFAULT_CONFIG,
   LLM_GEMINI_DEFAULT_CONFIG,
+  LLM_AZURE_OPENAI_DEFAULT_CONFIG,
   userLevels,
 } from "../../shared/constants";
 import { useMulmoGlobalStore } from "../store";
@@ -182,7 +191,10 @@ const llmConfigs = ref<LlmConfigs>({
   anthropic: { ...LLM_ANTHROPIC_DEFAULT_CONFIG },
   groq: { ...LLM_GROQ_DEFAULT_CONFIG },
   gemini: { ...LLM_GEMINI_DEFAULT_CONFIG },
+  azureOpenai: { ...LLM_AZURE_OPENAI_DEFAULT_CONFIG },
 });
+
+const azureOpenAIConfig = ref<AzureOpenAIConfig>({});
 
 // Initialize all keys
 Object.keys(ENV_KEYS).forEach((envKey) => {
@@ -233,6 +245,12 @@ onMounted(async () => {
     if (settings?.llmConfigs?.groq) {
       llmConfigs.value.groq = settings.llmConfigs.groq;
     }
+    if (settings?.llmConfigs?.azureOpenai) {
+      llmConfigs.value.azureOpenai = settings.llmConfigs.azureOpenai;
+    }
+    if (settings?.AZURE_OPENAI) {
+      azureOpenAIConfig.value = settings.AZURE_OPENAI;
+    }
     if (settings?.USER_LEVEL) {
       selectedUserLevel.value = settings.USER_LEVEL;
     }
@@ -259,6 +277,7 @@ const saveSettings = async () => {
       USER_LEVEL: selectedUserLevel.value ?? USER_LEVEL ?? "beginner",
       onboardProject,
       DARK_MODE,
+      AZURE_OPENAI: JSON.parse(JSON.stringify(azureOpenAIConfig.value)),
     };
     await window.electronAPI.settings.set(data);
     console.log(data);
@@ -288,9 +307,13 @@ const updateLlmConfigs = (configs: LlmConfigs) => {
   llmConfigs.value = configs;
 };
 
+const updateAzureOpenAIConfig = (config: AzureOpenAIConfig) => {
+  azureOpenAIConfig.value = config;
+};
+
 // Watch for changes in text
 watch(
-  [apiKeys, llmConfigs],
+  [apiKeys, llmConfigs, azureOpenAIConfig],
   () => {
     // Skip save during initial load
     if (!isInitialLoad.value) {

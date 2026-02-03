@@ -19,24 +19,38 @@
       </div>
       <div>
         <Label>{{ t("ui.common.model") }}</Label>
-        <Select
-          :model-value="imageParams?.model || IMAGE_PARAMS_DEFAULT_VALUES.model"
-          @update:model-value="(value) => handleUpdate('model', String(value))"
-        >
-          <SelectTrigger>
-            <SelectValue :placeholder="t('parameters.imageParams.modelAuto')" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="__undefined__">{{ t("parameters.imageParams.modelAuto") }}</SelectItem>
-            <SelectItem
-              v-for="model in PROVIDERS.find((p) => p.value === imageProvider)?.models || []"
-              :key="model"
-              :value="model"
-            >
-              {{ getModelDisplayName(model) }}
-            </SelectItem>
-          </SelectContent>
-        </Select>
+        <!-- Azure OpenAI: Text input for deployment name -->
+        <template v-if="isAzureOpenAI">
+          <Input
+            :model-value="imageParams?.model || ''"
+            @update:model-value="(value) => handleUpdate('model', String(value))"
+            :placeholder="t('settings.azureOpenAI.deploymentNamePlaceholder')"
+          />
+          <p v-if="!imageParams?.model" class="text-destructive mt-1 text-xs">
+            {{ t("settings.azureOpenAI.deploymentNameRequired") }}
+          </p>
+        </template>
+        <!-- Other providers: Dropdown -->
+        <template v-else>
+          <Select
+            :model-value="imageParams?.model || IMAGE_PARAMS_DEFAULT_VALUES.model"
+            @update:model-value="(value) => handleUpdate('model', String(value))"
+          >
+            <SelectTrigger>
+              <SelectValue :placeholder="t('parameters.imageParams.modelAuto')" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="__undefined__">{{ t("parameters.imageParams.modelAuto") }}</SelectItem>
+              <SelectItem
+                v-for="model in PROVIDERS.find((p) => p.value === imageProvider)?.models || []"
+                :key="model"
+                :value="model"
+              >
+                {{ getModelDisplayName(model) }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </template>
       </div>
       <div>
         <Label>{{ t("ui.common.renderingQuality") }}</Label>
@@ -92,15 +106,28 @@ const { t } = useI18n();
 const qualityOptions = mulmoOpenAIImageModelSchema.shape.quality._def.innerType.options;
 const defaultQuality = "auto";
 
-const PROVIDERS = Object.entries(provider2ImageAgent)
-  .filter(([provider, __]) => {
-    return provider !== "mock";
-  })
-  .map(([provider, agent]) => ({
-    name: provider,
-    value: provider,
-    models: agent.models,
-  }));
+const PROVIDERS = [
+  ...Object.entries(provider2ImageAgent)
+    .filter(([provider, __]) => {
+      return provider !== "mock";
+    })
+    .map(([provider, agent]) => ({
+      name: provider,
+      value: provider,
+      models: (agent as { models: string[] }).models,
+    })),
+  // Azure OpenAI uses the same API as OpenAI but with custom base URL
+  {
+    name: "azureOpenai",
+    value: "azureOpenai",
+    models: [] as string[], // Azure requires manual deployment name input
+  },
+];
+
+// Check if provider is Azure OpenAI (requires manual model input)
+const isAzureOpenAI = computed(() => {
+  return imageProvider.value === "azureOpenai";
+});
 
 const props = withDefaults(
   defineProps<{

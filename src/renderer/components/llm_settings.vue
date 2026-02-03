@@ -85,6 +85,15 @@
           </SelectContent>
         </Select>
       </div>
+      <!-- Azure OpenAI Model config (requires manual model/deployment name input) -->
+      <div class="mt-4 space-y-2" v-if="selectedLLM === 'azureOpenAIAgent'">
+        <Label for="azureOpenaiModel">{{ t("settings.llmSettings.model") }}</Label>
+        <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.azureOpenai.modelDescription") }}</p>
+        <Input v-model="llmConfigs['azureOpenai']['model']" type="text" class="flex-1" :placeholder="t('settings.llmSettings.azureOpenai.modelPlaceholder')" />
+        <div v-if="!azureOpenAIConfigured" class="text-destructive text-sm">
+          {{ t("settings.llmSettings.azureOpenai.configRequired") }}
+        </div>
+      </div>
     </CardContent>
   </Card>
 </template>
@@ -108,6 +117,7 @@ type LlmConfigOpenAI = { model: string };
 type LlmConfigGemini = { model: string };
 type LlmConfigAnthropic = { model: string };
 type LlmConfigGroq = { model: string };
+type LlmConfigAzureOpenAI = { model: string };
 
 type LlmConfigs = {
   ollama: LlmConfigOllama;
@@ -115,12 +125,25 @@ type LlmConfigs = {
   gemini: LlmConfigGemini;
   anthropic: LlmConfigAnthropic;
   groq: LlmConfigGroq;
+  azureOpenai: LlmConfigAzureOpenAI;
+};
+
+type AzureOpenAIServiceConfig = {
+  apiKey?: string;
+  baseUrl?: string;
+};
+
+type AzureOpenAIConfig = {
+  image?: AzureOpenAIServiceConfig;
+  tts?: AzureOpenAIServiceConfig;
+  llm?: AzureOpenAIServiceConfig;
 };
 
 type Props = {
   selectedLLM: string;
   llmConfigs: LlmConfigs;
   apiKeys?: Record<string, string>;
+  azureOpenAIConfig?: AzureOpenAIConfig;
 };
 
 type Emits = {
@@ -145,10 +168,20 @@ const alertLLM = computed(() => {
   if (!props.apiKeys) {
     return null;
   }
+  // Azure OpenAI uses a different validation path
+  if (selectedLLM.value === "azureOpenAIAgent") {
+    return null;
+  }
   const llmKey = llms.find((llm) => llm.id === selectedLLM.value)?.apiKey;
   if (llmKey && props.apiKeys[llmKey] === "") {
     return llmKey;
   }
   return null;
+});
+
+// Check if Azure OpenAI LLM is properly configured
+const azureOpenAIConfigured = computed(() => {
+  const llmConfig = props.azureOpenAIConfig?.llm;
+  return !!(llmConfig?.apiKey && llmConfig?.baseUrl);
 });
 </script>

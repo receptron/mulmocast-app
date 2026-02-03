@@ -79,6 +79,16 @@ export const ENV_KEYS = {
 
 export type EnvKey = keyof typeof ENV_KEYS;
 
+// Azure OpenAI environment variable names
+export const AZURE_OPENAI_ENV_KEYS = {
+  IMAGE_OPENAI_API_KEY: "IMAGE_OPENAI_API_KEY",
+  IMAGE_OPENAI_BASE_URL: "IMAGE_OPENAI_BASE_URL",
+  TTS_OPENAI_API_KEY: "TTS_OPENAI_API_KEY",
+  TTS_OPENAI_BASE_URL: "TTS_OPENAI_BASE_URL",
+  LLM_OPENAI_API_KEY: "LLM_OPENAI_API_KEY",
+  LLM_OPENAI_BASE_URL: "LLM_OPENAI_BASE_URL",
+} as const;
+
 export const llms = [
   {
     id: "openAIAgent",
@@ -87,6 +97,10 @@ export const llms = [
   {
     id: "anthropicAgent",
     apiKey: "ANTHROPIC_API_KEY",
+  },
+  {
+    id: "azureOpenAIAgent",
+    apiKey: null, // API Key is configured in Azure OpenAI settings section
   },
   /*
   {
@@ -121,6 +135,10 @@ export const LLM_GROQ_DEFAULT_MODEL = provider2LLMAgent.groq.defaultModel;
 
 export const LLM_GROQ_DEFAULT_CONFIG = {
   model: provider2LLMAgent.groq.defaultModel,
+};
+
+export const LLM_AZURE_OPENAI_DEFAULT_CONFIG = {
+  model: "", // Azure requires explicit deployment name
 };
 
 export type AppSettingKey = "APP_LANGUAGE" | "VIEW_MODE" | "SORT_BY" | "SORT_ORDER" | "DARK_MODE";

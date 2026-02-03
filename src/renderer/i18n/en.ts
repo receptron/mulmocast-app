@@ -220,6 +220,7 @@ const lang = {
       anthropicAgent: "Anthropic",
       replicateAgent: "Replicate",
       groqAgent: "Groq",
+      azureOpenAIAgent: "Azure OpenAI",
     },
     provider: {
       openai: {
@@ -244,6 +245,10 @@ const lang = {
       },
       replicate: {
         name: "Replicate",
+      },
+      azureOpenai: {
+        name: "Azure OpenAI",
+        speechName: "Azure OpenAI",
       },
       alertTemplate: "You need to setup {thing}",
     },
@@ -345,6 +350,31 @@ const lang = {
         url: "URL",
       },
       model: "Model",
+      azureOpenai: {
+        modelDescription: "Enter your Azure OpenAI deployment name",
+        modelPlaceholder: "e.g., gpt-4o-deployment",
+        configRequired: "Please configure Azure OpenAI API Key and Base URL in the Azure OpenAI settings section",
+      },
+    },
+    azureOpenAI: {
+      title: "Azure OpenAI",
+      description: "Configure Azure OpenAI Service for enterprise use",
+      apiKey: "API Key",
+      apiKeyPlaceholder: "Enter Azure OpenAI API Key",
+      baseUrl: "Base URL",
+      baseUrlPlaceholder: "https://your-resource-name.openai.azure.com/",
+      image: {
+        title: "Image Generation",
+      },
+      tts: {
+        title: "Text-to-Speech",
+      },
+      llm: {
+        title: "Text Generation (LLM)",
+      },
+      deploymentNamePlaceholder: "Enter deployment name",
+      deploymentNameRequired: "Deployment name is required for Azure OpenAI",
+      voiceIdPlaceholder: "Enter voice ID",
     },
   },
   onboarding: {

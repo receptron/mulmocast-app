@@ -54,11 +54,24 @@ export type UserLevel = "beginner" | "semiPro" | "pro";
 
 export type Lang = "ja" | "en";
 
+// Azure OpenAI Service configuration types
+export type AzureOpenAIServiceConfig = {
+  apiKey?: string;
+  baseUrl?: string; // https://<resource-name>.openai.azure.com/
+};
+
+export type AzureOpenAIConfig = {
+  image?: AzureOpenAIServiceConfig;
+  tts?: AzureOpenAIServiceConfig;
+  llm?: AzureOpenAIServiceConfig;
+};
+
 type LlmConfigOllama = { url: string; model: string };
 type LlmConfigOpenAI = { model: string };
 type LlmConfigGemini = { model: string };
 type LlmConfigAnthropic = { model: string };
 type LlmConfigGroq = { model: string };
+type LlmConfigAzureOpenAI = { model: string }; // Azure OpenAI requires explicit model (deployment name)
 
 export type LlmConfigs = {
   ollama?: LlmConfigOllama;
@@ -66,6 +79,7 @@ export type LlmConfigs = {
   gemini?: LlmConfigGemini;
   anthropic?: LlmConfigAnthropic;
   groq?: LlmConfigGroq;
+  azureOpenai?: LlmConfigAzureOpenAI;
 };
 
 export type Settings = {
@@ -80,6 +94,7 @@ export type Settings = {
   DARK_MODE?: string; // Backward compatible
   CHAT_CONVERSATION_MODE?: string;
   CHAT_TEMPLATE_INDEX?: number;
+  AZURE_OPENAI?: AzureOpenAIConfig;
 };
 
 export type MediaType = "image" | "movie";

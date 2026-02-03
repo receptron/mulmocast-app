@@ -38,7 +38,32 @@
       </SelectContent>
     </Select>
   </div>
-  <div>
+  <!-- Azure OpenAI: Text inputs for model and voice -->
+  <template v-if="isAzureOpenAI">
+    <div>
+      <Label class="text-xs">{{ t("ui.common.model") }}</Label>
+      <Input
+        :model-value="localizedSpeaker.model || ''"
+        @update:model-value="(value) => handleModelChange(String(value))"
+        class="h-8"
+        :placeholder="t('settings.azureOpenAI.deploymentNamePlaceholder')"
+      />
+      <p v-if="!localizedSpeaker.model" class="text-destructive mt-1 text-xs">
+        {{ t("settings.azureOpenAI.deploymentNameRequired") }}
+      </p>
+    </div>
+    <div>
+      <Label class="text-xs">{{ t("parameters.speechParams.voiceId") }}</Label>
+      <Input
+        :model-value="localizedSpeaker.voiceId || ''"
+        @update:model-value="(value) => handleSpeakerVoiceChange(String(value))"
+        class="h-8"
+        :placeholder="t('settings.azureOpenAI.voiceIdPlaceholder')"
+      />
+    </div>
+  </template>
+  <!-- Other providers: Dropdown for voiceId -->
+  <div v-else>
     <!-- voiceId -->
     <Label class="text-xs">{{ t("parameters.speechParams.voiceId") }}</Label>
     <Select
@@ -225,11 +250,15 @@ const emit = defineEmits<{
   updateSpeakerData: [updates: Partial<Speaker>, overridden?: boolean];
 }>();
 
-const providers = Object.keys(VOICE_LISTS);
-const DEFAULT_VOICE_IDS: Record<string, string> = providers.reduce((tmp, provider) => {
+const baseProviders = Object.keys(VOICE_LISTS);
+// Add Azure OpenAI as a provider option
+const providers = [...baseProviders, "azureOpenai"];
+const DEFAULT_VOICE_IDS: Record<string, string> = baseProviders.reduce((tmp, provider) => {
   tmp[provider] = VOICE_LISTS[provider][0].id;
   return tmp;
-}, {});
+}, {} as Record<string, string>);
+// Azure OpenAI has no default voice - requires manual input
+DEFAULT_VOICE_IDS["azureOpenai"] = "";
 
 type Provider = keyof typeof VOICE_LISTS;
 
@@ -276,6 +305,11 @@ const localizedSpeaker = computed(() => {
     };
   }
   return props.speaker;
+});
+
+// Check if current provider is Azure OpenAI (requires manual model/voice input)
+const isAzureOpenAI = computed(() => {
+  return (localizedSpeaker.value?.provider || defaultSpeechProvider) === "azureOpenai";
 });
 
 const modelList = computed(() => {
