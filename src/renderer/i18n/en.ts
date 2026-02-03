@@ -351,6 +351,7 @@ const lang = {
       },
       model: "Model",
       azureOpenai: {
+        useAzure: "Use Azure OpenAI",
         modelDescription: "Enter your Azure OpenAI deployment name",
         modelPlaceholder: "e.g., gpt-4o-deployment",
         configRequired: "Please configure Azure OpenAI API Key and Base URL in the Azure OpenAI settings section",

@@ -324,12 +324,24 @@ const getGraphConfig = async () => {
   const geminiApikey = globalStore.settings?.APIKEY?.GEMINI_API_KEY;
   const exaApikey = globalStore.settings?.APIKEY?.EXA_API_KEY;
 
-  // console.log(openaiConfig, openaiConfig?.model ?? LLM_OPENAI_DEFAULT_CONFIG.model);
+  // Azure OpenAI configuration
+  const azureOpenAIConfig = globalStore.settings?.AZURE_OPENAI?.llm;
+  const useAzure = openaiConfig?.useAzure && azureOpenAIConfig?.apiKey && azureOpenAIConfig?.baseUrl;
+
+  // Determine OpenAI agent config based on Azure usage
+  const openAIAgentConfig = useAzure
+    ? {
+        apiKey: azureOpenAIConfig.apiKey,
+        baseURL: azureOpenAIConfig.baseUrl,
+        model: openaiConfig?.azureDeploymentName ?? "",
+      }
+    : {
+        apiKey: openaiApikey,
+        model: isDevelopment ? (openaiConfig?.model ?? LLM_OPENAI_DEFAULT_CONFIG.model) : LLM_OPENAI_DEFAULT_CONFIG.model,
+      };
+
   return {
-    openAIAgent: {
-      apiKey: openaiApikey,
-      model: isDevelopment ? (openaiConfig?.model ?? LLM_OPENAI_DEFAULT_CONFIG.model) : LLM_OPENAI_DEFAULT_CONFIG.model, // gpt-5
-    },
+    openAIAgent: openAIAgentConfig,
     groqAgent: {
       apiKey: groqApikey,
       model: LLM_GROQ_DEFAULT_MODEL,
@@ -367,15 +379,22 @@ const hasExa = computed(() => {
 
 const apiKeyName = computed(() => {
   const llm = llms.find((_llm) => _llm.id === llmAgent.value);
-  return llm.apiKey;
+  return llm?.apiKey;
+});
+
+// Check if using Azure OpenAI (OpenAI agent with useAzure flag enabled)
+const isUsingAzureOpenAI = computed(() => {
+  return llmAgent.value === "openAIAgent" && globalStore.settings?.llmConfigs?.openai?.useAzure;
 });
 
 const run = async (isScript: false) => {
   if (isRunning.value) {
     return;
   }
-  if (apiKeyName.value && !hasApiKey(apiKeyName.value)) {
-    apiErrorNotify(apiKeyName.value);
+  // Skip OPENAI_API_KEY check when using Azure OpenAI
+  const keyName = apiKeyName.value;
+  if (!isUsingAzureOpenAI.value && keyName && !hasApiKey(keyName as keyof typeof import("../../../shared/constants").ENV_KEYS)) {
+    apiErrorNotify(keyName as keyof typeof import("../../../shared/constants").ENV_KEYS);
     return;
   }
 

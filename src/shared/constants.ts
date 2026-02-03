@@ -98,10 +98,6 @@ export const llms = [
     id: "anthropicAgent",
     apiKey: "ANTHROPIC_API_KEY",
   },
-  {
-    id: "azureOpenAIAgent",
-    apiKey: null, // API Key is configured in Azure OpenAI settings section
-  },
   /*
   {
     id: "ollamaAgent",

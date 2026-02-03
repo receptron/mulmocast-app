@@ -45,6 +45,24 @@
           </SelectContent>
         </Select>
       </div>
+      <!-- Azure OpenAI option under OpenAI (shown when Azure LLM is configured) -->
+      <div class="mt-4 space-y-2" v-if="selectedLLM === 'openAIAgent' && azureOpenAIConfigured">
+        <div class="flex items-center space-x-2">
+          <Checkbox :model-value="llmConfigs['openai']['useAzure'] ?? false" @update:model-value="(v) => updateUseAzure(v)" />
+          <Label>{{ t("settings.llmSettings.azureOpenai.useAzure") }}</Label>
+        </div>
+        <div v-if="llmConfigs['openai']['useAzure']" class="mt-2 space-y-2">
+          <Label for="azureOpenaiModel">{{ t("settings.llmSettings.model") }}</Label>
+          <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.azureOpenai.modelDescription") }}</p>
+          <Input
+            :model-value="llmConfigs['openai']['azureDeploymentName'] ?? ''"
+            @update:model-value="(v) => updateAzureDeploymentName(v)"
+            type="text"
+            class="flex-1"
+            :placeholder="t('settings.llmSettings.azureOpenai.modelPlaceholder')"
+          />
+        </div>
+      </div>
       <!-- Gemini Model config -->
       <div class="mt-4 space-y-2" v-if="selectedLLM === 'geminiAgent' && isDevelopment">
         {{ t("settings.llmSettings.model") }}:
@@ -85,20 +103,6 @@
           </SelectContent>
         </Select>
       </div>
-      <!-- Azure OpenAI Model config (requires manual model/deployment name input) -->
-      <div class="mt-4 space-y-2" v-if="selectedLLM === 'azureOpenAIAgent'">
-        <Label for="azureOpenaiModel">{{ t("settings.llmSettings.model") }}</Label>
-        <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.azureOpenai.modelDescription") }}</p>
-        <Input
-          v-model="llmConfigs['azureOpenai']['model']"
-          type="text"
-          class="flex-1"
-          :placeholder="t('settings.llmSettings.azureOpenai.modelPlaceholder')"
-        />
-        <div v-if="!azureOpenAIConfigured" class="text-destructive text-sm">
-          {{ t("settings.llmSettings.azureOpenai.configRequired") }}
-        </div>
-      </div>
     </CardContent>
   </Card>
 </template>
@@ -108,7 +112,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { provider2LLMAgent } from "mulmocast/browser";
 
-import { Input, Label } from "@/components/ui";
+import { Input, Label, Checkbox } from "@/components/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -118,7 +122,7 @@ const isDevelopment = import.meta.env.DEV;
 const { t } = useI18n();
 
 type LlmConfigOllama = { url: string; model: string };
-type LlmConfigOpenAI = { model: string };
+type LlmConfigOpenAI = { model: string; useAzure?: boolean; azureDeploymentName?: string };
 type LlmConfigGemini = { model: string };
 type LlmConfigAnthropic = { model: string };
 type LlmConfigGroq = { model: string };
@@ -173,8 +177,8 @@ const alertLLM = computed(() => {
   if (!props.apiKeys) {
     return null;
   }
-  // Azure OpenAI uses a different validation path
-  if (selectedLLM.value === "azureOpenAIAgent") {
+  // Azure OpenAI uses a different validation path (skip API key check when useAzure is enabled)
+  if (selectedLLM.value === "openAIAgent" && props.llmConfigs.openai?.useAzure) {
     return null;
   }
   const llmKey = llms.find((llm) => llm.id === selectedLLM.value)?.apiKey;
@@ -189,4 +193,18 @@ const azureOpenAIConfigured = computed(() => {
   const llmConfig = props.azureOpenAIConfig?.llm;
   return !!(llmConfig?.apiKey && llmConfig?.baseUrl);
 });
+
+// Update useAzure flag in llmConfigs
+const updateUseAzure = (value: boolean) => {
+  const newConfigs = { ...props.llmConfigs };
+  newConfigs.openai = { ...newConfigs.openai, useAzure: value };
+  emit("update:llmConfigs", newConfigs);
+};
+
+// Update Azure deployment name in llmConfigs
+const updateAzureDeploymentName = (value: string) => {
+  const newConfigs = { ...props.llmConfigs };
+  newConfigs.openai = { ...newConfigs.openai, azureDeploymentName: value };
+  emit("update:llmConfigs", newConfigs);
+};
 </script>
