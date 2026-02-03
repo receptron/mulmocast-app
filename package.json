@@ -57,7 +57,7 @@
     "@types/node": "^25.2.0",
     "@typescript-eslint/eslint-plugin": "^8.54.0",
     "@typescript-eslint/parser": "^8.54.0",
-    "@vitejs/plugin-vue": "^6.0.3",
+    "@vitejs/plugin-vue": "^6.0.4",
     "@vue/eslint-config-typescript": "^14.6.0",
     "bufferutil": "^4.1.0",
     "dotenv": "^17.2.3",
@@ -89,7 +89,7 @@
     "unicorn-magic": "0.2.0"
   },
   "dependencies": {
-    "@elevenlabs/elevenlabs-js": "^2.33.0",
+    "@elevenlabs/elevenlabs-js": "^2.34.0",
     "@graphai/llm_agents": "^2.0.14",
     "@graphai/stream_agent_filter": "^2.0.2",
     "@graphai/vanilla": "^2.0.12",
@@ -114,7 +114,7 @@
     "lucide-vue-next": "^0.563.0",
     "monaco-editor": "^0.55.1",
     "monaco-yaml": "^5.4.0",
-    "mulmocast": "^2.1.30",
+    "mulmocast": "^2.1.31",
     "pinia": "^3.0.4",
     "punycode": "^2.3.1",
     "puppeteer": "24.36.1",
@@ -125,7 +125,7 @@
     "update-electron-app": "^3.1.2",
     "vue": "^3.5.27",
     "vue-i18n": "^11.2.8",
-    "vue-router": "^5.0.1",
+    "vue-router": "^5.0.2",
     "vue-sonner": "^2.0.9",
     "zod": "^4.3.6"
   }
