@@ -1142,10 +1142,10 @@
     minimist "^1.2.8"
     postject "^1.0.0-alpha.6"
 
-"@elevenlabs/elevenlabs-js@^2.33.0":
-  version "2.33.0"
-  resolved "https://registry.yarnpkg.com/@elevenlabs/elevenlabs-js/-/elevenlabs-js-2.33.0.tgz#884f16d44ef444eadad9f15eba8489ea961a13cb"
-  integrity sha512-cWUkm39kLW+Nbl+NZ51/0GUfqGvSTbzR0zFRq5Asvu7Dm9eFfMVjkRXGezgNo7gzxhX3WbqTAfP9X3BL5vgUqA==
+"@elevenlabs/elevenlabs-js@^2.34.0":
+  version "2.34.0"
+  resolved "https://registry.yarnpkg.com/@elevenlabs/elevenlabs-js/-/elevenlabs-js-2.34.0.tgz#a6591e84e0314a1bd4ec170cd483681fb1601525"
+  integrity sha512-McDCQFimFHN9qPZn+/zEwAoUnGhGt4zksBFOC2R2eUd4nv7fhiNL4U7PkjTAYAqOAKDkun0rPaeLKYMQvGWFxA==
   dependencies:
     command-exists "^1.2.9"
     node-fetch "^2.7.0"
@@ -2188,10 +2188,10 @@
   resolved "https://registry.yarnpkg.com/@receptron/event_agent_generator/-/event_agent_generator-0.0.6.tgz#267533315a53e84f419d3dd4856900ee11328960"
   integrity sha512-BJpCMjPkhSMEE+zG2apop2ZnQT37Z83ew+1eBFdjRBCsWIGTgMsq4n8kQuIOS2xnKK4U4Y+3DICupM5z1HxzQw==
 
-"@rolldown/pluginutils@1.0.0-beta.53":
-  version "1.0.0-beta.53"
-  resolved "https://registry.yarnpkg.com/@rolldown/pluginutils/-/pluginutils-1.0.0-beta.53.tgz#c57a5234ae122671aff6fe72e673a7ed90f03f87"
-  integrity sha512-vENRlFU4YbrwVqNDZ7fLvy+JR1CRkyr01jhSiDpE1u6py3OMzQfztQU2jxykW3ALNxO4kSlqIDeYyD0Y9RcQeQ==
+"@rolldown/pluginutils@1.0.0-rc.2":
+  version "1.0.0-rc.2"
+  resolved "https://registry.yarnpkg.com/@rolldown/pluginutils/-/pluginutils-1.0.0-rc.2.tgz#10324e74cb3396cb7b616042ea7e9e6aa7d8d458"
+  integrity sha512-izyXV/v+cHiRfozX62W9htOAvwMo4/bXKDrQ+vom1L1qRuexPock/7VZDAhnpHCLNejd3NJ6hiab+tO0D44Rgw==
 
 "@rollup/rollup-android-arm-eabi@4.53.5":
   version "4.53.5"
@@ -3365,12 +3365,12 @@
     "@typescript-eslint/types" "8.54.0"
     eslint-visitor-keys "^4.2.1"
 
-"@vitejs/plugin-vue@^6.0.3":
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-6.0.3.tgz#b857c5dcbc5cfb30bf5d7f9d6e274afcca2d46d1"
-  integrity sha512-TlGPkLFLVOY3T7fZrwdvKpjprR3s4fxRln0ORDo1VQ7HHyxJwTlrjKU3kpVWTlaAjIEuCTokmjkZnr8Tpc925w==
+"@vitejs/plugin-vue@^6.0.4":
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-6.0.4.tgz#f571fe5aeb0be511e3bfdd43844d8eaa0738b28e"
+  integrity sha512-uM5iXipgYIn13UUQCZNdWkYk+sysBeA97d5mHsAoAt1u/wpN3+zxOmsVJWosuzX+IMGRzeYUNytztrYznboIkQ==
   dependencies:
-    "@rolldown/pluginutils" "1.0.0-beta.53"
+    "@rolldown/pluginutils" "1.0.0-rc.2"
 
 "@volar/language-core@2.4.27":
   version "2.4.27"
@@ -3595,11 +3595,6 @@
   resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-10.11.1.tgz#209db7bb5915aa172a87510b6de2ca01cadbd2a7"
   integrity sha512-IGa5FXd003Ug1qAZmyE8wF3sJ81xGLSqTqtQ6jaVfkeZ4i5kS2mwQF61yhVqojRnenVew5PldLyRgvdl4YYuSw==
 
-"@vueuse/metadata@14.1.0":
-  version "14.1.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-14.1.0.tgz#70fc2e94775e4a07369f11f86f6f0a465b04a381"
-  integrity sha512-7hK4g015rWn2PhKcZ99NyT+ZD9sbwm7SGvp7k+k+rKGWnLjS/oQozoIZzWfCewSUeBmnJkIb+CNr7Zc/EyRnnA==
-
 "@vueuse/metadata@14.2.0":
   version "14.2.0"
   resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-14.2.0.tgz#990be3368ee24acf4e8daf47db396f913dc9e939"
@@ -3611,11 +3606,6 @@
   integrity sha512-LHpC8711VFZlDaYUXEBbFBCQ7GS3dVU9mjOhhMhXP6txTV4EhYQg/KGnQuvt/sPAtoUKq7VVUnL6mVtFoL42sA==
   dependencies:
     vue-demi ">=0.14.8"
-
-"@vueuse/shared@14.1.0":
-  version "14.1.0"
-  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-14.1.0.tgz#49b2face86a9c0c52e20eaf4c732a0223276c11f"
-  integrity sha512-EcKxtYvn6gx1F8z9J5/rsg3+lTQnvOruQd8fUecW99DCK04BkWD7z5KQ/wTAx+DazyoEE9dJt/zV8OIEQbM6kw==
 
 "@vueuse/shared@14.2.0", "@vueuse/shared@^14.1.0":
   version "14.2.0"
@@ -7873,10 +7863,10 @@ mulmocast-vision@^1.0.8:
     pdfkit "^0.17.2"
     puppeteer "^24.32.0"
 
-mulmocast@^2.1.30:
-  version "2.1.30"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.1.30.tgz#57b43daef90b188fe22aee2a02774257348fda48"
-  integrity sha512-p9MhO4Zu7A8rr0lV3JnEom2Y4a5Y/zN3xKSboj7Og9H3pgupnL9pU9ys18Vy5c1VkE7M/qmukSFpnuWkdWzq3A==
+mulmocast@^2.1.31:
+  version "2.1.31"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.1.31.tgz#1322b78acdeb019e8de39ca79f1d57502daa24ad"
+  integrity sha512-hucgLYr7xqQzoKy8crfh/aDCipSPpcM1fodPyNXJVpwRNqT2DtyeviDF2+xYF+lVrbtXn53dWdXVWG6xi2K0SA==
   dependencies:
     "@google-cloud/text-to-speech" "^6.4.0"
     "@google/genai" "^1.38.0"
@@ -10174,13 +10164,12 @@ unplugin-utils@^0.3.0, unplugin-utils@^0.3.1:
     pathe "^2.0.3"
     picomatch "^4.0.3"
 
-unplugin@^2.3.11:
-  version "2.3.11"
-  resolved "https://registry.yarnpkg.com/unplugin/-/unplugin-2.3.11.tgz#411e020dd2ba90e2fbe1e7bd63a5a399e6ee3b54"
-  integrity sha512-5uKD0nqiYVzlmCRs01Fhs2BdkEgBS3SAVP6ndrBsuK42iC2+JHyxM05Rm9G8+5mkmRtzMZGY8Ct5+mliZxU/Ww==
+unplugin@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/unplugin/-/unplugin-3.0.0.tgz#01e40c474bf74d363744f4cb262569d26dd9bb43"
+  integrity sha512-0Mqk3AT2TZCXWKdcoaufeXNukv2mTrEZExeXlHIOZXdqYoHHr4n51pymnwV8x2BOVxwXbK2HLlI7usrqMpycdg==
   dependencies:
     "@jridgewell/remapping" "^2.3.5"
-    acorn "^8.15.0"
     picomatch "^4.0.3"
     webpack-virtual-modules "^0.6.2"
 
@@ -10327,10 +10316,10 @@ vue-i18n@^11.2.8:
     "@intlify/shared" "11.2.8"
     "@vue/devtools-api" "^6.5.0"
 
-vue-router@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-5.0.1.tgz#e19675c81f7cfdd8e3495c809e4a14610b0b822e"
-  integrity sha512-t+lFugGXMdaq8lbn+vXG4j2H9UlsP205Tszz1wcDk9FyxqItBzcdJQ06IhpkQ2mHOfiTOHZeBshkskzPzHJkCw==
+vue-router@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-5.0.2.tgz#34e4ebb10069fc44e15570eddd9baabba942e07b"
+  integrity sha512-YFhwaE5c5JcJpNB1arpkl4/GnO32wiUWRB+OEj1T0DlDxEZoOfbltl2xEwktNU/9o1sGcGburIXSpbLpPFe/6w==
   dependencies:
     "@babel/generator" "^7.28.6"
     "@vue-macros/common" "^3.1.1"
@@ -10346,7 +10335,7 @@ vue-router@^5.0.1:
     picomatch "^4.0.3"
     scule "^1.3.0"
     tinyglobby "^0.2.15"
-    unplugin "^2.3.11"
+    unplugin "^3.0.0"
     unplugin-utils "^0.3.1"
     yaml "^2.8.2"
 
