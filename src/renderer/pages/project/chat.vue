@@ -326,14 +326,18 @@ const getGraphConfig = async () => {
 
   // Azure OpenAI configuration
   const azureOpenAIConfig = globalStore.settings?.AZURE_OPENAI?.llm;
-  const useAzure = openaiConfig?.useAzure && azureOpenAIConfig?.apiKey && azureOpenAIConfig?.baseUrl;
+  const azureDeploymentName = openaiConfig?.azureDeploymentName ?? "";
+  const useAzure =
+    openaiConfig?.useAzure && azureOpenAIConfig?.apiKey && azureOpenAIConfig?.baseUrl && azureDeploymentName;
 
   // Determine OpenAI agent config based on Azure usage
+  // Azure OpenAI requires baseURL format: https://<resource>.openai.azure.com/openai/deployments/<deployment-name>
   const openAIAgentConfig = useAzure
     ? {
         apiKey: azureOpenAIConfig.apiKey,
-        baseURL: azureOpenAIConfig.baseUrl,
-        model: openaiConfig?.azureDeploymentName ?? "",
+        baseURL: `${azureOpenAIConfig.baseUrl.replace(/\/$/, "")}/openai/deployments/${azureDeploymentName}`,
+        model: azureDeploymentName,
+        defaultQuery: { "api-version": "2024-08-01-preview" },
       }
     : {
         apiKey: openaiApikey,
