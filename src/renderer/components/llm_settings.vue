@@ -89,7 +89,12 @@
       <div class="mt-4 space-y-2" v-if="selectedLLM === 'azureOpenAIAgent'">
         <Label for="azureOpenaiModel">{{ t("settings.llmSettings.model") }}</Label>
         <p class="text-muted-foreground text-sm">{{ t("settings.llmSettings.azureOpenai.modelDescription") }}</p>
-        <Input v-model="llmConfigs['azureOpenai']['model']" type="text" class="flex-1" :placeholder="t('settings.llmSettings.azureOpenai.modelPlaceholder')" />
+        <Input
+          v-model="llmConfigs['azureOpenai']['model']"
+          type="text"
+          class="flex-1"
+          :placeholder="t('settings.llmSettings.azureOpenai.modelPlaceholder')"
+        />
         <div v-if="!azureOpenAIConfigured" class="text-destructive text-sm">
           {{ t("settings.llmSettings.azureOpenai.configRequired") }}
         </div>

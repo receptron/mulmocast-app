@@ -253,10 +253,13 @@ const emit = defineEmits<{
 const baseProviders = Object.keys(VOICE_LISTS);
 // Add Azure OpenAI as a provider option
 const providers = [...baseProviders, "azureOpenai"];
-const DEFAULT_VOICE_IDS: Record<string, string> = baseProviders.reduce((tmp, provider) => {
-  tmp[provider] = VOICE_LISTS[provider][0].id;
-  return tmp;
-}, {} as Record<string, string>);
+const DEFAULT_VOICE_IDS: Record<string, string> = baseProviders.reduce(
+  (tmp, provider) => {
+    tmp[provider] = VOICE_LISTS[provider][0].id;
+    return tmp;
+  },
+  {} as Record<string, string>,
+);
 // Azure OpenAI has no default voice - requires manual input
 DEFAULT_VOICE_IDS["azureOpenai"] = "";
 
