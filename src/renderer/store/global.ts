@@ -33,7 +33,16 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
 
   const updateSettings = (data: SETTINGS) => {
     const { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs, APIKEY, USER_LEVEL, APP_LANGUAGE, AZURE_OPENAI } = data;
-    const newData = { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs, APIKEY, USER_LEVEL, APP_LANGUAGE, AZURE_OPENAI };
+    const newData = {
+      MAIN_LANGUAGE,
+      USE_LANGUAGES,
+      CHAT_LLM,
+      llmConfigs,
+      APIKEY,
+      USER_LEVEL,
+      APP_LANGUAGE,
+      AZURE_OPENAI,
+    };
     settings.value = newData;
     userMode.value = userLevels.find((userLevel) => userLevel.id === settings.value.USER_LEVEL) ?? userLevels[0];
   };

@@ -337,7 +337,9 @@ const getGraphConfig = async () => {
       }
     : {
         apiKey: openaiApikey,
-        model: isDevelopment ? (openaiConfig?.model ?? LLM_OPENAI_DEFAULT_CONFIG.model) : LLM_OPENAI_DEFAULT_CONFIG.model,
+        model: isDevelopment
+          ? (openaiConfig?.model ?? LLM_OPENAI_DEFAULT_CONFIG.model)
+          : LLM_OPENAI_DEFAULT_CONFIG.model,
       };
 
   return {
@@ -393,7 +395,11 @@ const run = async (isScript: false) => {
   }
   // Skip OPENAI_API_KEY check when using Azure OpenAI
   const keyName = apiKeyName.value;
-  if (!isUsingAzureOpenAI.value && keyName && !hasApiKey(keyName as keyof typeof import("../../../shared/constants").ENV_KEYS)) {
+  if (
+    !isUsingAzureOpenAI.value &&
+    keyName &&
+    !hasApiKey(keyName as keyof typeof import("../../../shared/constants").ENV_KEYS)
+  ) {
     apiErrorNotify(keyName as keyof typeof import("../../../shared/constants").ENV_KEYS);
     return;
   }

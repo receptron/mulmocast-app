@@ -48,7 +48,10 @@
       <!-- Azure OpenAI option under OpenAI (shown when Azure LLM is configured) -->
       <div class="mt-4 space-y-2" v-if="selectedLLM === 'openAIAgent' && azureOpenAIConfigured">
         <div class="flex items-center space-x-2">
-          <Checkbox :model-value="llmConfigs['openai']['useAzure'] ?? false" @update:model-value="(v) => updateUseAzure(v)" />
+          <Checkbox
+            :model-value="llmConfigs['openai']['useAzure'] ?? false"
+            @update:model-value="(v) => updateUseAzure(v)"
+          />
           <Label>{{ t("settings.llmSettings.azureOpenai.useAzure") }}</Label>
         </div>
         <div v-if="llmConfigs['openai']['useAzure']" class="mt-2 space-y-2">
