@@ -273,7 +273,7 @@ const saveSettings = async () => {
       APP_LANGUAGE: selectedLanguage.value ?? APP_LANGUAGE,
       MAIN_LANGUAGE: mainLanguage.value ?? MAIN_LANGUAGE,
       CHAT_LLM: selectedLLM.value ?? CHAT_LLM,
-      llmConfigs: toRaw(llmConfigs.value),
+      llmConfigs: JSON.parse(JSON.stringify(llmConfigs.value)),
       USER_LEVEL: selectedUserLevel.value ?? USER_LEVEL ?? "beginner",
       onboardProject,
       DARK_MODE,
