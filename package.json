@@ -86,12 +86,13 @@
     "yaml-eslint-parser": "^2.0.0"
   },
   "resolutions": {
-    "unicorn-magic": "0.2.0"
+    "unicorn-magic": "0.2.0",
+    "@graphai/stream_agent_filter": "2.0.3"
   },
   "dependencies": {
     "@elevenlabs/elevenlabs-js": "^2.34.0",
     "@graphai/llm_agents": "^2.0.14",
-    "@graphai/stream_agent_filter": "^2.0.2",
+    "@graphai/stream_agent_filter": "2.0.3",
     "@graphai/vanilla": "^2.0.12",
     "@monaco-editor/loader": "^1.7.0",
     "@mozilla/readability": "^0.6.0",
