@@ -86,8 +86,7 @@
     "yaml-eslint-parser": "^2.0.0"
   },
   "resolutions": {
-    "unicorn-magic": "0.2.0",
-    "@graphai/stream_agent_filter": "2.0.3"
+    "unicorn-magic": "0.2.0"
   },
   "dependencies": {
     "@elevenlabs/elevenlabs-js": "^2.34.0",
@@ -115,7 +114,7 @@
     "lucide-vue-next": "^0.563.0",
     "monaco-editor": "^0.55.1",
     "monaco-yaml": "^5.4.0",
-    "mulmocast": "^2.1.34",
+    "mulmocast": "^2.1.35",
     "pinia": "^3.0.4",
     "punycode": "^2.3.1",
     "puppeteer": "24.36.1",
