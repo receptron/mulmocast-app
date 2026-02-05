@@ -14,10 +14,12 @@
 - `llm_settings.vue` に「Use Azure OpenAI」チェックボックスを追加
 - `chat.vue` でAzure OpenAI config構築ロジックを追加
 - **前提条件**: `@graphai/openai_agent` の `dangerouslyAllowBrowser` 対応が必要
+- 詳細は [Phase 2 実装ガイド](#phase-2-chat対応-実装ガイド) を参照
 
 ### Phase 3: 翻訳モデル変更対応（将来）
 - 翻訳時に使用するLLMモデルをUIから選択可能にする
 - 現在は環境変数 `LLM_OPENAI_BASE_URL` で固定
+- 詳細は [Phase 3 実装ガイド](#phase-3-翻訳モデル変更-実装ガイド) を参照
 
 ---
 
@@ -463,3 +465,83 @@ const args = { settings: mulmoSettings };
 | `mulmoGenerateBeatAudio` | `buildMulmoSettings(settings)`を使用 |
 | `mulmoTranslateBeat` | `buildMulmoSettings(settings)`を使用 |
 | `mulmoTranslate` | `buildMulmoSettings(settings)`を使用 |
+
+---
+
+## Phase 2: Chat対応 実装ガイド
+
+### 概要
+ChatはRenderer Process（ブラウザ環境）で実行されるため、Main Processとは異なるアプローチが必要。
+
+### Phase 1からの学び
+- `settings2GraphAIConfig`は`settings`オブジェクトを**最初に**チェックする
+- 環境変数(`process.env`)は2番目にチェックされる
+- したがって、`settings`に直接`LLM_OPENAI_API_KEY`等を渡せば動作する可能性がある
+
+### 実装方針
+1. **UI変更**: `llm_settings.vue`に「Use Azure OpenAI」トグルを追加
+2. **設定の渡し方**: `chat.vue`でGraphAI configを構築する際に、Azure設定を含める
+   ```typescript
+   // Phase 1の buildMulmoSettings と同様のパターン
+   const buildChatConfig = (settings: Settings) => {
+     const config: Record<string, any> = {};
+     if (settings.AZURE_OPENAI?.llm?.apiKey) {
+       config.openAIAgent = {
+         apiKey: settings.AZURE_OPENAI.llm.apiKey,
+         baseURL: settings.AZURE_OPENAI.llm.baseUrl,
+       };
+     } else if (settings.APIKEY?.OPENAI_API_KEY) {
+       config.openAIAgent = {
+         apiKey: settings.APIKEY.OPENAI_API_KEY,
+       };
+     }
+     return config;
+   };
+   ```
+
+### 前提条件・確認事項
+- [ ] `@graphai/openai_agent`の`dangerouslyAllowBrowser`対応状況を確認
+- [ ] Azure OpenAIのCORS設定（ブラウザからの直接アクセス可否）
+- [ ] Azure OpenAI APIのエンドポイント形式（`/openai/deployments/{deployment-id}/chat/completions`）
+
+### 修正対象ファイル
+| ファイル | 変更内容 |
+|---------|---------|
+| `src/renderer/pages/project/llm_settings.vue` | Azure OpenAIトグル追加 |
+| `src/renderer/pages/project/chat.vue` | Azure config構築ロジック |
+
+---
+
+## Phase 3: 翻訳モデル変更 実装ガイド
+
+### 概要
+翻訳時に使用するLLMモデルをUIから選択可能にする。
+
+### 現状
+- 翻訳は`mulmoTranslate`/`mulmoTranslateBeat`経由でMain Processで実行
+- `buildMulmoSettings`で`LLM_OPENAI_API_KEY`/`LLM_OPENAI_BASE_URL`を渡している
+- モデル選択UIは現在存在しない
+
+### 実装方針
+1. **UI追加**: 翻訳設定UIにLLMプロバイダー/モデル選択を追加
+2. **設定保存**: `Settings`型に翻訳用LLM設定を追加
+   ```typescript
+   type Settings = {
+     // 既存...
+     TRANSLATION_LLM?: {
+       provider: 'openai' | 'anthropic' | 'gemini';
+       model?: string;
+     };
+   };
+   ```
+3. **mulmocast連携**: 翻訳関数呼び出し時にLLM設定を渡す
+
+### 修正対象ファイル
+| ファイル | 変更内容 |
+|---------|---------|
+| `src/types/index.ts` | `TRANSLATION_LLM`型追加 |
+| `src/renderer/pages/project/script_editor/` | 翻訳LLM設定UI |
+| `src/main/mulmo/handler_generator.ts` | 翻訳時のLLM設定渡し |
+
+### 依存関係
+- mulmocastライブラリが翻訳時のLLMプロバイダー/モデル指定に対応している必要あり
