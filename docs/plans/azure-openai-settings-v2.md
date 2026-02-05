@@ -243,3 +243,26 @@ watch(
   { deep: true },
 );
 ```
+
+### 問題2: vue-i18n の HTML検出警告
+
+#### 症状
+設定画面を開くと以下の警告が発生:
+```
+[intlify] Detected HTML in 'https://<resource-name>.openai.azure.com/' message.
+Recommend not using HTML messages to avoid XSS.
+```
+
+#### 原因
+i18n翻訳ファイルの `baseUrlPlaceholder` に `<resource-name>` という文字列が含まれており、vue-i18nがHTMLタグとして検出した。
+
+#### 修正内容
+`en.ts` と `ja.ts` の `baseUrlPlaceholder` を修正:
+
+```typescript
+// 修正前
+baseUrlPlaceholder: "https://<resource-name>.openai.azure.com/"
+
+// 修正後
+baseUrlPlaceholder: "https://your-resource-name.openai.azure.com/"
+```
