@@ -102,7 +102,8 @@ export const ja_notify = {
         imageFile: "素材が存在しない、もしくは正しくないようです",
       },
       apiError: {
-        imageOpenaiAgent: "OpenAIのAPI Keyが正しくありません",
+        imageOpenaiAgent:
+          "OpenAI APIキーが正しくありません。Azure OpenAI を使っている場合は、Azure の APIキーと Base URL の設定を確認してください。",
         imageReplicateAgent: "ReplicateのAPI Keyが正しくありません",
         imageGenAIAgent: "GoogleのAPI Keyが正しくありません",
       },
@@ -162,12 +163,14 @@ export const ja_notify = {
       errorMessage: "翻訳データ取得に失敗しました",
     },
     apiKeyInvalid: {
-      imageOpenaiAgent: "OpenAIのAPI Keyが正しくありません",
+      imageOpenaiAgent:
+        "OpenAI APIキーが正しくありません。Azure OpenAI を使っている場合は、Azure の APIキーと Base URL の設定を確認してください。",
       imageReplicateAgent: "ReplicateのAPI Tokenが正しくありません",
       imageGenAIAgent: "GeminiのAPI Keyが正しくありません",
       movieGenAIAgent: "GeminiのAPI Keyが正しくありません",
       movieReplicateAgent: "ReplicateのAPI Tokenが正しくありません",
-      ttsOpenaiAgent: "OpenAIのAPI Keyが正しくありません",
+      ttsOpenaiAgent:
+        "OpenAI APIキーが正しくありません。Azure OpenAI を使っている場合は、Azure の APIキーと Base URL の設定を確認してください。",
       ttsGoogleAgent: "GeminiのAPI Keyが正しくありません",
       ttsGeminiAgent: "GeminiのAPI Keyが正しくありません",
       ttsElevenlabsAgent: "ElevenLabsのAPI Keyが正しくありません",
@@ -175,8 +178,10 @@ export const ja_notify = {
       bgmElevenlabsAgent: "ElevenLabsのAPI Keyが正しくありません",
       voiceCloneElevenlabsAgent: "ElevenLabsのAPI Keyが正しくありません",
       mulmoMediaAgent: "Mulmo MediaのAPI Keyが正しくありません",
-      openaiAgent: "OpenAIのAPI Keyが正しくありません",
-      openAIAgent: "OpenAIのAPI Keyが正しくありません",
+      openaiAgent:
+        "OpenAI APIキーが正しくありません。Azure OpenAI を使っている場合は、Azure の APIキーと Base URL の設定を確認してください。",
+      openAIAgent:
+        "OpenAI APIキーが正しくありません。Azure OpenAI を使っている場合は、Azure の APIキーと Base URL の設定を確認してください。",
       anthropicAgent: "AnthropicのAPI Keyが正しくありません",
     },
     apiRateLimit: {
@@ -206,7 +211,8 @@ export const ja_notify = {
       },
     },
     apiKeyMissing: {
-      OPENAI_API_KEY: "OpenAIのAPI Keyが設定されていません",
+      OPENAI_API_KEY:
+        "OpenAI APIキーが設定されていません。Azure OpenAI を使っている場合は、Azure の APIキーと Base URL の設定を確認してください。",
       TAVILY_API_KEY: "TavilyのAPI Keyが設定されていません",
       ELEVENLABS_API_KEY: "ElevenLabsのAPI Keyが設定されていません",
       KOTODAMA_API_KEY: "KotodamaのAPI Keyが設定されていません",
