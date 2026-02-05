@@ -301,6 +301,18 @@ app.on("ready", () => {
         process.env[envKey] = value;
       }
     }
+
+    // Azure OpenAI settings to environment variables
+    if (settings.AZURE_OPENAI) {
+      const { image, tts, llm } = settings.AZURE_OPENAI;
+      if (image?.apiKey) process.env.IMAGE_OPENAI_API_KEY = image.apiKey;
+      if (image?.baseUrl) process.env.IMAGE_OPENAI_BASE_URL = image.baseUrl;
+      if (tts?.apiKey) process.env.TTS_OPENAI_API_KEY = tts.apiKey;
+      if (tts?.baseUrl) process.env.TTS_OPENAI_BASE_URL = tts.baseUrl;
+      if (llm?.apiKey) process.env.LLM_OPENAI_API_KEY = llm.apiKey;
+      if (llm?.baseUrl) process.env.LLM_OPENAI_BASE_URL = llm.baseUrl;
+    }
+
     const menu = await getMenu();
     Menu.setApplicationMenu(menu);
     createWindow(splashWindow);
