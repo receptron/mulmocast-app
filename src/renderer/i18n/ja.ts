@@ -364,7 +364,7 @@ const lang = {
         apiKey: "APIキー",
         baseUrl: "Base URL",
       },
-      baseUrlPlaceholder: "https://<リソース名>.openai.azure.com/",
+      baseUrlPlaceholder: "https://your-resource-name.openai.azure.com/",
     },
   },
   onboarding: {
