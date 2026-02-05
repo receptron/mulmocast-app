@@ -177,10 +177,8 @@ export const en_notify = {
       bgmElevenlabsAgent: "The ElevenLabs API Key is invalid",
       voiceCloneElevenlabsAgent: "The ElevenLabs API Key is invalid",
       mulmoMediaAgent: "The Mulmo Media API Key is invalid",
-      openaiAgent:
-        "The OpenAI API Key is invalid. If you use Azure OpenAI, the Azure API key or Base URL is invalid.",
-      openAIAgent:
-        "The OpenAI API Key is invalid. If you use Azure OpenAI, the Azure API key or Base URL is invalid.",
+      openaiAgent: "The OpenAI API Key is invalid. If you use Azure OpenAI, the Azure API key or Base URL is invalid.",
+      openAIAgent: "The OpenAI API Key is invalid. If you use Azure OpenAI, the Azure API key or Base URL is invalid.",
       anthropicAgent: "Anthropic API Key is invalid",
     },
     apiRateLimit: {
