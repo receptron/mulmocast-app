@@ -18,6 +18,7 @@
       class="mt-2"
       :settingPresence="settingPresence"
       :provider="localizedSpeaker?.provider || defaultSpeechProvider"
+      feature="tts"
     />
   </div>
   <div v-if="localizedSpeaker.provider === 'gemini' || localizedSpeaker.provider === 'elevenlabs'">

@@ -9,15 +9,19 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { useMulmoGlobalStore } from "@/store";
+
 const { t } = useI18n();
+const globalStore = useMulmoGlobalStore();
 
 interface Props {
   provider?: string;
   settingPresence: Record<string, boolean>;
+  feature?: "image" | "tts" | "llm"; // OpenAI feature type for Azure OpenAI support
 }
 const props = defineProps<Props>();
 
-const provider2ApiKey = {
+const provider2ApiKey: Record<string, string> = {
   openai: "OPENAI_API_KEY",
   google: "GEMINI_API_KEY",
   gemini: "GEMINI_API_KEY",
@@ -34,6 +38,16 @@ const providerAlert = computed(() => {
     return false;
   }
   const key = provider2ApiKey[props.provider];
+
+  // For OpenAI provider with feature specified, use feature-specific check (supports Azure OpenAI)
+  if (props.provider === "openai" && props.feature) {
+    if (globalStore.hasOpenAIKeyForFeature(props.feature)) {
+      return false;
+    }
+    return key;
+  }
+
+  // Default behavior for other providers
   if (!props.settingPresence[key]) {
     return key;
   }

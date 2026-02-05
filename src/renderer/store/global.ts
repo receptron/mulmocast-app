@@ -72,7 +72,22 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
   });
 
   const hasApiKey = (keyName: string) => {
-    return !!settings.value.APIKEY[keyName];
+    return !!settings.value.APIKEY?.[keyName];
+  };
+
+  // Check if OpenAI API key is available for a specific feature
+  // Returns true if either regular OPENAI_API_KEY or Azure OpenAI key for the feature is configured
+  const hasOpenAIKeyForFeature = (feature: "image" | "tts" | "llm"): boolean => {
+    // Regular OpenAI API Key works for all features
+    if (settings.value.APIKEY?.OPENAI_API_KEY) {
+      return true;
+    }
+    // Azure OpenAI: check feature-specific key
+    const azureOpenAI = settings.value.AZURE_OPENAI;
+    if (azureOpenAI) {
+      return !!azureOpenAI[feature]?.apiKey;
+    }
+    return false;
   };
 
   const userIsPro = computed(() => {
@@ -114,6 +129,7 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
     useLanguages,
 
     hasApiKey,
+    hasOpenAIKeyForFeature,
 
     hasUpdateInstall,
     upadteInstall,
