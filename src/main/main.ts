@@ -12,7 +12,6 @@ import { GraphAILogger } from "graphai";
 import { registerIPCHandler } from "./ipc_handler";
 import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
-import { ENV_KEYS } from "../shared/constants";
 import { resolveTargetFromVersion } from "../shared/version";
 import { getWindowState, saveWindowState } from "./utils/windw_state";
 import config from "../renderer/i18n/index";
@@ -293,25 +292,8 @@ app.on("ready", () => {
 
     await projectManager.ensureProjectBaseDirectory();
 
-    const settings = await settingsManager.loadSettings();
-
-    for (const envKey of Object.keys(ENV_KEYS)) {
-      const value = settings?.APIKEY?.[envKey as keyof typeof ENV_KEYS];
-      if (value) {
-        process.env[envKey] = value;
-      }
-    }
-
-    // Azure OpenAI settings to environment variables
-    if (settings.AZURE_OPENAI) {
-      const { image, tts, llm } = settings.AZURE_OPENAI;
-      if (image?.apiKey) process.env.IMAGE_OPENAI_API_KEY = image.apiKey;
-      if (image?.baseUrl) process.env.IMAGE_OPENAI_BASE_URL = image.baseUrl;
-      if (tts?.apiKey) process.env.TTS_OPENAI_API_KEY = tts.apiKey;
-      if (tts?.baseUrl) process.env.TTS_OPENAI_BASE_URL = tts.baseUrl;
-      if (llm?.apiKey) process.env.LLM_OPENAI_API_KEY = llm.apiKey;
-      if (llm?.baseUrl) process.env.LLM_OPENAI_BASE_URL = llm.baseUrl;
-    }
+    // loadSettings handles environment variable setup (including cleanup of removed keys)
+    await settingsManager.loadSettings();
 
     const menu = await getMenu();
     Menu.setApplicationMenu(menu);
