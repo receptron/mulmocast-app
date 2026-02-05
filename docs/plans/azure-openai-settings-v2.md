@@ -328,9 +328,14 @@ if (!hasOpenAIKeyForFeature('tts')) {
 | ファイル | 変更内容 |
 |---------|---------|
 | `src/renderer/store/global.ts` | `hasOpenAIKeyForFeature` 関数を追加、export |
-| 警告表示コンポーネント | 機能に応じたチェックに変更 |
+| `src/renderer/pages/project/script_editor/settings_alert.vue` | `feature` propを追加、OpenAI判定時に`hasOpenAIKeyForFeature`を使用 |
+| `src/renderer/pages/project/script_editor/styles/image_params.vue` | SettingsAlertに `feature="image"` を追加 |
+| `src/renderer/pages/project/script_editor/styles/speech_speaker.vue` | SettingsAlertに `feature="tts"` を追加 |
 
 #### 検証方法
 1. OpenAI API Keyを空にする
 2. Azure OpenAIの `image.apiKey` のみ設定
 3. 画像生成 → 警告なし、TTS → 警告あり を確認
+
+#### 修正完了
+✅ 2024/02/05 コミット `44b6ba6f` で修正完了
