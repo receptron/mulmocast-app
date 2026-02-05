@@ -346,6 +346,26 @@ const lang = {
       },
       model: "モデル",
     },
+    azureOpenAI: {
+      title: "Azure OpenAI",
+      description: "企業向けAzure OpenAI Serviceの設定",
+      image: {
+        title: "画像生成",
+        apiKey: "APIキー",
+        baseUrl: "Base URL",
+      },
+      tts: {
+        title: "音声合成",
+        apiKey: "APIキー",
+        baseUrl: "Base URL",
+      },
+      llm: {
+        title: "テキスト生成（翻訳）",
+        apiKey: "APIキー",
+        baseUrl: "Base URL",
+      },
+      baseUrlPlaceholder: "https://<リソース名>.openai.azure.com/",
+    },
   },
   onboarding: {
     title: "MulmoCastへようこそ",
