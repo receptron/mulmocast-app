@@ -402,9 +402,64 @@ if (settings.AZURE_OPENAI) {
 }
 ```
 
-#### 修正完了
-✅ 2024/02/05 コミット `b13a9747` で `main.ts` 修正
-✅ 2024/02/05 コミット `218d3038` で `loadSettings` 修正
+#### 調査結果
+環境変数経由のアプローチでは問題が解決しなかった。根本原因を調査:
 
-**追加修正が必要だった理由**:
-`mulmoActionRunner`は`loadSettings()`を呼び出すが、当初の修正では`main.ts`の起動時のみ環境変数を設定していた。`loadSettings()`でも環境変数を設定することで、アクション実行時に最新の設定が反映されるようになった。
+1. mulmocastライブラリの`settings2GraphAIConfig`関数を分析
+2. `audio.js`内で`settings2GraphAIConfig(settings, process.env)`を呼び出し
+3. `getKey`関数は以下の順序でキーを探す:
+   - `settings["TTS_OPENAI_API_KEY"]` (prefix + key)
+   - `settings["OPENAI_API_KEY"]` (key only)
+   - `env["TTS_OPENAI_API_KEY"]` (env prefix + key)
+   - `env["OPENAI_API_KEY"]` (env key only)
+
+4. `handler_generator.ts`では`args = { settings: settings.APIKEY ?? {} }`を渡していた
+5. `settings.APIKEY`には`TTS_OPENAI_API_KEY`などのプレフィックス付きキーが含まれていない
+
+#### 最終修正
+**ファイル**: `src/main/mulmo/handler_generator.ts`
+
+`buildMulmoSettings`関数を追加して、Azure OpenAI設定を`settings`オブジェクトに直接マッピング:
+
+```typescript
+const buildMulmoSettings = (settings: Settings): Record<string, string | undefined> => {
+  const result: Record<string, string | undefined> = { ...settings.APIKEY };
+
+  // Add Azure OpenAI keys with service-specific prefixes
+  if (settings.AZURE_OPENAI) {
+    const { image, tts, llm } = settings.AZURE_OPENAI;
+
+    // TTS (Text-to-Speech) Azure OpenAI settings
+    if (tts?.apiKey) result["TTS_OPENAI_API_KEY"] = tts.apiKey;
+    if (tts?.baseUrl) result["TTS_OPENAI_BASE_URL"] = tts.baseUrl;
+
+    // Image generation Azure OpenAI settings
+    if (image?.apiKey) result["IMAGE_OPENAI_API_KEY"] = image.apiKey;
+    if (image?.baseUrl) result["IMAGE_OPENAI_BASE_URL"] = image.baseUrl;
+
+    // LLM Azure OpenAI settings
+    if (llm?.apiKey) result["LLM_OPENAI_API_KEY"] = llm.apiKey;
+    if (llm?.baseUrl) result["LLM_OPENAI_BASE_URL"] = llm.baseUrl;
+  }
+
+  return result;
+};
+
+// 使用箇所
+const mulmoSettings = buildMulmoSettings(settings);
+const args = { settings: mulmoSettings };
+```
+
+**メリット**:
+- `settings2GraphAIConfig`の最初のチェック（`settings["TTS_OPENAI_API_KEY"]`）で直接マッチ
+- 環境変数に依存しない確実な設定渡し
+- 全てのmulmocast関数呼び出し箇所で一貫した動作
+
+#### 修正対象箇所
+| 関数 | 修正内容 |
+|-----|---------|
+| `mulmoActionRunner` | `buildMulmoSettings(settings)`を使用 |
+| `mulmoGenerateBeatImage` | `buildMulmoSettings(settings)`を使用 |
+| `mulmoGenerateBeatAudio` | `buildMulmoSettings(settings)`を使用 |
+| `mulmoTranslateBeat` | `buildMulmoSettings(settings)`を使用 |
+| `mulmoTranslate` | `buildMulmoSettings(settings)`を使用 |
