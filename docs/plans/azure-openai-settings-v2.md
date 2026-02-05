@@ -497,6 +497,17 @@ const args = { settings: mulmoSettings };
 **修正**:
 - `src/renderer/store/global.ts`で`apiKey && baseUrl`を両方チェックするように変更
 
+### 問題6: 翻訳ボタンでもAPIキーエラーが出る ✅ 解決済み
+
+**症状**:
+Textタブの翻訳ボタンを押すと「You need to setup OpenAI API Key」エラーが表示される（Azure OpenAI設定済みでも）。
+
+**原因**:
+`text_editor.vue`の`translateBeat`関数が`hasApiKey("OPENAI_API_KEY")`を使用していた。
+
+**修正**:
+- `src/renderer/pages/project/script_editor/text_editor.vue`で`globalStore.hasOpenAIKeyForFeature("llm")`を使用するように変更
+
 ---
 
 ## Phase 2: Chat対応 実装ガイド
