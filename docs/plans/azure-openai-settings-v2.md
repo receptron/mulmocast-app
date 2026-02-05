@@ -119,7 +119,7 @@ API Keys セクションの下にAzure OpenAI設定セクションを追加
   "settings": {
     "azureOpenAI": {
       "title": "Azure OpenAI",
-      "description": "企業向けAzure OpenAI Serviceの設定",
+      "description": "Azure OpenAI Serviceの設定",
       "image": { "title": "画像生成", "apiKey": "API Key", "baseUrl": "Base URL" },
       "tts": { "title": "音声合成", "apiKey": "API Key", "baseUrl": "Base URL" },
       "llm": { "title": "テキスト生成", "apiKey": "API Key", "baseUrl": "Base URL" },

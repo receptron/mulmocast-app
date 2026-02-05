@@ -348,7 +348,7 @@ const lang = {
     },
     azureOpenAI: {
       title: "Azure OpenAI",
-      description: "Configure Azure OpenAI Service for enterprise use",
+      description: "Azure OpenAI Service settings",
       image: {
         title: "Image Generation",
         apiKey: "API Key",

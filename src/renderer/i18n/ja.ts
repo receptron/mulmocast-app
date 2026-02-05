@@ -348,7 +348,7 @@ const lang = {
     },
     azureOpenAI: {
       title: "Azure OpenAI",
-      description: "企業向けAzure OpenAI Serviceの設定",
+      description: "Azure OpenAI Serviceの設定",
       image: {
         title: "画像生成",
         apiKey: "APIキー",
