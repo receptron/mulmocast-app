@@ -339,3 +339,65 @@ if (!hasOpenAIKeyForFeature('tts')) {
 
 #### 修正完了
 ✅ 2024/02/05 コミット `44b6ba6f` で修正完了
+
+### 問題4: Generate Contentsボタン押下時に「OpenAI API key is not set」エラー
+
+#### 症状
+Azure OpenAI設定がある状態でGenerate Contentsボタンを押すと、「OpenAI API key is not set」エラーが表示される。
+
+#### 原因
+アプリ起動時の環境変数設定が不足している。
+
+**現状** (`src/main/main.ts` 296-303行目):
+```typescript
+const settings = await settingsManager.loadSettings();
+
+for (const envKey of Object.keys(ENV_KEYS)) {
+  const value = settings?.APIKEY?.[envKey as keyof typeof ENV_KEYS];
+  if (value) {
+    process.env[envKey] = value;
+  }
+}
+```
+
+- `settings.APIKEY` から通常のAPI Key（`OPENAI_API_KEY`等）を環境変数に設定
+- **Azure OpenAI設定** (`settings.AZURE_OPENAI`) を環境変数に設定していない
+
+`saveSettings`では Azure OpenAI設定を環境変数に設定しているが、`main.ts`の起動時処理には含まれていない。
+
+#### 影響
+- アプリ起動後、設定を保存するまではAzure OpenAI環境変数が設定されない
+- mulmocastライブラリが`OPENAI_API_KEY`または機能別環境変数をチェックした際に「not set」エラーになる
+
+#### 修正方針
+`main.ts`の起動時処理にAzure OpenAI環境変数の設定を追加する。
+
+#### 修正対象ファイル
+
+| ファイル | 変更内容 |
+|---------|---------|
+| `src/main/main.ts` | Azure OpenAI設定から環境変数を設定するコードを追加 |
+
+#### 修正内容
+```typescript
+const settings = await settingsManager.loadSettings();
+
+// 既存: APIKEY設定
+for (const envKey of Object.keys(ENV_KEYS)) {
+  const value = settings?.APIKEY?.[envKey as keyof typeof ENV_KEYS];
+  if (value) {
+    process.env[envKey] = value;
+  }
+}
+
+// 追加: Azure OpenAI設定
+if (settings.AZURE_OPENAI) {
+  const { image, tts, llm } = settings.AZURE_OPENAI;
+  if (image?.apiKey) process.env.IMAGE_OPENAI_API_KEY = image.apiKey;
+  if (image?.baseUrl) process.env.IMAGE_OPENAI_BASE_URL = image.baseUrl;
+  if (tts?.apiKey) process.env.TTS_OPENAI_API_KEY = tts.apiKey;
+  if (tts?.baseUrl) process.env.TTS_OPENAI_BASE_URL = tts.baseUrl;
+  if (llm?.apiKey) process.env.LLM_OPENAI_API_KEY = llm.apiKey;
+  if (llm?.baseUrl) process.env.LLM_OPENAI_BASE_URL = llm.baseUrl;
+}
+```
