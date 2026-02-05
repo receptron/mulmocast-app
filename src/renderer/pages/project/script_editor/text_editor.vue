@@ -154,7 +154,7 @@ const generateAudio = async (index: number) => {
 };
 
 const translateBeat = async (index: number) => {
-  if (!hasApiKey("OPENAI_API_KEY")) {
+  if (!globalStore.hasOpenAIKeyForFeature("llm")) {
     apiErrorNotify("OPENAI_API_KEY");
     return;
   }
