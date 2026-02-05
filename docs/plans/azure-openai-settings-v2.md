@@ -401,3 +401,6 @@ if (settings.AZURE_OPENAI) {
   if (llm?.baseUrl) process.env.LLM_OPENAI_BASE_URL = llm.baseUrl;
 }
 ```
+
+#### 修正完了
+✅ 2024/02/05 コミット `b13a9747` で修正完了
