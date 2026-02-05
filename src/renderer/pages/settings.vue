@@ -272,7 +272,6 @@ const saveSettings = async () => {
       AZURE_OPENAI: toRaw(azureOpenAIConfig.value),
     };
     await window.electronAPI.settings.set(data);
-    console.log(data);
     globalStore.updateSettings(data);
     notifySuccess(t("settings.notifications.success"));
   } catch (error) {

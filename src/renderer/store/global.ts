@@ -82,10 +82,11 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
     if (settings.value.APIKEY?.OPENAI_API_KEY) {
       return true;
     }
-    // Azure OpenAI: check feature-specific key
+    // Azure OpenAI: check feature-specific key AND baseUrl (both required)
     const azureOpenAI = settings.value.AZURE_OPENAI;
     if (azureOpenAI) {
-      return !!azureOpenAI[feature]?.apiKey;
+      const featureConfig = azureOpenAI[feature];
+      return !!(featureConfig?.apiKey && featureConfig?.baseUrl);
     }
     return false;
   };
