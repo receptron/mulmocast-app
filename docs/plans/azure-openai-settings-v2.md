@@ -266,3 +266,71 @@ baseUrlPlaceholder: "https://<resource-name>.openai.azure.com/"
 // 修正後
 baseUrlPlaceholder: "https://your-resource-name.openai.azure.com/"
 ```
+
+### 問題3: Azure OpenAI設定時でもOpenAI API Key警告が表示される
+
+#### 症状
+Azure OpenAIのAPI Keyを設定しても、「You need to setup OpenAI API Key」エラーが表示され、Generate Contentsボタンが押せない。
+
+#### 背景: OpenAI vs Azure OpenAI の API Key 構造の違い
+
+| サービス | API Key構造 |
+|---------|------------|
+| **OpenAI** | `OPENAI_API_KEY` 1つで全機能（image/tts/llm）に対応 |
+| **Azure OpenAI** | 機能ごとに別々のAPI Key（`image.apiKey`, `tts.apiKey`, `llm.apiKey`） |
+
+#### 原因
+現在の `settingPresence` は `OPENAI_API_KEY` の有無のみをチェックしている。
+Azure OpenAIでは機能ごとにAPI Keyが分かれているため、単純な置き換えでは対応できない。
+
+#### 修正方針
+**機能別のAPI Keyチェック関数を追加する**
+
+各機能（image/tts/llm）について、以下のいずれかがあれば「設定済み」とする:
+- 通常の `OPENAI_API_KEY`（全機能で使える）
+- Azure OpenAIの該当機能のAPI Key
+
+#### 修正内容
+
+**ファイル**: `src/renderer/store/global.ts`
+
+```typescript
+// 新規追加: 機能別にOpenAI API Keyが設定されているかチェック
+const hasOpenAIKeyForFeature = (feature: 'image' | 'tts' | 'llm'): boolean => {
+  // 通常のOpenAI API Keyがあれば全機能で使える
+  if (settings.value.APIKEY?.OPENAI_API_KEY) {
+    return true;
+  }
+  // Azure OpenAIの場合は機能別にチェック
+  const azureOpenAI = settings.value.AZURE_OPENAI;
+  if (azureOpenAI) {
+    return !!azureOpenAI[feature]?.apiKey;
+  }
+  return false;
+};
+```
+
+**使用例**:
+```typescript
+// 画像生成時のチェック
+if (!hasOpenAIKeyForFeature('image')) {
+  // 警告表示
+}
+
+// TTS時のチェック
+if (!hasOpenAIKeyForFeature('tts')) {
+  // 警告表示
+}
+```
+
+#### 修正対象ファイル
+
+| ファイル | 変更内容 |
+|---------|---------|
+| `src/renderer/store/global.ts` | `hasOpenAIKeyForFeature` 関数を追加、export |
+| 警告表示コンポーネント | 機能に応じたチェックに変更 |
+
+#### 検証方法
+1. OpenAI API Keyを空にする
+2. Azure OpenAIの `image.apiKey` のみ設定
+3. 画像生成 → 警告なし、TTS → 警告あり を確認
