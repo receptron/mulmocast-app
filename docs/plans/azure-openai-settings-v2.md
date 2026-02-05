@@ -479,6 +479,7 @@ const args = { settings: mulmoSettings };
 **修正**:
 - `src/main/settings_manager.ts`で空キーの`delete process.env[KEY]`を追加
 - Azure環境変数は一旦全て削除してから設定するパターンに変更
+- `src/main/main.ts`の重複コードを削除（`loadSettings`で既に処理されるため）
 
 #### 5-2: 設定保存時の console.log(data) が機密情報を露出（中） ✅
 
