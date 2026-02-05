@@ -508,6 +508,15 @@ Textタブの翻訳ボタンを押すと「You need to setup OpenAI API Key」�
 **修正**:
 - `src/renderer/pages/project/script_editor/text_editor.vue`で`globalStore.hasOpenAIKeyForFeature("llm")`を使用するように変更
 
+### 問題7: エラーメッセージにAzureヒントがない ✅ 解決済み
+
+**症状**:
+OpenAI APIキーエラー時に「APIキーが正しくありません」とだけ表示され、Azure OpenAIユーザーが設定ミスに気づきにくい。
+
+**修正**:
+- `src/renderer/i18n/en_notify.ts`と`ja_notify.ts`のOpenAI関連エラーメッセージに「Azure OpenAIを使っている場合は、APIキーとBase URLの設定を確認してください」を追記
+- 対象: `apiKeyMissing.OPENAI_API_KEY`, `apiKeyInvalid.imageOpenaiAgent`, `apiKeyInvalid.ttsOpenaiAgent`, `apiKeyInvalid.openaiAgent`, `apiKeyInvalid.openAIAgent`, `imageReference.apiError.imageOpenaiAgent`
+
 ---
 
 ## Phase 2: Chat対応 実装ガイド
