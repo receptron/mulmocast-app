@@ -466,6 +466,51 @@ const args = { settings: mulmoSettings };
 | `mulmoTranslateBeat` | `buildMulmoSettings(settings)`を使用 |
 | `mulmoTranslate` | `buildMulmoSettings(settings)`を使用 |
 
+### 問題5: PRレビュー指摘事項
+
+#### 5-1: キー削除時に古い環境変数が残り続ける（中）
+
+**症状**:
+ユーザーがAPIキーを削除しても、古いキーが環境変数に残り続け、`settings2GraphAIConfig`のフォールバックで使用される可能性がある。
+
+**原因**:
+`saveSettings`と`loadSettings`で環境変数を「セットのみ」しており、空になったキーを`delete`していない。
+
+**対象ファイル**:
+- `src/main/settings_manager.ts` (lines 41-112)
+- `src/main/main.ts` (lines 298-314)
+
+**修正方針**:
+APIKEY / Azure の各キーについて、値が空なら `delete process.env[KEY]` を実施。
+
+#### 5-2: 設定保存時の console.log(data) が機密情報を露出（中）
+
+**症状**:
+設定保存時に`console.log(data)`でAPIキーがログに出力される。
+
+**原因**:
+デバッグ用のログが残っている。
+
+**対象ファイル**:
+- `src/renderer/pages/settings.vue` (line 275)
+
+**修正方針**:
+`console.log`を削除する。
+
+#### 5-3: AzureのbaseUrlが未設定でも「設定済み」と見なされる（低〜中）
+
+**症状**:
+`hasOpenAIKeyForFeature`がAzureの`apiKey`のみをチェックし、`baseUrl`を無視している。Azure OpenAIは`baseUrl`が必須のため、未設定だと実際には失敗するが警告が出ない。
+
+**原因**:
+Azure判定時に`apiKey`のみをチェックしている。
+
+**対象ファイル**:
+- `src/renderer/store/global.ts` (lines 78-90)
+
+**修正方針**:
+Azure判定時は`apiKey && baseUrl`を両方チェックする。
+
 ---
 
 ## Phase 2: Chat対応 実装ガイド
