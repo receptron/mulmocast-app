@@ -9,6 +9,50 @@ const getSettingsPath = (): string => {
   return path.join(userDataPath, "settings.json");
 };
 
+/**
+ * Azure OpenAI environment variable keys.
+ * These are set/cleared based on AZURE_OPENAI settings.
+ */
+const AZURE_ENV_KEYS = [
+  "IMAGE_OPENAI_API_KEY",
+  "IMAGE_OPENAI_BASE_URL",
+  "TTS_OPENAI_API_KEY",
+  "TTS_OPENAI_BASE_URL",
+  "LLM_OPENAI_API_KEY",
+  "LLM_OPENAI_BASE_URL",
+] as const;
+
+/**
+ * Apply settings to environment variables.
+ * Sets configured keys and deletes removed keys.
+ */
+const applyEnvFromSettings = (settings: Settings): void => {
+  // Set or delete regular API keys
+  for (const envKey of Object.keys(ENV_KEYS)) {
+    const value = settings?.APIKEY?.[envKey as keyof typeof ENV_KEYS];
+    if (value) {
+      process.env[envKey] = value;
+    } else {
+      delete process.env[envKey];
+    }
+  }
+
+  // Clear all Azure env vars first, then set only configured ones
+  for (const key of AZURE_ENV_KEYS) {
+    delete process.env[key];
+  }
+
+  if (settings.AZURE_OPENAI) {
+    const { image, tts, llm } = settings.AZURE_OPENAI;
+    if (image?.apiKey) process.env.IMAGE_OPENAI_API_KEY = image.apiKey;
+    if (image?.baseUrl) process.env.IMAGE_OPENAI_BASE_URL = image.baseUrl;
+    if (tts?.apiKey) process.env.TTS_OPENAI_API_KEY = tts.apiKey;
+    if (tts?.baseUrl) process.env.TTS_OPENAI_BASE_URL = tts.baseUrl;
+    if (llm?.apiKey) process.env.LLM_OPENAI_API_KEY = llm.apiKey;
+    if (llm?.baseUrl) process.env.LLM_OPENAI_BASE_URL = llm.baseUrl;
+  }
+};
+
 export const loadSettings = async (): Promise<Settings> => {
   const settingsPath = getSettingsPath();
   const defaultUseLanguageSet = new Set(I18N_SUPPORTED_LANGUAGES.map((l) => l.id));
@@ -38,40 +82,7 @@ export const loadSettings = async (): Promise<Settings> => {
     const data = await fs.promises.readFile(settingsPath, "utf-8");
     const settings = { ...defaultSettings, ...JSON.parse(data) };
 
-    // Set or delete environment variables from loaded settings
-    for (const envKey of Object.keys(ENV_KEYS)) {
-      const value = settings?.APIKEY?.[envKey as keyof typeof ENV_KEYS];
-      if (value) {
-        process.env[envKey] = value;
-      } else {
-        delete process.env[envKey];
-      }
-    }
-
-    // Azure OpenAI settings to environment variables
-    const azureEnvKeys = [
-      "IMAGE_OPENAI_API_KEY",
-      "IMAGE_OPENAI_BASE_URL",
-      "TTS_OPENAI_API_KEY",
-      "TTS_OPENAI_BASE_URL",
-      "LLM_OPENAI_API_KEY",
-      "LLM_OPENAI_BASE_URL",
-    ] as const;
-
-    // Clear all Azure env vars first, then set only configured ones
-    for (const key of azureEnvKeys) {
-      delete process.env[key];
-    }
-
-    if (settings.AZURE_OPENAI) {
-      const { image, tts, llm } = settings.AZURE_OPENAI;
-      if (image?.apiKey) process.env.IMAGE_OPENAI_API_KEY = image.apiKey;
-      if (image?.baseUrl) process.env.IMAGE_OPENAI_BASE_URL = image.baseUrl;
-      if (tts?.apiKey) process.env.TTS_OPENAI_API_KEY = tts.apiKey;
-      if (tts?.baseUrl) process.env.TTS_OPENAI_BASE_URL = tts.baseUrl;
-      if (llm?.apiKey) process.env.LLM_OPENAI_API_KEY = llm.apiKey;
-      if (llm?.baseUrl) process.env.LLM_OPENAI_BASE_URL = llm.baseUrl;
-    }
+    applyEnvFromSettings(settings);
 
     return settings;
   } catch (error) {
@@ -108,40 +119,7 @@ export const saveSettings = async (settings: Settings): Promise<void> => {
 
     await fs.promises.writeFile(settingsPath, JSON.stringify(settings, null, 2), "utf-8");
 
-    // Dynamically set or delete environment variables based on constants
-    for (const envKey of Object.keys(ENV_KEYS)) {
-      const value = settings?.APIKEY?.[envKey as keyof typeof ENV_KEYS];
-      if (value) {
-        process.env[envKey] = value;
-      } else {
-        delete process.env[envKey];
-      }
-    }
-
-    // Azure OpenAI settings to environment variables
-    const azureEnvKeys = [
-      "IMAGE_OPENAI_API_KEY",
-      "IMAGE_OPENAI_BASE_URL",
-      "TTS_OPENAI_API_KEY",
-      "TTS_OPENAI_BASE_URL",
-      "LLM_OPENAI_API_KEY",
-      "LLM_OPENAI_BASE_URL",
-    ] as const;
-
-    // Clear all Azure env vars first, then set only configured ones
-    for (const key of azureEnvKeys) {
-      delete process.env[key];
-    }
-
-    if (settings.AZURE_OPENAI) {
-      const { image, tts, llm } = settings.AZURE_OPENAI;
-      if (image?.apiKey) process.env.IMAGE_OPENAI_API_KEY = image.apiKey;
-      if (image?.baseUrl) process.env.IMAGE_OPENAI_BASE_URL = image.baseUrl;
-      if (tts?.apiKey) process.env.TTS_OPENAI_API_KEY = tts.apiKey;
-      if (tts?.baseUrl) process.env.TTS_OPENAI_BASE_URL = tts.baseUrl;
-      if (llm?.apiKey) process.env.LLM_OPENAI_API_KEY = llm.apiKey;
-      if (llm?.baseUrl) process.env.LLM_OPENAI_BASE_URL = llm.baseUrl;
-    }
+    applyEnvFromSettings(settings);
   } catch (error) {
     console.error("Failed to save settings:", error);
     throw error;
