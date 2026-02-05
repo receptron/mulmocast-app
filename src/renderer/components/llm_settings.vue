@@ -46,7 +46,8 @@
         </Select>
       </div>
       <!-- Azure OpenAI option under OpenAI (shown when Azure LLM is configured) -->
-      <div class="mt-4 space-y-2" v-if="selectedLLM === 'openAIAgent' && azureOpenAIConfigured">
+      <!-- TODO: Enable when @graphai/openai_agent supports dangerouslyAllowBrowser for AzureOpenAI -->
+      <div class="mt-4 space-y-2" v-if="false && selectedLLM === 'openAIAgent' && azureOpenAIConfigured">
         <div class="flex items-center space-x-2">
           <Checkbox
             :model-value="llmConfigs['openai']['useAzure'] ?? false"
