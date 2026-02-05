@@ -138,14 +138,25 @@ const localConfig = reactive<{
   llm: { ...createDefaultServiceConfig(), ...props.config?.llm },
 });
 
-// Watch for external config changes
+// Watch for external config changes (only update if values actually differ to prevent infinite loop)
 watch(
   () => props.config,
   (newConfig) => {
     if (newConfig) {
-      localConfig.image = { ...createDefaultServiceConfig(), ...newConfig.image };
-      localConfig.tts = { ...createDefaultServiceConfig(), ...newConfig.tts };
-      localConfig.llm = { ...createDefaultServiceConfig(), ...newConfig.llm };
+      const newImage = { ...createDefaultServiceConfig(), ...newConfig.image };
+      const newTts = { ...createDefaultServiceConfig(), ...newConfig.tts };
+      const newLlm = { ...createDefaultServiceConfig(), ...newConfig.llm };
+
+      // Only update if values actually changed
+      if (JSON.stringify(localConfig.image) !== JSON.stringify(newImage)) {
+        localConfig.image = newImage;
+      }
+      if (JSON.stringify(localConfig.tts) !== JSON.stringify(newTts)) {
+        localConfig.tts = newTts;
+      }
+      if (JSON.stringify(localConfig.llm) !== JSON.stringify(newLlm)) {
+        localConfig.llm = newLlm;
+      }
     }
   },
   { deep: true },

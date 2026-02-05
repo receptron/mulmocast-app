@@ -185,3 +185,61 @@ API Keys セクションの下にAzure OpenAI設定セクションを追加
 ### 混在利用
 - 各機能（IMAGE/TTS/LLM）は独立して設定可能
 - 例: 「画像生成はAzure、TTSは通常OpenAI」という混在利用が可能
+
+---
+
+## 実装時に発生した問題と修正
+
+### 問題1: 無限ループによる "Maximum recursive updates exceeded" エラー
+
+#### 症状
+設定画面を開くと以下のエラーが発生:
+```
+Maximum recursive updates exceeded in component <settings>.
+This means you have a reactive effect that is mutating its own dependencies
+and thus recursively triggering itself.
+```
+
+#### 原因
+`azure_openai_settings.vue` で2つのwatchが相互にトリガーし合い、無限ループが発生:
+
+1. `localConfig` が変更される
+2. watch → `emit("update:config", ...)` 発火
+3. 親 (`settings.vue`) が `azureOpenAIConfig.value = config` で更新
+4. 親のwatch → `saveSettings()` → `globalStore.updateSettings()` 実行
+5. `props.config` が更新される
+6. watch → `localConfig` を更新
+7. → 1に戻る（無限ループ）
+
+#### 修正内容
+`azure_openai_settings.vue` の `props.config` watchで、値が実際に変わった場合のみ `localConfig` を更新するように修正:
+
+```typescript
+// 修正前
+watch(
+  () => props.config,
+  (newConfig) => {
+    if (newConfig) {
+      localConfig.image = { ...createDefaultServiceConfig(), ...newConfig.image };
+      // ...
+    }
+  },
+  { deep: true },
+);
+
+// 修正後
+watch(
+  () => props.config,
+  (newConfig) => {
+    if (newConfig) {
+      const newImage = { ...createDefaultServiceConfig(), ...newConfig.image };
+      // Only update if values actually changed
+      if (JSON.stringify(localConfig.image) !== JSON.stringify(newImage)) {
+        localConfig.image = newImage;
+      }
+      // ...
+    }
+  },
+  { deep: true },
+);
+```
