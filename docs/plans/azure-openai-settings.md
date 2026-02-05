@@ -198,3 +198,85 @@ API Keys セクションの下にAzure OpenAI設定セクションを追加
 以下は本プランの範囲外とし、別プランで対応:
 - **バリデーション詳細**: Azure選択時のモデル名必須チェック、未入力時のUI挙動（警告/保存禁止）
 - **環境変数削除処理**: 設定クリア時のprocess.env削除ロジック
+
+---
+
+## 実装時の変更点（プランとの差分）
+
+### Chat機能のAzure OpenAI対応
+
+プランでは `azureOpenAIAgent` を別のLLMオプションとして追加する予定だったが、**よりシンプルな方式**に変更:
+
+#### 変更内容
+1. **llms から `azureOpenAIAgent` を削除**（プランと逆）
+2. **OpenAI選択時に「Use Azure OpenAI」チェックボックスを追加**
+   - チェックON時: Azure OpenAI設定（API Key + Base URL）を使用
+   - チェックON時: デプロイ名を手入力するフィールドを表示
+
+#### 理由
+- ユーザーはOpenAIとAzure OpenAIを切り替えて使いたい場合がある
+- 別のLLMオプションとして追加すると、設定画面でLLMを切り替える必要があり面倒
+- チェックボックス方式なら、同じ「OpenAI」設定内でAzureを有効/無効にできる
+
+#### 修正ファイル
+| ファイル | 変更内容 | 状態 |
+|---------|---------|------|
+| `src/shared/constants.ts` | `azureOpenAIAgent`をllmsから削除 | 未変更（元々なし） |
+| `src/renderer/components/llm_settings.vue` | OpenAI選択時に「Use Azure」チェックボックス追加 | `v-if="false"`で非表示 |
+| `src/renderer/store/global.ts` | AZURE_OPENAI設定をstoreに追加 | 済（既存） |
+| `src/renderer/pages/project/chat.vue` | Azure使用時のconfig構築ロジック追加 | **restore済**（変更なし） |
+| `src/renderer/pages/settings.vue` | llmConfigs保存時のシリアライズ修正 | 済 |
+| `src/renderer/i18n/en.ts`, `ja.ts` | `useAzure`翻訳キー追加 | 済 |
+
+### 未解決の問題: ブラウザでAzureOpenAIが動かない
+
+#### 原因
+`@graphai/openai_agent` (v2.0.9) のバグ:
+
+```javascript
+// Azure OpenAI の場合（150-154行）
+if (url.hostname.endsWith(".openai.azure.com")) {
+    return new AzureOpenAI({
+        apiKey,
+        endpoint: baseURL,
+        apiVersion: apiVersion ?? "2025-04-01-preview",
+        // ↑ dangerouslyAllowBrowser: true が無い！
+    });
+}
+
+// 通常の OpenAI（161行）
+return new OpenAI({
+    apiKey,
+    baseURL,
+    dangerouslyAllowBrowser: !!forWeb  // ← これはある
+});
+```
+
+- ブラウザ環境では `AzureOpenAI` に `dangerouslyAllowBrowser: true` が必要
+- それが無いので `AzureOpenAI` がエラーを投げる
+- catch ブロックで捕捉され、通常の `OpenAI` クライアントにフォールバック
+- 結果: 間違ったURL `https://xxx.openai.azure.com/chat/completions` → 404
+
+#### 解決策（TODO）
+- 案1. **カスタムfetchエージェント作成**: Azure OpenAI用のfetchベースエージェントを作成
+- 案2. **ライブラリ修正**: `@graphai/openai_agent` にPRを送る
+
+#### 現状の対応
+**チェックボックスを一旦非表示に**（`v-if="false"`）
+- `llm_settings.vue` で Azure OpenAI チェックボックスを非表示
+- ライブラリ修正後に有効化予定
+
+---
+
+## 翻訳・画像生成・TTS の Azure 対応状況
+
+| 機能 | 状態 | 備考 |
+|-----|------|-----|
+| 画像生成 (IMAGE) | ✅ 動作する | main processで実行。環境変数経由でAzure使用 |
+| 音声合成 (TTS) | ✅ 動作する | main processで実行。環境変数経由でAzure使用 |
+| 翻訳 (LLM) | ✅ 動作する | main processで実行。mulmocast-cliと同じ仕組み |
+| Chat (LLM) | ❌ 動作しない | renderer processで実行。ブラウザ環境の問題 |
+
+**翻訳が動く理由**: 翻訳はmain process（Node.js環境）で `mulmocast-cli` のGraphAIを使って実行される。Node.js環境では `AzureOpenAI` に `dangerouslyAllowBrowser` は不要なので、正常に動作する。
+
+**Chatが動かない理由**: ChatはRenderer process（ブラウザ環境）で実行される。`@graphai/openai_agent` がブラウザでのAzure対応に問題がある。
