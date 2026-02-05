@@ -36,7 +36,28 @@ export const loadSettings = async (): Promise<Settings> => {
     }
 
     const data = await fs.promises.readFile(settingsPath, "utf-8");
-    return { ...defaultSettings, ...JSON.parse(data) };
+    const settings = { ...defaultSettings, ...JSON.parse(data) };
+
+    // Set environment variables from loaded settings
+    for (const envKey of Object.keys(ENV_KEYS)) {
+      const value = settings?.APIKEY?.[envKey as keyof typeof ENV_KEYS];
+      if (value) {
+        process.env[envKey] = value;
+      }
+    }
+
+    // Azure OpenAI settings to environment variables
+    if (settings.AZURE_OPENAI) {
+      const { image, tts, llm } = settings.AZURE_OPENAI;
+      if (image?.apiKey) process.env.IMAGE_OPENAI_API_KEY = image.apiKey;
+      if (image?.baseUrl) process.env.IMAGE_OPENAI_BASE_URL = image.baseUrl;
+      if (tts?.apiKey) process.env.TTS_OPENAI_API_KEY = tts.apiKey;
+      if (tts?.baseUrl) process.env.TTS_OPENAI_BASE_URL = tts.baseUrl;
+      if (llm?.apiKey) process.env.LLM_OPENAI_API_KEY = llm.apiKey;
+      if (llm?.baseUrl) process.env.LLM_OPENAI_BASE_URL = llm.baseUrl;
+    }
+
+    return settings;
   } catch (error) {
     console.error("Failed to load settings:", error);
     return defaultSettings;
