@@ -103,7 +103,7 @@ export const en_notify = {
       },
       apiError: {
         imageOpenaiAgent:
-          "The OpenAI API Key is invalid. If you use Azure OpenAI, check that the Azure API key and Base URL are correct.",
+          "The OpenAI API Key is invalid. If you use Azure OpenAI, the Azure API key or Base URL is invalid.",
         imageReplicateAgent: "The Replicate API Key is invalid",
         imageGenAIAgent: "The Google API Key is invalid",
       },
@@ -163,13 +163,13 @@ export const en_notify = {
     },
     apiKeyInvalid: {
       imageOpenaiAgent:
-        "The OpenAI API Key is invalid. If you use Azure OpenAI, check that the Azure API key and Base URL are correct.",
+        "The OpenAI API Key is invalid. If you use Azure OpenAI, the Azure API key or Base URL is invalid.",
       imageReplicateAgent: "The Replicate API Token is invalid",
       imageGenAIAgent: "The Gemini API Key is invalid",
       movieGenAIAgent: "The Gemini API Key is invalid",
       movieReplicateAgent: "The Replicate API Token is invalid",
       ttsOpenaiAgent:
-        "The OpenAI API Key is invalid. If you use Azure OpenAI, check that the Azure API key and Base URL are correct.",
+        "The OpenAI API Key is invalid. If you use Azure OpenAI, the Azure API key or Base URL is invalid.",
       ttsGoogleAgent: "The Gemini API Key is invalid",
       ttsGeminiAgent: "The Gemini API Key is invalid",
       ttsElevenlabsAgent: "The ElevenLabs API Key is invalid",
@@ -178,9 +178,9 @@ export const en_notify = {
       voiceCloneElevenlabsAgent: "The ElevenLabs API Key is invalid",
       mulmoMediaAgent: "The Mulmo Media API Key is invalid",
       openaiAgent:
-        "The OpenAI API Key is invalid. If you use Azure OpenAI, check that the Azure API key and Base URL are correct.",
+        "The OpenAI API Key is invalid. If you use Azure OpenAI, the Azure API key or Base URL is invalid.",
       openAIAgent:
-        "The OpenAI API Key is invalid. If you use Azure OpenAI, check that the Azure API key and Base URL are correct.",
+        "The OpenAI API Key is invalid. If you use Azure OpenAI, the Azure API key or Base URL is invalid.",
       anthropicAgent: "Anthropic API Key is invalid",
     },
     apiRateLimit: {

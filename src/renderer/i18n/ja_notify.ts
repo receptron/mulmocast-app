@@ -103,7 +103,7 @@ export const ja_notify = {
       },
       apiError: {
         imageOpenaiAgent:
-          "OpenAI APIキーが正しくありません。Azure OpenAI を使っている場合は、Azure の APIキーと Base URL が正しいか確認してください。",
+          "OpenAI APIキーが正しくありません。Azure OpenAI を使っている場合は、Azure の APIキー または Base URL が正しくありません。",
         imageReplicateAgent: "ReplicateのAPI Keyが正しくありません",
         imageGenAIAgent: "GoogleのAPI Keyが正しくありません",
       },
@@ -164,13 +164,13 @@ export const ja_notify = {
     },
     apiKeyInvalid: {
       imageOpenaiAgent:
-        "OpenAI APIキーが正しくありません。Azure OpenAI を使っている場合は、Azure の APIキーと Base URL が正しいか確認してください。",
+        "OpenAI APIキーが正しくありません。Azure OpenAI を使っている場合は、Azure の APIキー または Base URL が正しくありません。",
       imageReplicateAgent: "ReplicateのAPI Tokenが正しくありません",
       imageGenAIAgent: "GeminiのAPI Keyが正しくありません",
       movieGenAIAgent: "GeminiのAPI Keyが正しくありません",
       movieReplicateAgent: "ReplicateのAPI Tokenが正しくありません",
       ttsOpenaiAgent:
-        "OpenAI APIキーが正しくありません。Azure OpenAI を使っている場合は、Azure の APIキーと Base URL が正しいか確認してください。",
+        "OpenAI APIキーが正しくありません。Azure OpenAI を使っている場合は、Azure の APIキー または Base URL が正しくありません。",
       ttsGoogleAgent: "GeminiのAPI Keyが正しくありません",
       ttsGeminiAgent: "GeminiのAPI Keyが正しくありません",
       ttsElevenlabsAgent: "ElevenLabsのAPI Keyが正しくありません",
@@ -179,9 +179,9 @@ export const ja_notify = {
       voiceCloneElevenlabsAgent: "ElevenLabsのAPI Keyが正しくありません",
       mulmoMediaAgent: "Mulmo MediaのAPI Keyが正しくありません",
       openaiAgent:
-        "OpenAI APIキーが正しくありません。Azure OpenAI を使っている場合は、Azure の APIキーと Base URL が正しいか確認してください。",
+        "OpenAI APIキーが正しくありません。Azure OpenAI を使っている場合は、Azure の APIキー または Base URL が正しくありません。",
       openAIAgent:
-        "OpenAI APIキーが正しくありません。Azure OpenAI を使っている場合は、Azure の APIキーと Base URL が正しいか確認してください。",
+        "OpenAI APIキーが正しくありません。Azure OpenAI を使っている場合は、Azure の APIキー または Base URL が正しくありません。",
       anthropicAgent: "AnthropicのAPI Keyが正しくありません",
     },
     apiRateLimit: {
