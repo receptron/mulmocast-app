@@ -15,7 +15,7 @@
             </SelectItem>
           </SelectContent>
         </Select>
-        <SettingsAlert class="mt-2" :settingPresence="settingPresence" :provider="imageProvider" />
+        <SettingsAlert class="mt-2" :settingPresence="settingPresence" :provider="imageProvider" feature="image" />
       </div>
       <div>
         <Label>{{ t("ui.common.model") }}</Label>

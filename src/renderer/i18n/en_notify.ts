@@ -102,7 +102,8 @@ export const en_notify = {
         imageFile: "Material does not exist or is invalid",
       },
       apiError: {
-        imageOpenaiAgent: "The OpenAI API Key is invalid",
+        imageOpenaiAgent:
+          "The OpenAI API Key is invalid. If you use Azure OpenAI, the Azure API key or Base URL is invalid.",
         imageReplicateAgent: "The Replicate API Key is invalid",
         imageGenAIAgent: "The Google API Key is invalid",
       },
@@ -161,12 +162,14 @@ export const en_notify = {
       errorMessage: "Failed to get translation data",
     },
     apiKeyInvalid: {
-      imageOpenaiAgent: "The OpenAI API Key is invalid",
+      imageOpenaiAgent:
+        "The OpenAI API Key is invalid. If you use Azure OpenAI, the Azure API key or Base URL is invalid.",
       imageReplicateAgent: "The Replicate API Token is invalid",
       imageGenAIAgent: "The Gemini API Key is invalid",
       movieGenAIAgent: "The Gemini API Key is invalid",
       movieReplicateAgent: "The Replicate API Token is invalid",
-      ttsOpenaiAgent: "The OpenAI API Key is invalid",
+      ttsOpenaiAgent:
+        "The OpenAI API Key is invalid. If you use Azure OpenAI, the Azure API key or Base URL is invalid.",
       ttsGoogleAgent: "The Gemini API Key is invalid",
       ttsGeminiAgent: "The Gemini API Key is invalid",
       ttsElevenlabsAgent: "The ElevenLabs API Key is invalid",
@@ -174,8 +177,8 @@ export const en_notify = {
       bgmElevenlabsAgent: "The ElevenLabs API Key is invalid",
       voiceCloneElevenlabsAgent: "The ElevenLabs API Key is invalid",
       mulmoMediaAgent: "The Mulmo Media API Key is invalid",
-      openaiAgent: "The OpenAI API Key is invalid",
-      openAIAgent: "The OpenAI API Key is invalid",
+      openaiAgent: "The OpenAI API Key is invalid. If you use Azure OpenAI, the Azure API key or Base URL is invalid.",
+      openAIAgent: "The OpenAI API Key is invalid. If you use Azure OpenAI, the Azure API key or Base URL is invalid.",
       anthropicAgent: "Anthropic API Key is invalid",
     },
     apiRateLimit: {
@@ -201,7 +204,8 @@ export const en_notify = {
       },
     },
     apiKeyMissing: {
-      OPENAI_API_KEY: "OpenAI API key is not set",
+      OPENAI_API_KEY:
+        "OpenAI API key is not set. If you use Azure OpenAI, check the Azure API key and Base URL settings.",
       TAVILY_API_KEY: "Tavily API key is not set",
       ELEVENLABS_API_KEY: "ElevenLabs API key is not set",
       KOTODAMA_API_KEY: "Kotodama API key is not set",

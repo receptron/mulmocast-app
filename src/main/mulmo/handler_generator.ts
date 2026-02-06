@@ -26,6 +26,35 @@ import {
 import z from "zod";
 import fs from "fs";
 import { loadSettings } from "../settings_manager";
+import { Settings } from "../../types/index";
+
+/**
+ * Build settings object for mulmocast library that includes both regular API keys
+ * and Azure OpenAI keys in the format expected by settings2GraphAIConfig.
+ * Azure keys are mapped with prefixes (TTS_, IMAGE_, LLM_) for service-specific access.
+ */
+const buildMulmoSettings = (settings: Settings): Record<string, string | undefined> => {
+  const result: Record<string, string | undefined> = { ...settings.APIKEY };
+
+  // Add Azure OpenAI keys with service-specific prefixes
+  if (settings.AZURE_OPENAI) {
+    const { image, tts, llm } = settings.AZURE_OPENAI;
+
+    // TTS (Text-to-Speech) Azure OpenAI settings
+    if (tts?.apiKey) result["TTS_OPENAI_API_KEY"] = tts.apiKey;
+    if (tts?.baseUrl) result["TTS_OPENAI_BASE_URL"] = tts.baseUrl;
+
+    // Image generation Azure OpenAI settings
+    if (image?.apiKey) result["IMAGE_OPENAI_API_KEY"] = image.apiKey;
+    if (image?.baseUrl) result["IMAGE_OPENAI_BASE_URL"] = image.baseUrl;
+
+    // LLM Azure OpenAI settings
+    if (llm?.apiKey) result["LLM_OPENAI_API_KEY"] = llm.apiKey;
+    if (llm?.baseUrl) result["LLM_OPENAI_BASE_URL"] = llm.baseUrl;
+  }
+
+  return result;
+};
 
 export const mulmoActionRunner = async (
   projectId: string,
@@ -55,9 +84,10 @@ export const mulmoActionRunner = async (
       pdfHandout: hasMatchingAction(["pdfHandout", "pdf"], actionNames),
       bundle: hasMatchingAction(["bundle"], actionNames),
     };
-    const args = { settings: settings.APIKEY ?? {} };
+    const mulmoSettings = buildMulmoSettings(settings);
+    const args = { settings: mulmoSettings };
     if (enables.bundle) {
-      await translate(context, { settings: settings.APIKEY ?? {}, targetLangs: bundleTargetLang });
+      await translate(context, { settings: mulmoSettings, targetLangs: bundleTargetLang });
       for (const lang of bundleTargetLang.filter((_lang) => _lang !== context.lang)) {
         await audio({ ...context, lang });
       }
@@ -197,7 +227,7 @@ export const mulmoGenerateBeatImage = async (
       index: 0,
       context,
       args: {
-        settings: settings.APIKEY ?? {},
+        settings: buildMulmoSettings(settings),
         forceImage,
         forceMovie,
         forceLipSync,
@@ -232,7 +262,7 @@ export const mulmoGenerateBeatAudio = async (projectId: string, index: number, w
       return { result: false, noContext: true };
     }
     const beat = context.studio.script.beats[0];
-    await generateBeatAudio(0, context, { settings: settings.APIKEY ?? {}, langs: [context.lang] });
+    await generateBeatAudio(0, context, { settings: buildMulmoSettings(settings), langs: [context.lang] });
     removeSessionProgressCallback(mulmoCallback);
 
     // Notify renderer that audio generation is complete
@@ -316,7 +346,7 @@ export const mulmoTranslateBeat = async (
       return { result: false, noContext: true };
     }
 
-    await translateBeat(0, context, targetLangs, { settings: settings.APIKEY ?? {} });
+    await translateBeat(0, context, targetLangs, { settings: buildMulmoSettings(settings) });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     GraphAILogger.log(error);
@@ -343,7 +373,7 @@ export const mulmoTranslate = async (projectId: string, targetLangs: string[], w
       return { result: false, noContext: true };
     }
 
-    await translate(context, { settings: settings.APIKEY ?? {}, targetLangs });
+    await translate(context, { settings: buildMulmoSettings(settings), targetLangs });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
     removeSessionProgressCallback(mulmoCallback);

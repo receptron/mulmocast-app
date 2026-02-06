@@ -12,7 +12,6 @@ import { GraphAILogger } from "graphai";
 import { registerIPCHandler } from "./ipc_handler";
 import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
-import { ENV_KEYS } from "../shared/constants";
 import { resolveTargetFromVersion } from "../shared/version";
 import { getWindowState, saveWindowState } from "./utils/windw_state";
 import config from "../renderer/i18n/index";
@@ -293,14 +292,9 @@ app.on("ready", () => {
 
     await projectManager.ensureProjectBaseDirectory();
 
-    const settings = await settingsManager.loadSettings();
+    // loadSettings handles environment variable setup (including cleanup of removed keys)
+    await settingsManager.loadSettings();
 
-    for (const envKey of Object.keys(ENV_KEYS)) {
-      const value = settings?.APIKEY?.[envKey as keyof typeof ENV_KEYS];
-      if (value) {
-        process.env[envKey] = value;
-      }
-    }
     const menu = await getMenu();
     Menu.setApplicationMenu(menu);
     createWindow(splashWindow);

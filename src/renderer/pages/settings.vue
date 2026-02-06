@@ -75,6 +75,10 @@
           </CollapsibleContent>
         </Collapsible>
       </Card>
+
+      <!-- Azure OpenAI Settings Section -->
+      <AzureOpenAISettings :config="azureOpenAIConfig" @update:config="updateAzureOpenAIConfig" />
+
       <!-- language -->
       <Card>
         <CardHeader>
@@ -142,9 +146,10 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import LlmSettings from "@/components/llm_settings.vue";
 import ApiKeyInput from "@/components/api_key_input.vue";
+import AzureOpenAISettings from "@/components/azure_openai_settings.vue";
 
 import { notifySuccess, notifyError } from "@/lib/notification";
-import { LlmConfigs } from "../../types/index";
+import { LlmConfigs, AzureOpenAIConfig } from "../../types/index";
 import {
   ENV_KEYS,
   languages,
@@ -183,6 +188,8 @@ const llmConfigs = ref<LlmConfigs>({
   groq: { ...LLM_GROQ_DEFAULT_CONFIG },
   gemini: { ...LLM_GEMINI_DEFAULT_CONFIG },
 });
+
+const azureOpenAIConfig = ref<AzureOpenAIConfig>({});
 
 // Initialize all keys
 Object.keys(ENV_KEYS).forEach((envKey) => {
@@ -236,6 +243,9 @@ onMounted(async () => {
     if (settings?.USER_LEVEL) {
       selectedUserLevel.value = settings.USER_LEVEL;
     }
+    if (settings?.AZURE_OPENAI) {
+      azureOpenAIConfig.value = settings.AZURE_OPENAI;
+    }
     // Wait for the next tick to avoid triggering save during initial load
     await nextTick();
     isInitialLoad.value = false;
@@ -259,9 +269,9 @@ const saveSettings = async () => {
       USER_LEVEL: selectedUserLevel.value ?? USER_LEVEL ?? "beginner",
       onboardProject,
       DARK_MODE,
+      AZURE_OPENAI: toRaw(azureOpenAIConfig.value),
     };
     await window.electronAPI.settings.set(data);
-    console.log(data);
     globalStore.updateSettings(data);
     notifySuccess(t("settings.notifications.success"));
   } catch (error) {
@@ -288,9 +298,13 @@ const updateLlmConfigs = (configs: LlmConfigs) => {
   llmConfigs.value = configs;
 };
 
+const updateAzureOpenAIConfig = (config: AzureOpenAIConfig) => {
+  azureOpenAIConfig.value = config;
+};
+
 // Watch for changes in text
 watch(
-  [apiKeys, llmConfigs],
+  [apiKeys, llmConfigs, azureOpenAIConfig],
   () => {
     // Skip save during initial load
     if (!isInitialLoad.value) {

@@ -80,6 +80,7 @@ export type Settings = {
   DARK_MODE?: string; // Backward compatible
   CHAT_CONVERSATION_MODE?: string;
   CHAT_TEMPLATE_INDEX?: number;
+  AZURE_OPENAI?: AzureOpenAIConfig;
 };
 
 export type MediaType = "image" | "movie";
@@ -126,4 +127,16 @@ export type MulmoTransition = {
 export type MulmoMovieParams = {
   transition?: MulmoTransition;
   // Add other movieParams properties as needed
+};
+
+// Azure OpenAI Service Configuration
+export type AzureOpenAIServiceConfig = {
+  apiKey?: string;
+  baseUrl?: string; // https://<resource-name>.openai.azure.com/
+};
+
+export type AzureOpenAIConfig = {
+  image?: AzureOpenAIServiceConfig;
+  tts?: AzureOpenAIServiceConfig;
+  llm?: AzureOpenAIServiceConfig;
 };

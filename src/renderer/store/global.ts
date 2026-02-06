@@ -2,7 +2,7 @@ import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 
 import { ENV_KEYS, userLevels } from "../../shared/constants";
-import { type UserLevel } from "../../types/index";
+import { type UserLevel, type AzureOpenAIConfig } from "../../types/index";
 
 type SETTINGS = {
   APP_LANGUAGE?: string;
@@ -12,6 +12,7 @@ type SETTINGS = {
   llmConfigs?: Record<string, Record<string, string>>;
   APIKEY?: Record<string, string>;
   USER_LEVEL?: UserLevel;
+  AZURE_OPENAI?: AzureOpenAIConfig;
 };
 
 export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
@@ -20,8 +21,17 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
   const hasUpdateInstall = ref(false);
 
   const updateSettings = (data: SETTINGS) => {
-    const { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs, APIKEY, USER_LEVEL, APP_LANGUAGE } = data;
-    const newData = { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs, APIKEY, USER_LEVEL, APP_LANGUAGE };
+    const { MAIN_LANGUAGE, USE_LANGUAGES, CHAT_LLM, llmConfigs, APIKEY, USER_LEVEL, APP_LANGUAGE, AZURE_OPENAI } = data;
+    const newData = {
+      MAIN_LANGUAGE,
+      USE_LANGUAGES,
+      CHAT_LLM,
+      llmConfigs,
+      APIKEY,
+      USER_LEVEL,
+      APP_LANGUAGE,
+      AZURE_OPENAI,
+    };
     settings.value = newData;
     userMode.value = userLevels.find((userLevel) => userLevel.id === settings.value.USER_LEVEL) ?? userLevels[0];
   };
@@ -62,7 +72,23 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
   });
 
   const hasApiKey = (keyName: string) => {
-    return !!settings.value.APIKEY[keyName];
+    return !!settings.value.APIKEY?.[keyName];
+  };
+
+  // Check if OpenAI API key is available for a specific feature
+  // Returns true if either regular OPENAI_API_KEY or Azure OpenAI key for the feature is configured
+  const hasOpenAIKeyForFeature = (feature: "image" | "tts" | "llm"): boolean => {
+    // Regular OpenAI API Key works for all features
+    if (settings.value.APIKEY?.OPENAI_API_KEY) {
+      return true;
+    }
+    // Azure OpenAI: check feature-specific key AND baseUrl (both required)
+    const azureOpenAI = settings.value.AZURE_OPENAI;
+    if (azureOpenAI) {
+      const featureConfig = azureOpenAI[feature];
+      return !!(featureConfig?.apiKey && featureConfig?.baseUrl);
+    }
+    return false;
   };
 
   const userIsPro = computed(() => {
@@ -104,6 +130,7 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
     useLanguages,
 
     hasApiKey,
+    hasOpenAIKeyForFeature,
 
     hasUpdateInstall,
     upadteInstall,

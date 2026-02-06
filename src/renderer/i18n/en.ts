@@ -346,6 +346,26 @@ const lang = {
       },
       model: "Model",
     },
+    azureOpenAI: {
+      title: "Azure OpenAI",
+      description: "Azure OpenAI Service settings",
+      image: {
+        title: "Image Generation",
+        apiKey: "API Key",
+        baseUrl: "Base URL",
+      },
+      tts: {
+        title: "Text-to-Speech",
+        apiKey: "API Key",
+        baseUrl: "Base URL",
+      },
+      llm: {
+        title: "Text Generation (Translation)",
+        apiKey: "API Key",
+        baseUrl: "Base URL",
+      },
+      baseUrlPlaceholder: "https://your-resource-name.openai.azure.com/",
+    },
   },
   onboarding: {
     title: "Welcome to MulmoCast",
