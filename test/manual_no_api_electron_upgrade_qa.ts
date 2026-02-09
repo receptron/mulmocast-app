@@ -567,6 +567,7 @@ async function testExternalLinkButton(page: Page) {
   console.log("");
 
   const resources: { browser: Browser | null } = { browser: null };
+  let exitCode = 1;
 
   try {
     resources.browser = await connectCDP();
@@ -633,13 +634,14 @@ async function testExternalLinkButton(page: Page) {
     }
 
     console.log("\n========================================");
-    process.exit(fail > 0 ? 1 : 0);
+    exitCode = fail > 0 ? 1 : 0;
   } catch (error) {
     console.error("\nTest suite failed:", error);
-    process.exit(1);
+    exitCode = 1;
   } finally {
     if (resources.browser) {
       await resources.browser.close().catch(() => {});
     }
+    process.exit(exitCode);
   }
 })();
