@@ -1,6 +1,6 @@
-# MulmoCast App テストガイド
+# Playwright E2E テストガイド
 
-このディレクトリには MulmoCast Electron アプリの Playwright テストが含まれています。
+このディレクトリには MulmoCast Electron アプリの Playwright E2E テストが含まれています。
 
 ## テストファイル
 * `automated_`: Electron アプリ未起動時に実行するものです。GitHub Actions 向けにも利用します。
