@@ -13,8 +13,8 @@
  *
  * Usage:
  *   1. Start the app: yarn start
- *   2. Run: npx tsx test/manual_electron40_qa.ts [expected-chromium-major]
- *      e.g. npx tsx test/manual_electron40_qa.ts 144
+ *   2. Run: npx tsx test/manual_no_api_electron_upgrade_qa.ts [expected-chromium-major]
+ *      e.g. npx tsx test/manual_no_api_electron_upgrade_qa.ts 144
  *
  * Environment variables:
  *   CDP_URL  - CDP endpoint (default: http://localhost:9222/)
@@ -494,8 +494,12 @@ async function testClipboardIPC(page: Page, monitor: ConsoleMonitor) {
 
   record("Clipboard button (dev)", "PASS", "Button found (dev mode confirmed)");
 
-  // Reset monitor and click
+  // Snapshot monitor state, reset for clipboard-specific check, then restore
+  const prevErrors = [...monitor.errors];
+  const prevWarnings = [...monitor.warnings];
+  const prevDeprecations = [...monitor.deprecations];
   monitor.reset();
+
   await copyMsgBtn.click();
   await page.waitForTimeout(CONFIG.NAVIGATION_DELAY_MS);
 
@@ -517,6 +521,11 @@ async function testClipboardIPC(page: Page, monitor: ConsoleMonitor) {
       ? "No deprecation/clipboard warnings"
       : `Found: ${monitor.deprecations.join("; ")}`,
   );
+
+  // Restore previous state so testConsoleHealth sees the full session
+  monitor.errors.unshift(...prevErrors);
+  monitor.warnings.unshift(...prevWarnings);
+  monitor.deprecations.unshift(...prevDeprecations);
 }
 
 async function testConsoleHealth(monitor: ConsoleMonitor) {
