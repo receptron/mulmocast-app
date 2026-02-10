@@ -1330,14 +1330,20 @@ async function testJsonToUI(page: Page) {
   }
 
   // Modify imageParams via JSON (reorder so vertexai fields come before images to avoid Monaco autocomplete)
-  const imageParams = (json.imageParams || {}) as Record<string, unknown>;
+  const presentationStyle = json.presentationStyle as Record<string, unknown> | undefined;
+  const imageParams = ((presentationStyle?.imageParams || json.imageParams) ?? {}) as Record<string, unknown>;
   const savedImages = imageParams.images;
   delete imageParams.images;
   imageParams.provider = "google";
   imageParams.vertexai_project = JSON_EDIT_PROJECT_ID;
   imageParams.vertexai_location = JSON_EDIT_LOCATION;
   if (savedImages !== undefined) imageParams.images = savedImages;
-  json.imageParams = imageParams;
+  // Write back to the correct location
+  if (presentationStyle?.imageParams) {
+    presentationStyle.imageParams = imageParams;
+  } else {
+    json.imageParams = imageParams;
+  }
 
   // Write modified JSON back
   const written = await writeEditorJson(page, json);
@@ -1575,6 +1581,194 @@ async function testProviderSwitchHidesToggle(page: Page) {
 }
 
 /**
+ * Test 9: Partial vertexai fields (location-only) → toggle ON.
+ * Verifies that having only vertexai_location (without vertexai_project) still shows toggle ON.
+ */
+async function testPartialVertexAIFields(page: Page) {
+  console.log("\n=== 9. Partial Vertex AI Fields ===");
+
+  // Switch to JSON tab
+  const jsonClicked = await clickTabByText(page, "JSON");
+  if (!jsonClicked) {
+    record("9: Switch to JSON tab", "FAIL", "Tab not found");
+    return;
+  }
+  await page.waitForTimeout(CONFIG.EDITOR_LOAD_DELAY_MS);
+
+  const json = await readEditorJson(page);
+  if (!json) {
+    record("9: Read JSON", "FAIL", "Could not read/parse editor content");
+    return;
+  }
+
+  // First, restore provider to Google and set only vertexai_location (no vertexai_project)
+  const ps = json.presentationStyle as Record<string, unknown> | undefined;
+  const imgParams = ((ps?.imageParams || json.imageParams) ?? {}) as Record<string, unknown>;
+  const savedImages = imgParams.images;
+  delete imgParams.images;
+  imgParams.provider = "google";
+  delete imgParams.vertexai_project;
+  imgParams.vertexai_location = "asia-northeast1";
+  if (savedImages !== undefined) imgParams.images = savedImages;
+  if (ps?.imageParams) {
+    ps.imageParams = imgParams;
+  } else {
+    json.imageParams = imgParams;
+  }
+
+  const written = await writeEditorJson(page, json);
+  record("9: Write JSON (location-only)", written ? "PASS" : "FAIL", written ? "Written" : "Failed");
+  if (!written) return;
+
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+
+  // Switch to Style tab and verify toggle ON (location-only should show toggle ON)
+  await navigateToStyleTab(page);
+  await scrollToImageParams(page);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+  const switches = await getSwitchStates(page);
+  const imgToggle = switches.find((s) => s.label.includes("Vertex AI"));
+  record(
+    "9: Img location-only → toggle ON",
+    imgToggle?.checked ? "PASS" : "FAIL",
+    imgToggle ? `checked=${imgToggle.checked}` : "Toggle not found",
+  );
+
+  // Now test project-only (no location)
+  const jsonClicked2 = await clickTabByText(page, "JSON");
+  if (!jsonClicked2) {
+    record("9: Switch to JSON tab (2)", "FAIL", "Tab not found");
+    return;
+  }
+  await page.waitForTimeout(CONFIG.EDITOR_LOAD_DELAY_MS);
+
+  const json2 = await readEditorJson(page);
+  if (!json2) {
+    record("9: Read JSON (2)", "FAIL", "Could not read/parse editor content");
+    return;
+  }
+
+  const ps2 = json2.presentationStyle as Record<string, unknown> | undefined;
+  const imgParams2 = ((ps2?.imageParams || json2.imageParams) ?? {}) as Record<string, unknown>;
+  const savedImages2 = imgParams2.images;
+  delete imgParams2.images;
+  imgParams2.vertexai_project = `project-only-${runId}`;
+  delete imgParams2.vertexai_location;
+  if (savedImages2 !== undefined) imgParams2.images = savedImages2;
+  if (ps2?.imageParams) {
+    ps2.imageParams = imgParams2;
+  } else {
+    json2.imageParams = imgParams2;
+  }
+
+  const written2 = await writeEditorJson(page, json2);
+  record("9: Write JSON (project-only)", written2 ? "PASS" : "FAIL", written2 ? "Written" : "Failed");
+  if (!written2) return;
+
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+
+  await navigateToStyleTab(page);
+  await scrollToImageParams(page);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+  const switches2 = await getSwitchStates(page);
+  const imgToggle2 = switches2.find((s) => s.label.includes("Vertex AI"));
+  record(
+    "9: Img project-only → toggle ON",
+    imgToggle2?.checked ? "PASS" : "FAIL",
+    imgToggle2 ? `checked=${imgToggle2.checked}` : "Toggle not found",
+  );
+
+  // Verify fields are visible
+  const inputs = await getInputValues(page);
+  const projectField = inputs.find((i) => i.placeholder === "your-gcp-project-id");
+  const locationField = inputs.find((i) => i.placeholder === "us-central1");
+  record(
+    "9: Project field visible",
+    projectField !== undefined ? "PASS" : "FAIL",
+    projectField ? `value="${projectField.value}"` : "Not found",
+  );
+  record(
+    "9: Location field visible (empty)",
+    locationField !== undefined ? "PASS" : "FAIL",
+    locationField ? `value="${locationField.value}"` : "Not found",
+  );
+
+  // Clean up: toggle OFF to remove partial fields, then toggle ON with full values for subsequent tests
+  await clickSwitchByLabel(page, "Vertex AI");
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  await clickSwitchByLabel(page, "Vertex AI");
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+}
+
+/**
+ * Test 10: Provider round-trip (Google → non-Google → Google) preserves/resets Vertex AI state.
+ */
+async function testProviderRoundTrip(page: Page) {
+  console.log("\n=== 10. Provider Round-trip ===");
+
+  const styleClicked = await navigateToStyleTab(page);
+  if (!styleClicked) {
+    record("10: Switch to Style tab", "FAIL", "Tab not found");
+    return;
+  }
+
+  await scrollToImageParams(page);
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+
+  // Ensure provider is Google and toggle ON with known values
+  const imgProvIdx = await findImageProviderIndex(page);
+  if (imgProvIdx >= 0) {
+    await clickComboboxByIndex(page, imgProvIdx);
+    await selectOption(page, "Google");
+    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  }
+
+  // Toggle ON if not already
+  const switches0 = await getSwitchStates(page);
+  const toggle0 = switches0.find((s) => s.label.includes("Vertex AI"));
+  if (toggle0 && !toggle0.checked) {
+    await clickSwitchByLabel(page, "Vertex AI");
+    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  }
+
+  // Switch to OpenAI
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+  const imgProvIdx2 = await findImageProviderIndex(page);
+  if (imgProvIdx2 >= 0) {
+    await clickComboboxByIndex(page, imgProvIdx2);
+    await selectOption(page, "OpenAI");
+    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  }
+  await scrollToImageParams(page);
+
+  // Verify no Vertex AI toggle
+  const midToggles = await countVertexAIToggles(page);
+  record("10: OpenAI → no Vertex AI toggle", midToggles <= 1 ? "PASS" : "FAIL", `${midToggles} toggle(s)`);
+
+  // Switch back to Google
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+  const imgProvIdx3 = await findImageProviderIndex(page);
+  if (imgProvIdx3 >= 0) {
+    await clickComboboxByIndex(page, imgProvIdx3);
+    await selectOption(page, "Google");
+    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  }
+  await scrollToImageParams(page);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+  // Verify Vertex AI toggle is visible and check its state
+  const switchesFinal = await getSwitchStates(page);
+  const toggleFinal = switchesFinal.find((s) => s.label.includes("Vertex AI"));
+  record(
+    "10: Google restored → toggle visible",
+    toggleFinal !== undefined ? "PASS" : "FAIL",
+    toggleFinal ? `checked=${toggleFinal.checked}` : "Toggle not found",
+  );
+}
+
+/**
  * Test 8: Console health.
  */
 async function testConsoleHealth(monitor: ConsoleMonitor) {
@@ -1731,6 +1925,12 @@ async function testConsoleHealth(monitor: ConsoleMonitor) {
 
     // 7. Provider Switch Hides Toggle
     await testProviderSwitchHidesToggle(page);
+
+    // 9. Partial Vertex AI Fields
+    await testPartialVertexAIFields(page);
+
+    // 10. Provider Round-trip
+    await testProviderRoundTrip(page);
 
     // 8. Console Health
     await testConsoleHealth(monitor);

@@ -172,7 +172,9 @@ const getModelDisplayName = (modelId: string): string => {
 
 const globalStore = useMulmoGlobalStore();
 
-const vertexAIEnabled = computed(() => props.imageParams?.vertexai_project !== undefined);
+const vertexAIEnabled = computed(
+  () => props.imageParams?.vertexai_project !== undefined || props.imageParams?.vertexai_location !== undefined,
+);
 
 const handleVertexAIToggle = (enabled: boolean) => {
   const currentParams = props.imageParams || {};

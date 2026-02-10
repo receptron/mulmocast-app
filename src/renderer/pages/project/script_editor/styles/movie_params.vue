@@ -209,7 +209,9 @@ const handleTransitionDurationChange = (value: MovieParams["transition"]["durati
 
 const globalStore = useMulmoGlobalStore();
 
-const vertexAIEnabled = computed(() => props.movieParams?.vertexai_project !== undefined);
+const vertexAIEnabled = computed(
+  () => props.movieParams?.vertexai_project !== undefined || props.movieParams?.vertexai_location !== undefined,
+);
 
 const handleVertexAIToggle = (enabled: boolean) => {
   if (enabled) {
