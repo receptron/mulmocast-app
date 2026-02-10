@@ -122,6 +122,7 @@ import SettingsAlert from "../settings_alert.vue";
 import { defaultProviders, provider2MovieAgent, type MulmoPresentationStyle } from "mulmocast/browser";
 import { TRANSITION_TYPES, DEFAULT_TRANSITION_DURATION } from "@/../shared/constants";
 import { useMulmoGlobalStore } from "../../../../store";
+import { isVertexAIEnabled, getVertexAIDefaults, stripVertexAIFields } from "../../../../lib/vertexai";
 
 type MovieParams = MulmoPresentationStyle["movieParams"];
 
@@ -209,24 +210,13 @@ const handleTransitionDurationChange = (value: MovieParams["transition"]["durati
 
 const globalStore = useMulmoGlobalStore();
 
-const vertexAIEnabled = computed(
-  () => props.movieParams?.vertexai_project !== undefined || props.movieParams?.vertexai_location !== undefined,
-);
+const vertexAIEnabled = computed(() => isVertexAIEnabled(props.movieParams));
 
 const handleVertexAIToggle = (enabled: boolean) => {
   if (enabled) {
-    const defaults = globalStore.settings.VERTEX_AI;
-    updateParams({
-      vertexai_project: defaults?.project || "",
-      vertexai_location: defaults?.location || "",
-    });
+    updateParams(getVertexAIDefaults(globalStore.settings.VERTEX_AI));
   } else {
-    const {
-      vertexai_project: __vertexai_project,
-      vertexai_location: __vertexai_location,
-      ...rest
-    } = props.movieParams || {};
-    emit("update", rest as MovieParams);
+    emit("update", stripVertexAIFields(props.movieParams || {}) as MovieParams);
   }
 };
 </script>

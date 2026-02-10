@@ -114,6 +114,7 @@ import SettingsAlert from "../settings_alert.vue";
 
 import { IMAGE_PARAMS_DEFAULT_VALUES, IMAGE_MODEL_DISPLAY_KEYS } from "../../../../../shared/constants";
 import { useMulmoGlobalStore } from "../../../../store";
+import { isVertexAIEnabled, getVertexAIDefaults, stripVertexAIFields } from "../../../../lib/vertexai";
 
 const { t } = useI18n();
 const qualityOptions = mulmoOpenAIImageModelSchema.shape.quality._def.innerType.options;
@@ -172,23 +173,18 @@ const getModelDisplayName = (modelId: string): string => {
 
 const globalStore = useMulmoGlobalStore();
 
-const vertexAIEnabled = computed(
-  () => props.imageParams?.vertexai_project !== undefined || props.imageParams?.vertexai_location !== undefined,
-);
+const vertexAIEnabled = computed(() => isVertexAIEnabled(props.imageParams));
 
 const handleVertexAIToggle = (enabled: boolean) => {
   const currentParams = props.imageParams || {};
   if (enabled) {
-    const defaults = globalStore.settings.VERTEX_AI;
     emit("update", {
       ...IMAGE_PARAMS_DEFAULT_VALUES,
       ...currentParams,
-      vertexai_project: defaults?.project || "",
-      vertexai_location: defaults?.location || "",
+      ...getVertexAIDefaults(globalStore.settings.VERTEX_AI),
     });
   } else {
-    const { vertexai_project: __vertexai_project, vertexai_location: __vertexai_location, ...rest } = currentParams;
-    emit("update", rest as MulmoImageParams);
+    emit("update", stripVertexAIFields(currentParams) as MulmoImageParams);
   }
 };
 </script>
