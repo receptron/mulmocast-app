@@ -166,6 +166,7 @@ export class SecureKeyStore {
 
 ### 8. Build & Development
 
+- Package Manager: **yarn**
 - Framework: Electron Forge with Vite
 - Frontend: Vue 3 with TypeScript and Composition API
 - Styling: Tailwind CSS v4 with CSS v4 features
@@ -175,6 +176,21 @@ export class SecureKeyStore {
 - Validation: Zod schemas for runtime type safety
 - Internationalization: Vue I18n with English/Japanese support
 - Testing: Playwright for E2E testing with Electron integration
+
+#### Development Commands
+
+| Command | Description |
+|---------|-------------|
+| `yarn start` | 開発モードでアプリ起動（CDP port 9222） |
+| `yarn build` | プロダクションビルド（`electron-forge make` 相当は `yarn make:local`） |
+| `yarn lint` | ESLint + i18n dump チェック |
+| `yarn lint:fix` | ESLint 自動修正 |
+| `yarn format` | Prettier フォーマット |
+| `yarn format:check` | Prettier フォーマットチェック |
+| `yarn type-check` | TypeScript 型チェック（main + renderer） |
+| `yarn test` | ユニットテスト実行（`test/test_*.ts`） |
+| `npx tsx test/manual_no_api_vertex_ai_qa.ts` | Vertex AI QA テスト（要アプリ起動） |
+| `npx tsx test/manual_no_api_electron_upgrade_qa.ts` | Electron アップグレード QA テスト（要アプリ起動） |
 
 ## Key Workflows
 
