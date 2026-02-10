@@ -948,9 +948,9 @@ const lang = {
     },
     vertexAI: {
       toggle: "Use Vertex AI",
-      project: "Vertex AI Project ID",
+      project: "Project ID",
       projectPlaceholder: "your-gcp-project-id",
-      location: "Vertex AI Location",
+      location: "Location",
       locationPlaceholder: "us-central1",
     },
     imageParams: {
