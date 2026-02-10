@@ -1703,6 +1703,110 @@ async function testPartialVertexAIFields(page: Page) {
 }
 
 /**
+ * Test 9b: Partial vertexai fields for Movie Params (location-only / project-only).
+ */
+async function testPartialVertexAIFieldsMovie(page: Page) {
+  console.log("\n=== 9b. Partial Vertex AI Fields (Movie) ===");
+
+  // Switch to JSON tab
+  const jsonClicked = await clickTabByText(page, "JSON");
+  if (!jsonClicked) {
+    record("9b: Switch to JSON tab", "FAIL", "Tab not found");
+    return;
+  }
+  await page.waitForTimeout(CONFIG.EDITOR_LOAD_DELAY_MS);
+
+  const json = await readEditorJson(page);
+  if (!json) {
+    record("9b: Read JSON", "FAIL", "Could not read/parse editor content");
+    return;
+  }
+
+  // Set movieParams: provider=google, only vertexai_location (no vertexai_project)
+  const ps = json.presentationStyle as Record<string, unknown> | undefined;
+  const movieParams = ((ps?.movieParams || json.movieParams) ?? {}) as Record<string, unknown>;
+  movieParams.provider = "google";
+  delete movieParams.vertexai_project;
+  movieParams.vertexai_location = "asia-northeast1";
+  if (ps?.movieParams) {
+    ps.movieParams = movieParams;
+  } else {
+    json.movieParams = movieParams;
+  }
+
+  const written = await writeEditorJson(page, json);
+  record("9b: Write JSON (movie location-only)", written ? "PASS" : "FAIL", written ? "Written" : "Failed");
+  if (!written) return;
+
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+
+  // Switch to Style tab and check Movie toggle
+  await navigateToStyleTab(page);
+  await scrollToMovieParams(page);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+  const switches = await getSwitchStates(page);
+  const vertexSwitches = switches.filter((s) => s.label.includes("Vertex AI"));
+  // Movie toggle is the 2nd one (Image toggle is 1st)
+  const movieToggle = vertexSwitches.length >= 2 ? vertexSwitches[1] : vertexSwitches[vertexSwitches.length - 1];
+  record(
+    "9b: Movie location-only → toggle ON",
+    movieToggle?.checked ? "PASS" : "FAIL",
+    movieToggle ? `checked=${movieToggle.checked}` : "Toggle not found",
+  );
+
+  // Now test project-only (no location) for Movie
+  const jsonClicked2 = await clickTabByText(page, "JSON");
+  if (!jsonClicked2) {
+    record("9b: Switch to JSON tab (2)", "FAIL", "Tab not found");
+    return;
+  }
+  await page.waitForTimeout(CONFIG.EDITOR_LOAD_DELAY_MS);
+
+  const json2 = await readEditorJson(page);
+  if (!json2) {
+    record("9b: Read JSON (2)", "FAIL", "Could not read/parse editor content");
+    return;
+  }
+
+  const ps2 = json2.presentationStyle as Record<string, unknown> | undefined;
+  const movieParams2 = ((ps2?.movieParams || json2.movieParams) ?? {}) as Record<string, unknown>;
+  movieParams2.vertexai_project = `movie-proj-only-${runId}`;
+  delete movieParams2.vertexai_location;
+  if (ps2?.movieParams) {
+    ps2.movieParams = movieParams2;
+  } else {
+    json2.movieParams = movieParams2;
+  }
+
+  const written2 = await writeEditorJson(page, json2);
+  record("9b: Write JSON (movie project-only)", written2 ? "PASS" : "FAIL", written2 ? "Written" : "Failed");
+  if (!written2) return;
+
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+
+  await navigateToStyleTab(page);
+  await scrollToMovieParams(page);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+  const switches2 = await getSwitchStates(page);
+  const vertexSwitches2 = switches2.filter((s) => s.label.includes("Vertex AI"));
+  const movieToggle2 =
+    vertexSwitches2.length >= 2 ? vertexSwitches2[1] : vertexSwitches2[vertexSwitches2.length - 1];
+  record(
+    "9b: Movie project-only → toggle ON",
+    movieToggle2?.checked ? "PASS" : "FAIL",
+    movieToggle2 ? `checked=${movieToggle2.checked}` : "Toggle not found",
+  );
+
+  // Clean up: toggle OFF then ON to restore full values
+  await clickNthVertexAISwitch(page, 2);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  await clickNthVertexAISwitch(page, 2);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+}
+
+/**
  * Test 10: Provider round-trip (Google → non-Google → Google) preserves/resets Vertex AI state.
  */
 async function testProviderRoundTrip(page: Page) {
@@ -1765,6 +1869,82 @@ async function testProviderRoundTrip(page: Page) {
     "10: Google restored → toggle visible",
     toggleFinal !== undefined ? "PASS" : "FAIL",
     toggleFinal ? `checked=${toggleFinal.checked}` : "Toggle not found",
+  );
+}
+
+/**
+ * Test 10b: Movie provider round-trip (Google → Replicate → Google).
+ */
+async function testProviderRoundTripMovie(page: Page) {
+  console.log("\n=== 10b. Provider Round-trip (Movie) ===");
+
+  const styleClicked = await navigateToStyleTab(page);
+  if (!styleClicked) {
+    record("10b: Switch to Style tab", "FAIL", "Tab not found");
+    return;
+  }
+
+  await scrollToMovieParams(page);
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+
+  // Ensure movie provider is Google
+  const movieProvIdx = await findMovieProviderIndex(page);
+  if (movieProvIdx >= 0) {
+    await clickComboboxByIndex(page, movieProvIdx);
+    await selectOption(page, "Google");
+    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  }
+  await scrollToMovieParams(page);
+
+  // Ensure movie toggle ON
+  const switches0 = await getSwitchStates(page);
+  const vertexSwitches0 = switches0.filter((s) => s.label.includes("Vertex AI"));
+  const movieToggle0 = vertexSwitches0.length >= 2 ? vertexSwitches0[1] : vertexSwitches0[vertexSwitches0.length - 1];
+  if (movieToggle0 && !movieToggle0.checked) {
+    await clickNthVertexAISwitch(page, 2);
+    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  }
+
+  // Switch movie to Replicate
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+  const movieProvIdx2 = await findMovieProviderIndex(page);
+  if (movieProvIdx2 >= 0) {
+    await clickComboboxByIndex(page, movieProvIdx2);
+    await selectOption(page, "Replicate");
+    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  }
+  await scrollToMovieParams(page);
+
+  // Count Vertex AI toggles: movie should not have one now
+  const midSwitches = await getSwitchStates(page);
+  const midVertexToggles = midSwitches.filter((s) => s.label.includes("Vertex AI"));
+  // Image toggle exists (1), movie toggle should be gone
+  record(
+    "10b: Replicate → movie Vertex AI hidden",
+    midVertexToggles.length <= 1 ? "PASS" : "FAIL",
+    `${midVertexToggles.length} Vertex AI toggle(s)`,
+  );
+
+  // Switch back to Google
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+  const movieProvIdx3 = await findMovieProviderIndex(page);
+  if (movieProvIdx3 >= 0) {
+    await clickComboboxByIndex(page, movieProvIdx3);
+    await selectOption(page, "Google");
+    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  }
+  await scrollToMovieParams(page);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+  // Verify movie Vertex AI toggle is back
+  const finalSwitches = await getSwitchStates(page);
+  const finalVertexToggles = finalSwitches.filter((s) => s.label.includes("Vertex AI"));
+  const movieToggleFinal =
+    finalVertexToggles.length >= 2 ? finalVertexToggles[1] : finalVertexToggles[finalVertexToggles.length - 1];
+  record(
+    "10b: Google restored → movie toggle visible",
+    finalVertexToggles.length >= 2 ? "PASS" : "FAIL",
+    movieToggleFinal ? `checked=${movieToggleFinal.checked}` : "Toggle not found",
   );
 }
 
@@ -1926,11 +2106,17 @@ async function testConsoleHealth(monitor: ConsoleMonitor) {
     // 7. Provider Switch Hides Toggle
     await testProviderSwitchHidesToggle(page);
 
-    // 9. Partial Vertex AI Fields
+    // 9. Partial Vertex AI Fields (Image)
     await testPartialVertexAIFields(page);
 
-    // 10. Provider Round-trip
+    // 9b. Partial Vertex AI Fields (Movie)
+    await testPartialVertexAIFieldsMovie(page);
+
+    // 10. Provider Round-trip (Image)
     await testProviderRoundTrip(page);
+
+    // 10b. Provider Round-trip (Movie)
+    await testProviderRoundTripMovie(page);
 
     // 8. Console Health
     await testConsoleHealth(monitor);
