@@ -1791,8 +1791,7 @@ async function testPartialVertexAIFieldsMovie(page: Page) {
 
   const switches2 = await getSwitchStates(page);
   const vertexSwitches2 = switches2.filter((s) => s.label.includes("Vertex AI"));
-  const movieToggle2 =
-    vertexSwitches2.length >= 2 ? vertexSwitches2[1] : vertexSwitches2[vertexSwitches2.length - 1];
+  const movieToggle2 = vertexSwitches2.length >= 2 ? vertexSwitches2[1] : vertexSwitches2[vertexSwitches2.length - 1];
   record(
     "9b: Movie project-only → toggle ON",
     movieToggle2?.checked ? "PASS" : "FAIL",
