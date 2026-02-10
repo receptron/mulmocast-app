@@ -216,14 +216,14 @@ const handleVertexAIToggle = (enabled: boolean) => {
     const defaults = globalStore.settings.VERTEX_AI;
     updateParams({
       vertexai_project: defaults?.project || "",
-      vertexai_location: defaults?.location || "us-central1",
+      vertexai_location: defaults?.location || "",
     });
   } else {
     const {
       vertexai_project: __vertexai_project,
       vertexai_location: __vertexai_location,
       ...rest
-    } = currentParams.value;
+    } = props.movieParams || {};
     emit("update", rest as MovieParams);
   }
 };

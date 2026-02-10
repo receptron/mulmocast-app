@@ -403,11 +403,15 @@ async function navigateToStyleTab(page: Page): Promise<boolean> {
 }
 
 async function scrollToImageParams(page: Page): Promise<boolean> {
-  return (await scrollToH4(page, "\u753b\u50cf\u751f\u6210\u8a2d\u5b9a")) || (await scrollToH4(page, "Image Parameters"));
+  return (
+    (await scrollToH4(page, "\u753b\u50cf\u751f\u6210\u8a2d\u5b9a")) || (await scrollToH4(page, "Image Parameters"))
+  );
 }
 
 async function scrollToMovieParams(page: Page): Promise<boolean> {
-  return (await scrollToH4(page, "\u52d5\u753b\u751f\u6210\u8a2d\u5b9a")) || (await scrollToH4(page, "Movie Parameters"));
+  return (
+    (await scrollToH4(page, "\u52d5\u753b\u751f\u6210\u8a2d\u5b9a")) || (await scrollToH4(page, "Movie Parameters"))
+  );
 }
 
 async function findImageProviderIndex(page: Page): Promise<number> {
@@ -598,10 +602,16 @@ async function testImageParamsBlankDefaults(page: Page) {
 
   const inputsBlank = await getInputValues(page);
   const projectBlank = inputsBlank.find((i) => i.placeholder === "your-gcp-project-id");
+  const locationBlank = inputsBlank.find((i) => i.placeholder === "us-central1");
   record(
-    "Img: Blank defaults \u2192 empty fields visible",
-    projectBlank !== undefined ? "PASS" : "FAIL",
+    "Img: Blank defaults \u2192 empty project field",
+    projectBlank !== undefined && projectBlank.value === "" ? "PASS" : "FAIL",
     projectBlank ? `value="${projectBlank.value}"` : "Field not found",
+  );
+  record(
+    "Img: Blank defaults \u2192 empty location field",
+    locationBlank !== undefined && locationBlank.value === "" ? "PASS" : "FAIL",
+    locationBlank ? `value="${locationBlank.value}"` : "Field not found",
   );
 
   // Step 5: Toggle OFF → fields removed
@@ -705,11 +715,18 @@ async function testMovieParamsBlankDefaults(page: Page) {
   // Image toggle is OFF so image fields are hidden. Only movie fields should appear.
   const inputsBlank = await getInputValues(page);
   const projectFields = inputsBlank.filter((i) => i.placeholder === "your-gcp-project-id");
+  const locationFields = inputsBlank.filter((i) => i.placeholder === "us-central1");
   const hasEmptyProject = projectFields.some((f) => f.value === "");
+  const hasEmptyLocation = locationFields.some((f) => f.value === "");
   record(
-    "Movie: Blank defaults \u2192 empty fields visible",
+    "Movie: Blank defaults \u2192 empty project field",
     hasEmptyProject ? "PASS" : "FAIL",
     `${projectFields.length} project field(s), empty=${hasEmptyProject}`,
+  );
+  record(
+    "Movie: Blank defaults \u2192 empty location field",
+    hasEmptyLocation ? "PASS" : "FAIL",
+    `${locationFields.length} location field(s), empty=${hasEmptyLocation}`,
   );
 
   // Step 5: Toggle OFF → fields removed
@@ -880,7 +897,10 @@ async function testPerBeatVertexAI(page: Page) {
     const headings = document.querySelectorAll("h4");
     for (const h4 of headings) {
       const text = h4.textContent?.trim() || "";
-      if (text.includes("Advanced Beat Settings") || text.includes("\u30d3\u30fc\u30c8\u306e\u8a73\u7d30\u8a2d\u5b9a")) {
+      if (
+        text.includes("Advanced Beat Settings") ||
+        text.includes("\u30d3\u30fc\u30c8\u306e\u8a73\u7d30\u8a2d\u5b9a")
+      ) {
         // Click the collapsible trigger (parent div with cursor-pointer)
         const trigger = h4.closest("[class*='cursor-pointer']") || h4.parentElement;
         if (trigger) {
@@ -905,7 +925,11 @@ async function testPerBeatVertexAI(page: Page) {
     const checkboxes = document.querySelectorAll('[role="checkbox"]');
     for (const cb of checkboxes) {
       const label = cb.closest("div")?.querySelector("label")?.textContent || "";
-      if (label.includes("Override") || label.includes("\u753b\u50cf\u751f\u6210") || label.includes("\u3053\u306e\u30d3\u30fc\u30c8")) {
+      if (
+        label.includes("Override") ||
+        label.includes("\u753b\u50cf\u751f\u6210") ||
+        label.includes("\u3053\u306e\u30d3\u30fc\u30c8")
+      ) {
         if (cb.getAttribute("data-state") !== "checked") {
           (cb as HTMLElement).click();
         }
@@ -935,7 +959,11 @@ async function testPerBeatVertexAI(page: Page) {
     const checkboxes = document.querySelectorAll('[role="checkbox"]');
     for (const cb of checkboxes) {
       const label = cb.closest("div")?.querySelector("label")?.textContent || "";
-      if (label.includes("Override") || label.includes("\u753b\u50cf\u751f\u6210") || label.includes("\u3053\u306e\u30d3\u30fc\u30c8")) {
+      if (
+        label.includes("Override") ||
+        label.includes("\u753b\u50cf\u751f\u6210") ||
+        label.includes("\u3053\u306e\u30d3\u30fc\u30c8")
+      ) {
         const checkboxRow = cb.closest(".flex.items-center.gap-2");
         const beatStyleRoot = checkboxRow?.parentElement;
         if (!beatStyleRoot) continue;
@@ -1015,10 +1043,16 @@ async function testPerBeatVertexAI(page: Page) {
 
     const inputsBlank = await getInputValues(page);
     const projectBlank = inputsBlank.find((i) => i.placeholder === "your-gcp-project-id");
+    const locationBlank = inputsBlank.find((i) => i.placeholder === "us-central1");
     record(
-      "Per-beat: Blank \u2192 empty fields",
-      projectBlank !== undefined ? "PASS" : "FAIL",
+      "Per-beat: Blank \u2192 empty project field",
+      projectBlank !== undefined && projectBlank.value === "" ? "PASS" : "FAIL",
       projectBlank ? `value="${projectBlank.value}"` : "Field not found",
+    );
+    record(
+      "Per-beat: Blank \u2192 empty location field",
+      locationBlank !== undefined && locationBlank.value === "" ? "PASS" : "FAIL",
+      locationBlank ? `value="${locationBlank.value}"` : "Field not found",
     );
 
     // Toggle OFF
@@ -1063,9 +1097,7 @@ async function testPerBeatVertexAI(page: Page) {
     record(
       "Per-beat: Pre-filled project ID",
       hasBeatProject ? "PASS" : "WARN",
-      hasBeatProject
-        ? `Found "${TEST_PROJECT_ID}"`
-        : `Values: ${beatProjectFields.map((f) => f.value).join(", ")}`,
+      hasBeatProject ? `Found "${TEST_PROJECT_ID}"` : `Values: ${beatProjectFields.map((f) => f.value).join(", ")}`,
     );
 
     const beatLocationFields = inputs.filter((i) => i.placeholder === "us-central1");
@@ -1073,9 +1105,7 @@ async function testPerBeatVertexAI(page: Page) {
     record(
       "Per-beat: Pre-filled location",
       hasBeatLocation ? "PASS" : "WARN",
-      hasBeatLocation
-        ? `Found "${TEST_LOCATION}"`
-        : `Values: ${beatLocationFields.map((f) => f.value).join(", ")}`,
+      hasBeatLocation ? `Found "${TEST_LOCATION}"` : `Values: ${beatLocationFields.map((f) => f.value).join(", ")}`,
     );
 
     // Toggle OFF
@@ -1101,7 +1131,9 @@ async function cleanupPerBeat(page: Page) {
     for (const cb of checkboxes) {
       const label = cb.closest("div")?.querySelector("label")?.textContent || "";
       if (
-        (label.includes("Override") || label.includes("\u753b\u50cf\u751f\u6210") || label.includes("\u3053\u306e\u30d3\u30fc\u30c8")) &&
+        (label.includes("Override") ||
+          label.includes("\u753b\u50cf\u751f\u6210") ||
+          label.includes("\u3053\u306e\u30d3\u30fc\u30c8")) &&
         cb.getAttribute("data-state") === "checked"
       ) {
         (cb as HTMLElement).click();
