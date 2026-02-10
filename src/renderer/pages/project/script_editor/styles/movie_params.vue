@@ -171,8 +171,9 @@ const currentParams = computed((): MovieParams => {
 });
 
 const updateParams = (partial: Partial<MovieParams>) => {
+  const base = { ...currentParams.value, ...props.movieParams };
   const params = {
-    ...currentParams.value,
+    ...base,
     ...partial,
     transition: partial.transition
       ? {
