@@ -1,6 +1,6 @@
-# MulmoCast App テストガイド
+# Playwright E2E テストガイド
 
-このディレクトリには MulmoCast Electron アプリの Playwright テストが含まれています。
+このディレクトリには MulmoCast Electron アプリの Playwright E2E テストが含まれています。
 
 ## テストファイル
 * `automated_`: Electron アプリ未起動時に実行するものです。GitHub Actions 向けにも利用します。
@@ -52,6 +52,28 @@ npx tsx test/manual_run_switch_language.ts en
 4. 言語ドロップダウンから指定言語を選択
 5. 言語変更を確認
 6. 元のページへ自動で戻る
+
+3. `test/manual_no_api_electron_upgrade_qa.ts`
+**Electron アップグレード QA テスト**
+
+- Electron バージョンアップ時の回帰テスト用スイート
+- CDP 接続で起動中のアプリに接続し、25項目を自動検証
+  1. Chromium バージョン確認
+  2. ダッシュボード表示
+  3. プロジェクト新規作成・ページ遷移
+  4. Monaco Editor 表示・JSON編集（title変更、description挿入/削除）
+  5. Monaco Cmd+Z undo（タブ遷移なし）
+  6. BEAT タブへの同期確認
+  7. アプリ undo ボタン動作
+  8. 設定モーダル開閉・APIキーアコーディオン
+  9. Clipboard IPC（dev モード）・deprecation 警告チェック
+  10. コンソールエラー・警告チェック
+
+**使用方法:**
+```bash
+# 引数: 期待する Chromium メジャーバージョン（省略可）
+npx tsx test/manual_no_api_electron_upgrade_qa.ts 144
+```
 
 ## 前提条件
 

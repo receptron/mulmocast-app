@@ -326,6 +326,11 @@ The app uses Playwright for E2E testing with Electron integration:
 - Screenshot capture on test failures
 - Environment-specific configuration (dev/CI)
 
+### Test Details
+
+- Naming convention, commands, and usage: see `test/README.md`
+- Electron upgrade QA checklist and template: see `docs/qa_report/TEMPLATE.md`
+
 ### Debugging with Playwright MCP
 
 When the Electron app is running in development mode (`yarn start`), Playwright MCP can connect via CDP for debugging:

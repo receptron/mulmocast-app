@@ -90,6 +90,16 @@ typings/
 
 # Electron-Forge
 out/
+dist/
+
+# Puppeteer / Chromium (downloaded by make:local)
+chromium/
+
+# IDE
+.vscode/
+
+# Playwright MCP
+.playwright-mcp/
 
 # emacs
 *~
