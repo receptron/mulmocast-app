@@ -56,16 +56,19 @@ npx tsx test/manual_run_switch_language.ts en
 3. `test/manual_no_api_vertex_ai_qa.ts`
 **Vertex AI サポート QA テスト（APIコスト: なし）**
 
-- Vertex AI 統合の UI 動作を検証する QA テストスイート
-- CDP 経由で起動中の Electron アプリに接続し、39項目のテストを実行
-- テスト項目:
-  1. Settings ページ: Vertex AI セクションの展開/折りたたみ、Project ID・Location の入力
-  2. Image Params: Google プロバイダー選択時の Vertex AI トグル表示、ON/OFF 動作、Settings デフォルト値のプリフィル
-  3. Movie Params: Image Params と同様のトグル動作
-  4. UI → JSON: vertexai_project / vertexai_location がスクリプト JSON に反映されることの確認
-  5. JSON → UI: JSON エディタで vertexai フィールドを変更し、Style タブに反映されることの確認
-  6. プロバイダー切替: Google 以外に切り替えた際にトグルが非表示になることの確認
-  7. コンソールヘルス: テスト中のコンソールエラー有無
+- Vertex AI 統合の UI 動作を検証する QA テストスイート（60項目）
+- CDP 経由で起動中の Electron アプリに接続
+- テストプロジェクトは `[QA] Vertex AI Test <タイムスタンプ>` というタイトルで作成されるため、手動で識別・削除が容易
+- project ID / location は毎回ユニークな値（`Date.now()` ベース）を使用
+- テスト項目（8セクション）:
+  1. **Settings（ブランク）**: Vertex AI セクションの展開/折りたたみ、フィールドをブランクにリセット
+  2. **Image Params**: 非 Google → トグル非表示、Google → トグル表示・デフォルト OFF、ブランク ON → 空フィールド表示、OFF → フィールド削除、Settings 値設定後 ON → プリフィル、OFF/ON サイクル
+  3. **Movie Params**: Image Params と同等の ON/OFF サイクル（非 Google 非表示、Google トグル、プリフィル確認）
+  4. **Per-beat**: Pro モード + Media タブ → Advanced Settings → カスタム imageParams 有効化 → Google 選択 → Vertex AI トグル ON/OFF・プリフィル確認
+  5. **UI → JSON**: imageParams / movieParams の vertexai_project / vertexai_location がスクリプト JSON に反映されることの確認
+  6. **JSON → UI**: JSON エディタで vertexai フィールドを変更し、Style タブに反映されることの確認
+  7. **プロバイダー切替**: Google 以外に切り替えた際にトグルが非表示になることの確認（Image: OpenAI、Movie: Replicate）
+  8. **コンソールヘルス**: テスト中のコンソールエラー有無
 
 **使用方法:**
 ```bash
