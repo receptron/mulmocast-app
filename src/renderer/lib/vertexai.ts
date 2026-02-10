@@ -1,4 +1,4 @@
-import type { VertexAIConfig } from "@/../../types";
+import type { VertexAIConfig } from "@/types";
 
 type VertexAIParams = {
   vertexai_project?: string;
