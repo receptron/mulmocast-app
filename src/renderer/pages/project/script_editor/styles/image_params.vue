@@ -70,6 +70,31 @@
           :placeholder="t('parameters.imageParams.moderationPlaceholder')"
         />
       </div>
+      <!-- Vertex AI (Google provider only) -->
+      <div v-if="imageProvider === 'google'" class="space-y-2 rounded-md border p-3">
+        <div class="flex items-center justify-between">
+          <Label>{{ t("parameters.vertexAI.toggle") }}</Label>
+          <Switch :model-value="vertexAIEnabled" @update:model-value="handleVertexAIToggle" />
+        </div>
+        <template v-if="vertexAIEnabled">
+          <div>
+            <Label class="text-xs">{{ t("parameters.vertexAI.project") }}</Label>
+            <Input
+              :model-value="imageParams?.vertexai_project || ''"
+              @update:model-value="(value) => handleUpdate('vertexai_project', String(value))"
+              :placeholder="t('parameters.vertexAI.projectPlaceholder')"
+            />
+          </div>
+          <div>
+            <Label class="text-xs">{{ t("parameters.vertexAI.location") }}</Label>
+            <Input
+              :model-value="imageParams?.vertexai_location || ''"
+              @update:model-value="(value) => handleUpdate('vertexai_location', String(value))"
+              :placeholder="t('parameters.vertexAI.locationPlaceholder')"
+            />
+          </div>
+        </template>
+      </div>
       <MulmoError :mulmoError="mulmoError" />
     </div>
   </Card>
@@ -80,6 +105,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { Label, Input, Card } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import MulmoError from "./mulmo_error.vue";
 import { provider2ImageAgent, type MulmoImageParams, type MulmoBeat, type Text2ImageProvider } from "mulmocast/browser";
 import { mulmoOpenAIImageModelSchema } from "mulmocast/browser";
@@ -87,6 +113,8 @@ import { mulmoOpenAIImageModelSchema } from "mulmocast/browser";
 import SettingsAlert from "../settings_alert.vue";
 
 import { IMAGE_PARAMS_DEFAULT_VALUES, IMAGE_MODEL_DISPLAY_KEYS } from "../../../../../shared/constants";
+import { useMulmoGlobalStore } from "../../../../store";
+import { isVertexAIEnabled, getVertexAIDefaults, stripVertexAIFields } from "../../../../lib/vertexai";
 
 const { t } = useI18n();
 const qualityOptions = mulmoOpenAIImageModelSchema.shape.quality._def.innerType.options;
@@ -141,5 +169,22 @@ const handleUpdate = (field: keyof MulmoImageParams, value: string) => {
 const getModelDisplayName = (modelId: string): string => {
   const i18nKey = IMAGE_MODEL_DISPLAY_KEYS[modelId];
   return i18nKey ? t(`ai.imageModel.${i18nKey}`) : modelId;
+};
+
+const globalStore = useMulmoGlobalStore();
+
+const vertexAIEnabled = computed(() => isVertexAIEnabled(props.imageParams));
+
+const handleVertexAIToggle = (enabled: boolean) => {
+  const currentParams = props.imageParams || {};
+  if (enabled) {
+    emit("update", {
+      ...IMAGE_PARAMS_DEFAULT_VALUES,
+      ...currentParams,
+      ...getVertexAIDefaults(globalStore.settings.VERTEX_AI),
+    });
+  } else {
+    emit("update", stripVertexAIFields(currentParams) as MulmoImageParams);
+  }
 };
 </script>

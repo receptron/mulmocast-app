@@ -346,6 +346,14 @@ const lang = {
       },
       model: "モデル",
     },
+    vertexAI: {
+      title: "Vertex AI",
+      description: "Google Cloud Vertex AI の画像・動画生成のデフォルト設定",
+      project: "プロジェクトID",
+      projectPlaceholder: "your-gcp-project-id",
+      location: "ロケーション",
+      locationPlaceholder: "us-central1",
+    },
     azureOpenAI: {
       title: "Azure OpenAI",
       description: "Azure OpenAI Serviceの設定",
@@ -937,6 +945,13 @@ const lang = {
         "CSSスタイルを単一文字列または複数行で入力してください（テキストスライド・Markdown・Chart・Mermaidに適用）",
       cssPlaceholder:
         "h2 {'{'} font-size: 48px; margin-left: 40px; text-align: left {'}'}\nh3 {'{'} font-size: 36px; margin-left: 40px {'}'}\nul {'{'} margin-left: 40px {'}'}\nol {'{'} margin-left: 40px {'}'}",
+    },
+    vertexAI: {
+      toggle: "Vertex AIを使用する",
+      project: "プロジェクトID",
+      projectPlaceholder: "your-gcp-project-id",
+      location: "ロケーション",
+      locationPlaceholder: "us-central1",
     },
     imageParams: {
       title: "画像生成設定",

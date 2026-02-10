@@ -81,6 +81,7 @@ export type Settings = {
   CHAT_CONVERSATION_MODE?: string;
   CHAT_TEMPLATE_INDEX?: number;
   AZURE_OPENAI?: AzureOpenAIConfig;
+  VERTEX_AI?: VertexAIConfig;
 };
 
 export type MediaType = "image" | "movie";
@@ -139,4 +140,9 @@ export type AzureOpenAIConfig = {
   image?: AzureOpenAIServiceConfig;
   tts?: AzureOpenAIServiceConfig;
   llm?: AzureOpenAIServiceConfig;
+};
+
+export type VertexAIConfig = {
+  project?: string;
+  location?: string; // default: "us-central1"
 };

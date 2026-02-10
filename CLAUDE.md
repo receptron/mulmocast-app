@@ -166,6 +166,7 @@ export class SecureKeyStore {
 
 ### 8. Build & Development
 
+- Package Manager: **yarn**
 - Framework: Electron Forge with Vite
 - Frontend: Vue 3 with TypeScript and Composition API
 - Styling: Tailwind CSS v4 with CSS v4 features
@@ -175,6 +176,23 @@ export class SecureKeyStore {
 - Validation: Zod schemas for runtime type safety
 - Internationalization: Vue I18n with English/Japanese support
 - Testing: Playwright for E2E testing with Electron integration
+- QA Playbook: `docs/qa_playbook.md` — Patterns and anti-patterns for QA test creation. Must be read before writing new tests
+- QA Skill: `/qa-create` — Workflow for creating QA test suites (loads playbook, designs tests, generates code)
+
+#### Development Commands
+
+| Command | Description |
+|---------|-------------|
+| `yarn start` | Start app in dev mode (CDP port 9222) |
+| `yarn build` | Production build (`yarn make:local` for electron-forge make) |
+| `yarn lint` | ESLint + i18n dump check |
+| `yarn lint:fix` | ESLint auto-fix |
+| `yarn format` | Prettier format |
+| `yarn format:check` | Prettier format check |
+| `yarn type-check` | TypeScript type check (main + renderer) |
+| `yarn test` | Run unit tests (`test/test_*.ts`) |
+| `npx tsx test/manual_no_api_vertex_ai_qa.ts` | Vertex AI QA test (requires running app) |
+| `npx tsx test/manual_no_api_electron_upgrade_qa.ts` | Electron upgrade QA test (requires running app) |
 
 ## Key Workflows
 
