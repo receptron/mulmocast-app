@@ -143,7 +143,9 @@ watch(
 );
 
 onUnmounted(() => {
-  editorInstance.value?.dispose();
+  if (editorInstance.value) {
+    editorInstance.value.dispose();
+  }
 });
 </script>
 

@@ -23,7 +23,9 @@
  *
  *   Phase 5 – Integration
  *     5. JSON Editor: UI → JSON reflection
+ *     5b. Toggle OFF → JSON fields absent
  *     6. JSON → UI reflection
+ *     6b. JSON field removal/addition → toggle state
  *     7. Provider switch hides toggle
  *     8. Console health
  *
@@ -45,6 +47,8 @@ const CONFIG = {
   EDITOR_LOAD_DELAY_MS: 1500,
   SETTINGS_SAVE_DELAY_MS: 2000,
   PROJECT_CREATE_DELAY_MS: 3000,
+  /** Wait before leaving JSON tab so Monaco can finish async operations (diagnostics, validation) */
+  EDITOR_SETTLE_DELAY_MS: 1500,
 } as const;
 
 const timestamp = new Date().toISOString().replace(/T/, " ").replace(/\..+/, "");
@@ -352,7 +356,9 @@ async function writeEditorJson(page: Page, json: Record<string, unknown>): Promi
   await page.evaluate((t) => navigator.clipboard.writeText(t), newText);
   await page.waitForTimeout(200);
   await page.keyboard.press(pasteKey);
-  await page.waitForTimeout(1000);
+  // Wait for Monaco to finish internal operations (diagnostics, validation)
+  // before the editor may be disposed by a tab switch
+  await page.waitForTimeout(2000);
   return true;
 }
 
@@ -1211,6 +1217,106 @@ async function testJsonReflection(page: Page) {
 }
 
 /**
+ * Test 5b: Toggle OFF \u2192 JSON fields absent.
+ * Verify that toggling Vertex AI OFF removes vertexai fields from JSON.
+ */
+async function testToggleOffJsonReflection(page: Page) {
+  console.log("\n=== 5b. Toggle OFF \u2192 JSON Fields Absent ===");
+
+  // Wait for Monaco to settle before leaving JSON tab
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+
+  // Switch to Style tab (we're on JSON tab from test 5)
+  const styleClicked = await navigateToStyleTab(page);
+  if (!styleClicked) {
+    record("5b: Switch to Style tab", "FAIL", "Tab not found");
+    return;
+  }
+
+  // Toggle Image Vertex AI OFF (1st switch)
+  await scrollToImageParams(page);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  await clickSwitchByLabel(page, "Vertex AI");
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+  // Toggle Movie Vertex AI OFF (2nd switch)
+  await scrollToMovieParams(page);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  await clickNthVertexAISwitch(page, 2);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+  // Switch to JSON tab and verify fields absent
+  const jsonClicked = await clickTabByText(page, "JSON");
+  if (!jsonClicked) {
+    record("5b: Switch to JSON tab", "FAIL", "Tab not found");
+    return;
+  }
+  await page.waitForTimeout(CONFIG.EDITOR_LOAD_DELAY_MS);
+
+  const json = await readEditorJson(page);
+  if (!json) {
+    record("5b: Read JSON", "FAIL", "Could not read/parse editor content");
+    return;
+  }
+
+  const presentationStyle = json.presentationStyle as Record<string, unknown> | undefined;
+  const imageParams = (presentationStyle?.imageParams || json.imageParams) as Record<string, unknown> | undefined;
+
+  record(
+    "5b: Img OFF \u2192 no vertexai_project in JSON",
+    imageParams?.vertexai_project === undefined ? "PASS" : "FAIL",
+    imageParams?.vertexai_project === undefined
+      ? "Field absent"
+      : `vertexai_project="${imageParams?.vertexai_project}"`,
+  );
+  record(
+    "5b: Img OFF \u2192 no vertexai_location in JSON",
+    imageParams?.vertexai_location === undefined ? "PASS" : "FAIL",
+    imageParams?.vertexai_location === undefined
+      ? "Field absent"
+      : `vertexai_location="${imageParams?.vertexai_location}"`,
+  );
+
+  const movieParams = (presentationStyle?.movieParams || json.movieParams) as Record<string, unknown> | undefined;
+
+  record(
+    "5b: Movie OFF \u2192 no vertexai_project in JSON",
+    movieParams?.vertexai_project === undefined ? "PASS" : "FAIL",
+    movieParams?.vertexai_project === undefined
+      ? "Field absent"
+      : `vertexai_project="${movieParams?.vertexai_project}"`,
+  );
+  record(
+    "5b: Movie OFF \u2192 no vertexai_location in JSON",
+    movieParams?.vertexai_location === undefined ? "PASS" : "FAIL",
+    movieParams?.vertexai_location === undefined
+      ? "Field absent"
+      : `vertexai_location="${movieParams?.vertexai_location}"`,
+  );
+
+  // Wait for Monaco to settle before leaving JSON tab
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+
+  // Toggle both back ON for subsequent tests (test 6 expects ON state)
+  const styleClicked2 = await navigateToStyleTab(page);
+  if (styleClicked2) {
+    await scrollToImageParams(page);
+    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+    await clickSwitchByLabel(page, "Vertex AI");
+    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+    await scrollToMovieParams(page);
+    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+    await clickNthVertexAISwitch(page, 2);
+    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  }
+
+  // Go back to JSON tab (test 6 expects to start on JSON tab)
+  await clickTabByText(page, "JSON");
+  await page.waitForTimeout(CONFIG.EDITOR_LOAD_DELAY_MS);
+}
+
+/**
  * Test 6: JSON \u2192 UI reflection.
  */
 async function testJsonToUI(page: Page) {
@@ -1223,17 +1329,23 @@ async function testJsonToUI(page: Page) {
     return;
   }
 
-  // Modify imageParams via JSON
+  // Modify imageParams via JSON (reorder so vertexai fields come before images to avoid Monaco autocomplete)
   const imageParams = (json.imageParams || {}) as Record<string, unknown>;
+  const savedImages = imageParams.images;
+  delete imageParams.images;
   imageParams.provider = "google";
   imageParams.vertexai_project = JSON_EDIT_PROJECT_ID;
   imageParams.vertexai_location = JSON_EDIT_LOCATION;
+  if (savedImages !== undefined) imageParams.images = savedImages;
   json.imageParams = imageParams;
 
   // Write modified JSON back
   const written = await writeEditorJson(page, json);
   record("Write modified JSON", written ? "PASS" : "FAIL", written ? "Written" : "Failed");
   if (!written) return;
+
+  // Wait for Monaco to settle before leaving JSON tab
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
 
   // Switch to Style tab
   const styleClicked = await navigateToStyleTab(page);
@@ -1276,6 +1388,134 @@ async function testJsonToUI(page: Page) {
 }
 
 /**
+ * Test 6b: JSON field removal/addition \u2192 toggle state.
+ * Remove vertexai fields from JSON \u2192 verify toggles OFF.
+ * Add vertexai fields to JSON \u2192 verify toggles ON.
+ */
+async function testJsonFieldsToToggle(page: Page) {
+  console.log("\n=== 6b. JSON Fields \u2192 Toggle State ===");
+
+  // Switch to JSON tab (we're on Style tab from test 6)
+  const jsonClicked = await clickTabByText(page, "JSON");
+  if (!jsonClicked) {
+    record("6b: Switch to JSON tab", "FAIL", "Tab not found");
+    return;
+  }
+  await page.waitForTimeout(CONFIG.EDITOR_LOAD_DELAY_MS);
+
+  const json = await readEditorJson(page);
+  if (!json) {
+    record("6b: Read JSON", "FAIL", "Could not read/parse editor content");
+    return;
+  }
+
+  // Remove vertexai fields from imageParams and movieParams
+  const ps = json.presentationStyle as Record<string, unknown> | undefined;
+  const imgParams = (ps?.imageParams || json.imageParams) as Record<string, unknown> | undefined;
+  if (imgParams) {
+    delete imgParams.vertexai_project;
+    delete imgParams.vertexai_location;
+  }
+  const mvParams = (ps?.movieParams || json.movieParams) as Record<string, unknown> | undefined;
+  if (mvParams) {
+    delete mvParams.vertexai_project;
+    delete mvParams.vertexai_location;
+  }
+
+  const written = await writeEditorJson(page, json);
+  record("6b: Write JSON (remove vertexai)", written ? "PASS" : "FAIL", written ? "Written" : "Failed");
+  if (!written) return;
+
+  // Wait for Monaco to settle before leaving JSON tab
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+
+  // Switch to Style tab and verify toggles OFF
+  await navigateToStyleTab(page);
+  await scrollToImageParams(page);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+  const switches1 = await getSwitchStates(page);
+  const imgToggle1 = switches1.find((s) => s.label.includes("Vertex AI"));
+  record(
+    "6b: JSON remove \u2192 Img toggle OFF",
+    imgToggle1 && !imgToggle1.checked ? "PASS" : "FAIL",
+    imgToggle1 ? `checked=${imgToggle1.checked}` : "Toggle not found",
+  );
+
+  await scrollToMovieParams(page);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  const switches2 = await getSwitchStates(page);
+  const vertexSwitches2 = switches2.filter((s) => s.label.includes("Vertex AI"));
+  const movieToggle1 = vertexSwitches2.length >= 2 ? vertexSwitches2[1] : undefined;
+  record(
+    "6b: JSON remove \u2192 Movie toggle OFF",
+    movieToggle1 && !movieToggle1.checked ? "PASS" : "FAIL",
+    movieToggle1 ? `checked=${movieToggle1.checked}` : "Movie toggle not found",
+  );
+
+  // Now add vertexai fields via JSON
+  const jsonClicked2 = await clickTabByText(page, "JSON");
+  if (!jsonClicked2) {
+    record("6b: Switch to JSON tab (2)", "FAIL", "Tab not found");
+    return;
+  }
+  await page.waitForTimeout(CONFIG.EDITOR_LOAD_DELAY_MS);
+
+  const json2 = await readEditorJson(page);
+  if (!json2) {
+    record("6b: Read JSON (2)", "FAIL", "Could not read/parse editor content");
+    return;
+  }
+
+  const ps2 = json2.presentationStyle as Record<string, unknown> | undefined;
+  const imgParams2 = (ps2?.imageParams || json2.imageParams) as Record<string, unknown> | undefined;
+  if (imgParams2) {
+    // Reorder so vertexai fields come before images to avoid Monaco autocomplete
+    const savedImages2 = imgParams2.images;
+    delete imgParams2.images;
+    imgParams2.vertexai_project = JSON_EDIT_PROJECT_ID;
+    imgParams2.vertexai_location = JSON_EDIT_LOCATION;
+    if (savedImages2 !== undefined) imgParams2.images = savedImages2;
+  }
+  const mvParams2 = (ps2?.movieParams || json2.movieParams) as Record<string, unknown> | undefined;
+  if (mvParams2) {
+    mvParams2.vertexai_project = JSON_EDIT_PROJECT_ID;
+    mvParams2.vertexai_location = JSON_EDIT_LOCATION;
+  }
+
+  const written2 = await writeEditorJson(page, json2);
+  record("6b: Write JSON (add vertexai)", written2 ? "PASS" : "FAIL", written2 ? "Written" : "Failed");
+  if (!written2) return;
+
+  // Wait for Monaco to settle before leaving JSON tab
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+
+  // Switch to Style tab and verify toggles ON
+  await navigateToStyleTab(page);
+  await scrollToImageParams(page);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+  const switches3 = await getSwitchStates(page);
+  const imgToggle2 = switches3.find((s) => s.label.includes("Vertex AI"));
+  record(
+    "6b: JSON add \u2192 Img toggle ON",
+    imgToggle2?.checked ? "PASS" : "FAIL",
+    imgToggle2 ? `checked=${imgToggle2.checked}` : "Toggle not found",
+  );
+
+  await scrollToMovieParams(page);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  const switches4 = await getSwitchStates(page);
+  const vertexSwitches4 = switches4.filter((s) => s.label.includes("Vertex AI"));
+  const movieToggle2 = vertexSwitches4.length >= 2 ? vertexSwitches4[1] : undefined;
+  record(
+    "6b: JSON add \u2192 Movie toggle ON",
+    movieToggle2?.checked ? "PASS" : "FAIL",
+    movieToggle2 ? `checked=${movieToggle2.checked}` : "Movie toggle not found",
+  );
+}
+
+/**
  * Test 7: Provider switch hides toggle.
  */
 async function testProviderSwitchHidesToggle(page: Page) {
@@ -1289,6 +1529,10 @@ async function testProviderSwitchHidesToggle(page: Page) {
 
   await scrollToImageParams(page);
 
+  // Wait for Monaco to fully settle before provider switch
+  // (provider change triggers Vue reactivity cascade that can dispose Monaco)
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+
   // Switch image provider to OpenAI
   const imgProvIdx = await findImageProviderIndex(page);
   if (imgProvIdx >= 0) {
@@ -1298,7 +1542,7 @@ async function testProviderSwitchHidesToggle(page: Page) {
     if (!selected) return;
   }
 
-  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
   await scrollToImageParams(page);
 
   // Verify image Vertex AI toggle is gone
@@ -1311,6 +1555,7 @@ async function testProviderSwitchHidesToggle(page: Page) {
 
   // Switch movie provider away from Google (movie has Replicate, not OpenAI)
   await scrollToMovieParams(page);
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
   const movieProvIdx = await findMovieProviderIndex(page);
   if (movieProvIdx >= 0) {
     await clickComboboxByIndex(page, movieProvIdx);
@@ -1475,8 +1720,14 @@ async function testConsoleHealth(monitor: ConsoleMonitor) {
     // 5. JSON Reflection (UI → JSON)
     await testJsonReflection(page);
 
+    // 5b. Toggle OFF → JSON fields absent
+    await testToggleOffJsonReflection(page);
+
     // 6. JSON → UI Reflection
     await testJsonToUI(page);
+
+    // 6b. JSON field removal/addition → toggle state
+    await testJsonFieldsToToggle(page);
 
     // 7. Provider Switch Hides Toggle
     await testProviderSwitchHidesToggle(page);
