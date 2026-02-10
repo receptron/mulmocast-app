@@ -42,6 +42,31 @@
           </SelectContent>
         </Select>
       </div>
+      <!-- Vertex AI (Google provider only) -->
+      <div v-if="movieParams?.provider === 'google'" class="space-y-2 rounded-md border p-3">
+        <div class="flex items-center justify-between">
+          <Label>{{ t("parameters.vertexAI.toggle") }}</Label>
+          <Switch :model-value="vertexAIEnabled" @update:model-value="handleVertexAIToggle" />
+        </div>
+        <template v-if="vertexAIEnabled">
+          <div>
+            <Label class="text-xs">{{ t("parameters.vertexAI.project") }}</Label>
+            <Input
+              :model-value="movieParams?.vertexai_project || ''"
+              @update:model-value="(value) => updateParams({ vertexai_project: String(value) })"
+              :placeholder="t('parameters.vertexAI.projectPlaceholder')"
+            />
+          </div>
+          <div>
+            <Label class="text-xs">{{ t("parameters.vertexAI.location") }}</Label>
+            <Input
+              :model-value="movieParams?.vertexai_location || ''"
+              @update:model-value="(value) => updateParams({ vertexai_location: String(value) })"
+              :placeholder="t('parameters.vertexAI.locationPlaceholder')"
+            />
+          </div>
+        </template>
+      </div>
     </div>
   </Card>
   <Card class="p-4">
@@ -91,10 +116,12 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { Card, Label, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import MulmoError from "./mulmo_error.vue";
 import SettingsAlert from "../settings_alert.vue";
 import { defaultProviders, provider2MovieAgent, type MulmoPresentationStyle } from "mulmocast/browser";
 import { TRANSITION_TYPES, DEFAULT_TRANSITION_DURATION } from "@/../shared/constants";
+import { useMulmoGlobalStore } from "../../../../store";
 
 type MovieParams = MulmoPresentationStyle["movieParams"];
 
@@ -178,5 +205,26 @@ const handleTransitionTypeChange = (value: MovieParams["transition"]["type"]) =>
 
 const handleTransitionDurationChange = (value: MovieParams["transition"]["duration"]) => {
   updateParams({ transition: { type: currentParams.value.transition.type, duration: value } });
+};
+
+const globalStore = useMulmoGlobalStore();
+
+const vertexAIEnabled = computed(() => !!props.movieParams?.vertexai_project);
+
+const handleVertexAIToggle = (enabled: boolean) => {
+  if (enabled) {
+    const defaults = globalStore.settings.VERTEX_AI;
+    updateParams({
+      vertexai_project: defaults?.project || "",
+      vertexai_location: defaults?.location || "us-central1",
+    });
+  } else {
+    const {
+      vertexai_project: __vertexai_project,
+      vertexai_location: __vertexai_location,
+      ...rest
+    } = currentParams.value;
+    emit("update", rest as MovieParams);
+  }
 };
 </script>

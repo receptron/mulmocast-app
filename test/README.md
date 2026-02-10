@@ -53,6 +53,25 @@ npx tsx test/manual_run_switch_language.ts en
 5. 言語変更を確認
 6. 元のページへ自動で戻る
 
+3. `test/manual_no_api_vertex_ai_qa.ts`
+**Vertex AI サポート QA テスト（APIコスト: なし）**
+
+- Vertex AI 統合の UI 動作を検証する QA テストスイート
+- CDP 経由で起動中の Electron アプリに接続し、39項目のテストを実行
+- テスト項目:
+  1. Settings ページ: Vertex AI セクションの展開/折りたたみ、Project ID・Location の入力
+  2. Image Params: Google プロバイダー選択時の Vertex AI トグル表示、ON/OFF 動作、Settings デフォルト値のプリフィル
+  3. Movie Params: Image Params と同様のトグル動作
+  4. UI → JSON: vertexai_project / vertexai_location がスクリプト JSON に反映されることの確認
+  5. JSON → UI: JSON エディタで vertexai フィールドを変更し、Style タブに反映されることの確認
+  6. プロバイダー切替: Google 以外に切り替えた際にトグルが非表示になることの確認
+  7. コンソールヘルス: テスト中のコンソールエラー有無
+
+**使用方法:**
+```bash
+npx tsx test/manual_no_api_vertex_ai_qa.ts
+```
+
 ## 前提条件
 
 ### 1. 依存関係のインストール

@@ -79,6 +79,9 @@
       <!-- Azure OpenAI Settings Section -->
       <AzureOpenAISettings :config="azureOpenAIConfig" @update:config="updateAzureOpenAIConfig" />
 
+      <!-- Vertex AI Settings Section -->
+      <VertexAISettings :config="vertexAIConfig" @update:config="updateVertexAIConfig" />
+
       <!-- language -->
       <Card>
         <CardHeader>
@@ -147,9 +150,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import LlmSettings from "@/components/llm_settings.vue";
 import ApiKeyInput from "@/components/api_key_input.vue";
 import AzureOpenAISettings from "@/components/azure_openai_settings.vue";
+import VertexAISettings from "@/components/vertex_ai_settings.vue";
 
 import { notifySuccess, notifyError } from "@/lib/notification";
-import { LlmConfigs, AzureOpenAIConfig } from "../../types/index";
+import { LlmConfigs, AzureOpenAIConfig, VertexAIConfig } from "../../types/index";
 import {
   ENV_KEYS,
   languages,
@@ -190,6 +194,7 @@ const llmConfigs = ref<LlmConfigs>({
 });
 
 const azureOpenAIConfig = ref<AzureOpenAIConfig>({});
+const vertexAIConfig = ref<VertexAIConfig>({});
 
 // Initialize all keys
 Object.keys(ENV_KEYS).forEach((envKey) => {
@@ -246,6 +251,9 @@ onMounted(async () => {
     if (settings?.AZURE_OPENAI) {
       azureOpenAIConfig.value = settings.AZURE_OPENAI;
     }
+    if (settings?.VERTEX_AI) {
+      vertexAIConfig.value = settings.VERTEX_AI;
+    }
     // Wait for the next tick to avoid triggering save during initial load
     await nextTick();
     isInitialLoad.value = false;
@@ -270,6 +278,7 @@ const saveSettings = async () => {
       onboardProject,
       DARK_MODE,
       AZURE_OPENAI: toRaw(azureOpenAIConfig.value),
+      VERTEX_AI: toRaw(vertexAIConfig.value),
     };
     await window.electronAPI.settings.set(data);
     globalStore.updateSettings(data);
@@ -302,9 +311,13 @@ const updateAzureOpenAIConfig = (config: AzureOpenAIConfig) => {
   azureOpenAIConfig.value = config;
 };
 
+const updateVertexAIConfig = (config: VertexAIConfig) => {
+  vertexAIConfig.value = config;
+};
+
 // Watch for changes in text
 watch(
-  [apiKeys, llmConfigs, azureOpenAIConfig],
+  [apiKeys, llmConfigs, azureOpenAIConfig, vertexAIConfig],
   () => {
     // Skip save during initial load
     if (!isInitialLoad.value) {

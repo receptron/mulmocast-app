@@ -346,6 +346,14 @@ const lang = {
       },
       model: "Model",
     },
+    vertexAI: {
+      title: "Vertex AI",
+      description: "Google Cloud Vertex AI default settings for image and video generation",
+      project: "Project ID",
+      projectPlaceholder: "your-gcp-project-id",
+      location: "Location",
+      locationPlaceholder: "us-central1",
+    },
     azureOpenAI: {
       title: "Azure OpenAI",
       description: "Azure OpenAI Service settings",
@@ -937,6 +945,13 @@ const lang = {
         "Enter CSS styles as a single string or multiple lines (applies to Text Slide, Markdown, Chart, and Mermaid).",
       cssPlaceholder:
         "h2 {'{'} font-size: 48px; margin-left: 40px; text-align: left {'}'}\nh3 {'{'} font-size: 36px; margin-left: 40px {'}'}\nul {'{'} margin-left: 40px {'}'}\nol {'{'} margin-left: 40px {'}'}",
+    },
+    vertexAI: {
+      toggle: "Use Vertex AI",
+      project: "Vertex AI Project ID",
+      projectPlaceholder: "your-gcp-project-id",
+      location: "Vertex AI Location",
+      locationPlaceholder: "us-central1",
     },
     imageParams: {
       title: "Image Parameters",
