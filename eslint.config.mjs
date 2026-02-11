@@ -74,6 +74,8 @@ const sonarjsRules = {
   "sonarjs/no-nested-conditional": "off",
   "sonarjs/slow-regex": "warn",
   "sonarjs/prefer-regexp-exec": "off",
+  "no-useless-assignment": "warn",
+  "preserve-caught-error": "warn",
 };
 
 export default [
