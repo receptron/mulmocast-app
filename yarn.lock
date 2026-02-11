@@ -10262,10 +10262,10 @@ unicode-trie@^2.0.0:
     pako "^0.2.5"
     tiny-inflate "^1.0.0"
 
-unicorn-magic@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/unicorn-magic/-/unicorn-magic-0.3.0.tgz#4efd45c85a69e0dd576d25532fbfa22aa5c8a104"
-  integrity sha512-+QBBXBCvifc56fsbuxZQ6Sic3wqqc3WWaqxs58gvJrcOuN83HGTCwz3oS5phzU9LthRNE9VrJCFCLUgHeeFnfA==
+unicorn-magic@0.2.0, unicorn-magic@^0.3.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/unicorn-magic/-/unicorn-magic-0.2.0.tgz#623c1d38a296aac5e1c4bde4618c4c93a6f4741d"
+  integrity sha512-q83y+/QtXrbKX1jYY+bdQROAbZj6EeSP+Plv0cYZBMPfirSaEvnnhMwRk2WH4n5XkNCQHygAiwTVNpvw3I1dCg==
 
 unique-filename@^2.0.0:
   version "2.0.1"
