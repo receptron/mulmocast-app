@@ -94,7 +94,7 @@
     "@mozilla/readability": "^0.6.0",
     "@receptron/event_agent_generator": "^0.0.6",
     "@tailwindcss/vite": "^4.1.18",
-    "@tato30/vue-pdf": "^1.11.5",
+    "@tato30/vue-pdf": "^2.0.0",
     "@vueuse/core": "^14.2.1",
     "adm-zip": "^0.5.16",
     "class-variance-authority": "^0.7.1",
