@@ -11,7 +11,7 @@ import { collectKeysWithValues, findMissingKeys } from "./check-i18n-core";
 // Load .env file if it exists (for local development)
 // Only load when not in test environment
 if (process.env.NODE_ENV !== "test") {
-  dotenv.config();
+  dotenv.config({ quiet: true });
 }
 
 interface GoogleGenerativeAIError extends Error {
