@@ -215,6 +215,20 @@ export class SecureKeyStore {
 2. Main process reads files and returns as ArrayBuffers
 3. Renderer displays assets in UI
 
+### Release Workflow
+
+Release tasks are automated via Skills in `.claude/skills/`. See each Skill for details.
+
+| Skill | Description |
+|-------|-------------|
+| `/release <version>` | Orchestrator (runs the skills below in sequence) |
+| `/release-notes <version>` | PR summary + release notes generation |
+| `/release-xpost <version>` | X post draft + screenshots |
+| `/discord-release <version>` | Discord webhook notification (from xpost draft) |
+| `/release-tag <version>` | GitHub Release creation |
+
+Output directory: `docs/release_notes/v<version>/`
+
 ## Reka UI Component Patterns
 
 This project uses Reka UI (formerly Radix Vue) for UI components. Important API conventions:
