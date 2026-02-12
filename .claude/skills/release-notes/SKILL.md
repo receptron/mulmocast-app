@@ -16,7 +16,7 @@ argument-hint: "<version> (例: 1.0.11)"
 ### Step 1: 準備
 
 1. 出力ディレクトリを作成:
-   ```
+   ```bash
    mkdir -p docs/release_notes/v<version>
    ```
 

@@ -13,7 +13,7 @@
 
 Main updates:
 BGM Generation with AI
-- Generate custom background music using ElevenLabs AI (requires paid plan). Save to BGM Library for reuse.
+- Generate custom background music using ElevenLabs AI (requires a paid plan). Save to BGM Library for reuse.
 - ElevenLabs AIでカスタムBGMを生成（有料プラン必須）。BGMライブラリに保存して再利用可能。 https://t.co/LGli6ZKotk
 
 ### 添付メディア
