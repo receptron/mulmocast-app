@@ -110,6 +110,23 @@ for ch in post:
 3. `browser_take_screenshot` でキャプチャ
 4. `docs/release_notes/v<version>/images/` に保存
 
+#### ファイル命名規則
+
+`{ポスト番号}-{画像番号}_{説明}.png`
+
+- **ポスト番号**: メインポスト=`01`、連投1=`02`、連投2=`03`...（2桁ゼロ埋め）
+- **画像番号**: そのポスト内の画像連番（`01`, `02`...）
+- **説明**: スクリーンショットの内容を表す英語のスネークケース
+
+```
+01-01_settings_azure_openai.png      ← メインポスト, 画像1
+02-01_settings_vertex_ai.png         ← 連投1, 画像1
+02-02_style_image_params_vertexai.png ← 連投1, 画像2
+03-01_style_caption_split.png        ← 連投3, 画像1
+```
+
+この命名規則により `/release-script` が画像→ビートの対応を機械的にマッピングできる。
+
 **注意**:
 - `browser_snapshot` は大量のトークンを消費するため使わない
 - `browser_evaluate` や `browser_run_code` で要素操作する

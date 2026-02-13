@@ -101,6 +101,9 @@ chromium/
 # Playwright MCP
 .playwright-mcp/
 
+# Release notes output (generated media files)
+docs/release_notes/*/output/
+
 # emacs
 *~
 

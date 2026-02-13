@@ -1,0 +1,209 @@
+{
+  "$mulmocast": {
+    "version": "1.1",
+    "credit": "closing"
+  },
+  "canvasSize": {
+    "width": 1280,
+    "height": 720
+  },
+  "speechParams": {
+    "speakers": {
+      "Presenter": {
+        "displayName": {
+          "ja": "ナレーター"
+        },
+        "voiceId": "shimmer",
+        "speechOptions": {
+          "instruction": "Speak clearly and professionally like a news announcer reading release notes. Use a neutral, informative tone with clear enunciation."
+        },
+        "provider": "openai"
+      }
+    }
+  },
+  "imageParams": {
+    "provider": "openai",
+    "images": {}
+  },
+  "movieParams": {
+    "provider": "mock",
+    "model": "",
+    "transition": {
+      "type": "fade",
+      "duration": 1
+    }
+  },
+  "soundEffectParams": {
+    "provider": "replicate"
+  },
+  "textSlideParams": {
+    "cssStyles": [
+      "h3 {margin-left: 20px; margin-top: 20px}"
+    ]
+  },
+  "captionParams": {
+    "lang": "ja",
+    "captionSplit": "estimate",
+    "textSplit": {
+      "type": "delimiters",
+      "delimiters": [
+        "。",
+        "．",
+        "、",
+        ",",
+        ".",
+        "！",
+        "!",
+        "？",
+        "?",
+        "；",
+        ";",
+        "\n"
+      ]
+    }
+  },
+  "audioParams": {
+    "padding": 0.3,
+    "introPadding": 1,
+    "closingPadding": 0.8,
+    "outroPadding": 1,
+    "bgm": {
+      "kind": "path",
+      "path": "../bgm/20251217031931-8c55b232.mp3"
+    },
+    "bgmVolume": 0.1,
+    "audioVolume": 1,
+    "suppressSpeech": false
+  },
+  "title": "MulmoCast v1.0.11 リリースノート（OpenAI）",
+  "description": "MulmoCast v1.0.11の新機能と改善点を紹介するリリースノート動画",
+  "lang": "ja",
+  "beats": [
+    {
+      "speaker": "Presenter",
+      "text": "マルモキャスト バージョン1.0.11をリリースしました！",
+      "captionParams": {
+        "captionSplit": "none",
+        "textSplit": { "type": "none" }
+      },
+      "id": "title-slide",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "# 🎉 MulmoCast v1.0.11 Released!",
+          "## February 11, 2026",
+          "",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "このバージョンでは、Azure OpenAIサービス対応、Vertex AI対応、字幕分割機能などの更新があります。",
+      "id": "title-overview",
+      "image": {
+        "type": "beat",
+        "id": "title-slide"
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "1：Azure OpenAIサービスに対応しました。\nAzure経由でOpenAIの画像生成、音声合成、翻訳機能を利用できます。\n設定画面でサービスごとに\nAPIキーとベースURLを個別に設定できます。",
+      "id": "azure-openai",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "path",
+          "path": "images/settings_azure_openai.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "2：Google Cloud Vertex AIに対応しました。\nImagenによる画像生成と、\nVeoによる動画生成を設定画面から利用できます。\nデフォルトのプロジェクトIDとロケーションを設定できます。",
+      "id": "vertex-ai-settings",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "path",
+          "path": "images/settings_vertex_ai.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "画像パラメータでプロバイダーにGoogleを選択すると、\nVertex AIトグルが表示されます。\nプロジェクト単位やビート単位で異なる設定を指定できます。",
+      "id": "vertex-ai-toggle",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "path",
+          "path": "images/style_image_params_vertexai.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "3：字幕分割機能を追加しました。\nこれまで1ビートにつき1つの字幕でしたが、\n句読点や記号で自動分割して複数行表示が可能になりました。",
+      "id": "caption-split",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "path",
+          "path": "images/style_caption_split.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "4：にじボイスのサービス終了に伴い、\nTTSプロバイダーから削除しました。\n利用可能なTTSプロバイダーは、\nOpenAI、ElevenLabs、Gemini、Google、Kotodamaです。",
+      "id": "nijivoice-removed",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "# ⚠️ Nijivoice TTS Removed",
+          "",
+          "### Service ended February 4, 2026",
+          "",
+          "### Available TTS: OpenAI, ElevenLabs, Gemini, Google, Kotodama",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "その他、軽微な改善を行いました。\n起動中のアプリに更新通知が届きます。\nダウンロードは公式サイトから行えます。",
+      "id": "thank-you-slide",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "# Thank You!",
+          "",
+          "## MulmoCast v1.0.11",
+          "",
+          "### Happy Creating!",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "マルモキャスト バージョン1.0.11をお楽しみください！",
+      "captionParams": {
+        "captionSplit": "none",
+        "textSplit": { "type": "none" }
+      },
+      "id": "thank-you-closing",
+      "image": {
+        "type": "beat",
+        "id": "thank-you-slide"
+      }
+    }
+  ]
+}

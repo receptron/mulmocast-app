@@ -224,10 +224,19 @@ Release tasks are automated via Skills in `.claude/skills/`. See each Skill for 
 | `/release <version>` | Orchestrator (runs the skills below in sequence) |
 | `/release-notes <version>` | PR summary + release notes generation |
 | `/release-xpost <version>` | X post draft + screenshots |
+| `/release-script <version>` | MulmoScript generation (release note video) |
 | `/discord-release <version>` | Discord webhook notification (from xpost draft) |
 | `/release-tag <version>` | GitHub Release creation |
+| `/release-youtube <version>` | YouTube upload metadata (title, description, timestamps) |
+| `/release-zenn <version>` | Zenn article from MulmoScript (`ZENN_CONTENT_DIR` env required) |
 
 Output directory: `docs/release_notes/v<version>/`
+
+## MulmoCast CLI Notes
+
+- **`_studio.json` は `mulmo movie` 実行ごとに上書きされる** — 言語別タイムスタンプが必要な場合は JA 生成→読取→ EN 生成→読取の順で実行すること
+- **翻訳誤りパターン** — `_lang.json` で「マルモキャスト」が「MarmoCast」「MarmCast」等に誤訳されることがある。英語版動画生成後に必ず確認・置換すること
+- **`image type: beat`** — 同じ画像を使い回すビートでは `{"type": "beat", "id": "<参照先beat-id>"}` で重複を避ける
 
 ## Reka UI Component Patterns
 
