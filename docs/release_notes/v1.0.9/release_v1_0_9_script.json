@@ -1,0 +1,289 @@
+{
+  "$mulmocast": {
+    "version": "1.1",
+    "credit": "closing"
+  },
+  "canvasSize": {
+    "width": 1280,
+    "height": 720
+  },
+  "speechParams": {
+    "speakers": {
+      "Presenter": {
+        "displayName": {
+          "ja": "ナレーター"
+        },
+        "voiceId": "shimmer",
+        "speechOptions": {
+          "instruction": "Speak clearly and professionally like a news announcer reading release notes. Use a neutral, informative tone with clear enunciation."
+        },
+        "provider": "openai"
+      }
+    }
+  },
+  "imageParams": {
+    "provider": "openai",
+    "images": {}
+  },
+  "movieParams": {
+    "provider": "mock",
+    "model": "",
+    "transition": {
+      "type": "fade",
+      "duration": 1
+    }
+  },
+  "soundEffectParams": {
+    "provider": "replicate"
+  },
+  "textSlideParams": {
+    "cssStyles": [
+      "h3 {margin-left: 20px; margin-top: 20px}"
+    ]
+  },
+  "captionParams": {
+    "lang": "ja",
+    "styles": []
+  },
+  "audioParams": {
+    "padding": 0.3,
+    "introPadding": 1,
+    "closingPadding": 0.8,
+    "outroPadding": 1,
+    "bgm": {
+      "kind": "path",
+      "path": "../../bgm/20251217031931-8c55b232.mp3"
+    },
+    "bgmVolume": 0.1,
+    "audioVolume": 1,
+    "suppressSpeech": false
+  },
+  "title": "MulmoCast v1.0.9 リリースノート（OpenAI）",
+  "description": "MulmoCast v1.0.9の新機能と改善点を紹介するリリースノート動画",
+  "lang": "ja",
+  "beats": [
+    {
+      "speaker": "Presenter",
+      "text": "マルモキャスト バージョン1.0.9をリリースしました！このバージョンでは、5つの主な更新があります。",
+      "id": "title-slide",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "# 🎉 MulmoCast v1.0.9 Released!",
+          "## December 17, 2025",
+          "",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "1。AIによるBGM生成機能を追加しました。イレブンラボのAIを使用して、カスタム背景音楽を生成できます。有料プランが必要です。",
+      "id": "01b69adf-2c9f-4756-ac08-d9ccc7be41c6",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G8VxbCzbAAA5Lim.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "BGMライブラリから新規BGM作成を押します。",
+      "id": "c27c287a-628a-4382-8658-3b1b7a38df98",
+      "image": {
+        "type": "beat",
+        "id": "01b69adf-2c9f-4756-ac08-d9ccc7be41c6"
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "プロンプト、時間を設定し生成ボタンを押します。",
+      "id": "c7b1753f-ca85-4b2a-8844-dbfba8305b1c",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G8Vxm0xawAAkCWz.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "生成したBGMはスタイルタブのBGMライブラリから選択して使用できます。",
+      "id": "d411b8ca-b5a2-4722-8e6e-7a0412c64f0d",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G8Vxwn3aoAAa4KA.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "選択するとこのように表示されます。",
+      "id": "043846c5-1299-4b0d-a7b3-d66107b8cf9a",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G8Vx5pXbkAA4h1k.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "2。18種類のトランジションエフェクトを追加しました。フェード、スライド8種類、ワイプ8種類のトランジションが使用可能です。",
+      "id": "794b75a5-0ad1-4184-9eba-97b2b06993e4",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G8VzTn5a4AQspcA.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "また、ビートごとにトランジションエフェクトを制御できるようになりました。",
+      "id": "8c1af54e-53c5-4639-b5a5-660fca3ec0f0",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G8VzEHua4AI5yBV.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "3。音声ファイルのアップロード機能を追加しました。MP3、WAVなどの独自の音声ファイルを",
+      "id": "d7777a0a-64af-480c-9468-1f90b2e5a574",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G8VyiLra4AQbktv.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "ビートに直接アップロードできるようになりました。",
+      "id": "941c5081-ad24-4327-b810-44871cbb4a99",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G8VypTPa4AI5s4e.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "4。音声プロバイダーの機能を強化しました。音声プレビューが充実し、モデル選択が可能になりました。",
+      "id": "bde6b99d-8628-4c8d-bd7b-302137ad1a2d",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G8VzxRhaQAA3nPf.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "音声モデルの選択画面が改善されました。ジェミニ",
+      "id": "7bdadaaa-380a-4483-8a37-d67b4c7d3055",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G8VzxRhaQAA3nPf.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "イレブンラボ",
+      "id": "83e70f8b-30ee-4586-b2a6-c5aea52ff5e2",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G8Vz3mybwAAh9y9.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "コトダマが対象です。",
+      "id": "fb847264-ff1a-4e12-aac5-50dacd8aafba",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G8Vz6zwa4AEh60l.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "5。ビート履歴と画像選択機能を追加しました。",
+      "id": "4888e67d-dc7d-4089-89ca-2f94d713fe26",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G8V1DHJa4AIHvT3.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "以前生成した画像をビート履歴から参照できるようになりました。",
+      "id": "b4847288-445a-4636-97c7-dc48d01837b3",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G8V1HSba4AAKWSP.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "また、素材選択画面が更新され、より使いやすくなりました。",
+      "id": "54bd30e2-73b6-4891-a5d7-0c4033072328",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G8V1MWqa4AcbofD.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "その他、軽微な改善を行いました。起動中のアプリに更新通知が届きます。ダウンロードは公式サイトから行えます。マルモキャスト バージョン1.0.9をお楽しみください！",
+      "id": "5911fba5-7eea-4cf4-8653-75d08d293d81",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "# Thank You!",
+          "",
+          "## MulmoCast v1.0.9",
+          "",
+          "### Happy Creating!",
+          "</div>"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "$mulmocast": {
+    "version": "1.1",
+    "credit": "closing"
+  },
+  "canvasSize": {
+    "width": 1280,
+    "height": 720
+  },
+  "speechParams": {
+    "speakers": {
+      "Presenter": {
+        "displayName": {
+          "ja": "ナレーター"
+        },
+        "voiceId": "shimmer",
+        "speechOptions": {
+          "instruction": "Speak clearly and professionally like a news announcer reading release notes. Use a neutral, informative tone with clear enunciation."
+        },
+        "provider": "openai"
+      }
+    }
+  },
+  "imageParams": {
+    "provider": "openai",
+    "images": {}
+  },
+  "movieParams": {
+    "provider": "mock",
+    "model": "",
+    "transition": {
+      "type": "fade",
+      "duration": 1
+    }
+  },
+  "soundEffectParams": {
+    "provider": "replicate"
+  },
+  "textSlideParams": {
+    "cssStyles": [
+      "h3 {margin-left: 20px; margin-top: 20px}"
+    ]
+  },
+  "captionParams": {
+    "lang": "ja",
+    "styles": []
+  },
+  "audioParams": {
+    "padding": 0.3,
+    "introPadding": 1,
+    "closingPadding": 0.8,
+    "outroPadding": 1,
+    "bgm": {
+      "kind": "path",
+      "path": "../../bgm/20251217031931-8c55b232.mp3"
+    },
+    "bgmVolume": 0.1,
+    "audioVolume": 1,
+    "suppressSpeech": false
+  },
+  "title": "MulmoCast v1.0.10 リリースノート（OpenAI）",
+  "description": "MulmoCast v1.0.10の新機能と改善点を紹介するリリースノート動画",
+  "lang": "ja",
+  "beats": [
+    {
+      "speaker": "Presenter",
+      "text": "マルモキャスト バージョン1.0.10をリリースしました！このバージョンでは、ボイスクローン機能、TTS設定の強化、UI改善などの更新があります。",
+      "id": "title-slide",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "# 🎉 MulmoCast v1.0.10 Released!",
+          "## January 15, 2026",
+          "",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "1。ボイスクローン機能を追加しました。ElevenLabsを使用して、自分の声をナレーションに使用できるようになりました。",
+      "id": "voice-clone-1",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G-rKR_EakAElEAI.jpg"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "音声ファイルをドラッグ＆ドロップするだけで、カスタムボイスを簡単に作成できます。",
+      "id": "voice-clone-2",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G-rKS8Ba0AABExl.jpg"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "作成したボイスクローンは、ナレーションの音声として選択できます。",
+      "id": "voice-clone-3",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G-rKUfMbsAAJFkt.jpg"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "2。ElevenLabsのTTSオプションを強化しました。速度、安定性、類似度をビート単位で調整できるようになりました。",
+      "id": "elevenlabs-tts-options",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G-rKZL1bQAMLC5k.jpg"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "3。Gemini TTSにreading styleを追加しました。読み上げスタイルを指定できるようになりました。",
+      "id": "gemini-tts-instruction",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G-rKaLWacAAqcLZ.jpg"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "4。上級モードのスタイルタブにサマリー表示を追加しました。音声、画像、動画、BGM、サイズの設定が一目で確認できます。",
+      "id": "ui-style-tab-summary",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "url",
+          "url": "https://pbs.twimg.com/media/G-rKd_pbQAoSwqz.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "その他、軽微な改善を行いました。起動中のアプリに更新通知が届きます。ダウンロードは公式サイトから行えます。マルモキャスト バージョン1.0.10をお楽しみください！",
+      "id": "thank-you-slide",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "# Thank You!",
+          "",
+          "## MulmoCast v1.0.10",
+          "",
+          "### Happy Creating!",
+          "</div>"
+        ]
+      }
+    }
+  ]
+}
