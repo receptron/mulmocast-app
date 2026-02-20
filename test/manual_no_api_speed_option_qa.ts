@@ -360,13 +360,12 @@ async function setSpeedInputValue(page: Page, value: string): Promise<boolean> {
 /** Click the "Advanced Settings" collapsible in the beat editor, if not already open. */
 async function openBeatAdvancedSettings(page: Page): Promise<boolean> {
   return page.evaluate(() => {
-    // Find the "Advanced Settings" / "詳細設定" heading
+    // Find the "Advanced Beat Settings" / "詳細設定" heading
     const headings = document.querySelectorAll("h4");
     for (const h of headings) {
       const text = h.textContent?.trim() || "";
-      if (text === "Advanced Settings" || text === "\u8a73\u7d30\u8a2d\u5b9a") {
-        const trigger = h.closest("[data-state]") || h.closest("div")?.parentElement;
-        // Check if already open
+      if (text === "Advanced Beat Settings" || text === "Advanced Settings" || text === "\u8a73\u7d30\u8a2d\u5b9a") {
+        // Check if the parent collapsible is already open
         const collapsible = h.closest("[data-state]");
         if (collapsible?.getAttribute("data-state") === "open") return true;
         // Click the trigger area
@@ -383,13 +382,11 @@ async function toggleBeatSpeechOptionsOverride(page: Page, enable: boolean): Pro
   return page.evaluate((shouldEnable) => {
     const checkboxes = document.querySelectorAll('[role="checkbox"]');
     for (const cb of checkboxes) {
-      const parentDiv = cb.closest("div.flex");
-      if (!parentDiv) continue;
-      const label = parentDiv.querySelector("label");
-      if (!label) continue;
-      const text = label.textContent?.trim() || "";
-      // Match "Override speech options" / "音声オプションを上書き"
-      if (text.includes("speech") || text.includes("音声オプション")) {
+      // Check sibling or nearby text for "speech" / "音声オプション"
+      const parent = cb.parentElement;
+      if (!parent) continue;
+      const text = parent.textContent?.trim() || "";
+      if (text.toLowerCase().includes("speech") || text.includes("音声オプション")) {
         const isChecked = cb.getAttribute("data-state") === "checked";
         if (isChecked !== shouldEnable) {
           (cb as HTMLElement).click();
@@ -448,6 +445,7 @@ interface SpeedExpectation {
   placeholderContains?: string;
 }
 
+// Order matters: ends with ElevenLabs so Phase 3 can check stability without re-switching
 const SPEED_EXPECTATIONS: SpeedExpectation[] = [
   {
     provider: "openai",
@@ -468,15 +466,6 @@ const SPEED_EXPECTATIONS: SpeedExpectation[] = [
     placeholderContains: "0.25",
   },
   {
-    provider: "elevenlabs",
-    providerDisplayName: "ElevenLabs",
-    visible: true,
-    min: "0.7",
-    max: "1.2",
-    step: "0.1",
-    placeholderContains: "0.7",
-  },
-  {
     provider: "gemini",
     providerDisplayName: "Gemini",
     visible: false,
@@ -485,6 +474,15 @@ const SPEED_EXPECTATIONS: SpeedExpectation[] = [
     provider: "kotodama",
     providerDisplayName: "Kotodama",
     visible: false,
+  },
+  {
+    provider: "elevenlabs",
+    providerDisplayName: "ElevenLabs",
+    visible: true,
+    min: "0.7",
+    max: "1.2",
+    step: "0.1",
+    placeholderContains: "0.7",
   },
 ];
 
@@ -627,13 +625,11 @@ async function testSpeedOptionPerProvider(page: Page): Promise<void> {
 async function testElevenLabsExclusiveFields(page: Page): Promise<void> {
   console.log("\n=== 3. ElevenLabs-Exclusive Fields ===");
 
-  const switched1 = await switchSpeakerProvider(page, "ElevenLabs");
-  if (switched1) {
-    await scrollToSpeechParams(page);
-    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
-    const visible = await getStabilityInputVisible(page);
-    record("ElevenLabs: Stability visible", visible ? "PASS" : "FAIL", visible ? "OK" : "Not found");
-  }
+  // Phase 2 ends with ElevenLabs selected, so no need to switch
+  await scrollToSpeechParams(page);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  const visible = await getStabilityInputVisible(page);
+  record("ElevenLabs: Stability visible", visible ? "PASS" : "FAIL", visible ? "OK" : "Not found");
 
   const switched2 = await switchSpeakerProvider(page, "OpenAI");
   if (switched2) {
