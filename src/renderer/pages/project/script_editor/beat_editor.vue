@@ -570,19 +570,17 @@
                     :placeholder="t('parameters.speechParams.instructionPlaceholder')"
                   />
                 </div>
-                <div
-                  v-if="providerSupportsElevenLabsOptions(mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider)"
-                >
+                <div v-if="providerSupportsSpeed(mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider)">
                   <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
                   <Input
                     :model-value="beat.speechOptions?.speed !== undefined ? String(beat.speechOptions.speed) : ''"
                     @update:model-value="handleSpeedChange"
                     class="h-8"
                     type="number"
-                    step="0.1"
-                    min="0.7"
-                    max="1.2"
-                    :placeholder="t('parameters.speechParams.speedPlaceholderElevenlabs')"
+                    :step="beatSpeedConfig.step"
+                    :min="beatSpeedConfig.min"
+                    :max="beatSpeedConfig.max"
+                    :placeholder="t(beatSpeedConfig.placeholderKey)"
                   />
                 </div>
                 <div
@@ -700,7 +698,9 @@ import type { MulmoTransition } from "@/types";
 import {
   providerSupportsInstruction,
   providerSupportsElevenLabsOptions,
+  providerSupportsSpeed,
   providerSupportsSpeechOptions,
+  getSpeedConfig,
 } from "../../utils";
 
 import Markdown from "./beat_editors/markdown.vue";
@@ -799,6 +799,11 @@ const showBeatStyleSettings = computed(() => {
 // Show Transition settings for beat 2 onwards, but not for voice_over type
 const showTransitionSettings = computed(() => {
   return props.index > 0 && !isVoiceOver.value;
+});
+
+const beatSpeedConfig = computed(() => {
+  const provider = props.mulmoScript.speechParams?.speakers?.[props.beat.speaker]?.provider;
+  return getSpeedConfig(provider);
 });
 
 // Show Speech Options settings for supported providers
