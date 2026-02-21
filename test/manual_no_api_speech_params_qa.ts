@@ -682,11 +682,12 @@ async function setBeatInput(page: Page, labelText: string, value: string): Promi
 
 /**
  * Test a combobox (select dropdown) round-trip: UI→JSON and JSON→UI.
- * @param speakerName  - h5 text identifying the speaker section in the UI
- * @param speakerKey   - key in JSON speechParams.speakers
- * @param label        - i18n label of the combobox (e.g. "Voice ID")
- * @param jsonField    - field name on the speaker object (e.g. "voiceId")
- * @param jsonTestValue - value to set in JSON for JSON→UI test
+ * @param speakerName    - h5 text identifying the speaker section in the UI
+ * @param speakerKey     - key in JSON speechParams.speakers
+ * @param label          - i18n label of the combobox (e.g. "Voice ID")
+ * @param jsonField      - field name on the speaker object (e.g. "voiceId")
+ * @param jsonTestValue  - value to set in JSON for JSON→UI test
+ * @param expectedDisplay - expected display text after setting jsonTestValue
  */
 async function testComboboxRoundTrip(
   page: Page,
@@ -696,8 +697,15 @@ async function testComboboxRoundTrip(
   label: string,
   jsonField: string,
   jsonTestValue: string,
+  expectedDisplay: string,
 ): Promise<void> {
   // --- UI→JSON ---
+  // Read current JSON value before UI change for strict comparison
+  await toJson(page);
+  const json0 = await readEditorJson(page);
+  const origValue = json0 ? getSpeaker(json0, speakerKey)[jsonField] : undefined;
+  await toStyleSpeaker(page, speakerName);
+
   const beforeText = await getSpeakerComboboxText(page, speakerName, label);
   const clickOk = await clickSpeakerCombobox(page, speakerName, label);
   if (!clickOk) {
@@ -715,7 +723,12 @@ async function testComboboxRoundTrip(
   if (json1) {
     const speaker = getSpeaker(json1, speakerKey);
     const val = speaker[jsonField];
-    record(`${prefix} ${label} UI→JSON`, val ? "PASS" : "FAIL", `"${beforeText}" → "${newText}", JSON=${val}`);
+    const changed = val != null && val !== "" && val !== origValue;
+    record(
+      `${prefix} ${label} UI→JSON`,
+      changed ? "PASS" : "FAIL",
+      `"${beforeText}" → "${newText}", JSON=${val} (was ${origValue})`,
+    );
   } else {
     record(`${prefix} ${label} UI→JSON`, "FAIL", "Could not read JSON");
   }
@@ -730,8 +743,8 @@ async function testComboboxRoundTrip(
     const displayText = await getSpeakerComboboxText(page, speakerName, label);
     record(
       `${prefix} ${label} JSON→UI`,
-      displayText ? "PASS" : "FAIL",
-      `Set "${jsonTestValue}" → display="${displayText}"`,
+      displayText === expectedDisplay ? "PASS" : "FAIL",
+      `Set "${jsonTestValue}" → expected="${expectedDisplay}", actual="${displayText}"`,
     );
   } else {
     await toStyleSpeaker(page, speakerName);
@@ -749,8 +762,17 @@ async function testSpeechOptionsComboboxRoundTrip(
   label: string,
   jsonField: string,
   jsonTestValue: string,
+  expectedDisplay: string,
 ): Promise<void> {
   // --- UI→JSON ---
+  // Read current JSON value before UI change for strict comparison
+  await toJson(page);
+  const json0 = await readEditorJson(page);
+  const origValue = json0
+    ? (getSpeaker(json0, speakerKey).speechOptions as Record<string, unknown> | undefined)?.[jsonField]
+    : undefined;
+  await toStyleSpeaker(page, speakerName);
+
   const beforeText = await getSpeakerComboboxText(page, speakerName, label);
   const clickOk = await clickSpeakerCombobox(page, speakerName, label);
   if (!clickOk) {
@@ -768,7 +790,12 @@ async function testSpeechOptionsComboboxRoundTrip(
   if (json1) {
     const so = getSpeaker(json1, speakerKey).speechOptions as Record<string, unknown> | undefined;
     const val = so?.[jsonField];
-    record(`${prefix} ${label} UI→JSON`, val ? "PASS" : "FAIL", `"${beforeText}" → "${newText}", JSON=${val}`);
+    const changed = val != null && val !== "" && val !== origValue;
+    record(
+      `${prefix} ${label} UI→JSON`,
+      changed ? "PASS" : "FAIL",
+      `"${beforeText}" → "${newText}", JSON=${val} (was ${origValue})`,
+    );
   } else {
     record(`${prefix} ${label} UI→JSON`, "FAIL", "Could not read JSON");
   }
@@ -784,8 +811,8 @@ async function testSpeechOptionsComboboxRoundTrip(
     const displayText = await getSpeakerComboboxText(page, speakerName, label);
     record(
       `${prefix} ${label} JSON→UI`,
-      displayText ? "PASS" : "FAIL",
-      `Set "${jsonTestValue}" → display="${displayText}"`,
+      displayText === expectedDisplay ? "PASS" : "FAIL",
+      `Set "${jsonTestValue}" → expected="${expectedDisplay}", actual="${displayText}"`,
     );
   } else {
     await toStyleSpeaker(page, speakerName);
@@ -893,9 +920,14 @@ async function testInputRoundTrip(
 }
 
 /**
- * Test beat-level override: enable → set values → verify JSON → disable → verify removal.
+ * Test beat-level override with bulk set/verify:
+ *   1. UI→JSON: enable override → set ALL fields → verify ALL in JSON
+ *   2. Override OFF → verify speechOptions removed
+ *   3. JSON→UI: write ALL fields to JSON → verify checkbox ON + ALL field values in UI
+ *   4. Clean up
+ *
  * @param speakerKey - JSON speaker key (also used to assign beat.speaker)
- * @param fields - fields to test in the beat override card
+ * @param fields - all applicable fields for this provider
  */
 async function testBeatOverride(
   page: Page,
@@ -916,7 +948,7 @@ async function testBeatOverride(
     }
   }
 
-  // Navigate to BEAT tab
+  // --- UI→JSON: Set all params at once, verify all in JSON ---
   await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
   const beatOk = await navigateToBeatTab(page);
   if (!beatOk) {
@@ -935,17 +967,17 @@ async function testBeatOverride(
   if (!toggleOk) return;
   await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
 
-  // Set values
+  // Batch set all field values
+  const setFailures: string[] = [];
   for (const f of fields) {
-    const info = await getBeatInput(page, f.label);
-    record(`${bp} ${f.label} visible`, info.visible ? "PASS" : "FAIL", info.visible ? "Visible" : "Not found");
-    if (info.visible) {
-      const setOk = await setBeatInput(page, f.label, f.testValue);
-      record(`${bp} ${f.label} set`, setOk ? "PASS" : "FAIL", `value="${f.testValue}"`);
-    }
+    const setOk = await setBeatInput(page, f.label, f.testValue);
+    if (!setOk) setFailures.push(f.label);
+  }
+  if (setFailures.length > 0) {
+    record(`${bp} set fields`, "FAIL", `Could not set: ${setFailures.join(", ")}`);
   }
 
-  // Verify in JSON
+  // Verify all fields in JSON at once
   await toJson(page);
   const json = await readEditorJson(page);
   if (json) {
@@ -954,11 +986,11 @@ async function testBeatOverride(
     for (const f of fields) {
       const val = so?.[f.jsonField];
       const expected = Number(f.testValue) || f.testValue;
-      record(`${bp} ${f.label} in JSON`, val == expected ? "PASS" : "FAIL", `expected=${expected}, actual=${val}`);
+      record(`${bp} UI→JSON ${f.label}`, val == expected ? "PASS" : "FAIL", `expected=${expected}, actual=${val}`);
     }
   }
 
-  // Disable override
+  // --- Override OFF: verify speechOptions removed ---
   await navigateToBeatTab(page);
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
   await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
@@ -967,7 +999,6 @@ async function testBeatOverride(
   await toggleBeatSpeechOverride(page, false);
   await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
 
-  // Verify speechOptions removed
   await toJson(page);
   const json2 = await readEditorJson(page);
   if (json2) {
@@ -976,7 +1007,7 @@ async function testBeatOverride(
     record(`${bp} override OFF`, !hasSO ? "PASS" : "FAIL", !hasSO ? "speechOptions removed" : "Still present");
   }
 
-  // --- JSON→UI: Write speechOptions to JSON, verify checkbox ON and field values in BEAT tab ---
+  // --- JSON→UI: Write all params to JSON, verify checkbox ON and all field values ---
   const jsonValues: Record<string, number | string> = {};
   for (const f of fields) {
     jsonValues[f.jsonField] = Number(f.testValue) || f.testValue;
@@ -992,7 +1023,6 @@ async function testBeatOverride(
     }
   }
 
-  // Navigate to BEAT tab and check
   await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
   await navigateToBeatTab(page);
   await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
@@ -1004,7 +1034,7 @@ async function testBeatOverride(
   const cbState = await getBeatSpeechOverrideState(page);
   record(`${bp} JSON→UI checkbox`, cbState === true ? "PASS" : "FAIL", `expected=checked, actual=${cbState}`);
 
-  // Verify field values
+  // Verify all field values at once
   for (const f of fields) {
     const info = await getBeatInput(page, f.label);
     const expected = String(jsonValues[f.jsonField]);
@@ -1016,6 +1046,91 @@ async function testBeatOverride(
   }
 
   // Clean up: disable override
+  await toggleBeatSpeechOverride(page, false);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+}
+
+/**
+ * Test that changing one field in beat override doesn't affect other fields.
+ * Sets all fields via JSON, changes one via UI, verifies others are unchanged in both UI and JSON.
+ *
+ * @param speakerKey - JSON speaker key
+ * @param fields - all fields with their initial values
+ * @param changeField - the single field to modify
+ */
+async function testBeatPartialUpdate(
+  page: Page,
+  prefix: string,
+  speakerKey: string,
+  fields: Array<{ label: string; jsonField: string; initialValue: string }>,
+  changeField: { label: string; jsonField: string; newValue: string },
+): Promise<void> {
+  const bp = `${prefix} Beat partial`;
+
+  // Set all initial values via JSON
+  await toJson(page);
+  const jsonSetup = await readEditorJson(page);
+  if (jsonSetup) {
+    const beat = getFirstBeat(jsonSetup);
+    if (beat) {
+      beat.speaker = speakerKey;
+      const so: Record<string, number | string> = {};
+      for (const f of fields) {
+        so[f.jsonField] = Number(f.initialValue) || f.initialValue;
+      }
+      beat.speechOptions = so;
+      await writeEditorJson(page, jsonSetup);
+    }
+  }
+
+  // Navigate to BEAT tab
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+  await navigateToBeatTab(page);
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  await openBeatAdvancedSettings(page);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+  // Change only one field via UI
+  const setOk = await setBeatInput(page, changeField.label, changeField.newValue);
+  if (!setOk) {
+    record(`${bp} set ${changeField.label}`, "FAIL", "Input not found");
+    return;
+  }
+
+  // Verify in UI: changed field has new value, others unchanged
+  for (const f of fields) {
+    const info = await getBeatInput(page, f.label);
+    const expected = f.jsonField === changeField.jsonField ? changeField.newValue : f.initialValue;
+    record(
+      `${bp} UI ${f.label}`,
+      info.visible && info.value === expected ? "PASS" : "FAIL",
+      `expected="${expected}", actual="${info.value}"`,
+    );
+  }
+
+  // Verify in JSON: changed field has new value, others unchanged
+  await toJson(page);
+  const json = await readEditorJson(page);
+  if (json) {
+    const beat = getFirstBeat(json);
+    const so = beat?.speechOptions as Record<string, unknown> | undefined;
+    for (const f of fields) {
+      const val = so?.[f.jsonField];
+      const expected =
+        f.jsonField === changeField.jsonField
+          ? Number(changeField.newValue) || changeField.newValue
+          : Number(f.initialValue) || f.initialValue;
+      record(`${bp} JSON ${f.label}`, val == expected ? "PASS" : "FAIL", `expected=${expected}, actual=${val}`);
+    }
+  }
+
+  // Clean up: disable override
+  await navigateToBeatTab(page);
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  await openBeatAdvancedSettings(page);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
   await toggleBeatSpeechOverride(page, false);
   await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
 }
@@ -1194,7 +1309,7 @@ async function phase3OpenAI(page: Page): Promise<void> {
   await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
 
   // voiceId round-trip
-  await testComboboxRoundTrip(page, P, S, K, "Voice ID", "voiceId", "alloy");
+  await testComboboxRoundTrip(page, P, S, K, "Voice ID", "voiceId", "alloy", "Alloy");
 
   // speed round-trip (OpenAI: 0.25–4.0, step 0.25)
   await testInputRoundTrip(page, P, S, K, "Reading Speed", "speed", "2.5", 3.0, {
@@ -1222,7 +1337,7 @@ async function phase4Google(page: Page): Promise<void> {
   await toStyleSpeaker(page, S);
 
   // voiceId round-trip
-  await testComboboxRoundTrip(page, P, S, K, "Voice ID", "voiceId", "en-US-Standard-A");
+  await testComboboxRoundTrip(page, P, S, K, "Voice ID", "voiceId", "en-US-Standard-A", "US Standard A (Male)");
 
   // speed round-trip (Google: 0.25–2.0, step 0.25)
   await testInputRoundTrip(page, P, S, K, "Reading Speed", "speed", "1.5", 1.75, {
@@ -1244,10 +1359,10 @@ async function phase5ElevenLabs(page: Page): Promise<void> {
   await toStyleSpeaker(page, S);
 
   // model round-trip
-  await testComboboxRoundTrip(page, P, S, K, "Model", "model", "eleven_multilingual_v2");
+  await testComboboxRoundTrip(page, P, S, K, "Model", "model", "eleven_multilingual_v2", "eleven_multilingual_v2");
 
   // voiceId round-trip
-  await testComboboxRoundTrip(page, P, S, K, "Voice ID", "voiceId", "c6SfcYrb2t09NHXiT80T");
+  await testComboboxRoundTrip(page, P, S, K, "Voice ID", "voiceId", "c6SfcYrb2t09NHXiT80T", "Janathan");
 
   // speed round-trip (ElevenLabs: 0.7–1.2, step 0.1)
   await testInputRoundTrip(page, P, S, K, "Reading Speed", "speed", "1.0", 0.9, {
@@ -1269,6 +1384,19 @@ async function phase5ElevenLabs(page: Page): Promise<void> {
     { label: "Stability", jsonField: "stability", testValue: "0.4" },
     { label: "Similarity Boost", jsonField: "similarity_boost", testValue: "0.9" },
   ]);
+
+  // Partial update: change speed only, verify stability and similarity_boost unchanged
+  await testBeatPartialUpdate(
+    page,
+    P,
+    K,
+    [
+      { label: "Reading Speed", jsonField: "speed", initialValue: "1.1" },
+      { label: "Stability", jsonField: "stability", initialValue: "0.4" },
+      { label: "Similarity Boost", jsonField: "similarity_boost", initialValue: "0.9" },
+    ],
+    { label: "Reading Speed", jsonField: "speed", newValue: "0.8" },
+  );
 }
 
 async function phase6Gemini(page: Page): Promise<void> {
@@ -1279,10 +1407,19 @@ async function phase6Gemini(page: Page): Promise<void> {
   await toStyleSpeaker(page, S);
 
   // model round-trip
-  await testComboboxRoundTrip(page, P, S, K, "Model", "model", "gemini-2.5-flash-preview-tts");
+  await testComboboxRoundTrip(
+    page,
+    P,
+    S,
+    K,
+    "Model",
+    "model",
+    "gemini-2.5-flash-preview-tts",
+    "gemini-2.5-flash-preview-tts",
+  );
 
   // voiceId round-trip
-  await testComboboxRoundTrip(page, P, S, K, "Voice ID", "voiceId", "Puck");
+  await testComboboxRoundTrip(page, P, S, K, "Voice ID", "voiceId", "Puck", "Puck (Upbeat)");
 
   // instruction round-trip
   await testInputRoundTrip(page, P, S, K, "Reading Style", "instruction", "Speak with energy", "Calm and steady");
@@ -1301,10 +1438,10 @@ async function phase7Kotodama(page: Page): Promise<void> {
   await toStyleSpeaker(page, S);
 
   // voiceId round-trip
-  await testComboboxRoundTrip(page, P, S, K, "Voice ID", "voiceId", "Poporo");
+  await testComboboxRoundTrip(page, P, S, K, "Voice ID", "voiceId", "Poporo", "Poporo");
 
   // decoration round-trip (combobox stored in speechOptions.decoration)
-  await testSpeechOptionsComboboxRoundTrip(page, P, S, K, "Voice Style", "decoration", "happy");
+  await testSpeechOptionsComboboxRoundTrip(page, P, S, K, "Voice Style", "decoration", "happy", "Happy");
 }
 
 async function phase8ConsoleHealth(monitor: ConsoleMonitor): Promise<void> {
