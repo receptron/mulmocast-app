@@ -83,23 +83,26 @@ npx tsx test/manual_run_switch_language.ts en
 npx tsx test/manual_no_api_vertex_ai_qa.ts
 ```
 
-4. `test/manual_no_api_speed_option_qa.ts`
-**TTS Speed Option QA テスト（APIコスト: なし）**
+4. `test/manual_no_api_speech_params_qa.ts`
+**Speech Parameters QA テスト（APIコスト: なし）**
 
-- TTS プロバイダごとの speed option UI を検証する QA テストスイート（41項目）
+- 全5プロバイダ（OpenAI/Google/ElevenLabs/Gemini/Kotodama）の Speech Parameters UI を検証する QA テストスイート（123項目）
 - CDP 経由で起動中の Electron アプリに接続
-- テストプロジェクトは `[QA] Speed Option Test <タイムスタンプ>` というタイトルで作成されるため、手動で識別・削除が容易
-- 6フェーズ構成:
-  - **Phase 1 – Setup**: テストプロジェクト作成、タイトル設定、Style タブへ遷移
-  - **Phase 2 – Speed per Provider**: 5プロバイダ（OpenAI/Google/Gemini/Kotodama/ElevenLabs）を切替え、speed の表示/非表示・min/max/step/placeholder を確認
-  - **Phase 3 – ElevenLabs-Exclusive**: stability/similarity_boost が ElevenLabs のみ表示、OpenAI/Google では非表示
-  - **Phase 4 – Round-Trip**: JSON→UI (4a)、UI→JSON (4b)、空クリア (4c)、プロバイダ切替時の speed 挙動 (4d)
-  - **Phase 5 – Beat-Level Override**: Advanced Beat Settings の speech override ON → speed フィールド表示・属性・JSON 反映
-  - **Phase 6 – Console Health**: テスト中のコンソールエラー有無
+- プロバイダごとにスピーカーを UI から作成し、各フィールドの双方向ラウンドトリップ（UI→JSON、JSON→UI）を検証
+- テストプロジェクトは `[QA] Speech Params Test <タイムスタンプ>` というタイトルで作成されるため、手動で識別・削除が容易
+- 8フェーズ構成:
+  - **Phase 1 – Setup**: テストプロジェクト作成、デフォルトスピーカー確認、4プロバイダ分のスピーカー追加
+  - **Phase 2 – Field Visibility Matrix**: 5プロバイダ×6フィールド（speed/instruction/stability/similarityBoost/model/decoration）の表示/非表示マトリクス検証
+  - **Phase 3 – OpenAI**: voiceId・speed・instruction のラウンドトリップ＋beat-level override
+  - **Phase 4 – Google**: voiceId・speed のラウンドトリップ＋beat-level override
+  - **Phase 5 – ElevenLabs**: model・voiceId・speed・stability・similarity_boost のラウンドトリップ＋beat-level override
+  - **Phase 6 – Gemini**: model・voiceId・instruction のラウンドトリップ＋beat-level override
+  - **Phase 7 – Kotodama**: voiceId・decoration のラウンドトリップ
+  - **Phase 8 – Console Health**: テスト中のコンソールエラー有無
 
 **使用方法:**
 ```bash
-npx tsx test/manual_no_api_speed_option_qa.ts
+npx tsx test/manual_no_api_speech_params_qa.ts
 ```
 
 5. `test/manual_no_api_electron_upgrade_qa.ts`

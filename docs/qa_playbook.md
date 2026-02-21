@@ -445,6 +445,23 @@ if (failed > 0) {
 - `parentElement.textContent` で検索するのが安全
 - `label.textContent` に頼ると見つからないケースがある
 
+### Tooltip ラッパーによる Label-Input 分離
+- ElevenLabs の Stability / Similarity Boost のように、Label がツールチップ用の `<div class="group">` に包まれていると、`label.parentElement.querySelector("input")` で input が見つからない
+- Label → 親 → 親の親… と最大3段階まで遡って input を探すパターンが安全:
+
+```typescript
+let el = label.parentElement;
+for (let d = 0; el && d < 3; d++, el = el.parentElement) {
+  const input = el.querySelector("input");
+  if (input) { /* found */ break; }
+}
+```
+
+### Zod スキーマのデフォルト値
+- `mulmoScriptSchema.strip().safeParse()` で Zod のデフォルト値が注入される
+- 新規プロジェクトでも `speechParams.speakers.Presenter` が最初から存在する（`initMulmoScript` 自体には含まれていないが、スキーマのデフォルトで追加される）
+- テストで「未初期化状態」のボタンクリックを前提にしない。実際の DOM を確認すること
+
 ---
 
 ## 9. MCP Playwright でのデバッグ時の注意
@@ -461,3 +478,4 @@ QA テスト作成中に MCP Playwright で動作確認する場合:
 
 - 2026-02-10: 初版作成（Vertex AI QA + Electron Upgrade QA の知見から）
 - 2026-02-21: 見出しテキスト不一致・Checkbox 隣接テキストの落とし穴を追加（Speed Option QA の知見から）
+- 2026-02-21: Tooltip ラッパーの Label-Input 分離・Zod スキーマデフォルト値の注意を追加（Speech Params QA の知見から）
