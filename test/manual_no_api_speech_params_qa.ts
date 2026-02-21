@@ -605,6 +605,22 @@ async function toggleBeatSpeechOverride(page: Page, enable: boolean): Promise<bo
   }, enable);
 }
 
+/** Get the current state of the speech override checkbox. */
+async function getBeatSpeechOverrideState(page: Page): Promise<boolean | null> {
+  return page.evaluate(() => {
+    const checkboxes = document.querySelectorAll('[role="checkbox"]');
+    for (const cb of checkboxes) {
+      const parent = cb.parentElement;
+      if (!parent) continue;
+      const text = parent.textContent?.trim() || "";
+      if (text.toLowerCase().includes("speech") || text.includes("音声オプション")) {
+        return cb.getAttribute("data-state") === "checked";
+      }
+    }
+    return null;
+  });
+}
+
 async function getBeatInput(page: Page, labelText: string): Promise<InputInfo> {
   return page.evaluate((label) => {
     const labels = document.querySelectorAll("label");
@@ -959,6 +975,49 @@ async function testBeatOverride(
     const hasSO = beat && "speechOptions" in beat;
     record(`${bp} override OFF`, !hasSO ? "PASS" : "FAIL", !hasSO ? "speechOptions removed" : "Still present");
   }
+
+  // --- JSON→UI: Write speechOptions to JSON, verify checkbox ON and field values in BEAT tab ---
+  const jsonValues: Record<string, number | string> = {};
+  for (const f of fields) {
+    jsonValues[f.jsonField] = Number(f.testValue) || f.testValue;
+  }
+
+  await toJson(page);
+  const json3 = await readEditorJson(page);
+  if (json3) {
+    const beat = getFirstBeat(json3);
+    if (beat) {
+      beat.speechOptions = jsonValues;
+      await writeEditorJson(page, json3);
+    }
+  }
+
+  // Navigate to BEAT tab and check
+  await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
+  await navigateToBeatTab(page);
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  await openBeatAdvancedSettings(page);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+  // Verify checkbox is ON
+  const cbState = await getBeatSpeechOverrideState(page);
+  record(`${bp} JSON→UI checkbox`, cbState === true ? "PASS" : "FAIL", `expected=checked, actual=${cbState}`);
+
+  // Verify field values
+  for (const f of fields) {
+    const info = await getBeatInput(page, f.label);
+    const expected = String(jsonValues[f.jsonField]);
+    record(
+      `${bp} JSON→UI ${f.label}`,
+      info.visible && info.value === expected ? "PASS" : "FAIL",
+      `expected="${expected}", actual="${info.value}", visible=${info.visible}`,
+    );
+  }
+
+  // Clean up: disable override
+  await toggleBeatSpeechOverride(page, false);
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
 }
 
 // =====================================================================
