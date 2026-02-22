@@ -723,18 +723,22 @@ async function testComboboxRoundTrip(
   if (json1) {
     const speaker = getSpeaker(json1, speakerKey);
     const val = speaker[jsonField];
-    const changed = val != null && val !== "" && val !== origValue;
+    // Round-trip verify: go back to Style, combobox should show newText
+    // (Vue re-renders from JSON on tab switch, so wrong value = wrong display)
+    await toStyleSpeaker(page, speakerName);
+    const verifyText = await getSpeakerComboboxText(page, speakerName, label);
     record(
       `${prefix} ${label} UI→JSON`,
-      changed ? "PASS" : "FAIL",
-      `"${beforeText}" → "${newText}", JSON=${val} (was ${origValue})`,
+      val !== origValue && verifyText === newText ? "PASS" : "FAIL",
+      `"${beforeText}" → "${newText}", JSON=${val}, verify="${verifyText}"`,
     );
   } else {
     record(`${prefix} ${label} UI→JSON`, "FAIL", "Could not read JSON");
   }
 
   // --- JSON→UI ---
-  const json2 = json1 || (await readEditorJson(page));
+  await toJson(page);
+  const json2 = await readEditorJson(page);
   if (json2) {
     const speaker = getSpeaker(json2, speakerKey);
     speaker[jsonField] = jsonTestValue;
@@ -790,18 +794,21 @@ async function testSpeechOptionsComboboxRoundTrip(
   if (json1) {
     const so = getSpeaker(json1, speakerKey).speechOptions as Record<string, unknown> | undefined;
     const val = so?.[jsonField];
-    const changed = val != null && val !== "" && val !== origValue;
+    // Round-trip verify: go back to Style, combobox should show newText
+    await toStyleSpeaker(page, speakerName);
+    const verifyText = await getSpeakerComboboxText(page, speakerName, label);
     record(
       `${prefix} ${label} UI→JSON`,
-      changed ? "PASS" : "FAIL",
-      `"${beforeText}" → "${newText}", JSON=${val} (was ${origValue})`,
+      val !== origValue && verifyText === newText ? "PASS" : "FAIL",
+      `"${beforeText}" → "${newText}", JSON=${val}, verify="${verifyText}"`,
     );
   } else {
     record(`${prefix} ${label} UI→JSON`, "FAIL", "Could not read JSON");
   }
 
   // --- JSON→UI ---
-  const json2 = json1 || (await readEditorJson(page));
+  await toJson(page);
+  const json2 = await readEditorJson(page);
   if (json2) {
     const speaker = getSpeaker(json2, speakerKey);
     const so = getSpeechOptions(speaker);
