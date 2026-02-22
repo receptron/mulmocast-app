@@ -899,6 +899,8 @@ const lang = {
       voiceId: "声の種類",
       speed: "読み上げの速さ",
       speedPlaceholder: "例）1.2（0.4〜3.0、標準は1.0）",
+      speedPlaceholderOpenai: "例）1.0（0.25〜4.0、標準は1.0）",
+      speedPlaceholderGoogle: "例）1.0（0.25〜2.0、標準は1.0）",
       speedPlaceholderElevenlabs: "例）1.0（0.7〜1.2、標準は1.0）",
       stability: "安定性",
       stabilityPlaceholder: "例）0.5（0.0〜1.0、標準は0.5）",

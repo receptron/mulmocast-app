@@ -83,7 +83,7 @@
   <div v-if="audioPreviewUrl">
     <audio :src="audioPreviewUrl" controls @loadedmetadata="(e) => (e.target.volume = 0.3)" />
   </div>
-  <div v-if="providerSupportsElevenLabsOptions(localizedSpeaker.provider)">
+  <div v-if="providerSupportsSpeed(localizedSpeaker.provider)">
     <!-- speed -->
     <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
     <Input
@@ -91,10 +91,10 @@
       @update:model-value="(value) => handleSpeechOptionsChange('speed', value)"
       class="h-8"
       type="number"
-      step="0.1"
-      min="0.7"
-      max="1.2"
-      :placeholder="t('parameters.speechParams.speedPlaceholderElevenlabs')"
+      :step="speedConfig.step"
+      :min="speedConfig.min"
+      :max="speedConfig.max"
+      :placeholder="t(speedConfig.placeholderKey)"
     />
   </div>
   <div v-if="supportsInstruction">
@@ -211,7 +211,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label, Input } from "@/components/ui";
 
 import SettingsAlert from "../settings_alert.vue";
-import { providerSupportsInstruction, providerSupportsElevenLabsOptions } from "../../../utils";
+import {
+  providerSupportsInstruction,
+  providerSupportsElevenLabsOptions,
+  providerSupportsSpeed,
+  getSpeedConfig,
+} from "../../../utils";
 
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
@@ -294,6 +299,10 @@ const currentDecoration = computed(() => {
 
 const supportsInstruction = computed(() => {
   return providerSupportsInstruction(localizedSpeaker.value?.provider);
+});
+
+const speedConfig = computed(() => {
+  return getSpeedConfig(localizedSpeaker.value?.provider);
 });
 
 const audioPreviewUrl = computed(() => {

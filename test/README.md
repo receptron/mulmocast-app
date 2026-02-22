@@ -83,7 +83,29 @@ npx tsx test/manual_run_switch_language.ts en
 npx tsx test/manual_no_api_vertex_ai_qa.ts
 ```
 
-4. `test/manual_no_api_electron_upgrade_qa.ts`
+4. `test/manual_no_api_speech_params_qa.ts`
+**Speech Parameters QA テスト（APIコスト: なし）**
+
+- 全5プロバイダ（OpenAI/Google/ElevenLabs/Gemini/Kotodama）の Speech Parameters UI を検証する QA テストスイート（123項目）
+- CDP 経由で起動中の Electron アプリに接続
+- プロバイダごとにスピーカーを UI から作成し、各フィールドの双方向ラウンドトリップ（UI→JSON、JSON→UI）を検証
+- テストプロジェクトは `[QA] Speech Params Test <タイムスタンプ>` というタイトルで作成されるため、手動で識別・削除が容易
+- 8フェーズ構成:
+  - **Phase 1 – Setup**: テストプロジェクト作成、デフォルトスピーカー確認、4プロバイダ分のスピーカー追加
+  - **Phase 2 – Field Visibility Matrix**: 5プロバイダ×6フィールド（speed/instruction/stability/similarityBoost/model/decoration）の表示/非表示マトリクス検証
+  - **Phase 3 – OpenAI**: voiceId・speed・instruction のラウンドトリップ＋beat-level override
+  - **Phase 4 – Google**: voiceId・speed のラウンドトリップ＋beat-level override
+  - **Phase 5 – ElevenLabs**: model・voiceId・speed・stability・similarity_boost のラウンドトリップ＋beat-level override
+  - **Phase 6 – Gemini**: model・voiceId・instruction のラウンドトリップ＋beat-level override
+  - **Phase 7 – Kotodama**: voiceId・decoration のラウンドトリップ
+  - **Phase 8 – Console Health**: テスト中のコンソールエラー有無
+
+**使用方法:**
+```bash
+npx tsx test/manual_no_api_speech_params_qa.ts
+```
+
+5. `test/manual_no_api_electron_upgrade_qa.ts`
 **Electron アップグレード QA テスト**
 
 - Electron バージョンアップ時の回帰テスト用スイート

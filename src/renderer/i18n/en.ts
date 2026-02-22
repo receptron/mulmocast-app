@@ -900,6 +900,8 @@ const lang = {
       modelDefault: "Default",
       speed: "Reading Speed",
       speedPlaceholder: "e.g., 1.2 (range: 0.4-3.0, default: 1.0)",
+      speedPlaceholderOpenai: "e.g., 1.0 (range: 0.25-4.0, default: 1.0)",
+      speedPlaceholderGoogle: "e.g., 1.0 (range: 0.25-2.0, default: 1.0)",
       speedPlaceholderElevenlabs: "e.g., 1.0 (range: 0.7-1.2, default: 1.0)",
       stability: "Stability",
       stabilityPlaceholder: "e.g., 0.5 (range: 0.0-1.0, default: 0.5)",

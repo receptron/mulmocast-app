@@ -435,6 +435,33 @@ if (failed > 0) {
 - Save ボタンクリック後、モーダルが閉じるまでの delay が必要
 - `SETTINGS_SAVE_DELAY_MS: 2000` が安全な値
 
+### 見出しテキストの不一致
+- コンポーネントの見出しが想定と異なる場合がある（例: "Advanced Settings" vs "Advanced Beat Settings"）
+- テスト前に `browser_snapshot` で実際の DOM テキストを確認すること
+- 複数の表記に対応する場合は OR 条件で検索する
+
+### Checkbox の隣接テキスト
+- Reka UI の Checkbox は `label` タグではなく sibling の `div`（generic）にテキストが入る場合がある
+- `parentElement.textContent` で検索するのが安全
+- `label.textContent` に頼ると見つからないケースがある
+
+### Tooltip ラッパーによる Label-Input 分離
+- ElevenLabs の Stability / Similarity Boost のように、Label がツールチップ用の `<div class="group">` に包まれていると、`label.parentElement.querySelector("input")` で input が見つからない
+- Label → 親 → 親の親… と最大3段階まで遡って input を探すパターンが安全:
+
+```typescript
+let el = label.parentElement;
+for (let d = 0; el && d < 3; d++, el = el.parentElement) {
+  const input = el.querySelector("input");
+  if (input) { /* found */ break; }
+}
+```
+
+### Zod スキーマのデフォルト値
+- `mulmoScriptSchema.strip().safeParse()` で Zod のデフォルト値が注入される
+- 新規プロジェクトでも `speechParams.speakers.Presenter` が最初から存在する（`initMulmoScript` 自体には含まれていないが、スキーマのデフォルトで追加される）
+- テストで「未初期化状態」のボタンクリックを前提にしない。実際の DOM を確認すること
+
 ---
 
 ## 9. MCP Playwright でのデバッグ時の注意
@@ -450,3 +477,5 @@ QA テスト作成中に MCP Playwright で動作確認する場合:
 ## 更新履歴
 
 - 2026-02-10: 初版作成（Vertex AI QA + Electron Upgrade QA の知見から）
+- 2026-02-21: 見出しテキスト不一致・Checkbox 隣接テキストの落とし穴を追加（Speed Option QA の知見から）
+- 2026-02-21: Tooltip ラッパーの Label-Input 分離・Zod スキーマデフォルト値の注意を追加（Speech Params QA の知見から）
