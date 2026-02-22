@@ -80,6 +80,7 @@ async function connectCDP(): Promise<Browser> {
       if (attempts === CONFIG.CDP_MAX_ATTEMPTS)
         throw new Error(
           `Failed after ${CONFIG.CDP_MAX_ATTEMPTS} attempts: ${error instanceof Error ? error.message : String(error)}`,
+          { cause: error },
         );
       if (attempts === 1) console.log(`Connecting to ${cdpUrl}...`);
       await new Promise((r) => setTimeout(r, CONFIG.CDP_RETRY_DELAY_MS));
