@@ -82,7 +82,7 @@
     "vite": "^7.3.1",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vue-eslint-parser": "^10.4.0",
-    "vue-tsc": "^3.2.4",
+    "vue-tsc": "^3.2.5",
     "yaml-eslint-parser": "^2.0.0"
   },
   "resolutions": {
@@ -114,7 +114,7 @@
     "lucide-vue-next": "^0.575.0",
     "monaco-editor": "^0.55.1",
     "monaco-yaml": "^5.4.1",
-    "mulmocast": "^2.2.1",
+    "mulmocast": "^2.2.4",
     "pinia": "^3.0.4",
     "punycode": "^2.3.1",
     "puppeteer": "24.37.5",
