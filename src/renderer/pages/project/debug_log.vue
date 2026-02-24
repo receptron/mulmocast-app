@@ -56,64 +56,20 @@ watch(
 const copyDebugLogs = async () => {
   if (!debugLog.value || debugLog.value.length === 0) return;
 
-  // Build logsText by mapping entries to strings, pretty-printing non-strings
   const logsText = debugLog.value
     .map((item) => {
       if (typeof item === "string") {
         return item;
       }
-      // Pretty-print non-string entries
       return JSON.stringify(item, null, 2);
     })
     .join("\n");
 
-  // Try multiple clipboard methods in order of preference
-  let copySucceeded = false;
-
-  // Method 1: Try navigator.clipboard.writeText (modern browsers)
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    try {
-      await navigator.clipboard.writeText(logsText);
-      copySucceeded = true;
-    } catch (error) {
-      console.warn("navigator.clipboard.writeText failed:", error);
-    }
-  }
-
-  // Method 2: Try Electron clipboard API if available
-  if (!copySucceeded && window.electronAPI?.clipboard) {
-    try {
-      await window.electronAPI.clipboard.writeText(logsText);
-      copySucceeded = true;
-    } catch (error) {
-      console.warn("Electron clipboard API failed:", error);
-    }
-  }
-
-  // Method 3: Fallback to document.execCommand (older browsers, insecure contexts)
-  if (!copySucceeded) {
-    try {
-      const textarea = document.createElement("textarea");
-      textarea.value = logsText;
-      textarea.style.position = "fixed";
-      textarea.style.left = "-999999px";
-      textarea.style.top = "-999999px";
-      document.body.appendChild(textarea);
-      textarea.focus();
-      textarea.select();
-
-      copySucceeded = document.execCommand("copy");
-
-      document.body.removeChild(textarea);
-    } catch (error) {
-      console.error("document.execCommand('copy') failed:", error);
-    }
-  }
-
-  // Show appropriate feedback
-  if (copySucceeded) {
+  try {
+    await window.electronAPI.writeClipboardText(logsText);
     notifySuccess(t("settings.notifications.copiedToClipboard"));
-  } else {
+  } catch (error) {
+    console.error("Failed to copy debug logs:", error);
     notifyError(t("settings.notifications.copyFailed"));
   }
 };
