@@ -373,6 +373,34 @@ UI 変更が JSON に反映されるだけでなく、JSON 変更が UI に反�
 Settings が空の状態で機能を操作する「blank defaults」テストを必ず含める。
 空文字 `""` は JavaScript で falsy なので、`|| "default"` のようなフォールバックがバグを生む。
 
+### 検証の厳密さ基準
+
+テスト値の検証は以下の順に厳密度が上がる。**Level 3 以上**を必須とする。
+
+| Level | 検証方法 | 例 | 判定 |
+|-------|---------|-----|------|
+| 1 | truthy チェック | `val ? "PASS" : "FAIL"` | **禁止** — 空文字・0 で誤判定 |
+| 2 | 変更チェック | `val !== origValue` | **不十分** — 別の間違った値でも PASS |
+| 3 | 具体値一致 | `val === expectedValue` | OK |
+| 4 | ラウンドトリップ | JSON書込→UI表示→具体値一致 | **推奨** — 双方向の整合性を保証 |
+
+**Combobox 固有の注意:**
+- Reka UI `SelectItem` は `data-value` 属性を DOM に公開しない（Vue リアクティビティ内部に閉じている）
+- → DOM から選択値を直接取得できないため、**タブ切替ラウンドトリップ**で検証する
+  1. UI でオプション選択
+  2. JSON タブで値を読み取り
+  3. Style タブに戻り、コンボボックスの表示テキストが選択したテキストと一致することを確認
+  （Vue は JSON から再レンダリングするため、JSON 値が間違っていれば表示も異なる）
+
+**JSON値とUI表示テキストが異なるケース:**
+- 例: JSON `"alloy"` → UI `"Alloy"` / JSON `"en-US-Standard-A"` → UI `"US Standard A (Male)"`
+- テスト関数に `expectedDisplay` パラメータを明示的に渡し、JSON→UI の逆方向も厳密に検証する
+
+### テスト拡張時の再読ルール
+
+新規テスト作成時だけでなく、**既存テストの拡張・改善時にもこの playbook を再読すること**。
+`/qa-create` skill は playbook の読み込みを強制するが、手動でテストを拡張する場合はこのルールが適用されない。
+
 ### テスト値のユニーク性
 
 ```typescript
@@ -479,3 +507,4 @@ QA テスト作成中に MCP Playwright で動作確認する場合:
 - 2026-02-10: 初版作成（Vertex AI QA + Electron Upgrade QA の知見から）
 - 2026-02-21: 見出しテキスト不一致・Checkbox 隣接テキストの落とし穴を追加（Speed Option QA の知見から）
 - 2026-02-21: Tooltip ラッパーの Label-Input 分離・Zod スキーマデフォルト値の注意を追加（Speech Params QA の知見から）
+- 2026-02-23: 検証の厳密さ基準（Level 1-4）・テスト拡張時の再読ルールを追加（Speech Params QA の3回書き直しの教訓から）
