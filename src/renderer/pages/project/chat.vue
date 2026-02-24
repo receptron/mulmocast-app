@@ -579,7 +579,7 @@ const undoMessages = () => {
 
 // for debug
 const copyMessageToClipboard = async () => {
-  await window.electronAPI.writeClipboardText(JSON.stringify(messageHistory.value ?? [], null, 2));
+  await window.electronAPI.writeClipboardText(JSON.stringify(props.messages ?? [], null, 2));
 };
 
 // Hybrid approach: Load from project metadata first, then fall back to global settings
