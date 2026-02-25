@@ -245,7 +245,7 @@ async function testMonacoEditor(page: Page) {
     await page.keyboard.press(copyKey);
     await page.waitForTimeout(200);
 
-    const originalJson = await page.evaluate(() => navigator.clipboard.readText());
+    const originalJson = await page.evaluate(() => window.electronAPI.readClipboardText());
 
     let parsed: Record<string, unknown>;
     try {
@@ -261,7 +261,7 @@ async function testMonacoEditor(page: Page) {
 
     // --- Helper: select all, paste JSON, wait for save ---
     const pasteJson = async (json: string) => {
-      await page.evaluate((text) => navigator.clipboard.writeText(text), json);
+      await page.evaluate((text) => window.electronAPI.writeClipboardText(text), json);
       await page.waitForTimeout(200);
       await page.keyboard.press(selectAllKey);
       await page.waitForTimeout(200);
@@ -276,7 +276,7 @@ async function testMonacoEditor(page: Page) {
       await page.waitForTimeout(200);
       await page.keyboard.press(copyKey);
       await page.waitForTimeout(200);
-      const text = await page.evaluate(() => navigator.clipboard.readText());
+      const text = await page.evaluate(() => window.electronAPI.readClipboardText());
       try {
         return JSON.parse(text);
       } catch {

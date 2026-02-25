@@ -70,6 +70,10 @@ export const registerIPCHandler = () => {
     clipboard.writeText(text ?? "");
   });
 
+  ipcMain.handle("readClipboardText", () => {
+    return clipboard.readText();
+  });
+
   ipcMain.handle("openExternal", async (_event: IpcMainInvokeEvent, url: string) => {
     await shell.openExternal(url);
   });

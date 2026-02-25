@@ -337,7 +337,7 @@ async function readEditorJson(page: Page): Promise<Record<string, unknown> | nul
   await page.waitForTimeout(200);
   await page.keyboard.press(copyKey);
   await page.waitForTimeout(200);
-  const text = await page.evaluate(() => navigator.clipboard.readText());
+  const text = await page.evaluate(() => window.electronAPI.readClipboardText());
   try {
     return JSON.parse(text);
   } catch {
@@ -353,7 +353,7 @@ async function writeEditorJson(page: Page, json: Record<string, unknown>): Promi
   await page.keyboard.press(selectAllKey);
   await page.waitForTimeout(200);
   const newText = JSON.stringify(json, null, 2);
-  await page.evaluate((t) => navigator.clipboard.writeText(t), newText);
+  await page.evaluate((t) => window.electronAPI.writeClipboardText(t), newText);
   await page.waitForTimeout(200);
   await page.keyboard.press(pasteKey);
   // Wait for Monaco to finish internal operations (diagnostics, validation)
