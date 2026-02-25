@@ -32,6 +32,7 @@ export interface ElectronAPI {
     set: (settings: unknown) => Promise<unknown>;
   };
   writeClipboardText: (text: string) => Promise<unknown>;
+  readClipboardText: () => Promise<string>;
   openExternal: (url: string) => Promise<void>;
   onNavigate: (callback: (path: string) => void) => void;
 }
@@ -67,6 +68,7 @@ const api: ElectronAPI = {
     set: (settings: unknown) => ipcRenderer.invoke("settings:set", settings),
   },
   writeClipboardText: (text: string) => ipcRenderer.invoke("writeClipboardText", text),
+  readClipboardText: () => ipcRenderer.invoke("readClipboardText"),
   openExternal: (url: string) => ipcRenderer.invoke("openExternal", url),
   onNavigate: (callback: (path: string) => void) => {
     ipcRenderer.on("navigate", (_, path) => callback(path));
