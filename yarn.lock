@@ -3441,17 +3441,6 @@
     magic-string-ast "^1.0.2"
     unplugin-utils "^0.3.0"
 
-"@vue/compiler-core@3.5.28":
-  version "3.5.28"
-  resolved "https://registry.yarnpkg.com/@vue/compiler-core/-/compiler-core-3.5.28.tgz#8298ab91d34b2c0d7d398384cd840471919e7e34"
-  integrity sha512-kviccYxTgoE8n6OCw96BNdYlBg2GOWfBuOW4Vqwrt7mSKWKwFVvI8egdTltqRgITGPsTFYtKYfxIG8ptX2PJHQ==
-  dependencies:
-    "@babel/parser" "^7.29.0"
-    "@vue/shared" "3.5.28"
-    entities "^7.0.1"
-    estree-walker "^2.0.2"
-    source-map-js "^1.2.1"
-
 "@vue/compiler-core@3.5.29":
   version "3.5.29"
   resolved "https://registry.yarnpkg.com/@vue/compiler-core/-/compiler-core-3.5.29.tgz#3fb70630c62a2e715eeddc3c2a48f46aa4507adc"
@@ -3462,14 +3451,6 @@
     entities "^7.0.1"
     estree-walker "^2.0.2"
     source-map-js "^1.2.1"
-
-"@vue/compiler-dom@3.5.28":
-  version "3.5.28"
-  resolved "https://registry.yarnpkg.com/@vue/compiler-dom/-/compiler-dom-3.5.28.tgz#4e27b885898f4799d95305dfc56d14c2dcf8e5ba"
-  integrity sha512-/1ZepxAb159jKR1btkefDP+J2xuWL5V3WtleRmxaT+K2Aqiek/Ab/+Ebrw2pPj0sdHO8ViAyyJWfhXXOP/+LQA==
-  dependencies:
-    "@vue/compiler-core" "3.5.28"
-    "@vue/shared" "3.5.28"
 
 "@vue/compiler-dom@3.5.29", "@vue/compiler-dom@^3.5.0":
   version "3.5.29"
@@ -3493,14 +3474,6 @@
     magic-string "^0.30.21"
     postcss "^8.5.6"
     source-map-js "^1.2.1"
-
-"@vue/compiler-ssr@3.5.28":
-  version "3.5.28"
-  resolved "https://registry.yarnpkg.com/@vue/compiler-ssr/-/compiler-ssr-3.5.28.tgz#bfd3d39b3085b77220eaa278e5fbe3c93ffbc9c2"
-  integrity sha512-JCq//9w1qmC6UGLWJX7RXzrGpKkroubey/ZFqTpvEIDJEKGgntuDMqkuWiZvzTzTA5h2qZvFBFHY7fAAa9475g==
-  dependencies:
-    "@vue/compiler-dom" "3.5.28"
-    "@vue/shared" "3.5.28"
 
 "@vue/compiler-ssr@3.5.29":
   version "3.5.29"
@@ -3624,11 +3597,6 @@
   dependencies:
     "@vue/compiler-ssr" "3.5.29"
     "@vue/shared" "3.5.29"
-
-"@vue/shared@3.5.28":
-  version "3.5.28"
-  resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.5.28.tgz#ed9b6785e9452621ad3ab2f2775e9cba494a9ef4"
-  integrity sha512-cfWa1fCGBxrvaHRhvV3Is0MgmrbSCxYTXCSCau2I0a1Xw1N1pHAvkWCiXPRAqjvToILvguNyEwjevUqAuBQWvQ==
 
 "@vue/shared@3.5.29", "@vue/shared@^3.5.0":
   version "3.5.29"
@@ -4231,9 +4199,9 @@ baseline-browser-mapping@^2.9.0:
   integrity sha512-ipDqC8FrAl/76p2SSWKSI+H9tFwm7vYqXQrItCuiVPt26Km0jS+NzSsBWAaBusvSbQcfJG+JitdMm+wZAgTYqg==
 
 basic-ftp@^5.0.2:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/basic-ftp/-/basic-ftp-5.1.0.tgz#00eb8128ce536aa697c45716c739bf38e8d890f5"
-  integrity sha512-RkaJzeJKDbaDWTIPiJwubyljaEPwpVWkm9Rt5h9Nd6h7tEXTJ3VB4qxdZBioV7JO5yLUaOKwz7vDOzlncUsegw==
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/basic-ftp/-/basic-ftp-5.2.0.tgz#7c2dff63c918bde60e6bad1f2ff93dcf5137a40a"
+  integrity sha512-VoMINM2rqJwJgfdHq6RiUudKt2BV+FY5ZFezP/ypmwayk68+NzzAQy4XXLlqsGD4MCzq3DrmNFD/uUmBJuGoXw==
 
 bidi-js@^1.0.3:
   version "1.0.3"
