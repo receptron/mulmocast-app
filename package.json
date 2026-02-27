@@ -86,6 +86,9 @@
     "yaml-eslint-parser": "^2.0.0"
   },
   "resolutions": {
+    "tar": "7.5.9",
+    "fast-xml-parser": "5.4.1",
+    "minimatch": "^10.2.4",
     "unicorn-magic": "0.2.0"
   },
   "dependencies": {
