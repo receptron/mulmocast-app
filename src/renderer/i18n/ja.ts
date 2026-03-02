@@ -250,6 +250,7 @@ const lang = {
     },
     imageModel: {
       nanoBananaPro: "Nano Banana Pro (gemini-3-pro-image-preview)",
+      nanoBanana2: "Nano Banana 2 (gemini-3.1-flash-image-preview)",
       nanoBanana: "Nano Banana (gemini-2.5-flash-image)",
     },
     apiKeyName: {

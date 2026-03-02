@@ -322,6 +322,7 @@ export const IMAGE_PARAMS_DEFAULT_VALUES: MulmoImageParams = {
 // Image model display name mappings for i18n
 export const IMAGE_MODEL_DISPLAY_KEYS: Record<string, string> = {
   "gemini-3-pro-image-preview": "nanoBananaPro",
+  "gemini-3.1-flash-image-preview": "nanoBanana2",
   "gemini-2.5-flash-image": "nanoBanana",
 };
 
