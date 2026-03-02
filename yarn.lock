@@ -1158,10 +1158,10 @@
     minimist "^1.2.8"
     postject "^1.0.0-alpha.6"
 
-"@elevenlabs/elevenlabs-js@^2.36.0":
-  version "2.36.0"
-  resolved "https://registry.yarnpkg.com/@elevenlabs/elevenlabs-js/-/elevenlabs-js-2.36.0.tgz#3cdbba9ef51dc7b688abc354bea6e0012b1d9c9f"
-  integrity sha512-dnhJHmozQj2xBxgEbPa3clK1G3jY8xUmij8nzNHW9GBDYg2750OwgaSCnZmlFtm53MorEspmlcSu2+fzSeldkQ==
+"@elevenlabs/elevenlabs-js@^2.37.0":
+  version "2.37.0"
+  resolved "https://registry.yarnpkg.com/@elevenlabs/elevenlabs-js/-/elevenlabs-js-2.37.0.tgz#6d472fd18cace70458075a30e336bf3547458ab1"
+  integrity sha512-GngmGe97krIhOzo3ZW6CYr1oiBmka/sVPLxMK5tZ8VioCZveY1P411yIY5x8qsK12hdwhmeq73S6dtJtc3UumA==
   dependencies:
     command-exists "^1.2.9"
     node-fetch "^2.7.0"
@@ -1843,10 +1843,10 @@
     "@intlify/message-compiler" "11.2.8"
     "@intlify/shared" "11.2.8"
 
-"@intlify/eslint-plugin-vue-i18n@^4.2.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@intlify/eslint-plugin-vue-i18n/-/eslint-plugin-vue-i18n-4.2.0.tgz#9bf65f7a7756bd214da33766de711c5aeb2a7734"
-  integrity sha512-1TtqzK0yrbjwYDs92Ob5O2xEMN5gcCM2MrdJ6FKA85ag6g1psyBGabxOPGiFzIcCyzrROGH72iIkvHkGKn8XWQ==
+"@intlify/eslint-plugin-vue-i18n@^4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@intlify/eslint-plugin-vue-i18n/-/eslint-plugin-vue-i18n-4.3.0.tgz#b7009e5f9482596034870136b6e259ebd6c423f2"
+  integrity sha512-CxUltFVnxoKpPQYITqx94/Vsni8VoVeVc5rltl82ctU8Yl2KCGcexn8mYlkRSozazNpJTmLuutixfwrOpW7Nkw==
   dependencies:
     "@eslint/eslintrc" "^3.0.0"
     "@intlify/core-base" "^11.0.0"
@@ -3145,10 +3145,10 @@
     "@types/node" "*"
     form-data "^4.0.4"
 
-"@types/node@*", "@types/node@>=13.7.0", "@types/node@^25.3.2":
-  version "25.3.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-25.3.2.tgz#cbc4b963e1b3503eb2bcf7c55bf48c95204918d1"
-  integrity sha512-RpV6r/ij22zRRdyBPcxDeKAzH43phWVKEjL2iksqo1Vz3CuBUrgmPpPhALKiRfU7OMCmeeO9vECBMsV0hMTG8Q==
+"@types/node@*", "@types/node@>=13.7.0", "@types/node@^25.3.3":
+  version "25.3.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-25.3.3.tgz#605862544ee7ffd7a936bcbf0135a14012f1e549"
+  integrity sha512-DpzbrH7wIcBaJibpKo9nnSQL0MTRdnWttGyE5haGwK86xgMOkFLp7vEyfQPGLOJh5wNYiJ3V9PmUMDhV9u8kkQ==
   dependencies:
     undici-types "~7.18.0"
 
@@ -6455,7 +6455,7 @@ global-dirs@^3.0.0:
   dependencies:
     ini "2.0.0"
 
-globals@17.3.0, globals@^17.3.0:
+globals@17.3.0:
   version "17.3.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-17.3.0.tgz#8b96544c2fa91afada02747cc9731c002a96f3b9"
   integrity sha512-yMqGUQVVCkD4tqjOJf3TnrvaaHDMYp4VlUSObbkIiuCPe/ofdMBFIAcBbCSRFWOnos6qRiTVStDwqPLUclaxIw==
@@ -6469,6 +6469,11 @@ globals@^16.0.0:
   version "16.5.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-16.5.0.tgz#ccf1594a437b97653b2be13ed4d8f5c9f850cac1"
   integrity sha512-c/c15i26VrJ4IRt5Z89DnIzCGDn9EcebibhAOjw5ibqEHsE1wLUgkPn9RDmNcUKyU87GeaL633nyJ+pplFR2ZQ==
+
+globals@^17.4.0:
+  version "17.4.0"
+  resolved "https://registry.yarnpkg.com/globals/-/globals-17.4.0.tgz#33d7d297ed1536b388a0e2f4bcd0ff19c8ff91b5"
+  integrity sha512-hjrNztw/VajQwOLsMNT1cbJiH2muO3OROCHnbehc8eY5JyD2gqz4AcMHPqgaOR59DjgUjYAYLeH699g/eWi2jw==
 
 globalthis@^1.0.1, globalthis@^1.0.4:
   version "1.0.4"
@@ -7616,10 +7621,10 @@ lru-cache@^7.14.1, lru-cache@^7.7.1:
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.18.3.tgz#f793896e0fd0e954a59dfdd82f0773808df6aa89"
   integrity sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==
 
-lucide-vue-next@^0.575.0:
-  version "0.575.0"
-  resolved "https://registry.yarnpkg.com/lucide-vue-next/-/lucide-vue-next-0.575.0.tgz#a782e0c00932dbe16ebf82e12030d9223895b62d"
-  integrity sha512-UHzA3cYMCgBLyGay5R9IQaidwV0NLocx7cIBnFt8vJ9Xhl6IM/oKD0fUhoCUuouFta15SX1rLXVoko9s3TzWMA==
+lucide-vue-next@^0.576.0:
+  version "0.576.0"
+  resolved "https://registry.yarnpkg.com/lucide-vue-next/-/lucide-vue-next-0.576.0.tgz#c0e49aaec9010fdff2d4156889250f8a5678473e"
+  integrity sha512-qX3m7wWjOcDk89LkbwYc+KdQt8+kX3VhKObYs8SfycHBcDjSTXmQKKHFKvt/+x90z3S7KhAnuS+51cK7bJcI8A==
 
 macos-version@^6.0.0:
   version "6.0.0"
@@ -7965,10 +7970,10 @@ mulmocast-vision@^1.0.8:
     pdfkit "^0.17.2"
     puppeteer "^24.32.0"
 
-mulmocast@^2.4.5:
-  version "2.4.5"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.4.5.tgz#b97f88b9dd24424838b6a5d50c3e140a062d96c1"
-  integrity sha512-Mv9WdNhozilQu5J1kD6ZBFgMcQ8iRjxMHyu4sypLSaE+Y4GdL/L0MwnJHpI2B1zfw7Uhl7pjSSFsuoatA4YH5w==
+mulmocast@^2.4.6:
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.4.6.tgz#6bd98943c9928913bf072d9b99a4442659a9114e"
+  integrity sha512-Vqa+RxgDNVtCXqltzfhy3ci7QwgjyvKSeSzXPRt/1+YMmUugU/+EyDCxqIzPFicY+14Xa8qM4LUnMYB2A9vSQA==
   dependencies:
     "@google-cloud/text-to-speech" "^6.4.0"
     "@google/genai" "^1.42.0"
