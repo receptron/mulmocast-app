@@ -1,4 +1,9 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(npx tsx .claude/skills/release-script/extract-timestamps.ts *)"
+    ]
+  },
   "hooks": {
     "PostToolUse": [
       {

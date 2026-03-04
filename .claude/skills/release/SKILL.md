@@ -10,15 +10,17 @@ argument-hint: "<version> (例: 1.0.11)"
 ## 全体フロー
 
 ```
-Phase 1: リリースノート作成    → /release-notes の手順に従う
-Phase 2: X投稿ドラフト作成    → /release-xpost の手順に従う
-Phase 3 (並行):
-  ├─ MulmoScript作成         → /release-script の手順に従う
-  ├─ Discord 投稿            → /discord-release の手順に従う
-  ├─ GitHub Release作成      → /release-tag の手順に従う
-  ├─ YouTube メタデータ作成  → /release-youtube の手順に従う（/release-script 完了後）
-  └─ Zenn 記事作成           → /release-zenn の手順に従う（/release-script 完了後）
-Phase 4: アーカイブ           → output を zip 化
+Phase 1: リリースノート作成        → /release-notes の手順に従う
+Phase 1.5: リリース候補ビルド確認  → RC ブランチ作成 + ビルド版で最終確認
+Phase 2: X投稿ドラフト作成        → /release-xpost の手順に従う
+Phase 3 (直列):
+  3a. GitHub Release作成          → /release-tag の手順に従う
+  3b. Discord 投稿                → /discord-release の手順に従う
+  3c. MulmoScript作成 + 動画生成  → /release-script の手順に従う
+  3d. YouTube メタデータ作成      → /release-youtube の手順に従う
+  3e. Zenn 記事作成               → /release-zenn の手順に従う
+Phase 4: アーカイブ               → output を zip 化
+Phase 5: リリースノート PR        → docs/release_notes/ をコミット・PR 作成
 ```
 
 ## 手順
@@ -33,6 +35,95 @@ Phase 4: アーカイブ           → output を zip 化
 **ユーザー確認ポイント**:
 - PR要約のカテゴリ分類は正しいか
 - リリースノートの内容は正確か
+
+✅ 確認が取れたら Phase 1.5 へ進む。
+
+### Phase 1.5: リリース候補ビルド確認
+
+リリースノート確認後、ビルド版で新機能の最終確認を行う。
+
+#### 1.5a. RC ブランチ作成
+
+```bash
+git checkout -b release/<version>-rc-1
+```
+
+#### 1.5b. package.json のバージョン更新
+
+`package.json` の `version` を `<version>-rc-1` に変更する。
+
+#### 1.5c. 確認チェックリスト作成
+
+リリースノートの新機能から、Win/Mac 両方で確認すべき項目をチェックリストとして提示する:
+
+```markdown
+| # | 確認項目 | Mac | Win |
+|---|---------|-----|-----|
+| 1 | （新機能から抽出） | | |
+| ...| | | |
+```
+
+#### 1.5d. commit してユーザーに push を依頼
+
+```bash
+git add package.json
+git commit -m "chore: bump version to <version>-rc-1"
+```
+
+ユーザーに push を依頼する。
+
+#### 1.5e. ユーザーがビルド → 確認
+
+- ユーザーが push してビルド版を作成
+- Win/Mac 両方で新機能を確認
+- 問題があれば修正して rc-2, rc-3... と繰り返す
+
+#### 1.5f. リリースブランチ作成
+
+ビルド確認 OK 後、正式リリースブランチを作成する:
+
+```bash
+git checkout -b release/<version>
+```
+
+`package.json` の `version` を `<version>`（rc サフィックスなし）に変更する。
+
+```bash
+git add package.json
+git commit -m "chore: bump version to <version>"
+```
+
+ユーザーに push を依頼する。
+
+#### 1.5g. リリース PR の作成
+
+ユーザーが `release/<version>` ブランチを push した後、ドラフト PR を作成（またはユーザーが作成済みの PR body を更新）する。
+
+前回のリリース PR（例: #1545）を参考に、以下の雛形で body を設定する:
+
+```markdown
+## Actions
+[GitHub Actions が全て完了しているスクリーンショットを貼る]
+
+## Web
+[Web ページのアプリダウンロードページで、バージョンが正しいことを確認するスクリーンショットを貼る]
+
+## Version
+### Mac
+[Mac の About ダイアログのスクリーンショットを貼る]
+
+### Win
+[Win の About ダイアログのスクリーンショットを貼る]
+
+## 動作確認
+- chat → script
+- introduction, 1 beat 生成
+- 新機能の確認
+  - [ ] （リリースノートの新機能から項目を抽出）
+- 旧 version から新 version への自動更新
+```
+
+スクリーンショットの貼り付けはユーザーが行うため、プレースホルダーは `[説明文]` の形式で記述する（HTML コメントは MD で非表示になるため使わない）。
 
 ✅ 確認が取れたら Phase 2 へ進む。
 
@@ -50,14 +141,17 @@ Phase 4: アーカイブ           → output を zip 化
 
 ✅ 確認が取れたら Phase 3 へ進む。
 
-### Phase 3: MulmoScript + Discord 投稿 + GitHub Release（並行実行）
+### Phase 3: GitHub Release → Discord → MulmoScript → YouTube → Zenn（直列実行）
 
-以下の3つを並行して実行する:
+以下を順番に実行する。バックグラウンド agent はファイル書き込み権限を得られないため、すべてフォアグラウンドで実行すること。
 
-#### 3a. MulmoScript 作成
+#### 3a. GitHub Release 作成
 
-`.claude/skills/release-script/SKILL.md` の手順に従い、リリースノート動画用 MulmoScript を作成する。
-確認不要（アプリ上でブラッシュアップする前提）。
+`.claude/skills/release-tag/SKILL.md` の手順に従い、GitHub Releaseを作成する。
+
+**ユーザー確認ポイント**:
+- ハイライトの内容は正しいか
+- `gh release create` を実行してよいか
 
 #### 3b. Discord 投稿
 
@@ -67,29 +161,26 @@ Phase 4: アーカイブ           → output を zip 化
 - Discord 向けメッセージの内容は正しいか
 - webhook で投稿してよいか
 
-#### 3c. GitHub Release 作成
+#### 3c. MulmoScript 作成 + 動画生成
 
-`.claude/skills/release-tag/SKILL.md` の手順に従い、GitHub Releaseを作成する。
-
-**ユーザー確認ポイント**:
-- ハイライトの内容は正しいか
-- `gh release create` を実行してよいか
+`.claude/skills/release-script/SKILL.md` の手順に従い、リリースノート動画用 MulmoScript を作成し、PDF・動画を生成する。
+問題があればユーザーと修正を繰り返す。
 
 #### 3d. YouTube メタデータ作成
 
 `.claude/skills/release-youtube/SKILL.md` の手順に従い、YouTube アップロード用メタデータを作成する。
-`/release-script` のタイムスタンプファイルを使用するため、3a 完了後に実行する。
+3c のタイムスタンプファイルを使用する。
 
 確認不要（アップロードはユーザーが手動で行う）。
 
 #### 3e. Zenn 記事作成
 
 `.claude/skills/release-zenn/SKILL.md` の手順に従い、MulmoScript から Zenn 記事を生成する。
-`/release-script` と `/release-youtube`（YouTube URL）が必要なため、3a・3d 完了後に実行する。
+3c・3d の成果物が必要。
 
 確認不要（Zenn 側でプレビュー・公開はユーザーが手動で行う）。
 
-✅ すべての確認が取れたら実行 → Phase 4 へ進む。
+✅ すべて完了したら Phase 4 へ進む。
 
 ### Phase 4: アーカイブ
 
@@ -104,16 +195,48 @@ zip -r output/mulmocast_v<version>_output.zip output/ -x "output/mulmocast_v<ver
 
 #### 4b. アップロード先へコピー（任意）
 
+```bash
+source .env 2>/dev/null || true
+```
+
 環境変数 `RELEASE_ARCHIVE_DIR` が設定されている場合、zip をコピーする:
 
 ```bash
-if [ -n "$RELEASE_ARCHIVE_DIR" ]; then
-  mkdir -p "$RELEASE_ARCHIVE_DIR"
-  cp docs/release_notes/v<version>/output/mulmocast_v<version>_output.zip "$RELEASE_ARCHIVE_DIR/"
-fi
+mkdir -p "$RELEASE_ARCHIVE_DIR"
+cp docs/release_notes/v<version>/output/mulmocast_v<version>_output.zip "$RELEASE_ARCHIVE_DIR/"
 ```
 
-`RELEASE_ARCHIVE_DIR` はローカルパスでも Google Drive マウントポイントでもよい。未設定の場合は zip 作成のみで完了。
+`RELEASE_ARCHIVE_DIR` はローカルパスでも Google Drive マウントポイントでもよい。
+
+**未設定の場合**: ユーザーに「`RELEASE_ARCHIVE_DIR` が設定されていないため、zip のコピーをスキップします。アーカイブ先を設定する場合は `.env` に `RELEASE_ARCHIVE_DIR=/path/to/dir` を追加してください」と伝える。
+
+✅ 完了したら Phase 5 へ進む。
+
+### Phase 5: リリースノート PR
+
+`docs/release_notes/v<version>/` を GitHub にコミット・PR 作成する。
+
+#### 5a. ブランチ作成
+
+```bash
+git checkout -b docs/release-notes-v<version>
+```
+
+#### 5b. コミット
+
+`output/` ディレクトリは `.gitignore` 済みのため、そのまま `git add` すればよい。
+
+```bash
+git add docs/release_notes/v<version>/
+git commit -m "docs: add release notes for v<version>"
+```
+
+#### 5c. ユーザーに push を依頼
+
+ユーザーに push を依頼し、push 後に PR を作成する。
+
+PR タイトル: `Add release notes for v<version>`
+PR ベースブランチ: `main`
 
 ✅ 完了。
 
