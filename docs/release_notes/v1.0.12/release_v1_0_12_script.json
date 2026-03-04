@@ -1,0 +1,227 @@
+{
+  "$mulmocast": {
+    "version": "1.1",
+    "credit": "closing"
+  },
+  "canvasSize": {
+    "width": 1280,
+    "height": 720
+  },
+  "speechParams": {
+    "speakers": {
+      "Presenter": {
+        "displayName": {
+          "ja": "ナレーター"
+        },
+        "voiceId": "shimmer",
+        "speechOptions": {
+          "instruction": "Speak clearly and professionally like a news announcer reading release notes. Use a neutral, informative tone with clear enunciation."
+        },
+        "provider": "openai"
+      }
+    }
+  },
+  "imageParams": {
+    "provider": "openai",
+    "images": {}
+  },
+  "movieParams": {
+    "provider": "mock",
+    "model": "",
+    "transition": {
+      "type": "fade",
+      "duration": 1
+    }
+  },
+  "soundEffectParams": {
+    "provider": "replicate"
+  },
+  "textSlideParams": {
+    "cssStyles": [
+      "h3 {margin-left: 20px; margin-top: 20px}"
+    ]
+  },
+  "captionParams": {
+    "lang": "ja",
+    "captionSplit": "estimate",
+    "textSplit": {
+      "type": "delimiters",
+      "delimiters": [
+        "。",
+        "．",
+        "、",
+        ",",
+        ".",
+        "！",
+        "!",
+        "？",
+        "?",
+        "；",
+        ";",
+        "\n"
+      ]
+    }
+  },
+  "audioParams": {
+    "padding": 0.3,
+    "introPadding": 1,
+    "closingPadding": 0.8,
+    "outroPadding": 1,
+    "bgm": {
+      "kind": "path",
+      "path": "../bgm/20251217031931-8c55b232.mp3"
+    },
+    "bgmVolume": 0.1,
+    "audioVolume": 1,
+    "suppressSpeech": false
+  },
+  "title": "MulmoCast v1.0.12 リリースノート（OpenAI）",
+  "description": "MulmoCast v1.0.12の新機能と改善点を紹介するリリースノート動画",
+  "lang": "ja",
+  "beats": [
+    {
+      "speaker": "Presenter",
+      "text": "マルモキャスト バージョン1.0.12をリリースしました！",
+      "captionParams": {
+        "captionSplit": "none",
+        "textSplit": { "type": "none" }
+      },
+      "id": "title-slide",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "# 🎉 MulmoCast v1.0.12 Released!",
+          "## March 3, 2026",
+          "",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "今回のアップデートでは、音声の読み上げ速度を細かく調整できるようになり、\n新しい画像生成モデルにも対応しました。",
+      "id": "title-overview",
+      "image": {
+        "type": "beat",
+        "id": "title-slide"
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "1：TTS読み上げ速度オプションを追加しました。",
+      "id": "speech-speed-intro",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "path",
+          "path": "images/01-01_speech_params_speed_openai.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "OpenAI TTSでは0.25倍速から4.0倍速まで読み上げ速度を調整できます。",
+      "captionParams": {
+        "captionSplit": "none",
+        "textSplit": { "type": "none" }
+      },
+      "id": "speech-speed-openai",
+      "image": {
+        "type": "beat",
+        "id": "speech-speed-intro"
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "Google Cloud TTSでは0.25倍速から2.0倍速まで調整できます。",
+      "captionParams": {
+        "captionSplit": "none",
+        "textSplit": { "type": "none" }
+      },
+      "id": "speech-speed-google-num",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "path",
+          "path": "images/01-02_speech_params_speed_google.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "プロバイダーごとに設定可能な範囲が異なり、\nそれぞれの上限と下限がUIに表示されます。",
+      "id": "speech-speed-google",
+      "image": {
+        "type": "beat",
+        "id": "speech-speed-google-num"
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "2：画像生成モデルにNano Banana 2を追加しました。\nGoogleの新しいモデル、",
+      "id": "nano-banana-2-intro",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "path",
+          "path": "images/02-01_image_model_nano_banana.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "gemini-3.1-flash-image-previewが",
+      "captionParams": {
+        "captionSplit": "none",
+        "textSplit": { "type": "none" }
+      },
+      "id": "nano-banana-2-model",
+      "image": {
+        "type": "beat",
+        "id": "nano-banana-2-intro"
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "画像モデル選択から利用可能です。",
+      "id": "nano-banana-2",
+      "image": {
+        "type": "beat",
+        "id": "nano-banana-2-intro"
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "その他、軽微な改善を行いました。\n起動中のアプリに更新通知が届きます。\nダウンロードは公式サイトから行えます。",
+      "id": "thank-you-slide",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "# Thank You!",
+          "",
+          "## MulmoCast v1.0.12",
+          "",
+          "### Happy Creating!",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "マルモキャスト バージョン1.0.12をお楽しみください！",
+      "captionParams": {
+        "captionSplit": "none",
+        "textSplit": { "type": "none" }
+      },
+      "id": "thank-you-closing",
+      "image": {
+        "type": "beat",
+        "id": "thank-you-slide"
+      }
+    }
+  ]
+}
