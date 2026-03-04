@@ -202,8 +202,10 @@ source .env 2>/dev/null || true
 環境変数 `RELEASE_ARCHIVE_DIR` が設定されている場合、zip をコピーする:
 
 ```bash
-mkdir -p "$RELEASE_ARCHIVE_DIR"
-cp docs/release_notes/v<version>/output/mulmocast_v<version>_output.zip "$RELEASE_ARCHIVE_DIR/"
+if [ -n "${RELEASE_ARCHIVE_DIR:-}" ]; then
+  mkdir -p "$RELEASE_ARCHIVE_DIR"
+  cp docs/release_notes/v<version>/output/mulmocast_v<version>_output.zip "$RELEASE_ARCHIVE_DIR/"
+fi
 ```
 
 `RELEASE_ARCHIVE_DIR` はローカルパスでも Google Drive マウントポイントでもよい。
