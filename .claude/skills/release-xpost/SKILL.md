@@ -41,6 +41,8 @@ ls docs/release_notes/*/xpost_*.md
 
 ### Step 3: ドラフト作成
 
+**必ず `docs/release_notes/v<version>/xpost_v<version>_draft.md` にファイルとして書き出すこと。** 口頭での提示だけで済ませない。
+
 以下のフォーマットで作成:
 
 ```markdown
@@ -73,6 +75,8 @@ ls docs/release_notes/*/xpost_*.md
 
 ### Step 4: 文字数チェック
 
+**Step 3 でファイルを書き出す前に必ず実行する。** 結果は各ポストの末尾に `**文字数**: NNN/280` として記載する。
+
 **X投稿の文字数ルール**:
 - CJK/全角文字 = 2
 - その他（英数字、半角記号、スペース、改行）= 1
@@ -99,16 +103,23 @@ for ch in post:
         weighted += 1
 ```
 
-**超過した場合**: 英語テキストを短縮する（日本語は意味が変わりやすいので英語を優先的に削る）。
+**超過した場合**: 280以内に収まるまでテキストを編集する。英語テキストを優先的に短縮する（日本語は意味が変わりやすいため）。編集後に再度チェックし、全ポストが280以内になってからファイルに書き出す。
 
 ### Step 5: スクリーンショット撮影
 
-アプリが起動中の場合、Playwright MCP でスクリーンショットを撮影する。
+ドラフトファイルに記載した各ポストの添付メディアに対応するスクリーンショットを用意する。
 
-1. **言語を英語に切り替える**: Settings → Language → English
-2. 対象画面に移動
+**方法A: ユーザーに依頼**（推奨）
+- 各ポストに必要なキャプチャの内容と保存先ファイル名を具体的に伝える
+- ユーザーが撮影して `docs/release_notes/v<version>/images/` に保存
+
+**方法B: Playwright MCP で撮影**（アプリ起動中の場合）
+1. **言語を英語に切り替える**: `browser_evaluate` で Settings → Language → English
+2. `browser_evaluate` で対象画面に移動
 3. `browser_take_screenshot` でキャプチャ
 4. `docs/release_notes/v<version>/images/` に保存
+- **`browser_snapshot` は絶対に使わない**（大量トークン消費）
+- `browser_evaluate` や `browser_run_code` で要素操作する
 
 #### ファイル命名規則
 
@@ -126,11 +137,6 @@ for ch in post:
 ```
 
 この命名規則により `/release-script` が画像→ビートの対応を機械的にマッピングできる。
-
-**注意**:
-- `browser_snapshot` は大量のトークンを消費するため使わない
-- `browser_evaluate` や `browser_run_code` で要素操作する
-- `browser_navigate` は使わない（アプリが既に開いている前提）
 
 ### Step 6: ユーザー確認
 

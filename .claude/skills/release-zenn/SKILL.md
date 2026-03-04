@@ -18,6 +18,7 @@ argument-hint: "<version> (例: 1.0.11)"
 ### Step 1: 環境変数の確認
 
 ```bash
+source .env 2>/dev/null || true
 echo "${ZENN_CONTENT_DIR:?ZENN_CONTENT_DIR is not set}"
 ```
 
@@ -45,6 +46,8 @@ ls "$ZENN_CONTENT_DIR/articles/"*mulmocast-release*.md
 grep -A2 '## URL' docs/release_notes/v<version>/youtube_v<version>_ja.md
 grep -A2 '## URL' docs/release_notes/v<version>/youtube_v<version>_en.md
 ```
+
+**URL が未登録の場合**: `## URL` セクションがない、または URL が空の場合は、「動画で見る」セクションにプレースホルダー（`（YouTube アップロード後に URL を追記）`）を記載して先に進む。ユーザーから URL を受け取った後に記事ファイルと YouTube メタデータファイルの両方を更新する。
 
 ### Step 5: 記事の編集
 
