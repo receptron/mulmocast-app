@@ -263,6 +263,14 @@
 
           <!-- html_tailwind -->
           <template v-else-if="beat.image.type === 'html_tailwind'">
+            <ImageEffect
+              :beat="beat"
+              :mulmoScript="mulmoScript"
+              :imageFiles="imageFiles"
+              :currentIndex="index"
+              @update="update"
+              @save="justSaveAndPushToHistory"
+            />
             <Label class="mb-1 block">{{ t("beat.html_tailwind.label") }}</Label>
             <Textarea
               :placeholder="t('beat.html_tailwind.placeholder')"
@@ -708,6 +716,7 @@ import Chart from "./beat_editors/chart.vue";
 import Media from "./beat_editors/media.vue";
 import Mermaid from "./beat_editors/mermaid.vue";
 import Vision from "./beat_editors/vision.vue";
+import ImageEffect from "./beat_editors/image_effect.vue";
 import { useApiErrorNotify } from "@/composables/notify";
 
 type FileData = ArrayBuffer | string | null;
