@@ -82,7 +82,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update", "save"]);
+const emit = defineEmits(["applyImageEffect", "save"]);
 
 const selectedEffect = ref<EffectType | null>(null);
 const selectedMaterialKey = ref<string | null>(null);
@@ -112,27 +112,26 @@ const isCustomEdited = computed(() => {
   );
 });
 
-const update = (path: string, value: unknown) => {
-  emit("update", path, value);
-};
-
 const applyEffect = () => {
   if (!selectedEffect.value || !selectedMaterialKey.value) return;
 
   const imageSrc = `image:${selectedMaterialKey.value}`;
   const template = generateEffectTemplate(selectedEffect.value, imageSrc, zoomPercent.value);
 
-  update("image.html", template.html);
-  update("image.script", template.script);
-  update("image.animation", true);
-  update("duration", durationSec.value);
+  emit("applyImageEffect", {
+    image: {
+      type: "html_tailwind" as const,
+      html: template.html,
+      script: template.script,
+      animation: true,
+    },
+    duration: durationSec.value,
+  });
 
   // Track last applied for custom detection
   lastAppliedEffect.value = selectedEffect.value;
   lastAppliedMaterialKey.value = selectedMaterialKey.value;
   lastAppliedZoom.value = zoomPercent.value;
-
-  emit("save");
 };
 
 // Reset custom detection when effect selection changes

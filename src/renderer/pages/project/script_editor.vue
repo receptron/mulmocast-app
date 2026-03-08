@@ -229,6 +229,7 @@
                   :mulmoError="mulmoError?.['beats']?.[index] ?? []"
                   :settingPresence="settingPresence"
                   @update="update"
+                  @updateBeat="updateBeat"
                   @updateImageData="(data, callback) => updateImageData(index)(data, callback)"
                   @generateImage="generateImage"
                   @changeBeat="changeBeat"
@@ -511,6 +512,13 @@ const update = (index: number, path: string, value: unknown) => {
   const newBeat = set(props.mulmoScript.beats[index], path.split("."), value);
   const newBeats = [...props.mulmoScript.beats.slice(0, index), newBeat, ...props.mulmoScript.beats.slice(index + 1)];
 
+  emit("updateMulmoScript", {
+    ...props.mulmoScript,
+    beats: newBeats,
+  });
+};
+const updateBeat = (index: number, newBeat: Record<string, unknown>) => {
+  const newBeats = [...props.mulmoScript.beats.slice(0, index), newBeat, ...props.mulmoScript.beats.slice(index + 1)];
   emit("updateMulmoScript", {
     ...props.mulmoScript,
     beats: newBeats,

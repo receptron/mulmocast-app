@@ -263,7 +263,7 @@
 
           <!-- html_tailwind -->
           <template v-else-if="beat.image.type === 'html_tailwind'">
-            <ImageEffect :beat="beat" :mulmoScript="mulmoScript" @update="update" @save="justSaveAndPushToHistory" />
+            <ImageEffect :beat="beat" :mulmoScript="mulmoScript" @applyImageEffect="applyImageEffect" />
             <Label class="mb-1 block">{{ t("beat.html_tailwind.label") }}</Label>
             <Textarea
               :placeholder="t('beat.html_tailwind.placeholder')"
@@ -747,6 +747,7 @@ const emit = defineEmits([
   "audioUploaded",
   "audioRemoved",
   "audioGenerated",
+  "updateBeat",
 ]);
 
 const route = useRoute();
@@ -1256,6 +1257,12 @@ const handleSimilarityBoostChange = (value: string | undefined) => {
 
 const update = (path: string, value: unknown) => {
   emit("update", props.index, path, value);
+};
+
+const applyImageEffect = (payload: { image: Record<string, unknown>; duration: number }) => {
+  // Emit both image and duration as a single beat update to avoid race conditions
+  const newBeat = { ...props.beat, image: payload.image, duration: payload.duration };
+  emit("updateBeat", props.index, newBeat);
 };
 
 const updateImageNames = (value: string[]) => {
