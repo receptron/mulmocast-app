@@ -86,9 +86,10 @@
     "yaml-eslint-parser": "^2.0.0"
   },
   "resolutions": {
-    "tar": "7.5.10",
+    "dompurify": "^3.3.2",
     "fast-xml-parser": "5.4.2",
     "minimatch": "^10.2.4",
+    "tar": "7.5.10",
     "unicorn-magic": "0.2.0"
   },
   "dependencies": {
