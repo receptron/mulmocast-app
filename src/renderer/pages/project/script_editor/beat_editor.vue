@@ -263,14 +263,7 @@
 
           <!-- html_tailwind -->
           <template v-else-if="beat.image.type === 'html_tailwind'">
-            <ImageEffect
-              :beat="beat"
-              :mulmoScript="mulmoScript"
-              :imageFiles="imageFiles"
-              :currentIndex="index"
-              @update="update"
-              @save="justSaveAndPushToHistory"
-            />
+            <ImageEffect :beat="beat" @update="update" @save="justSaveAndPushToHistory" />
             <Label class="mb-1 block">{{ t("beat.html_tailwind.label") }}</Label>
             <Textarea
               :placeholder="t('beat.html_tailwind.placeholder')"

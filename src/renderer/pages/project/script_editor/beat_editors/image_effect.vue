@@ -16,19 +16,21 @@
       </Select>
     </div>
 
-    <!-- Source beat select -->
+    <!-- Source image from materials -->
     <div class="mb-2">
-      <Label class="mb-1 block text-sm">{{ t("beat.html_tailwind.sourceBeat") }}</Label>
-      <Select v-model="selectedBeatId">
-        <SelectTrigger class="w-full">
-          <SelectValue :placeholder="t('beat.html_tailwind.sourceBeatPlaceholder')" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem v-for="refBeat in sourceBeats" :key="refBeat.id" :value="refBeat.id">
-            {{ refBeat.label }}
-          </SelectItem>
-        </SelectContent>
-      </Select>
+      <Label class="mb-1 block text-sm">{{ t("beat.html_tailwind.sourceImage") }}</Label>
+      <div class="flex items-center gap-2">
+        <Button @click="openMediaLibrary" type="button" size="sm" variant="outline" class="shrink-0">
+          {{ t("ui.actions.openImageLibrary") }}
+        </Button>
+        <span v-if="selectedImagePath" class="text-muted-foreground truncate text-sm">
+          {{ selectedImageFileName }}
+        </span>
+      </div>
+      <!-- Selected image preview -->
+      <div v-if="selectedImagePreviewUrl" class="mt-2">
+        <img :src="selectedImagePreviewUrl" class="h-20 rounded border object-cover" />
+      </div>
     </div>
 
     <!-- Parameters -->
@@ -50,18 +52,26 @@
           {{ t("beat.html_tailwind.customEdited") }}
         </Badge>
       </div>
-      <Button size="sm" @click="applyEffect" :disabled="!selectedEffect || !selectedBeatId">
+      <Button size="sm" @click="applyEffect" :disabled="!selectedEffect || !selectedImagePath">
         {{ t("ui.actions.set") }}
       </Button>
     </div>
   </div>
+
+  <MediaLibraryDialog
+    ref="mediaLibraryRef"
+    :project-id="projectId"
+    :allowed-media-types="['image']"
+    @select="handleMediaSelect"
+  />
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onBeforeUnmount } from "vue";
+import { useRoute } from "vue-router";
 import { Label, Input, Button, Badge } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import type { MulmoBeat, MulmoScript } from "mulmocast/browser";
+import type { MulmoBeat } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 import {
   type EffectType,
@@ -70,59 +80,47 @@ import {
   generateEffectTemplate,
   isTemplateMatch,
 } from "./image_effect_data";
+import MediaLibraryDialog, {
+  type MediaLibraryDialogExposed,
+  type ProjectScriptMedia,
+} from "./media_library_dialog.vue";
 
 const { t } = useI18n();
+const route = useRoute();
+const projectId = computed(() => route.params.id as string);
 
 interface Props {
   beat: MulmoBeat;
-  mulmoScript: MulmoScript;
-  imageFiles: Record<string, string | null>;
-  currentIndex: number;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits(["update", "save"]);
 
 const selectedEffect = ref<EffectType | null>(null);
-const selectedBeatId = ref<string | null>(null);
+const selectedImagePath = ref<string | null>(null);
+const selectedImagePreviewUrl = ref<string | null>(null);
 const durationSec = ref<number>(effectDefaults.duration);
 const zoomPercent = ref<number>(effectDefaults.zoom);
 
 // Last applied values for custom detection
 const lastAppliedEffect = ref<EffectType | null>(null);
-const lastAppliedBeatId = ref<string | null>(null);
+const lastAppliedImagePath = ref<string | null>(null);
 const lastAppliedZoom = ref<number>(effectDefaults.zoom);
 
-const sourceBeats = computed(() => {
-  return props.mulmoScript.beats
-    .map((beat, index) => ({
-      id: beat.id,
-      index,
-      label: `BEAT ${index + 1}`,
-    }))
-    .filter((_, index) => {
-      const beat = props.mulmoScript.beats[index];
-      // Exclude current beat and beat-reference types
-      return index !== props.currentIndex && beat?.image?.type !== "beat" && beat?.image?.type !== "voice_over";
-    });
+const mediaLibraryRef = ref<MediaLibraryDialogExposed | null>(null);
+
+const selectedImageFileName = computed(() => {
+  if (!selectedImagePath.value) return "";
+  return selectedImagePath.value.split("/").pop() ?? "";
 });
 
-const imageSrcForBeat = (beatId: string): string => {
-  const imageData = props.imageFiles[beatId];
-  if (imageData) {
-    return imageData;
-  }
-  return "";
-};
-
 const isCustomEdited = computed(() => {
-  if (!lastAppliedEffect.value || !lastAppliedBeatId.value) return false;
-  const imageSrc = imageSrcForBeat(lastAppliedBeatId.value);
+  if (!lastAppliedEffect.value || !lastAppliedImagePath.value) return false;
   return !isTemplateMatch(
     props.beat.image?.html as string | string[] | undefined,
     props.beat.image?.script as string | string[] | undefined,
     lastAppliedEffect.value,
-    imageSrc,
+    lastAppliedImagePath.value,
     lastAppliedZoom.value,
   );
 });
@@ -131,22 +129,36 @@ const update = (path: string, value: unknown) => {
   emit("update", path, value);
 };
 
-const applyEffect = () => {
-  if (!selectedEffect.value || !selectedBeatId.value) return;
+const openMediaLibrary = async () => {
+  if (mediaLibraryRef.value) {
+    await mediaLibraryRef.value.open();
+  }
+};
 
-  const imageSrc = imageSrcForBeat(selectedBeatId.value);
-  const template = generateEffectTemplate(selectedEffect.value, imageSrc, zoomPercent.value);
+const handleMediaSelect = (media: ProjectScriptMedia) => {
+  selectedImagePath.value = media.projectRelativePath;
+
+  // Create preview URL from ArrayBuffer
+  if (selectedImagePreviewUrl.value) {
+    URL.revokeObjectURL(selectedImagePreviewUrl.value);
+  }
+  const blob = new Blob([media.data], { type: media.mimeType });
+  selectedImagePreviewUrl.value = URL.createObjectURL(blob);
+};
+
+const applyEffect = () => {
+  if (!selectedEffect.value || !selectedImagePath.value) return;
+
+  const template = generateEffectTemplate(selectedEffect.value, selectedImagePath.value, zoomPercent.value);
 
   update("image.html", template.html);
   update("image.script", template.script);
   update("image.animation", true);
-
-  // Set duration on the beat
   update("duration", durationSec.value);
 
   // Track last applied for custom detection
   lastAppliedEffect.value = selectedEffect.value;
-  lastAppliedBeatId.value = selectedBeatId.value;
+  lastAppliedImagePath.value = selectedImagePath.value;
   lastAppliedZoom.value = zoomPercent.value;
 
   emit("save");
@@ -155,5 +167,11 @@ const applyEffect = () => {
 // Reset custom detection when effect selection changes
 watch(selectedEffect, () => {
   lastAppliedEffect.value = null;
+});
+
+onBeforeUnmount(() => {
+  if (selectedImagePreviewUrl.value) {
+    URL.revokeObjectURL(selectedImagePreviewUrl.value);
+  }
 });
 </script>
