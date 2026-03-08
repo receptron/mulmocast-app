@@ -4,10 +4,16 @@ export const EFFECT_TYPES: EffectType[] = ["zoomIn", "zoomOut", "panLeft", "panR
 
 const DEFAULT_ZOOM = 120;
 const DEFAULT_DURATION = 5;
+const DEFAULT_PAN_DISTANCE = 10;
 
 export const effectDefaults = {
   zoom: DEFAULT_ZOOM,
   duration: DEFAULT_DURATION,
+  panDistance: DEFAULT_PAN_DISTANCE,
+};
+
+export const isPanEffect = (effect: EffectType | null): boolean => {
+  return effect === "panLeft" || effect === "panRight" || effect === "panUp" || effect === "panDown";
 };
 
 const buildHtml = (imageSrc: string): string[] => [
@@ -18,31 +24,33 @@ const buildHtml = (imageSrc: string): string[] => [
   "</div>",
 ];
 
-const buildScript = (effectType: EffectType, zoom: number): string[] => {
+const buildScript = (effectType: EffectType, zoom: number, panDistance: number): string[] => {
   const scale = zoom / 100;
-  const animateParams = getAnimateParams(effectType, scale);
+  const animateParams = getAnimateParams(effectType, scale, panDistance);
   return [
     "const animation = new MulmoAnimation();",
     `animation.animate('#photo_wrap', ${JSON.stringify(animateParams)}, { start: 0, end: 'auto', easing: 'linear' });`,
   ];
 };
 
-const PAN_DISTANCE_PERCENT = 10;
-
-const getAnimateParams = (effectType: EffectType, scale: number): Record<string, (number | string)[]> => {
+const getAnimateParams = (
+  effectType: EffectType,
+  scale: number,
+  panDistance: number,
+): Record<string, (number | string)[]> => {
   switch (effectType) {
     case "zoomIn":
       return { scale: [1.0, scale] };
     case "zoomOut":
       return { scale: [scale, 1.0] };
     case "panLeft":
-      return { scale: [scale, scale], translateX: [0, -PAN_DISTANCE_PERCENT, "%"] };
+      return { scale: [scale, scale], translateX: [0, -panDistance, "%"] };
     case "panRight":
-      return { scale: [scale, scale], translateX: [0, PAN_DISTANCE_PERCENT, "%"] };
+      return { scale: [scale, scale], translateX: [0, panDistance, "%"] };
     case "panUp":
-      return { scale: [scale, scale], translateY: [0, -PAN_DISTANCE_PERCENT, "%"] };
+      return { scale: [scale, scale], translateY: [0, -panDistance, "%"] };
     case "panDown":
-      return { scale: [scale, scale], translateY: [0, PAN_DISTANCE_PERCENT, "%"] };
+      return { scale: [scale, scale], translateY: [0, panDistance, "%"] };
   }
 };
 
@@ -50,10 +58,11 @@ export const generateEffectTemplate = (
   effectType: EffectType,
   imageSrc: string,
   zoom: number,
+  panDistance: number = effectDefaults.panDistance,
 ): { html: string[]; script: string[] } => {
   return {
     html: buildHtml(imageSrc),
-    script: buildScript(effectType, zoom),
+    script: buildScript(effectType, zoom, panDistance),
   };
 };
 
@@ -63,8 +72,9 @@ export const isTemplateMatch = (
   effectType: EffectType,
   imageSrc: string,
   zoom: number,
+  panDistance: number = effectDefaults.panDistance,
 ): boolean => {
-  const template = generateEffectTemplate(effectType, imageSrc, zoom);
+  const template = generateEffectTemplate(effectType, imageSrc, zoom, panDistance);
   const htmlArr = Array.isArray(currentHtml) ? currentHtml : [currentHtml ?? ""];
   const scriptArr = Array.isArray(currentScript) ? currentScript : [currentScript ?? ""];
   return (

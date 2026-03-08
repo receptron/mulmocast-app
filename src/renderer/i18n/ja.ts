@@ -773,6 +773,7 @@ const lang = {
       noMaterials: "Materialsがありません。Materialsタブで追加してください。",
       duration: "時間（秒）",
       zoom: "ズーム（%）",
+      panDistance: "パン移動量（%）",
       customEdited: "カスタム（手動編集済み）",
       effect: {
         zoomIn: "ズームイン",

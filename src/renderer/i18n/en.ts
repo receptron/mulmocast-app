@@ -774,6 +774,7 @@ const lang = {
       noMaterials: "No materials found. Add materials in the Materials tab.",
       duration: "Duration (sec)",
       zoom: "Zoom (%)",
+      panDistance: "Pan Distance (%)",
       customEdited: "Custom (manually edited)",
       effect: {
         zoomIn: "Zoom In",

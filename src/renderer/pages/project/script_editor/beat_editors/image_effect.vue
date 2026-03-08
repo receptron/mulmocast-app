@@ -45,6 +45,12 @@
         <Input v-model="zoomPercent" type="number" min="100" max="200" />
       </div>
     </div>
+    <div v-if="isPan" class="mb-2 flex gap-3">
+      <div class="flex-1">
+        <Label class="mb-1 block text-sm">{{ t("beat.html_tailwind.panDistance") }}</Label>
+        <Input v-model="panDistancePercent" type="number" min="1" max="50" />
+      </div>
+    </div>
 
     <!-- Set button + custom badge -->
     <div class="flex items-center justify-between">
@@ -70,6 +76,7 @@ import {
   type EffectType,
   EFFECT_TYPES,
   effectDefaults,
+  isPanEffect,
   generateEffectTemplate,
   isTemplateMatch,
 } from "./image_effect_data";
@@ -88,11 +95,15 @@ const selectedEffect = ref<EffectType | null>(null);
 const selectedMaterialKey = ref<string | null>(null);
 const durationSec = ref<number>(effectDefaults.duration);
 const zoomPercent = ref<number>(effectDefaults.zoom);
+const panDistancePercent = ref<number>(effectDefaults.panDistance);
+
+const isPan = computed(() => isPanEffect(selectedEffect.value));
 
 // Last applied values for custom detection
 const lastAppliedEffect = ref<EffectType | null>(null);
 const lastAppliedMaterialKey = ref<string | null>(null);
 const lastAppliedZoom = ref<number>(effectDefaults.zoom);
+const lastAppliedPanDistance = ref<number>(effectDefaults.panDistance);
 
 const materialKeys = computed(() => {
   const images = props.mulmoScript.imageParams?.images;
@@ -109,6 +120,7 @@ const isCustomEdited = computed(() => {
     lastAppliedEffect.value,
     imageSrc,
     lastAppliedZoom.value,
+    lastAppliedPanDistance.value,
   );
 });
 
@@ -116,7 +128,7 @@ const applyEffect = () => {
   if (!selectedEffect.value || !selectedMaterialKey.value) return;
 
   const imageSrc = `image:${selectedMaterialKey.value}`;
-  const template = generateEffectTemplate(selectedEffect.value, imageSrc, zoomPercent.value);
+  const template = generateEffectTemplate(selectedEffect.value, imageSrc, zoomPercent.value, panDistancePercent.value);
 
   emit("applyImageEffect", {
     image: {
@@ -132,10 +144,14 @@ const applyEffect = () => {
   lastAppliedEffect.value = selectedEffect.value;
   lastAppliedMaterialKey.value = selectedMaterialKey.value;
   lastAppliedZoom.value = zoomPercent.value;
+  lastAppliedPanDistance.value = panDistancePercent.value;
 };
 
-// Reset custom detection when effect selection changes
+// Set presets and reset custom detection when effect selection changes
 watch(selectedEffect, () => {
   lastAppliedEffect.value = null;
+  durationSec.value = effectDefaults.duration;
+  zoomPercent.value = effectDefaults.zoom;
+  panDistancePercent.value = effectDefaults.panDistance;
 });
 </script>
