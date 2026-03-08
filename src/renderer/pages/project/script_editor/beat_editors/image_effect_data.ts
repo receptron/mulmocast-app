@@ -27,23 +27,22 @@ const buildScript = (effectType: EffectType, zoom: number): string[] => {
   ];
 };
 
-const getAnimateParams = (
-  effectType: EffectType,
-  scale: number,
-): Record<string, [number | string, number | string]> => {
+const PAN_DISTANCE_PERCENT = 10;
+
+const getAnimateParams = (effectType: EffectType, scale: number): Record<string, (number | string)[]> => {
   switch (effectType) {
     case "zoomIn":
       return { scale: [1.0, scale] };
     case "zoomOut":
       return { scale: [scale, 1.0] };
     case "panLeft":
-      return { translateX: ["0%", "-20%"] };
+      return { scale: [scale, scale], translateX: [0, -PAN_DISTANCE_PERCENT, "%"] };
     case "panRight":
-      return { translateX: ["0%", "20%"] };
+      return { scale: [scale, scale], translateX: [0, PAN_DISTANCE_PERCENT, "%"] };
     case "panUp":
-      return { translateY: ["0%", "-20%"] };
+      return { scale: [scale, scale], translateY: [0, -PAN_DISTANCE_PERCENT, "%"] };
     case "panDown":
-      return { translateY: ["0%", "20%"] };
+      return { scale: [scale, scale], translateY: [0, PAN_DISTANCE_PERCENT, "%"] };
   }
 };
 
