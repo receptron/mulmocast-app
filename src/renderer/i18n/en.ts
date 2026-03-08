@@ -770,6 +770,8 @@ const lang = {
       effectLabel: "Image Effect",
       effectPlaceholder: "Select effect",
       sourceImage: "Source Image",
+      sourceImagePlaceholder: "Select from Materials",
+      noMaterials: "No materials found. Add materials in the Materials tab.",
       duration: "Duration (sec)",
       zoom: "Zoom (%)",
       customEdited: "Custom (manually edited)",

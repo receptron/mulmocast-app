@@ -769,6 +769,8 @@ const lang = {
       effectLabel: "画像エフェクト",
       effectPlaceholder: "エフェクトを選択",
       sourceImage: "ソース画像",
+      sourceImagePlaceholder: "Materialsから選択",
+      noMaterials: "Materialsがありません。Materialsタブで追加してください。",
       duration: "時間（秒）",
       zoom: "ズーム（%）",
       customEdited: "カスタム（手動編集済み）",
