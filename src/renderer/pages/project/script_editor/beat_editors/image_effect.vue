@@ -19,19 +19,21 @@
     <!-- Source image from materials -->
     <div class="mb-2">
       <Label class="mb-1 block text-sm">{{ t("beat.html_tailwind.sourceImage") }}</Label>
-      <Select v-model="selectedMaterialKey">
-        <SelectTrigger class="w-full">
-          <SelectValue :placeholder="t('beat.html_tailwind.sourceImagePlaceholder')" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem v-for="key in materialKeys" :key="key" :value="key">
-            {{ key }}
-          </SelectItem>
-        </SelectContent>
-      </Select>
+      <div class="flex items-center gap-2">
+        <Button variant="outline" size="sm" @click="openMaterialsDialog" :disabled="materialKeys.length === 0">
+          {{ selectedMaterialKey || t("beat.html_tailwind.sourceImagePlaceholder") }}
+        </Button>
+        <img v-if="selectedPreviewUrl" :src="selectedPreviewUrl" class="h-8 w-8 rounded object-cover" />
+      </div>
       <p v-if="materialKeys.length === 0" class="text-muted-foreground mt-1 text-xs">
         {{ t("beat.html_tailwind.noMaterials") }}
       </p>
+      <MaterialsImageDialog
+        ref="materialsDialogRef"
+        :projectId="projectId"
+        :materialKeys="materialKeys"
+        @select="handleMaterialSelect"
+      />
     </div>
 
     <!-- Parameters -->
@@ -67,9 +69,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onBeforeUnmount } from "vue";
 import { Label, Input, Button, Badge } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { bufferToUrl } from "@/lib/utils";
 import type { MulmoBeat, MulmoScript } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 import {
@@ -80,12 +83,15 @@ import {
   generateEffectTemplate,
   isTemplateMatch,
 } from "./image_effect_data";
+import MaterialsImageDialog from "./materials_image_dialog.vue";
+import type { MaterialsImageDialogExposed } from "./materials_image_dialog.vue";
 
 const { t } = useI18n();
 
 interface Props {
   beat: MulmoBeat;
   mulmoScript: MulmoScript;
+  projectId: string;
 }
 
 const props = defineProps<Props>();
@@ -98,6 +104,36 @@ const zoomPercent = ref<number>(effectDefaults.zoom);
 const panDistancePercent = ref<number>(effectDefaults.panDistance);
 
 const isPan = computed(() => isPanEffect(selectedEffect.value));
+
+const selectedPreviewUrl = ref<string | null>(null);
+const materialsDialogRef = ref<MaterialsImageDialogExposed | null>(null);
+const openMaterialsDialog = () => {
+  materialsDialogRef.value?.open();
+};
+const handleMaterialSelect = async (key: string) => {
+  selectedMaterialKey.value = key;
+  if (selectedPreviewUrl.value) {
+    URL.revokeObjectURL(selectedPreviewUrl.value);
+    selectedPreviewUrl.value = null;
+  }
+  try {
+    const buffer = (await window.electronAPI.mulmoHandler(
+      "mulmoReferenceImagesFile",
+      props.projectId,
+      key,
+    )) as Uint8Array<ArrayBuffer> | null;
+    if (buffer) {
+      selectedPreviewUrl.value = bufferToUrl(buffer);
+    }
+  } catch {
+    // preview is optional
+  }
+};
+onBeforeUnmount(() => {
+  if (selectedPreviewUrl.value) {
+    URL.revokeObjectURL(selectedPreviewUrl.value);
+  }
+});
 
 // Last applied values for custom detection
 const lastAppliedEffect = ref<EffectType | null>(null);
