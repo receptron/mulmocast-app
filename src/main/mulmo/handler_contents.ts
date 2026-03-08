@@ -11,6 +11,7 @@ import {
   listLocalizedAudioPaths,
   defaultBGMPath,
   resolveAssetPath,
+  getImageRefs,
   type MulmoStudioContext,
   type MulmoStudioMultiLingual,
   type MulmoBeat,
@@ -165,8 +166,9 @@ const beatImage = (context: MulmoStudioContext) => {
   return async (beat: MulmoBeat, index: number) => {
     try {
       const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle, beat);
+      const imageRefs = await getImageRefs(context);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res = (await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs: {} } as any)) as any;
+      const res = (await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs } as any)) as any;
       if (res.htmlImageFile && fileExstsSync(res.htmlImageFile)) {
         const buffer = fs.readFileSync(res.htmlImageFile);
         res.imageData = buffer.buffer;
