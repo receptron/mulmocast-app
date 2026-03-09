@@ -853,8 +853,8 @@ async function testAllEffectsDefaults(
 
 // i18n label text for input fields
 const INPUT_LABELS = {
-  en: { duration: "Duration", zoom: "Zoom", panDistance: "Pan Distance" },
-  ja: { duration: "時間", zoom: "ズーム", panDistance: "パン移動量" },
+  en: { duration: "Duration", zoom: "Zoom", panDistance: "Move Distance" },
+  ja: { duration: "時間", zoom: "ズーム", panDistance: "移動量" },
 };
 
 /** Test custom values: change zoom/duration/panDistance → Set → verify exact JSON values. */
