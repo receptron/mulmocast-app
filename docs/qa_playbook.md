@@ -500,6 +500,23 @@ QA テスト作成中に MCP Playwright で動作確認する場合:
 - 操作間に適切な delay を入れること（最低 500ms）
 - Settings モーダルが開いている状態で他の操作をすると予期しない動作になる
 
+### 条件付きコンポーネントの事前設定
+
+- `v-if` や `v-else-if` で表示条件があるコンポーネントをテストする場合、JSON で事前に条件を満たすデータを設定する必要がある
+- 例: `ImageEffect` コンポーネントは `beat.image.type === 'html_tailwind'` のときだけ表示される。新規プロジェクトのデフォルト beat には `image.type` が `html_tailwind` ではないため、JSON で `beats[0].image = { type: "html_tailwind" }` を事前にセットしないとパネルが表示されない
+
+### Monaco 読み書きは必ずクリップボード経由
+
+- `window.monaco.editor.getEditors()[0].getValue()` は Electron 環境で editors が空になるケースがある
+- 安定するのは `.view-lines` クリック → 全選択 → コピー → `electronAPI.readClipboardText()` のパターン
+- 書き込みも `electronAPI.writeClipboardText()` → 全選択 → ペースト
+
+### IPC 経由でのファイルアップロード
+
+- Materials へのファイルアップロードは UI の drag-and-drop をシミュレーションするより、IPC 直接呼び出しが安定する
+- `page.evaluate` 内で `electronAPI.mulmoHandler("mulmoReferenceImageUpload", projectId, key, uint8Array, ext)` を呼ぶ
+- 注意: `page.evaluate` に渡せるのは serializable なデータのみ。`Uint8Array` は `Array.from()` で配列化して渡し、evaluate 内で `new Uint8Array()` に戻す
+
 ---
 
 ## 更新履歴
@@ -508,3 +525,4 @@ QA テスト作成中に MCP Playwright で動作確認する場合:
 - 2026-02-21: 見出しテキスト不一致・Checkbox 隣接テキストの落とし穴を追加（Speed Option QA の知見から）
 - 2026-02-21: Tooltip ラッパーの Label-Input 分離・Zod スキーマデフォルト値の注意を追加（Speech Params QA の知見から）
 - 2026-02-23: 検証の厳密さ基準（Level 1-4）・テスト拡張時の再読ルールを追加（Speech Params QA の3回書き直しの教訓から）
+- 2026-03-09: 条件付きコンポーネントの事前設定・Monaco クリップボード経由必須・IPC ファイルアップロードの知見を追加（Image Effect QA から）

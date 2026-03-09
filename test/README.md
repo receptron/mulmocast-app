@@ -127,6 +127,27 @@ npx tsx test/manual_no_api_speech_params_qa.ts
 npx tsx test/manual_no_api_electron_upgrade_qa.ts 144
 ```
 
+6. `test/manual_no_api_image_effect_qa.ts`
+**Image Effect QA テスト（APIコスト: なし）**
+
+- html_tailwind アニメーション beat の Image Effect UI を検証する QA テストスイート（235項目）
+- CDP 経由で起動中の Electron アプリに接続
+- 4プロジェクト（横長/縦長キャンバス × 横長/縦長画像）を作成し、各プロジェクトで全6エフェクトをテスト
+- テストプロジェクトは `[QA] ImageEffect <サイズ> <画像> <タイムスタンプ>` というタイトルで作成されるため、手動で識別・削除が容易
+- テスト画像: `test/images/qa_landscape.jpg`（横長）、`test/images/qa_portrait.png`（縦長）
+- 6フェーズ構成:
+  - **Phase 1 – Setup**: Pro モード設定
+  - **Phase 2 – Create Project**: ダッシュボードからプロジェクト新規作成（×4）
+  - **Phase 3 – Upload & Setup**: 画像アップロード（IPC経由）、JSON でキャンバスサイズ・Materials 参照・beat タイプ設定
+  - **Phase 4 – Effects (defaults)**: 全6エフェクト（zoomIn/zoomOut/panLeft/panRight/panUp/panDown）をデフォルト値で適用 → JSON で `image.type`、`image.animation`、`image.html`（image 参照）、`image.script`（MulmoAnimation パラメータ）、`duration` を厳密検証
+  - **Phase 5 – Custom Values**: zoomIn（zoom=150%, duration=8s）と panLeft（zoom=150%, duration=8s, panDistance=20%）でカスタム値を設定 → JSON に正しく反映されるか検証
+  - **Phase 6 – Console Health**: コンソールエラー・警告チェック
+
+**使用方法:**
+```bash
+npx tsx test/manual_no_api_image_effect_qa.ts
+```
+
 ## 前提条件
 
 ### 1. 依存関係のインストール
