@@ -3,7 +3,7 @@
  *
  * Tests the Image Effect UI for html_tailwind animation beats.
  * Creates 4 projects (landscape/portrait canvas × landscape/portrait image)
- * and applies all 6 effects (zoomIn, zoomOut, panLeft, panRight, panUp, panDown)
+ * and applies all 6 effects (zoomIn, zoomOut, leftToRight, rightToLeft, topToBottom, bottomToTop)
  * to each, verifying the resulting JSON structure.
  *
  * Usage:
@@ -38,25 +38,25 @@ const CONFIG = {
 const timestamp = new Date().toISOString().replace(/T/, " ").replace(/\..+/, "");
 const runId = Date.now();
 
-const EFFECT_TYPES = ["zoomIn", "zoomOut", "panLeft", "panRight", "panUp", "panDown"] as const;
+const EFFECT_TYPES = ["zoomIn", "zoomOut", "leftToRight", "rightToLeft", "topToBottom", "bottomToTop"] as const;
 type EffectType = (typeof EFFECT_TYPES)[number];
 
 const EFFECT_DISPLAY_NAMES: Record<string, Record<EffectType, string>> = {
   en: {
     zoomIn: "Zoom In",
     zoomOut: "Zoom Out",
-    panLeft: "Pan Left",
-    panRight: "Pan Right",
-    panUp: "Pan Up",
-    panDown: "Pan Down",
+    leftToRight: "Left to Right",
+    rightToLeft: "Right to Left",
+    topToBottom: "Top to Bottom",
+    bottomToTop: "Bottom to Top",
   },
   ja: {
     zoomIn: "ズームイン",
     zoomOut: "ズームアウト",
-    panLeft: "パン（左）",
-    panRight: "パン（右）",
-    panUp: "パン（上）",
-    panDown: "パン（下）",
+    leftToRight: "左から右へ",
+    rightToLeft: "右から左へ",
+    topToBottom: "上から下へ",
+    bottomToTop: "下から上へ",
   },
 };
 
@@ -693,20 +693,7 @@ function verifyEffectParamsExact(
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === 1;
       return { ok: scaleOk, detail: `scale=${JSON.stringify(scale)}, expected [${expectedScale},1]` };
     }
-    case "panLeft": {
-      const translateX = params.translateX as (number | string)[] | undefined;
-      const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
-      const txOk =
-        Array.isArray(translateX) &&
-        translateX[0] === 0 &&
-        translateX[1] === -expectedPanDistance &&
-        translateX[2] === "%";
-      return {
-        ok: scaleOk && txOk,
-        detail: `scale=${JSON.stringify(scale)}, translateX=${JSON.stringify(translateX)}`,
-      };
-    }
-    case "panRight": {
+    case "leftToRight": {
       const translateX = params.translateX as (number | string)[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
       const txOk =
@@ -719,26 +706,39 @@ function verifyEffectParamsExact(
         detail: `scale=${JSON.stringify(scale)}, translateX=${JSON.stringify(translateX)}`,
       };
     }
-    case "panUp": {
-      const translateY = params.translateY as (number | string)[] | undefined;
+    case "rightToLeft": {
+      const translateX = params.translateX as (number | string)[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
-      const tyOk =
-        Array.isArray(translateY) &&
-        translateY[0] === 0 &&
-        translateY[1] === -expectedPanDistance &&
-        translateY[2] === "%";
+      const txOk =
+        Array.isArray(translateX) &&
+        translateX[0] === 0 &&
+        translateX[1] === -expectedPanDistance &&
+        translateX[2] === "%";
       return {
-        ok: scaleOk && tyOk,
-        detail: `scale=${JSON.stringify(scale)}, translateY=${JSON.stringify(translateY)}`,
+        ok: scaleOk && txOk,
+        detail: `scale=${JSON.stringify(scale)}, translateX=${JSON.stringify(translateX)}`,
       };
     }
-    case "panDown": {
+    case "topToBottom": {
       const translateY = params.translateY as (number | string)[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
       const tyOk =
         Array.isArray(translateY) &&
         translateY[0] === 0 &&
         translateY[1] === expectedPanDistance &&
+        translateY[2] === "%";
+      return {
+        ok: scaleOk && tyOk,
+        detail: `scale=${JSON.stringify(scale)}, translateY=${JSON.stringify(translateY)}`,
+      };
+    }
+    case "bottomToTop": {
+      const translateY = params.translateY as (number | string)[] | undefined;
+      const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
+      const tyOk =
+        Array.isArray(translateY) &&
+        translateY[0] === 0 &&
+        translateY[1] === -expectedPanDistance &&
         translateY[2] === "%";
       return {
         ok: scaleOk && tyOk,
@@ -900,9 +900,9 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
     }
   }
 
-  // Test 2: panLeft with custom zoom, duration, and panDistance
+  // Test 2: leftToRight with custom zoom, duration, and panDistance
   {
-    const effectType: EffectType = "panLeft";
+    const effectType: EffectType = "leftToRight";
     const testLabel = `${effectType} custom (${config.label})`;
     console.log(`\n    --- ${testLabel} ---`);
 
@@ -1007,7 +1007,7 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
       console.log("\n  Phase 4: Apply Effects (defaults) & Verify JSON");
       await testAllEffectsDefaults(page, config, lang);
 
-      // Phase 5: Test custom values (zoom/duration/panDistance) on zoomIn + panLeft
+      // Phase 5: Test custom values (zoom/duration/panDistance) on zoomIn + leftToRight
       console.log("\n  Phase 5: Custom Values & Verify JSON");
       await testCustomValues(page, config, lang);
     }

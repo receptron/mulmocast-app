@@ -1,6 +1,6 @@
-export type EffectType = "zoomIn" | "zoomOut" | "panLeft" | "panRight" | "panUp" | "panDown";
+export type EffectType = "zoomIn" | "zoomOut" | "leftToRight" | "rightToLeft" | "topToBottom" | "bottomToTop";
 
-export const EFFECT_TYPES: EffectType[] = ["zoomIn", "zoomOut", "panLeft", "panRight", "panUp", "panDown"];
+export const EFFECT_TYPES: EffectType[] = ["zoomIn", "zoomOut", "leftToRight", "rightToLeft", "topToBottom", "bottomToTop"];
 
 const DEFAULT_ZOOM = 120;
 const DEFAULT_DURATION = 5;
@@ -13,7 +13,7 @@ export const effectDefaults = {
 };
 
 export const isPanEffect = (effect: EffectType | null): boolean => {
-  return effect === "panLeft" || effect === "panRight" || effect === "panUp" || effect === "panDown";
+  return effect === "leftToRight" || effect === "rightToLeft" || effect === "topToBottom" || effect === "bottomToTop";
 };
 
 const buildHtml = (imageSrc: string): string[] => [
@@ -43,14 +43,14 @@ const getAnimateParams = (
       return { scale: [1.0, scale] };
     case "zoomOut":
       return { scale: [scale, 1.0] };
-    case "panLeft":
-      return { scale: [scale, scale], translateX: [0, -panDistance, "%"] };
-    case "panRight":
+    case "leftToRight":
       return { scale: [scale, scale], translateX: [0, panDistance, "%"] };
-    case "panUp":
-      return { scale: [scale, scale], translateY: [0, -panDistance, "%"] };
-    case "panDown":
+    case "rightToLeft":
+      return { scale: [scale, scale], translateX: [0, -panDistance, "%"] };
+    case "topToBottom":
       return { scale: [scale, scale], translateY: [0, panDistance, "%"] };
+    case "bottomToTop":
+      return { scale: [scale, scale], translateY: [0, -panDistance, "%"] };
   }
 };
 
