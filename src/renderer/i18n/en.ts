@@ -782,10 +782,10 @@ const lang = {
       effect: {
         zoomIn: "Zoom In",
         zoomOut: "Zoom Out",
-        leftToRight: "Left to Right",
-        rightToLeft: "Right to Left",
-        topToBottom: "Top to Bottom",
-        bottomToTop: "Bottom to Top",
+        moveToLeft: "Move to Left",
+        moveToRight: "Move to Right",
+        moveToTop: "Move to Top",
+        moveToBottom: "Move to Bottom",
       },
     },
     beat: {

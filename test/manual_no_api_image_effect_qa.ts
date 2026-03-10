@@ -3,7 +3,7 @@
  *
  * Tests the Image Effect UI for html_tailwind animation beats.
  * Creates 4 projects (landscape/portrait canvas × landscape/portrait image)
- * and applies all 6 effects (zoomIn, zoomOut, leftToRight, rightToLeft, topToBottom, bottomToTop)
+ * and applies all 6 effects (zoomIn, zoomOut, moveToLeft, moveToRight, moveToTop, moveToBottom)
  * to each, verifying the resulting JSON structure.
  *
  * Usage:
@@ -38,25 +38,25 @@ const CONFIG = {
 const timestamp = new Date().toISOString().replace(/T/, " ").replace(/\..+/, "");
 const runId = Date.now();
 
-const EFFECT_TYPES = ["zoomIn", "zoomOut", "leftToRight", "rightToLeft", "topToBottom", "bottomToTop"] as const;
+const EFFECT_TYPES = ["zoomIn", "zoomOut", "moveToLeft", "moveToRight", "moveToTop", "moveToBottom"] as const;
 type EffectType = (typeof EFFECT_TYPES)[number];
 
 const EFFECT_DISPLAY_NAMES: Record<string, Record<EffectType, string>> = {
   en: {
     zoomIn: "Zoom In",
     zoomOut: "Zoom Out",
-    leftToRight: "Left to Right",
-    rightToLeft: "Right to Left",
-    topToBottom: "Top to Bottom",
-    bottomToTop: "Bottom to Top",
+    moveToLeft: "Move to Left",
+    moveToRight: "Move to Right",
+    moveToTop: "Move to Top",
+    moveToBottom: "Move to Bottom",
   },
   ja: {
     zoomIn: "ズームイン",
     zoomOut: "ズームアウト",
-    leftToRight: "左から右へ",
-    rightToLeft: "右から左へ",
-    topToBottom: "上から下へ",
-    bottomToTop: "下から上へ",
+    moveToLeft: "左へ移動",
+    moveToRight: "右へ移動",
+    moveToTop: "上へ移動",
+    moveToBottom: "下へ移動",
   },
 };
 
@@ -693,7 +693,7 @@ function verifyEffectParamsExact(
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === 1;
       return { ok: scaleOk, detail: `scale=${JSON.stringify(scale)}, expected [${expectedScale},1]` };
     }
-    case "leftToRight": {
+    case "moveToLeft": {
       const translateX = params.translateX as (number | string)[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
       const txOk =
@@ -706,7 +706,7 @@ function verifyEffectParamsExact(
         detail: `scale=${JSON.stringify(scale)}, translateX=${JSON.stringify(translateX)}`,
       };
     }
-    case "rightToLeft": {
+    case "moveToRight": {
       const translateX = params.translateX as (number | string)[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
       const txOk =
@@ -719,7 +719,7 @@ function verifyEffectParamsExact(
         detail: `scale=${JSON.stringify(scale)}, translateX=${JSON.stringify(translateX)}`,
       };
     }
-    case "topToBottom": {
+    case "moveToTop": {
       const translateY = params.translateY as (number | string)[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
       const tyOk =
@@ -732,7 +732,7 @@ function verifyEffectParamsExact(
         detail: `scale=${JSON.stringify(scale)}, translateY=${JSON.stringify(translateY)}`,
       };
     }
-    case "bottomToTop": {
+    case "moveToBottom": {
       const translateY = params.translateY as (number | string)[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
       const tyOk =
@@ -900,9 +900,9 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
     }
   }
 
-  // Test 2: leftToRight with custom zoom, duration, and panDistance
+  // Test 2: moveToLeft with custom zoom, duration, and panDistance
   {
-    const effectType: EffectType = "leftToRight";
+    const effectType: EffectType = "moveToLeft";
     const testLabel = `${effectType} custom (${config.label})`;
     console.log(`\n    --- ${testLabel} ---`);
 
@@ -1007,7 +1007,7 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
       console.log("\n  Phase 4: Apply Effects (defaults) & Verify JSON");
       await testAllEffectsDefaults(page, config, lang);
 
-      // Phase 5: Test custom values (zoom/duration/panDistance) on zoomIn + leftToRight
+      // Phase 5: Test custom values (zoom/duration/panDistance) on zoomIn + moveToLeft
       console.log("\n  Phase 5: Custom Values & Verify JSON");
       await testCustomValues(page, config, lang);
     }

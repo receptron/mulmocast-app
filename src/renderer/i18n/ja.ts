@@ -781,10 +781,10 @@ const lang = {
       effect: {
         zoomIn: "ズームイン",
         zoomOut: "ズームアウト",
-        leftToRight: "左から右へ",
-        rightToLeft: "右から左へ",
-        topToBottom: "上から下へ",
-        bottomToTop: "下から上へ",
+        moveToLeft: "左へ移動",
+        moveToRight: "右へ移動",
+        moveToTop: "上へ移動",
+        moveToBottom: "下へ移動",
       },
     },
     beat: {
