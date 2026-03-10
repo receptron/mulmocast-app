@@ -60,9 +60,6 @@ const EFFECT_DISPLAY_NAMES: Record<string, Record<EffectType, string>> = {
   },
 };
 
-// Container is 2x viewport (inset:-50%), so translate values are halved
-const CONTAINER_SCALE = 2;
-
 /** Canvas size configurations for the 4 test projects. */
 const CANVAS_CONFIGS = [
   { label: "Landscape canvas + Landscape image", width: 1792, height: 1024, imageKey: "landscape" },
@@ -662,16 +659,19 @@ const DEFAULT_ZOOM = 120;
 const DEFAULT_DURATION = 5;
 const DEFAULT_PAN_DISTANCE = 10;
 
-/** Parse the animate params JSON from the script line. */
-function parseAnimateParams(scriptStr: string): Record<string, unknown> | null {
-  // Script format: animation.animate('#photo_wrap', {...params...}, {...options...});
-  const match = scriptStr.match(/animate\([^,]+,\s*(\{[^}]+\})/);
-  if (!match) return null;
-  try {
-    return JSON.parse(match[1]);
-  } catch {
-    return null;
+/** Parse all animate() params from the script lines. Returns array of { selector, params } */
+function parseAllAnimateParams(scriptStr: string): Array<{ selector: string; params: Record<string, unknown> }> {
+  const results: Array<{ selector: string; params: Record<string, unknown> }> = [];
+  const regex = /animate\('([^']+)',\s*(\{[^}]+\})/g;
+  let match;
+  while ((match = regex.exec(scriptStr)) !== null) {
+    try {
+      results.push({ selector: match[1], params: JSON.parse(match[2]) });
+    } catch {
+      // skip unparseable
+    }
   }
+  return results;
 }
 
 /** Verify effect-specific parameters with exact value checks. */
@@ -681,69 +681,70 @@ function verifyEffectParamsExact(
   expectedZoom: number,
   expectedPanDistance: number,
 ): { ok: boolean; detail: string } {
-  const params = parseAnimateParams(scriptStr);
-  if (!params) return { ok: false, detail: "Could not parse animate params from script" };
+  const allParams = parseAllAnimateParams(scriptStr);
+  if (allParams.length === 0) return { ok: false, detail: "Could not parse animate params from script" };
 
   const expectedScale = expectedZoom / 100;
-  const scale = params.scale as number[] | undefined;
 
   switch (effectType) {
     case "zoomIn": {
+      const wrapParams = allParams.find((p) => p.selector === "#photo_wrap")?.params;
+      const scale = wrapParams?.scale as number[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === 1 && scale[1] === expectedScale;
       return { ok: scaleOk, detail: `scale=${JSON.stringify(scale)}, expected [1,${expectedScale}]` };
     }
     case "zoomOut": {
+      const wrapParams = allParams.find((p) => p.selector === "#photo_wrap")?.params;
+      const scale = wrapParams?.scale as number[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === 1;
       return { ok: scaleOk, detail: `scale=${JSON.stringify(scale)}, expected [${expectedScale},1]` };
     }
     case "moveToLeft": {
-      const translateX = params.translateX as (number | string)[] | undefined;
+      const wrapParams = allParams.find((p) => p.selector === "#photo_wrap")?.params;
+      const imgParams = allParams.find((p) => p.selector === "#photo_img")?.params;
+      const scale = wrapParams?.scale as number[] | undefined;
+      const left = imgParams?.left as (number | string)[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
-      const adjustedDistance = expectedPanDistance / CONTAINER_SCALE;
-      const txOk =
-        Array.isArray(translateX) && translateX[0] === 0 && translateX[1] === adjustedDistance && translateX[2] === "%";
+      const leftOk = Array.isArray(left) && left[0] === 50 && left[1] === 50 + expectedPanDistance && left[2] === "%";
       return {
-        ok: scaleOk && txOk,
-        detail: `scale=${JSON.stringify(scale)}, translateX=${JSON.stringify(translateX)}, expected adjustedDistance=${adjustedDistance}`,
+        ok: scaleOk && leftOk,
+        detail: `scale=${JSON.stringify(scale)}, left=${JSON.stringify(left)}`,
       };
     }
     case "moveToRight": {
-      const translateX = params.translateX as (number | string)[] | undefined;
+      const wrapParams = allParams.find((p) => p.selector === "#photo_wrap")?.params;
+      const imgParams = allParams.find((p) => p.selector === "#photo_img")?.params;
+      const scale = wrapParams?.scale as number[] | undefined;
+      const left = imgParams?.left as (number | string)[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
-      const adjustedDistance = expectedPanDistance / CONTAINER_SCALE;
-      const txOk =
-        Array.isArray(translateX) &&
-        translateX[0] === 0 &&
-        translateX[1] === -adjustedDistance &&
-        translateX[2] === "%";
+      const leftOk = Array.isArray(left) && left[0] === 50 && left[1] === 50 - expectedPanDistance && left[2] === "%";
       return {
-        ok: scaleOk && txOk,
-        detail: `scale=${JSON.stringify(scale)}, translateX=${JSON.stringify(translateX)}, expected adjustedDistance=${adjustedDistance}`,
+        ok: scaleOk && leftOk,
+        detail: `scale=${JSON.stringify(scale)}, left=${JSON.stringify(left)}`,
       };
     }
     case "moveToTop": {
-      const translateY = params.translateY as (number | string)[] | undefined;
+      const wrapParams = allParams.find((p) => p.selector === "#photo_wrap")?.params;
+      const imgParams = allParams.find((p) => p.selector === "#photo_img")?.params;
+      const scale = wrapParams?.scale as number[] | undefined;
+      const top = imgParams?.top as (number | string)[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
-      const adjustedDistance = expectedPanDistance / CONTAINER_SCALE;
-      const tyOk =
-        Array.isArray(translateY) && translateY[0] === 0 && translateY[1] === adjustedDistance && translateY[2] === "%";
+      const topOk = Array.isArray(top) && top[0] === 50 && top[1] === 50 + expectedPanDistance && top[2] === "%";
       return {
-        ok: scaleOk && tyOk,
-        detail: `scale=${JSON.stringify(scale)}, translateY=${JSON.stringify(translateY)}, expected adjustedDistance=${adjustedDistance}`,
+        ok: scaleOk && topOk,
+        detail: `scale=${JSON.stringify(scale)}, top=${JSON.stringify(top)}`,
       };
     }
     case "moveToBottom": {
-      const translateY = params.translateY as (number | string)[] | undefined;
+      const wrapParams = allParams.find((p) => p.selector === "#photo_wrap")?.params;
+      const imgParams = allParams.find((p) => p.selector === "#photo_img")?.params;
+      const scale = wrapParams?.scale as number[] | undefined;
+      const top = imgParams?.top as (number | string)[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
-      const adjustedDistance = expectedPanDistance / CONTAINER_SCALE;
-      const tyOk =
-        Array.isArray(translateY) &&
-        translateY[0] === 0 &&
-        translateY[1] === -adjustedDistance &&
-        translateY[2] === "%";
+      const topOk = Array.isArray(top) && top[0] === 50 && top[1] === 50 - expectedPanDistance && top[2] === "%";
       return {
-        ok: scaleOk && tyOk,
-        detail: `scale=${JSON.stringify(scale)}, translateY=${JSON.stringify(translateY)}, expected adjustedDistance=${adjustedDistance}`,
+        ok: scaleOk && topOk,
+        detail: `scale=${JSON.stringify(scale)}, top=${JSON.stringify(top)}`,
       };
     }
   }

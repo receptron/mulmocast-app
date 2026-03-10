@@ -23,46 +23,72 @@ export const isPanEffect = (effect: EffectType | null): boolean => {
   return effect === "moveToLeft" || effect === "moveToRight" || effect === "moveToTop" || effect === "moveToBottom";
 };
 
-const buildHtml = (imageSrc: string, isMove: boolean): string[] => [
-  "<div class='h-full w-full overflow-hidden relative bg-black'>",
-  `  <div id='photo_wrap' style='position:absolute;inset:${isMove ? "-50%" : "0"};overflow:hidden'>`,
-  `    <img src='${imageSrc}' style='width:100%;height:100%;object-fit:cover' />`,
-  "  </div>",
-  "</div>",
-];
-
-const buildScript = (effectType: EffectType, zoom: number, panDistance: number): string[] => {
-  const scale = zoom / 100;
-  const animateParams = getAnimateParams(effectType, scale, panDistance);
+const buildHtml = (imageSrc: string, effectType: EffectType): string[] => {
+  if (isPanEffect(effectType)) {
+    // Move effects: img covers viewport at natural aspect ratio.
+    // min-width/min-height ensure the image always covers the viewport.
+    // Panning animates left/top on the img to reveal hidden parts.
+    return [
+      "<div class='h-full w-full overflow-hidden relative bg-black'>",
+      "  <div id='photo_wrap' style='position:absolute;inset:0'>",
+      `    <img id='photo_img' src='${imageSrc}' style='position:absolute;min-width:100%;min-height:100%;width:auto;height:auto;top:50%;left:50%;transform:translate(-50%,-50%)' />`,
+      "  </div>",
+      "</div>",
+    ];
+  }
   return [
-    "const animation = new MulmoAnimation();",
-    `animation.animate('#photo_wrap', ${JSON.stringify(animateParams)}, { start: 0, end: 'auto', easing: 'linear' });`,
+    "<div class='h-full w-full overflow-hidden relative bg-black'>",
+    "  <div id='photo_wrap' style='position:absolute;inset:0;overflow:hidden'>",
+    `    <img src='${imageSrc}' style='width:100%;height:100%;object-fit:cover' />`,
+    "  </div>",
+    "</div>",
   ];
 };
 
-// Container is 2x viewport (inset:-50%), so translate % is relative to 2x width.
-// Divide panDistance by 2 to keep the visual movement matching the user's distance setting.
-const CONTAINER_SCALE = 2;
+const buildScript = (effectType: EffectType, zoom: number, panDistance: number): string[] => {
+  const scale = zoom / 100;
 
-const getAnimateParams = (
-  effectType: EffectType,
-  scale: number,
-  panDistance: number,
-): Record<string, (number | string)[]> => {
-  const adjustedDistance = panDistance / CONTAINER_SCALE;
+  if (isPanEffect(effectType)) {
+    const scaleParams = JSON.stringify({ scale: [scale, scale] });
+    const moveParams = JSON.stringify(getMoveParams(effectType, panDistance));
+    return [
+      "const animation = new MulmoAnimation();",
+      `animation.animate('#photo_wrap', ${scaleParams}, { start: 0, end: 'auto', easing: 'linear' });`,
+      `animation.animate('#photo_img', ${moveParams}, { start: 0, end: 'auto', easing: 'linear' });`,
+    ];
+  }
+
+  const animateParams = JSON.stringify(getZoomParams(effectType, scale));
+  return [
+    "const animation = new MulmoAnimation();",
+    `animation.animate('#photo_wrap', ${animateParams}, { start: 0, end: 'auto', easing: 'linear' });`,
+  ];
+};
+
+// Move effects: animate left/top on img from center (50%) toward the direction
+const getMoveParams = (effectType: EffectType, panDistance: number): Record<string, (number | string)[]> => {
+  switch (effectType) {
+    case "moveToLeft":
+      return { left: [50, 50 + panDistance, "%"] };
+    case "moveToRight":
+      return { left: [50, 50 - panDistance, "%"] };
+    case "moveToTop":
+      return { top: [50, 50 + panDistance, "%"] };
+    case "moveToBottom":
+      return { top: [50, 50 - panDistance, "%"] };
+    default:
+      return {};
+  }
+};
+
+const getZoomParams = (effectType: EffectType, scale: number): Record<string, (number | string)[]> => {
   switch (effectType) {
     case "zoomIn":
       return { scale: [1.0, scale] };
     case "zoomOut":
       return { scale: [scale, 1.0] };
-    case "moveToLeft":
-      return { scale: [scale, scale], translateX: [0, adjustedDistance, "%"] };
-    case "moveToRight":
-      return { scale: [scale, scale], translateX: [0, -adjustedDistance, "%"] };
-    case "moveToTop":
-      return { scale: [scale, scale], translateY: [0, adjustedDistance, "%"] };
-    case "moveToBottom":
-      return { scale: [scale, scale], translateY: [0, -adjustedDistance, "%"] };
+    default:
+      return {};
   }
 };
 
@@ -73,7 +99,7 @@ export const generateEffectTemplate = (
   panDistance: number = effectDefaults.panDistance,
 ): { html: string[]; script: string[] } => {
   return {
-    html: buildHtml(imageSrc, isPanEffect(effectType)),
+    html: buildHtml(imageSrc, effectType),
     script: buildScript(effectType, zoom, panDistance),
   };
 };
