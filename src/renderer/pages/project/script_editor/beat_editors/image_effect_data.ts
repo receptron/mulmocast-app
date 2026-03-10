@@ -23,9 +23,9 @@ export const isPanEffect = (effect: EffectType | null): boolean => {
   return effect === "moveToLeft" || effect === "moveToRight" || effect === "moveToTop" || effect === "moveToBottom";
 };
 
-const buildHtml = (imageSrc: string): string[] => [
+const buildHtml = (imageSrc: string, isMove: boolean): string[] => [
   "<div class='h-full w-full overflow-hidden relative bg-black'>",
-  "  <div id='photo_wrap' style='position:absolute;inset:0;overflow:hidden'>",
+  `  <div id='photo_wrap' style='position:absolute;inset:${isMove ? "-50%" : "0"};overflow:hidden'>`,
   `    <img src='${imageSrc}' style='width:100%;height:100%;object-fit:cover' />`,
   "  </div>",
   "</div>",
@@ -40,24 +40,29 @@ const buildScript = (effectType: EffectType, zoom: number, panDistance: number):
   ];
 };
 
+// Container is 2x viewport (inset:-50%), so translate % is relative to 2x width.
+// Divide panDistance by 2 to keep the visual movement matching the user's distance setting.
+const CONTAINER_SCALE = 2;
+
 const getAnimateParams = (
   effectType: EffectType,
   scale: number,
   panDistance: number,
 ): Record<string, (number | string)[]> => {
+  const adjustedDistance = panDistance / CONTAINER_SCALE;
   switch (effectType) {
     case "zoomIn":
       return { scale: [1.0, scale] };
     case "zoomOut":
       return { scale: [scale, 1.0] };
     case "moveToLeft":
-      return { scale: [scale, scale], translateX: [0, panDistance, "%"] };
+      return { scale: [scale, scale], translateX: [0, adjustedDistance, "%"] };
     case "moveToRight":
-      return { scale: [scale, scale], translateX: [0, -panDistance, "%"] };
+      return { scale: [scale, scale], translateX: [0, -adjustedDistance, "%"] };
     case "moveToTop":
-      return { scale: [scale, scale], translateY: [0, panDistance, "%"] };
+      return { scale: [scale, scale], translateY: [0, adjustedDistance, "%"] };
     case "moveToBottom":
-      return { scale: [scale, scale], translateY: [0, -panDistance, "%"] };
+      return { scale: [scale, scale], translateY: [0, -adjustedDistance, "%"] };
   }
 };
 
@@ -68,7 +73,7 @@ export const generateEffectTemplate = (
   panDistance: number = effectDefaults.panDistance,
 ): { html: string[]; script: string[] } => {
   return {
-    html: buildHtml(imageSrc),
+    html: buildHtml(imageSrc, isPanEffect(effectType)),
     script: buildScript(effectType, zoom, panDistance),
   };
 };

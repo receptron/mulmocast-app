@@ -60,6 +60,9 @@ const EFFECT_DISPLAY_NAMES: Record<string, Record<EffectType, string>> = {
   },
 };
 
+// Container is 2x viewport (inset:-50%), so translate values are halved
+const CONTAINER_SCALE = 2;
+
 /** Canvas size configurations for the 4 test projects. */
 const CANVAS_CONFIGS = [
   { label: "Landscape canvas + Landscape image", width: 1792, height: 1024, imageKey: "landscape" },
@@ -696,53 +699,51 @@ function verifyEffectParamsExact(
     case "moveToLeft": {
       const translateX = params.translateX as (number | string)[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
+      const adjustedDistance = expectedPanDistance / CONTAINER_SCALE;
       const txOk =
-        Array.isArray(translateX) &&
-        translateX[0] === 0 &&
-        translateX[1] === expectedPanDistance &&
-        translateX[2] === "%";
+        Array.isArray(translateX) && translateX[0] === 0 && translateX[1] === adjustedDistance && translateX[2] === "%";
       return {
         ok: scaleOk && txOk,
-        detail: `scale=${JSON.stringify(scale)}, translateX=${JSON.stringify(translateX)}`,
+        detail: `scale=${JSON.stringify(scale)}, translateX=${JSON.stringify(translateX)}, expected adjustedDistance=${adjustedDistance}`,
       };
     }
     case "moveToRight": {
       const translateX = params.translateX as (number | string)[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
+      const adjustedDistance = expectedPanDistance / CONTAINER_SCALE;
       const txOk =
         Array.isArray(translateX) &&
         translateX[0] === 0 &&
-        translateX[1] === -expectedPanDistance &&
+        translateX[1] === -adjustedDistance &&
         translateX[2] === "%";
       return {
         ok: scaleOk && txOk,
-        detail: `scale=${JSON.stringify(scale)}, translateX=${JSON.stringify(translateX)}`,
+        detail: `scale=${JSON.stringify(scale)}, translateX=${JSON.stringify(translateX)}, expected adjustedDistance=${adjustedDistance}`,
       };
     }
     case "moveToTop": {
       const translateY = params.translateY as (number | string)[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
+      const adjustedDistance = expectedPanDistance / CONTAINER_SCALE;
       const tyOk =
-        Array.isArray(translateY) &&
-        translateY[0] === 0 &&
-        translateY[1] === expectedPanDistance &&
-        translateY[2] === "%";
+        Array.isArray(translateY) && translateY[0] === 0 && translateY[1] === adjustedDistance && translateY[2] === "%";
       return {
         ok: scaleOk && tyOk,
-        detail: `scale=${JSON.stringify(scale)}, translateY=${JSON.stringify(translateY)}`,
+        detail: `scale=${JSON.stringify(scale)}, translateY=${JSON.stringify(translateY)}, expected adjustedDistance=${adjustedDistance}`,
       };
     }
     case "moveToBottom": {
       const translateY = params.translateY as (number | string)[] | undefined;
       const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
+      const adjustedDistance = expectedPanDistance / CONTAINER_SCALE;
       const tyOk =
         Array.isArray(translateY) &&
         translateY[0] === 0 &&
-        translateY[1] === -expectedPanDistance &&
+        translateY[1] === -adjustedDistance &&
         translateY[2] === "%";
       return {
         ok: scaleOk && tyOk,
-        detail: `scale=${JSON.stringify(scale)}, translateY=${JSON.stringify(translateY)}`,
+        detail: `scale=${JSON.stringify(scale)}, translateY=${JSON.stringify(translateY)}, expected adjustedDistance=${adjustedDistance}`,
       };
     }
   }
