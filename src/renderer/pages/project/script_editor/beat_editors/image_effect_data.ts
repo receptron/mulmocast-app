@@ -3,8 +3,8 @@ export type EffectType = "zoomIn" | "zoomOut" | "moveToLeft" | "moveToRight" | "
 export const EFFECT_TYPES: EffectType[] = [
   "zoomIn",
   "zoomOut",
-  "moveToLeft",
   "moveToRight",
+  "moveToLeft",
   "moveToTop",
   "moveToBottom",
 ];
