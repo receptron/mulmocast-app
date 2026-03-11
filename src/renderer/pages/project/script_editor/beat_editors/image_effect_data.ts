@@ -80,7 +80,9 @@ const buildZoomScript = (effectType: EffectType, scale: number): string => {
 
 const buildScript = (effectType: EffectType, zoom: number, panDistance: number): string[] => {
   const scale = zoom / 100;
-  return isPanEffect(effectType) ? [buildPanScript(effectType, scale, panDistance)] : [buildZoomScript(effectType, scale)];
+  return isPanEffect(effectType)
+    ? [buildPanScript(effectType, scale, panDistance)]
+    : [buildZoomScript(effectType, scale)];
 };
 
 export const generateEffectTemplate = (

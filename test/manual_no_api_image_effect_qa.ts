@@ -698,8 +698,12 @@ function verifyEffectParamsExact(
       const requestedDistance = extractConstNumber(scriptStr, "requestedDistance");
       const scale = extractConstNumber(scriptStr, "zoom");
       const hasRender = scriptStr.includes("function render(frame,totalFrames)");
-      const ok = hasRender && axis && direction === 1 && requestedDistance === expectedPanDistance && scale === expectedScale;
-      return { ok, detail: `render=${hasRender}, axis=x, direction=${direction}, distance=${requestedDistance}, zoom=${scale}` };
+      const ok =
+        hasRender && axis && direction === 1 && requestedDistance === expectedPanDistance && scale === expectedScale;
+      return {
+        ok,
+        detail: `render=${hasRender}, axis=x, direction=${direction}, distance=${requestedDistance}, zoom=${scale}`,
+      };
     }
     case "moveToRight": {
       const axis = scriptStr.includes("const axis='x'");
@@ -707,8 +711,12 @@ function verifyEffectParamsExact(
       const requestedDistance = extractConstNumber(scriptStr, "requestedDistance");
       const scale = extractConstNumber(scriptStr, "zoom");
       const hasRender = scriptStr.includes("function render(frame,totalFrames)");
-      const ok = hasRender && axis && direction === -1 && requestedDistance === expectedPanDistance && scale === expectedScale;
-      return { ok, detail: `render=${hasRender}, axis=x, direction=${direction}, distance=${requestedDistance}, zoom=${scale}` };
+      const ok =
+        hasRender && axis && direction === -1 && requestedDistance === expectedPanDistance && scale === expectedScale;
+      return {
+        ok,
+        detail: `render=${hasRender}, axis=x, direction=${direction}, distance=${requestedDistance}, zoom=${scale}`,
+      };
     }
     case "moveToTop": {
       const axis = scriptStr.includes("const axis='y'");
@@ -716,8 +724,12 @@ function verifyEffectParamsExact(
       const requestedDistance = extractConstNumber(scriptStr, "requestedDistance");
       const scale = extractConstNumber(scriptStr, "zoom");
       const hasRender = scriptStr.includes("function render(frame,totalFrames)");
-      const ok = hasRender && axis && direction === 1 && requestedDistance === expectedPanDistance && scale === expectedScale;
-      return { ok, detail: `render=${hasRender}, axis=y, direction=${direction}, distance=${requestedDistance}, zoom=${scale}` };
+      const ok =
+        hasRender && axis && direction === 1 && requestedDistance === expectedPanDistance && scale === expectedScale;
+      return {
+        ok,
+        detail: `render=${hasRender}, axis=y, direction=${direction}, distance=${requestedDistance}, zoom=${scale}`,
+      };
     }
     case "moveToBottom": {
       const axis = scriptStr.includes("const axis='y'");
@@ -725,8 +737,12 @@ function verifyEffectParamsExact(
       const requestedDistance = extractConstNumber(scriptStr, "requestedDistance");
       const scale = extractConstNumber(scriptStr, "zoom");
       const hasRender = scriptStr.includes("function render(frame,totalFrames)");
-      const ok = hasRender && axis && direction === -1 && requestedDistance === expectedPanDistance && scale === expectedScale;
-      return { ok, detail: `render=${hasRender}, axis=y, direction=${direction}, distance=${requestedDistance}, zoom=${scale}` };
+      const ok =
+        hasRender && axis && direction === -1 && requestedDistance === expectedPanDistance && scale === expectedScale;
+      return {
+        ok,
+        detail: `render=${hasRender}, axis=y, direction=${direction}, distance=${requestedDistance}, zoom=${scale}`,
+      };
     }
   }
 }
@@ -932,10 +948,8 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
   console.log(`  Run: ${runId} | ${timestamp}`);
   console.log("=".repeat(60));
 
-  let browser: Browser | null = null;
-
   try {
-    browser = await connectCDP();
+    const browser = await connectCDP();
     const page = findAppPage(browser.contexts());
     const monitor = createConsoleMonitor(page);
     monitor.start();

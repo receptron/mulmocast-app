@@ -151,7 +151,9 @@ const hasMaterials = computed(() => materialKeys.value.length > 0);
 const hasSelectedEffect = computed(() => selectedEffect.value !== null);
 const hasSelectedMaterialKey = computed(() => selectedMaterialKey.value !== null);
 const canApplyEffect = computed(() => hasSelectedEffect.value && hasSelectedMaterialKey.value);
-const selectedMaterialLabel = computed(() => selectedMaterialKey.value ?? t("beat.html_tailwind.sourceImagePlaceholder"));
+const selectedMaterialLabel = computed(
+  () => selectedMaterialKey.value ?? t("beat.html_tailwind.sourceImagePlaceholder"),
+);
 
 const getApplySelection = (): { effectType: EffectType; materialKey: string } | null => {
   if (!selectedEffect.value || !selectedMaterialKey.value) return null;
