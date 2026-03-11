@@ -505,6 +505,12 @@ QA テスト作成中に MCP Playwright で動作確認する場合:
 - `v-if` や `v-else-if` で表示条件があるコンポーネントをテストする場合、JSON で事前に条件を満たすデータを設定する必要がある
 - 例: `ImageEffect` コンポーネントは `beat.image.type === 'html_tailwind'` のときだけ表示される。新規プロジェクトのデフォルト beat には `image.type` が `html_tailwind` ではないため、JSON で `beats[0].image = { type: "html_tailwind" }` を事前にセットしないとパネルが表示されない
 
+### html_tailwind の script 検証方針
+
+- `image.script` は実装変更で `MulmoAnimation.animate(...)` 形式から `function render(frame,totalFrames)` 形式に変わることがある
+- 検証は「実装方式の固定」ではなく、`render` の存在と effect パラメータ定数（例: `zoomFrom` / `zoomTo` / `axis` / `direction` / `requestedDistance`）を確認する
+- `move` 系は黒縁防止のためクランプが入る場合があるので、最終座標の完全一致より「設定値が script に埋め込まれているか」を優先して検証する
+
 ### Monaco 読み書きは必ずクリップボード経由
 
 - `window.monaco.editor.getEditors()[0].getValue()` は Electron 環境で editors が空になるケースがある
@@ -526,3 +532,4 @@ QA テスト作成中に MCP Playwright で動作確認する場合:
 - 2026-02-21: Tooltip ラッパーの Label-Input 分離・Zod スキーマデフォルト値の注意を追加（Speech Params QA の知見から）
 - 2026-02-23: 検証の厳密さ基準（Level 1-4）・テスト拡張時の再読ルールを追加（Speech Params QA の3回書き直しの教訓から）
 - 2026-03-09: 条件付きコンポーネントの事前設定・Monaco クリップボード経由必須・IPC ファイルアップロードの知見を追加（Image Effect QA から）
+- 2026-03-12: html_tailwind script 検証方針を更新（MulmoAnimation 固定検証を避け、render + 定数検証へ）

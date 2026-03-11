@@ -139,7 +139,7 @@ npx tsx test/manual_no_api_electron_upgrade_qa.ts 144
   - **Phase 1 – Setup**: Pro モード設定
   - **Phase 2 – Create Project**: ダッシュボードからプロジェクト新規作成（×4）
   - **Phase 3 – Upload & Setup**: 画像アップロード（IPC経由）、JSON でキャンバスサイズ・Materials 参照・beat タイプ設定
-  - **Phase 4 – Effects (defaults)**: 全6エフェクト（zoomIn/zoomOut/panLeft/panRight/panUp/panDown）をデフォルト値で適用 → JSON で `image.type`、`image.animation`、`image.html`（image 参照）、`image.script`（MulmoAnimation パラメータ）、`duration` を厳密検証
+  - **Phase 4 – Effects (defaults)**: 全6エフェクト（zoomIn/zoomOut/panLeft/panRight/panUp/panDown）をデフォルト値で適用 → JSON で `image.type`、`image.animation`、`image.html`（image 参照）、`image.script`（`render(frame,totalFrames)` の定義と effect パラメータ定数）、`duration` を厳密検証
   - **Phase 5 – Custom Values**: zoomIn（zoom=150%, duration=8s）と panLeft（zoom=150%, duration=8s, panDistance=20%）でカスタム値を設定 → JSON に正しく反映されるか検証
   - **Phase 6 – Console Health**: コンソールエラー・警告チェック
 
