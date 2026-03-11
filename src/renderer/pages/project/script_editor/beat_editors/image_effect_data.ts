@@ -25,19 +25,20 @@ export const isPanEffect = (effect: EffectType | null): boolean => {
 
 const buildHtml = (imageSrc: string, effectType: EffectType): string[] => {
   if (isPanEffect(effectType)) {
-    // Move effects: script calculates cover size (object-fit:cover equivalent) with load/resize fallback.
+    // Move effects: script calculates cover*zoom size and pans by left/top.
     return [
-      "<div class='h-full w-full overflow-hidden relative bg-black'>",
+      "<div style='position:absolute;inset:0;overflow:hidden;background:black'>",
       "  <div id='photo_wrap' style='position:absolute;inset:0'>",
       `    <img id='photo_img' src='${imageSrc}' style='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);max-width:none;max-height:none' />`,
       "  </div>",
       "</div>",
     ];
   }
+  // Zoom effects: use the same img model as move effects so zoom meaning is consistent.
   return [
-    "<div class='h-full w-full overflow-hidden relative bg-black'>",
-    "  <div id='photo_wrap' style='position:absolute;inset:0;overflow:hidden'>",
-    `    <img src='${imageSrc}' style='width:100%;height:100%;object-fit:cover' />`,
+    "<div style='position:absolute;inset:0;overflow:hidden;background:black'>",
+    "  <div id='photo_wrap' style='position:absolute;inset:0'>",
+    `    <img id='photo_img' src='${imageSrc}' style='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);max-width:none;max-height:none' />`,
     "  </div>",
     "</div>",
   ];
@@ -53,10 +54,9 @@ const buildScript = (effectType: EffectType, zoom: number, panDistance: number):
     // to avoid transform-side effects and to clamp pan by real overflow.
     const panScript =
       "const img=document.querySelector('#photo_img');const wrap=document.querySelector('#photo_wrap');" +
-      "let __panState=window.__panState;" +
       `const axis='${axis}';const direction=${direction};const requestedDistance=${panDistance};const zoom=${scale};` +
       "function render(frame,totalFrames){if(!img||!wrap)return;" +
-      "if(!__panState){if(!img.naturalWidth||!img.naturalHeight)return;" +
+      "if(!img.naturalWidth||!img.naturalHeight)return;" +
       "const ww=wrap.clientWidth||wrap.offsetWidth;const wh=wrap.clientHeight||wrap.offsetHeight;if(!ww||!wh)return;" +
       "const cover=Math.max(ww/img.naturalWidth,wh/img.naturalHeight);const s=cover*zoom;" +
       "const iw=img.naturalWidth*s;const ih=img.naturalHeight*s;" +
@@ -65,29 +65,26 @@ const buildScript = (effectType: EffectType, zoom: number, panDistance: number):
       "const maxDistancePercent=Math.max(0,((imageSize-viewport)/2)/viewport*100);" +
       "const distancePercent=Math.min(requestedDistance,maxDistancePercent);" +
       "const from=50;const to=from+(direction*distancePercent);" +
-      "__panState={axis,from,to};window.__panState=__panState;}" +
       "const denom=Math.max(1,totalFrames-1);const t=Math.max(0,Math.min(1,frame/denom));" +
-      "const current=__panState.from+(__panState.to-__panState.from)*t;" +
-      "if(__panState.axis==='x'){img.style.left=current+'%';}else{img.style.top=current+'%';}}";
+      "const current=from+(to-from)*t;" +
+      "if(axis==='x'){img.style.left=current+'%';}else{img.style.top=current+'%';}}";
     return [panScript];
   }
 
-  const animateParams = JSON.stringify(getZoomParams(effectType, scale));
-  return [
-    "const animation = new MulmoAnimation();",
-    `animation.animate('#photo_wrap', ${animateParams}, { start: 0, end: 'auto', easing: 'linear' });`,
-  ];
-};
-
-const getZoomParams = (effectType: EffectType, scale: number): Record<string, (number | string)[]> => {
-  switch (effectType) {
-    case "zoomIn":
-      return { scale: [1.0, scale] };
-    case "zoomOut":
-      return { scale: [scale, 1.0] };
-    default:
-      return {};
-  }
+  const zoomFrom = effectType === "zoomOut" ? scale : 1.0;
+  const zoomTo = effectType === "zoomOut" ? 1.0 : scale;
+  const zoomScript =
+    "const img=document.querySelector('#photo_img');const wrap=document.querySelector('#photo_wrap');" +
+    `const zoomFrom=${zoomFrom};const zoomTo=${zoomTo};` +
+    "function render(frame,totalFrames){if(!img||!wrap)return;" +
+    "if(!img.naturalWidth||!img.naturalHeight)return;" +
+    "const ww=wrap.clientWidth||wrap.offsetWidth;const wh=wrap.clientHeight||wrap.offsetHeight;if(!ww||!wh)return;" +
+    "const cover=Math.max(ww/img.naturalWidth,wh/img.naturalHeight);" +
+    "const denom=Math.max(1,totalFrames-1);const t=Math.max(0,Math.min(1,frame/denom));" +
+    "const z=zoomFrom+((zoomTo-zoomFrom)*t);" +
+    "const s=cover*z;" +
+    "img.style.width=(img.naturalWidth*s)+'px';img.style.height=(img.naturalHeight*s)+'px';}";
+  return [zoomScript];
 };
 
 export const generateEffectTemplate = (
