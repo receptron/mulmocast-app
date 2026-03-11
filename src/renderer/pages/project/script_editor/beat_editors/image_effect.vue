@@ -20,12 +20,12 @@
     <div class="mb-2">
       <Label class="mb-1 block text-sm">{{ t("beat.html_tailwind.sourceImage") }}</Label>
       <div class="flex items-center gap-2">
-        <Button variant="outline" size="sm" @click="openMaterialsDialog" :disabled="materialKeys.length === 0">
-          {{ selectedMaterialKey || t("beat.html_tailwind.sourceImagePlaceholder") }}
+        <Button variant="outline" size="sm" @click="openMaterialsDialog" :disabled="!hasMaterials">
+          {{ selectedMaterialLabel }}
         </Button>
         <img v-if="selectedPreviewUrl" :src="selectedPreviewUrl" class="h-8 w-8 rounded object-cover" />
       </div>
-      <p v-if="materialKeys.length === 0" class="text-muted-foreground mt-1 text-xs">
+      <p v-if="!hasMaterials" class="text-muted-foreground mt-1 text-xs">
         {{ t("beat.html_tailwind.noMaterials") }}
       </p>
       <MaterialsImageDialog
@@ -61,7 +61,7 @@
           {{ t("beat.html_tailwind.customEdited") }}
         </Badge>
       </div>
-      <Button size="sm" @click="applyEffect" :disabled="!selectedEffect || !selectedMaterialKey">
+      <Button size="sm" @click="applyEffect" :disabled="!canApplyEffect">
         {{ t("ui.actions.set") }}
       </Button>
     </div>
@@ -147,6 +147,17 @@ const materialKeys = computed(() => {
   return Object.keys(images).sort();
 });
 
+const hasMaterials = computed(() => materialKeys.value.length > 0);
+const hasSelectedEffect = computed(() => selectedEffect.value !== null);
+const hasSelectedMaterialKey = computed(() => selectedMaterialKey.value !== null);
+const canApplyEffect = computed(() => hasSelectedEffect.value && hasSelectedMaterialKey.value);
+const selectedMaterialLabel = computed(() => selectedMaterialKey.value ?? t("beat.html_tailwind.sourceImagePlaceholder"));
+
+const getApplySelection = (): { effectType: EffectType; materialKey: string } | null => {
+  if (!selectedEffect.value || !selectedMaterialKey.value) return null;
+  return { effectType: selectedEffect.value, materialKey: selectedMaterialKey.value };
+};
+
 const isCustomEdited = computed(() => {
   if (!lastAppliedEffect.value || !lastAppliedMaterialKey.value) return false;
   const imageSrc = `image:${lastAppliedMaterialKey.value}`;
@@ -167,7 +178,8 @@ const normalizeNumber = (value: unknown, fallback: number, min: number, max: num
 };
 
 const applyEffect = () => {
-  if (!selectedEffect.value || !selectedMaterialKey.value) return;
+  const selection = getApplySelection();
+  if (!selection) return;
 
   const duration = normalizeNumber(durationSec.value, effectDefaults.duration, 1, 30);
   const zoom = normalizeNumber(zoomPercent.value, effectDefaults.zoom, 100, 200);
@@ -177,8 +189,8 @@ const applyEffect = () => {
   zoomPercent.value = zoom;
   panDistancePercent.value = panDistance;
 
-  const imageSrc = `image:${selectedMaterialKey.value}`;
-  const template = generateEffectTemplate(selectedEffect.value, imageSrc, zoom, panDistance);
+  const imageSrc = `image:${selection.materialKey}`;
+  const template = generateEffectTemplate(selection.effectType, imageSrc, zoom, panDistance);
 
   emit("applyImageEffect", {
     image: {
@@ -191,8 +203,8 @@ const applyEffect = () => {
   });
 
   // Track last applied for custom detection
-  lastAppliedEffect.value = selectedEffect.value;
-  lastAppliedMaterialKey.value = selectedMaterialKey.value;
+  lastAppliedEffect.value = selection.effectType;
+  lastAppliedMaterialKey.value = selection.materialKey;
   lastAppliedZoom.value = zoom;
   lastAppliedPanDistance.value = panDistance;
 };
