@@ -160,11 +160,25 @@ const isCustomEdited = computed(() => {
   );
 });
 
+const normalizeNumber = (value: unknown, fallback: number, min: number, max: number): number => {
+  const num = Number(value);
+  if (!Number.isFinite(num)) return fallback;
+  return Math.min(max, Math.max(min, num));
+};
+
 const applyEffect = () => {
   if (!selectedEffect.value || !selectedMaterialKey.value) return;
 
+  const duration = normalizeNumber(durationSec.value, effectDefaults.duration, 1, 30);
+  const zoom = normalizeNumber(zoomPercent.value, effectDefaults.zoom, 100, 200);
+  const panDistance = normalizeNumber(panDistancePercent.value, effectDefaults.panDistance, 1, 50);
+
+  durationSec.value = duration;
+  zoomPercent.value = zoom;
+  panDistancePercent.value = panDistance;
+
   const imageSrc = `image:${selectedMaterialKey.value}`;
-  const template = generateEffectTemplate(selectedEffect.value, imageSrc, zoomPercent.value, panDistancePercent.value);
+  const template = generateEffectTemplate(selectedEffect.value, imageSrc, zoom, panDistance);
 
   emit("applyImageEffect", {
     image: {
@@ -173,14 +187,14 @@ const applyEffect = () => {
       script: template.script,
       animation: true,
     },
-    duration: durationSec.value,
+    duration,
   });
 
   // Track last applied for custom detection
   lastAppliedEffect.value = selectedEffect.value;
   lastAppliedMaterialKey.value = selectedMaterialKey.value;
-  lastAppliedZoom.value = zoomPercent.value;
-  lastAppliedPanDistance.value = panDistancePercent.value;
+  lastAppliedZoom.value = zoom;
+  lastAppliedPanDistance.value = panDistance;
 };
 
 // Set presets and reset custom detection when effect selection changes

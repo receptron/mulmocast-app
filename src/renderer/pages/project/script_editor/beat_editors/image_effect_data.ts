@@ -25,13 +25,11 @@ export const isPanEffect = (effect: EffectType | null): boolean => {
 
 const buildHtml = (imageSrc: string, effectType: EffectType): string[] => {
   if (isPanEffect(effectType)) {
-    // Move effects: img covers viewport at natural aspect ratio.
-    // min-width/min-height ensure the image always covers the viewport.
-    // Panning animates left/top on the img to reveal hidden parts.
+    // Move effects: script calculates cover size (object-fit:cover equivalent) with load/resize fallback.
     return [
       "<div class='h-full w-full overflow-hidden relative bg-black'>",
       "  <div id='photo_wrap' style='position:absolute;inset:0'>",
-      `    <img id='photo_img' src='${imageSrc}' style='position:absolute;min-width:100%;min-height:100%;width:auto;height:auto;top:50%;left:50%;transform:translate(-50%,-50%)' />`,
+      `    <img id='photo_img' src='${imageSrc}' style='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);max-width:none;max-height:none' />`,
       "  </div>",
       "</div>",
     ];
@@ -49,13 +47,29 @@ const buildScript = (effectType: EffectType, zoom: number, panDistance: number):
   const scale = zoom / 100;
 
   if (isPanEffect(effectType)) {
-    const scaleParams = JSON.stringify({ scale: [scale, scale] });
-    const moveParams = JSON.stringify(getMoveParams(effectType, panDistance));
-    return [
-      "const animation = new MulmoAnimation();",
-      `animation.animate('#photo_wrap', ${scaleParams}, { start: 0, end: 'auto', easing: 'linear' });`,
-      `animation.animate('#photo_img', ${moveParams}, { start: 0, end: 'auto', easing: 'linear' });`,
-    ];
+    const axis = effectType === "moveToLeft" || effectType === "moveToRight" ? "x" : "y";
+    const direction = effectType === "moveToLeft" || effectType === "moveToTop" ? 1 : -1;
+    // Move effects are rendered with a custom render() function (without MulmoAnimation)
+    // to avoid transform-side effects and to clamp pan by real overflow.
+    const panScript =
+      "const img=document.querySelector('#photo_img');const wrap=document.querySelector('#photo_wrap');" +
+      "let __panState=window.__panState;" +
+      `const axis='${axis}';const direction=${direction};const requestedDistance=${panDistance};const zoom=${scale};` +
+      "function render(frame,totalFrames){if(!img||!wrap)return;" +
+      "if(!__panState){if(!img.naturalWidth||!img.naturalHeight)return;" +
+      "const ww=wrap.clientWidth||wrap.offsetWidth;const wh=wrap.clientHeight||wrap.offsetHeight;if(!ww||!wh)return;" +
+      "const cover=Math.max(ww/img.naturalWidth,wh/img.naturalHeight);const s=cover*zoom;" +
+      "const iw=img.naturalWidth*s;const ih=img.naturalHeight*s;" +
+      "img.style.width=iw+'px';img.style.height=ih+'px';img.style.maxWidth='none';img.style.maxHeight='none';" +
+      "const viewport=axis==='x'?ww:wh;const imageSize=axis==='x'?iw:ih;" +
+      "const maxDistancePercent=Math.max(0,((imageSize-viewport)/2)/viewport*100);" +
+      "const distancePercent=Math.min(requestedDistance,maxDistancePercent);" +
+      "const from=50;const to=from+(direction*distancePercent);" +
+      "__panState={axis,from,to};window.__panState=__panState;}" +
+      "const denom=Math.max(1,totalFrames-1);const t=Math.max(0,Math.min(1,frame/denom));" +
+      "const current=__panState.from+(__panState.to-__panState.from)*t;" +
+      "if(__panState.axis==='x'){img.style.left=current+'%';}else{img.style.top=current+'%';}}";
+    return [panScript];
   }
 
   const animateParams = JSON.stringify(getZoomParams(effectType, scale));
@@ -63,22 +77,6 @@ const buildScript = (effectType: EffectType, zoom: number, panDistance: number):
     "const animation = new MulmoAnimation();",
     `animation.animate('#photo_wrap', ${animateParams}, { start: 0, end: 'auto', easing: 'linear' });`,
   ];
-};
-
-// Move effects: animate left/top on img from center (50%) toward the direction
-const getMoveParams = (effectType: EffectType, panDistance: number): Record<string, (number | string)[]> => {
-  switch (effectType) {
-    case "moveToLeft":
-      return { left: [50, 50 + panDistance, "%"] };
-    case "moveToRight":
-      return { left: [50, 50 - panDistance, "%"] };
-    case "moveToTop":
-      return { top: [50, 50 + panDistance, "%"] };
-    case "moveToBottom":
-      return { top: [50, 50 - panDistance, "%"] };
-    default:
-      return {};
-  }
 };
 
 const getZoomParams = (effectType: EffectType, scale: number): Record<string, (number | string)[]> => {
