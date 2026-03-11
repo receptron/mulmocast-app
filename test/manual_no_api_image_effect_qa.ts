@@ -659,19 +659,13 @@ const DEFAULT_ZOOM = 120;
 const DEFAULT_DURATION = 5;
 const DEFAULT_PAN_DISTANCE = 10;
 
-/** Parse all animate() params from the script lines. Returns array of { selector, params } */
-function parseAllAnimateParams(scriptStr: string): Array<{ selector: string; params: Record<string, unknown> }> {
-  const results: Array<{ selector: string; params: Record<string, unknown> }> = [];
-  const regex = /animate\('([^']+)',\s*(\{[^}]+\})/g;
-  let match;
-  while ((match = regex.exec(scriptStr)) !== null) {
-    try {
-      results.push({ selector: match[1], params: JSON.parse(match[2]) });
-    } catch {
-      // skip unparseable
-    }
-  }
-  return results;
+function extractConstNumber(scriptStr: string, name: string): number | null {
+  const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const regex = new RegExp(`const\\s+${escapedName}\\s*=\\s*(-?\\d+(?:\\.\\d+)?)`);
+  const match = scriptStr.match(regex);
+  if (!match) return null;
+  const value = Number(match[1]);
+  return Number.isFinite(value) ? value : null;
 }
 
 /** Verify effect-specific parameters with exact value checks. */
@@ -681,71 +675,58 @@ function verifyEffectParamsExact(
   expectedZoom: number,
   expectedPanDistance: number,
 ): { ok: boolean; detail: string } {
-  const allParams = parseAllAnimateParams(scriptStr);
-  if (allParams.length === 0) return { ok: false, detail: "Could not parse animate params from script" };
-
   const expectedScale = expectedZoom / 100;
 
   switch (effectType) {
     case "zoomIn": {
-      const wrapParams = allParams.find((p) => p.selector === "#photo_wrap")?.params;
-      const scale = wrapParams?.scale as number[] | undefined;
-      const scaleOk = Array.isArray(scale) && scale[0] === 1 && scale[1] === expectedScale;
-      return { ok: scaleOk, detail: `scale=${JSON.stringify(scale)}, expected [1,${expectedScale}]` };
+      const zoomFrom = extractConstNumber(scriptStr, "zoomFrom");
+      const zoomTo = extractConstNumber(scriptStr, "zoomTo");
+      const hasRender = scriptStr.includes("function render(frame,totalFrames)");
+      const ok = hasRender && zoomFrom === 1 && zoomTo === expectedScale;
+      return { ok, detail: `render=${hasRender}, zoomFrom=${zoomFrom}, zoomTo=${zoomTo}` };
     }
     case "zoomOut": {
-      const wrapParams = allParams.find((p) => p.selector === "#photo_wrap")?.params;
-      const scale = wrapParams?.scale as number[] | undefined;
-      const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === 1;
-      return { ok: scaleOk, detail: `scale=${JSON.stringify(scale)}, expected [${expectedScale},1]` };
+      const zoomFrom = extractConstNumber(scriptStr, "zoomFrom");
+      const zoomTo = extractConstNumber(scriptStr, "zoomTo");
+      const hasRender = scriptStr.includes("function render(frame,totalFrames)");
+      const ok = hasRender && zoomFrom === expectedScale && zoomTo === 1;
+      return { ok, detail: `render=${hasRender}, zoomFrom=${zoomFrom}, zoomTo=${zoomTo}` };
     }
     case "moveToLeft": {
-      const wrapParams = allParams.find((p) => p.selector === "#photo_wrap")?.params;
-      const imgParams = allParams.find((p) => p.selector === "#photo_img")?.params;
-      const scale = wrapParams?.scale as number[] | undefined;
-      const left = imgParams?.left as (number | string)[] | undefined;
-      const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
-      const leftOk = Array.isArray(left) && left[0] === 50 && left[1] === 50 + expectedPanDistance && left[2] === "%";
-      return {
-        ok: scaleOk && leftOk,
-        detail: `scale=${JSON.stringify(scale)}, left=${JSON.stringify(left)}`,
-      };
+      const axis = scriptStr.includes("const axis='x'");
+      const direction = extractConstNumber(scriptStr, "direction");
+      const requestedDistance = extractConstNumber(scriptStr, "requestedDistance");
+      const scale = extractConstNumber(scriptStr, "zoom");
+      const hasRender = scriptStr.includes("function render(frame,totalFrames)");
+      const ok = hasRender && axis && direction === 1 && requestedDistance === expectedPanDistance && scale === expectedScale;
+      return { ok, detail: `render=${hasRender}, axis=x, direction=${direction}, distance=${requestedDistance}, zoom=${scale}` };
     }
     case "moveToRight": {
-      const wrapParams = allParams.find((p) => p.selector === "#photo_wrap")?.params;
-      const imgParams = allParams.find((p) => p.selector === "#photo_img")?.params;
-      const scale = wrapParams?.scale as number[] | undefined;
-      const left = imgParams?.left as (number | string)[] | undefined;
-      const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
-      const leftOk = Array.isArray(left) && left[0] === 50 && left[1] === 50 - expectedPanDistance && left[2] === "%";
-      return {
-        ok: scaleOk && leftOk,
-        detail: `scale=${JSON.stringify(scale)}, left=${JSON.stringify(left)}`,
-      };
+      const axis = scriptStr.includes("const axis='x'");
+      const direction = extractConstNumber(scriptStr, "direction");
+      const requestedDistance = extractConstNumber(scriptStr, "requestedDistance");
+      const scale = extractConstNumber(scriptStr, "zoom");
+      const hasRender = scriptStr.includes("function render(frame,totalFrames)");
+      const ok = hasRender && axis && direction === -1 && requestedDistance === expectedPanDistance && scale === expectedScale;
+      return { ok, detail: `render=${hasRender}, axis=x, direction=${direction}, distance=${requestedDistance}, zoom=${scale}` };
     }
     case "moveToTop": {
-      const wrapParams = allParams.find((p) => p.selector === "#photo_wrap")?.params;
-      const imgParams = allParams.find((p) => p.selector === "#photo_img")?.params;
-      const scale = wrapParams?.scale as number[] | undefined;
-      const top = imgParams?.top as (number | string)[] | undefined;
-      const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
-      const topOk = Array.isArray(top) && top[0] === 50 && top[1] === 50 + expectedPanDistance && top[2] === "%";
-      return {
-        ok: scaleOk && topOk,
-        detail: `scale=${JSON.stringify(scale)}, top=${JSON.stringify(top)}`,
-      };
+      const axis = scriptStr.includes("const axis='y'");
+      const direction = extractConstNumber(scriptStr, "direction");
+      const requestedDistance = extractConstNumber(scriptStr, "requestedDistance");
+      const scale = extractConstNumber(scriptStr, "zoom");
+      const hasRender = scriptStr.includes("function render(frame,totalFrames)");
+      const ok = hasRender && axis && direction === 1 && requestedDistance === expectedPanDistance && scale === expectedScale;
+      return { ok, detail: `render=${hasRender}, axis=y, direction=${direction}, distance=${requestedDistance}, zoom=${scale}` };
     }
     case "moveToBottom": {
-      const wrapParams = allParams.find((p) => p.selector === "#photo_wrap")?.params;
-      const imgParams = allParams.find((p) => p.selector === "#photo_img")?.params;
-      const scale = wrapParams?.scale as number[] | undefined;
-      const top = imgParams?.top as (number | string)[] | undefined;
-      const scaleOk = Array.isArray(scale) && scale[0] === expectedScale && scale[1] === expectedScale;
-      const topOk = Array.isArray(top) && top[0] === 50 && top[1] === 50 - expectedPanDistance && top[2] === "%";
-      return {
-        ok: scaleOk && topOk,
-        detail: `scale=${JSON.stringify(scale)}, top=${JSON.stringify(top)}`,
-      };
+      const axis = scriptStr.includes("const axis='y'");
+      const direction = extractConstNumber(scriptStr, "direction");
+      const requestedDistance = extractConstNumber(scriptStr, "requestedDistance");
+      const scale = extractConstNumber(scriptStr, "zoom");
+      const hasRender = scriptStr.includes("function render(frame,totalFrames)");
+      const ok = hasRender && axis && direction === -1 && requestedDistance === expectedPanDistance && scale === expectedScale;
+      return { ok, detail: `render=${hasRender}, axis=y, direction=${direction}, distance=${requestedDistance}, zoom=${scale}` };
     }
   }
 }
@@ -810,13 +791,13 @@ async function verifyEffectJson(
     hasImageRef ? `Contains "image:${MATERIAL_KEY}"` : "Missing image reference",
   );
 
-  // 4. Check script contains MulmoAnimation + animate
+  // 4. Check script contains render() function
   const scriptStr = Array.isArray(image.script) ? (image.script as string[]).join("\n") : String(image.script || "");
-  const hasAnimationCall = scriptStr.includes("MulmoAnimation") && scriptStr.includes("animate");
+  const hasRenderFunction = scriptStr.includes("function render(frame,totalFrames)");
   record(
     `${testPrefix} image.script`,
-    hasAnimationCall ? "PASS" : "FAIL",
-    hasAnimationCall ? "Contains MulmoAnimation.animate" : "Missing animation call",
+    hasRenderFunction ? "PASS" : "FAIL",
+    hasRenderFunction ? "Contains render(frame,totalFrames)" : "Missing render function",
   );
 
   // 5. Check effect-specific params with exact values (Level 3+ verification)
