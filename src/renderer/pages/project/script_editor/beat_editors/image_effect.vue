@@ -40,7 +40,7 @@
     <div class="mb-2 flex gap-3">
       <div class="flex-1">
         <Label class="mb-1 block text-sm">{{ t("beat.html_tailwind.duration") }}</Label>
-        <Input v-model="durationSec" type="number" min="1" max="30" />
+        <Input v-model="durationSec" type="number" min="1" />
       </div>
       <div class="flex-1">
         <Label class="mb-1 block text-sm">{{ t("beat.html_tailwind.zoom") }}</Label>
@@ -179,11 +179,17 @@ const normalizeNumber = (value: unknown, fallback: number, min: number, max: num
   return Math.min(max, Math.max(min, num));
 };
 
+const normalizeDuration = (value: unknown): number => {
+  const num = Number(value);
+  if (!Number.isFinite(num)) return effectDefaults.duration;
+  return Math.max(1, num);
+};
+
 const applyEffect = () => {
   const selection = getApplySelection();
   if (!selection) return;
 
-  const duration = normalizeNumber(durationSec.value, effectDefaults.duration, 1, 30);
+  const duration = normalizeDuration(durationSec.value);
   const zoom = normalizeNumber(zoomPercent.value, effectDefaults.zoom, 100, 200);
   const panDistance = normalizeNumber(panDistancePercent.value, effectDefaults.panDistance, 1, 50);
 
