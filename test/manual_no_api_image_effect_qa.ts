@@ -674,28 +674,26 @@ function verifyEffectParamsExact(
   expectedPanDistance: number,
 ): { ok: boolean; detail: string } {
   const expectedScale = expectedZoom / 100;
+  const hasRender = /function\s+render\s*\(\s*frame\s*,\s*totalFrames\s*\)/.test(scriptStr);
 
   switch (effectType) {
     case "zoomIn": {
       const zoomFrom = extractConstNumber(scriptStr, "zoomFrom");
       const zoomTo = extractConstNumber(scriptStr, "zoomTo");
-      const hasRender = scriptStr.includes("function render(frame,totalFrames)");
       const ok = hasRender && zoomFrom === 1 && zoomTo === expectedScale;
       return { ok, detail: `render=${hasRender}, zoomFrom=${zoomFrom}, zoomTo=${zoomTo}` };
     }
     case "zoomOut": {
       const zoomFrom = extractConstNumber(scriptStr, "zoomFrom");
       const zoomTo = extractConstNumber(scriptStr, "zoomTo");
-      const hasRender = scriptStr.includes("function render(frame,totalFrames)");
       const ok = hasRender && zoomFrom === expectedScale && zoomTo === 1;
       return { ok, detail: `render=${hasRender}, zoomFrom=${zoomFrom}, zoomTo=${zoomTo}` };
     }
     case "moveToLeft": {
-      const axis = scriptStr.includes("const axis='x'");
+      const axis = /const\s+axis\s*=\s*["']x["']/.test(scriptStr);
       const direction = extractConstNumber(scriptStr, "direction");
       const requestedDistance = extractConstNumber(scriptStr, "requestedDistance");
       const scale = extractConstNumber(scriptStr, "zoom");
-      const hasRender = scriptStr.includes("function render(frame,totalFrames)");
       const ok =
         hasRender && axis && direction === 1 && requestedDistance === expectedPanDistance && scale === expectedScale;
       return {
@@ -704,11 +702,10 @@ function verifyEffectParamsExact(
       };
     }
     case "moveToRight": {
-      const axis = scriptStr.includes("const axis='x'");
+      const axis = /const\s+axis\s*=\s*["']x["']/.test(scriptStr);
       const direction = extractConstNumber(scriptStr, "direction");
       const requestedDistance = extractConstNumber(scriptStr, "requestedDistance");
       const scale = extractConstNumber(scriptStr, "zoom");
-      const hasRender = scriptStr.includes("function render(frame,totalFrames)");
       const ok =
         hasRender && axis && direction === -1 && requestedDistance === expectedPanDistance && scale === expectedScale;
       return {
@@ -717,11 +714,10 @@ function verifyEffectParamsExact(
       };
     }
     case "moveToTop": {
-      const axis = scriptStr.includes("const axis='y'");
+      const axis = /const\s+axis\s*=\s*["']y["']/.test(scriptStr);
       const direction = extractConstNumber(scriptStr, "direction");
       const requestedDistance = extractConstNumber(scriptStr, "requestedDistance");
       const scale = extractConstNumber(scriptStr, "zoom");
-      const hasRender = scriptStr.includes("function render(frame,totalFrames)");
       const ok =
         hasRender && axis && direction === 1 && requestedDistance === expectedPanDistance && scale === expectedScale;
       return {
@@ -730,11 +726,10 @@ function verifyEffectParamsExact(
       };
     }
     case "moveToBottom": {
-      const axis = scriptStr.includes("const axis='y'");
+      const axis = /const\s+axis\s*=\s*["']y["']/.test(scriptStr);
       const direction = extractConstNumber(scriptStr, "direction");
       const requestedDistance = extractConstNumber(scriptStr, "requestedDistance");
       const scale = extractConstNumber(scriptStr, "zoom");
-      const hasRender = scriptStr.includes("function render(frame,totalFrames)");
       const ok =
         hasRender && axis && direction === -1 && requestedDistance === expectedPanDistance && scale === expectedScale;
       return {
@@ -807,7 +802,7 @@ async function verifyEffectJson(
 
   // 4. Check script contains render() function
   const scriptStr = Array.isArray(image.script) ? (image.script as string[]).join("\n") : String(image.script || "");
-  const hasRenderFunction = scriptStr.includes("function render(frame,totalFrames)");
+  const hasRenderFunction = /function\s+render\s*\(\s*frame\s*,\s*totalFrames\s*\)/.test(scriptStr);
   record(
     `${testPrefix} image.script`,
     hasRenderFunction ? "PASS" : "FAIL",
