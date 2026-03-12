@@ -40,16 +40,37 @@
     <div class="mb-2 flex gap-3">
       <div class="flex-1">
         <Label class="mb-1 block text-sm">{{ t("beat.html_tailwind.duration") }}</Label>
+        <p class="text-muted-foreground mt-1 text-xs">
+          {{ t("beat.html_tailwind.durationMin") }}
+        </p>
+        <p class="text-muted-foreground text-xs">
+          {{ t("beat.html_tailwind.durationMax") }}
+        </p>
         <Input v-model="durationSec" type="number" min="1" />
       </div>
       <div class="flex-1">
         <Label class="mb-1 block text-sm">{{ t("beat.html_tailwind.zoom") }}</Label>
+        <p class="text-muted-foreground mt-1 text-xs">
+          {{ t("beat.html_tailwind.zoomMin") }}
+        </p>
+        <p class="text-muted-foreground text-xs">
+          {{ t("beat.html_tailwind.zoomMax") }}
+        </p>
         <Input v-model="zoomPercent" type="number" min="100" max="200" />
       </div>
     </div>
     <div v-if="isPan" class="mb-2 flex gap-3">
       <div class="flex-1">
         <Label class="mb-1 block text-sm">{{ t("beat.html_tailwind.panDistance") }}</Label>
+        <p class="text-muted-foreground mt-1 text-xs">
+          {{ t("beat.html_tailwind.panDistanceMin") }}
+        </p>
+        <p class="text-muted-foreground text-xs">
+          {{ t("beat.html_tailwind.panDistanceMax") }}
+        </p>
+        <p class="text-muted-foreground text-xs">
+          {{ t("beat.html_tailwind.panDistanceNote") }}
+        </p>
         <Input v-model="panDistancePercent" type="number" min="1" max="50" />
       </div>
     </div>
