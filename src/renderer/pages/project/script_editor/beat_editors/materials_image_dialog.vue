@@ -90,7 +90,7 @@ const fetchImages = async () => {
   try {
     const refs = (await window.electronAPI.mulmoHandler("mulmoReferenceImagesFiles", props.projectId)) as Record<
       string,
-      Uint8Array<ArrayBuffer>
+      Uint8Array
     >;
     clearItems();
     imageItems.value = props.materialKeys.map((key) => ({
