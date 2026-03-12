@@ -13,6 +13,7 @@
  * Environment Variables:
  *   CDP_URL  – Override CDP endpoint (default: http://localhost:9222/)
  *   APP_URL  – Override app page URL match (default: localhost:5175)
+ *   RUN_GENERATE=1 – Also run "Generate Contents" and wait for completion
  */
 
 import path from "path";
@@ -74,6 +75,15 @@ const IMAGE_FILES: Record<string, { filename: string; extension: string }> = {
 };
 
 const MATERIAL_KEY = "testImage";
+const SHOULD_RUN_GENERATE = process.env.RUN_GENERATE === "1";
+const TARGET_BEAT_COUNT = 6;
+
+const MINIMAL_HTML_TAILWIND_IMAGE = {
+  type: "html_tailwind" as const,
+  html: ["<div class='h-full w-full'></div>"],
+  script: ["function render(frame,totalFrames){void frame;void totalFrames;}"],
+  animation: true,
+};
 
 // =====================================================================
 // Results
@@ -415,11 +425,19 @@ async function setupProjectViaJson(
   imageParams.images = images;
   json.imageParams = imageParams;
 
-  // Set first beat's image type to html_tailwind so the ImageEffect panel is visible
+  // Keep the first beat and add 5 more beats (6 total), each with minimal valid html_tailwind payload.
   const beats = (json.beats as Array<Record<string, unknown>>) || [];
-  if (beats.length > 0) {
-    beats[0].image = { type: "html_tailwind" };
+  if (beats.length === 0) {
+    record("Setup project JSON", "FAIL", "No base beat found in project JSON");
+    return false;
   }
+  const baseBeat = beats[0];
+  const seedBeats = Array.from({ length: TARGET_BEAT_COUNT }, (_, idx) => ({
+    ...JSON.parse(JSON.stringify(baseBeat)),
+    id: `${runId}-${idx + 1}`,
+    image: JSON.parse(JSON.stringify(MINIMAL_HTML_TAILWIND_IMAGE)),
+  }));
+  json.beats = seedBeats;
 
   const written = await writeEditorJson(page, json);
   record(
@@ -445,14 +463,21 @@ const IMAGE_EFFECT_SELECTORS = {
 } as const;
 
 /** Verify ImageEffect panel exists by stable test id. */
-async function findEffectPanel(page: Page): Promise<boolean> {
-  const panel = page.locator(IMAGE_EFFECT_SELECTORS.panel).first();
+async function findEffectPanel(page: Page, beatIndex: number): Promise<boolean> {
+  const panel = page.locator(IMAGE_EFFECT_SELECTORS.panel).nth(beatIndex);
   return (await panel.count()) > 0;
 }
 
+async function getEffectPanelElement(page: Page, beatIndex: number) {
+  const panels = await page.$$(IMAGE_EFFECT_SELECTORS.panel);
+  return panels[beatIndex] ?? null;
+}
+
 /** Find the effect type Select trigger inside the ImageEffect panel. */
-async function findEffectSelectTrigger(page: Page): Promise<ReturnType<Page["$"]>> {
-  return await page.$(IMAGE_EFFECT_SELECTORS.effectSelect);
+async function findEffectSelectTrigger(page: Page, beatIndex: number): Promise<ReturnType<Page["$"]>> {
+  const panel = await getEffectPanelElement(page, beatIndex);
+  if (!panel) return null;
+  return await panel.$(IMAGE_EFFECT_SELECTORS.effectSelect);
 }
 
 /** Select an option from an open dropdown by exact text. */
@@ -472,8 +497,10 @@ async function selectOptionByText(page: Page, optionText: string): Promise<boole
 }
 
 /** Find the material image button in the ImageEffect panel. */
-async function findMaterialButton(page: Page): Promise<ReturnType<Page["$"]>> {
-  return await page.$(IMAGE_EFFECT_SELECTORS.materialButton);
+async function findMaterialButton(page: Page, beatIndex: number): Promise<ReturnType<Page["$"]>> {
+  const panel = await getEffectPanelElement(page, beatIndex);
+  if (!panel) return null;
+  return await panel.$(IMAGE_EFFECT_SELECTORS.materialButton);
 }
 
 /** Select a material from the MaterialsImageDialog. */
@@ -494,8 +521,10 @@ async function selectMaterialFromDialog(page: Page): Promise<boolean> {
 }
 
 /** Click the "Set" button in the ImageEffect panel. */
-async function clickSetButton(page: Page): Promise<boolean> {
-  const setButton = await page.$(IMAGE_EFFECT_SELECTORS.setButton);
+async function clickSetButton(page: Page, beatIndex: number): Promise<boolean> {
+  const panel = await getEffectPanelElement(page, beatIndex);
+  if (!panel) return false;
+  const setButton = await panel.$(IMAGE_EFFECT_SELECTORS.setButton);
   if (!setButton) return false;
   const disabled = await setButton.isDisabled();
   if (disabled) return false;
@@ -504,8 +533,10 @@ async function clickSetButton(page: Page): Promise<boolean> {
 }
 
 /** Set an input field's value inside the ImageEffect panel by stable test id. */
-async function setEffectInput(page: Page, testIdSelector: string, value: number): Promise<boolean> {
-  const input = await page.$(testIdSelector);
+async function setEffectInput(page: Page, testIdSelector: string, beatIndex: number, value: number): Promise<boolean> {
+  const panel = await getEffectPanelElement(page, beatIndex);
+  if (!panel) return false;
+  const input = await panel.$(testIdSelector);
   if (!input) return false;
   await input.fill(String(value));
   return true;
@@ -515,10 +546,11 @@ async function setEffectInput(page: Page, testIdSelector: string, value: number)
 async function applyEffect(
   page: Page,
   effectType: EffectType,
+  beatIndex: number,
   lang: "en" | "ja",
   configLabel: string,
 ): Promise<boolean> {
-  const testName = `${effectType} (${configLabel})`;
+  const testName = `${effectType} [beat ${beatIndex + 1}] (${configLabel})`;
 
   // 1. Go to BEAT tab
   const beatTabOk = await toBeatTab(page);
@@ -529,7 +561,7 @@ async function applyEffect(
   await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
 
   // 2. Verify ImageEffect panel is visible
-  const panelExists = await findEffectPanel(page);
+  const panelExists = await findEffectPanel(page, beatIndex);
   if (!panelExists) {
     record(`Apply ${testName}`, "FAIL", "ImageEffect panel not found on BEAT tab");
     return false;
@@ -537,7 +569,7 @@ async function applyEffect(
 
   // 3. Select effect type
   const effectDisplayName = EFFECT_DISPLAY_NAMES[lang]?.[effectType] ?? effectType;
-  const effectSelect = await findEffectSelectTrigger(page);
+  const effectSelect = await findEffectSelectTrigger(page, beatIndex);
   if (!effectSelect) {
     record(`Apply ${testName}`, "FAIL", "Effect select trigger not found");
     return false;
@@ -553,7 +585,7 @@ async function applyEffect(
   await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
 
   // 4. Select material image via dialog
-  const materialBtn = await findMaterialButton(page);
+  const materialBtn = await findMaterialButton(page, beatIndex);
   if (!materialBtn) {
     record(`Apply ${testName}`, "FAIL", "Material button not found");
     return false;
@@ -569,7 +601,7 @@ async function applyEffect(
   await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
 
   // 5. Click "Set" button
-  const setOk = await clickSetButton(page);
+  const setOk = await clickSetButton(page, beatIndex);
   if (!setOk) {
     record(`Apply ${testName}`, "FAIL", "Set button not found or disabled");
     return false;
@@ -675,12 +707,13 @@ function verifyEffectParamsExact(
 async function verifyEffectJson(
   page: Page,
   effectType: EffectType,
+  beatIndex: number,
   configLabel: string,
   expectedZoom: number = DEFAULT_ZOOM,
   expectedDuration: number = DEFAULT_DURATION,
   expectedPanDistance: number = DEFAULT_PAN_DISTANCE,
 ): Promise<void> {
-  const testPrefix = `${effectType} (${configLabel})`;
+  const testPrefix = `${effectType} [beat ${beatIndex + 1}] (${configLabel})`;
 
   const jsonTabOk = await toJson(page);
   if (!jsonTabOk) {
@@ -700,7 +733,11 @@ async function verifyEffectJson(
     return;
   }
 
-  const beat = beats[0];
+  const beat = beats[beatIndex];
+  if (!beat) {
+    record(`${testPrefix} JSON`, "FAIL", `No beat at index ${beatIndex}`);
+    return;
+  }
   const image = beat.image as Record<string, unknown> | undefined;
 
   if (!image) {
@@ -763,14 +800,22 @@ async function testAllEffectsDefaults(
   config: (typeof CANVAS_CONFIGS)[number],
   lang: "en" | "ja",
 ): Promise<void> {
-  for (const effectType of EFFECT_TYPES) {
-    console.log(`\n    --- Effect: ${effectType} (defaults) ---`);
+  for (const [beatIndex, effectType] of EFFECT_TYPES.entries()) {
+    console.log(`\n    --- Effect: ${effectType} (defaults, beat ${beatIndex + 1}) ---`);
 
-    const applied = await applyEffect(page, effectType, lang, config.label);
+    const applied = await applyEffect(page, effectType, beatIndex, lang, config.label);
     if (!applied) continue;
 
     // Verify with default values
-    await verifyEffectJson(page, effectType, config.label, DEFAULT_ZOOM, DEFAULT_DURATION, DEFAULT_PAN_DISTANCE);
+    await verifyEffectJson(
+      page,
+      effectType,
+      beatIndex,
+      config.label,
+      DEFAULT_ZOOM,
+      DEFAULT_DURATION,
+      DEFAULT_PAN_DISTANCE,
+    );
   }
 }
 
@@ -786,20 +831,21 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
     const testLabel = `${effectType} custom (${config.label})`;
     console.log(`\n    --- ${testLabel} ---`);
 
-    const applied = await applyEffect(page, effectType, lang, config.label);
+    const beatIndex = EFFECT_TYPES.indexOf(effectType);
+    const applied = await applyEffect(page, effectType, beatIndex, lang, config.label);
     if (applied) {
       // Go back to BEAT tab to change inputs before re-applying
       await toBeatTab(page);
       await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
 
-      const zoomSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.zoomInput, customZoom);
+      const zoomSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.zoomInput, beatIndex, customZoom);
       record(`${testLabel} set zoom`, zoomSet ? "PASS" : "FAIL", `zoom=${customZoom}`);
 
-      const durSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.durationInput, customDuration);
+      const durSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.durationInput, beatIndex, customDuration);
       record(`${testLabel} set duration`, durSet ? "PASS" : "FAIL", `duration=${customDuration}`);
 
       await page.waitForTimeout(300);
-      const setOk = await clickSetButton(page);
+      const setOk = await clickSetButton(page, beatIndex);
       record(`${testLabel} click Set`, setOk ? "PASS" : "FAIL", "Re-applied with custom values");
 
       if (setOk) {
@@ -807,6 +853,7 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
         await verifyEffectJson(
           page,
           effectType,
+          beatIndex,
           `${config.label} custom`,
           customZoom,
           customDuration,
@@ -822,22 +869,23 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
     const testLabel = `${effectType} custom (${config.label})`;
     console.log(`\n    --- ${testLabel} ---`);
 
-    const applied = await applyEffect(page, effectType, lang, config.label);
+    const beatIndex = EFFECT_TYPES.indexOf(effectType);
+    const applied = await applyEffect(page, effectType, beatIndex, lang, config.label);
     if (applied) {
       await toBeatTab(page);
       await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
 
-      const zoomSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.zoomInput, customZoom);
+      const zoomSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.zoomInput, beatIndex, customZoom);
       record(`${testLabel} set zoom`, zoomSet ? "PASS" : "FAIL", `zoom=${customZoom}`);
 
-      const durSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.durationInput, customDuration);
+      const durSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.durationInput, beatIndex, customDuration);
       record(`${testLabel} set duration`, durSet ? "PASS" : "FAIL", `duration=${customDuration}`);
 
-      const panSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.panDistanceInput, customPanDistance);
+      const panSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.panDistanceInput, beatIndex, customPanDistance);
       record(`${testLabel} set panDistance`, panSet ? "PASS" : "FAIL", `panDistance=${customPanDistance}`);
 
       await page.waitForTimeout(300);
-      const setOk = await clickSetButton(page);
+      const setOk = await clickSetButton(page, beatIndex);
       record(`${testLabel} click Set`, setOk ? "PASS" : "FAIL", "Re-applied with custom values");
 
       if (setOk) {
@@ -845,6 +893,7 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
         await verifyEffectJson(
           page,
           effectType,
+          beatIndex,
           `${config.label} custom`,
           customZoom,
           customDuration,
@@ -853,6 +902,40 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
       }
     }
   }
+}
+
+async function generateContentsIfEnabled(page: Page, configLabel: string): Promise<void> {
+  if (!SHOULD_RUN_GENERATE) return;
+  const testName = `Generate contents (${configLabel})`;
+  const generateButton = page.locator('[data-testid="generate-contents-button"]').first();
+  if ((await generateButton.count()) === 0) {
+    record(testName, "FAIL", "Generate button not found");
+    return;
+  }
+
+  await generateButton.click();
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+  const generatingIndicator = page.locator('[data-testid="generating-indicator"]');
+  const timeoutMs = 10 * 60 * 1000;
+  const deadline = Date.now() + timeoutMs;
+
+  while (Date.now() < deadline) {
+    const indicatorVisible =
+      (await generatingIndicator.count()) > 0 &&
+      (await generatingIndicator
+        .first()
+        .isVisible()
+        .catch(() => false));
+    const disabled = await generateButton.isDisabled().catch(() => false);
+    if (!indicatorVisible && !disabled) {
+      record(testName, "PASS", "Generation completed");
+      return;
+    }
+    await page.waitForTimeout(2000);
+  }
+
+  record(testName, "WARN", "Timed out waiting for generation completion");
 }
 
 // =====================================================================
@@ -924,6 +1007,11 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
       // Phase 5: Test custom values (zoom/duration/panDistance) on zoomIn + moveToLeft
       console.log("\n  Phase 5: Custom Values & Verify JSON");
       await testCustomValues(page, config, lang);
+
+      if (SHOULD_RUN_GENERATE) {
+        console.log("\n  Phase 5.5: Generate Contents");
+      }
+      await generateContentsIfEnabled(page, config.label);
     }
 
     // Phase 6: Console Health
