@@ -434,35 +434,25 @@ async function setupProjectViaJson(
 // Effect Application Helpers
 // =====================================================================
 
-/** Find the ImageEffect panel's parent container. */
-async function findEffectPanel(page: Page): Promise<string> {
-  // The ImageEffect panel uses a label with i18n key "beat.html_tailwind.effectLabel"
-  // which renders as "Image Effect" (en) or "画像エフェクト" (ja)
-  const panelText = await page.evaluate(() => {
-    const panels = document.querySelectorAll(".mb-3.rounded-md.border");
-    for (const panel of panels) {
-      const text = panel.textContent?.substring(0, 100) || "";
-      if (text.includes("Image Effect") || text.includes("画像エフェクト")) {
-        return text.substring(0, 80);
-      }
-    }
-    return "";
-  });
-  return panelText;
+const IMAGE_EFFECT_SELECTORS = {
+  panel: '[data-testid="image-effect-panel"]',
+  effectSelect: '[data-testid="image-effect-effect-select"]',
+  materialButton: '[data-testid="image-effect-material-button"]',
+  setButton: '[data-testid="image-effect-set-button"]',
+  durationInput: '[data-testid="image-effect-duration-input"]',
+  zoomInput: '[data-testid="image-effect-zoom-input"]',
+  panDistanceInput: '[data-testid="image-effect-pan-distance-input"]',
+} as const;
+
+/** Verify ImageEffect panel exists by stable test id. */
+async function findEffectPanel(page: Page): Promise<boolean> {
+  const panel = page.locator(IMAGE_EFFECT_SELECTORS.panel).first();
+  return (await panel.count()) > 0;
 }
 
 /** Find the effect type Select trigger inside the ImageEffect panel. */
 async function findEffectSelectTrigger(page: Page): Promise<ReturnType<Page["$"]>> {
-  const triggers = await page.$$('button[role="combobox"]');
-  for (const trigger of triggers) {
-    const inPanel = await trigger.evaluate((el) => {
-      const panel = el.closest(".mb-3.rounded-md.border");
-      const text = panel?.textContent?.substring(0, 100) || "";
-      return text.includes("Image Effect") || text.includes("画像エフェクト");
-    });
-    if (inPanel) return trigger;
-  }
-  return null;
+  return await page.$(IMAGE_EFFECT_SELECTORS.effectSelect);
 }
 
 /** Select an option from an open dropdown by exact text. */
@@ -483,26 +473,7 @@ async function selectOptionByText(page: Page, optionText: string): Promise<boole
 
 /** Find the material image button in the ImageEffect panel. */
 async function findMaterialButton(page: Page): Promise<ReturnType<Page["$"]>> {
-  const buttons = await page.$$("button");
-  for (const btn of buttons) {
-    const result = await btn.evaluate((el) => {
-      const panel = el.closest(".mb-3.rounded-md.border");
-      if (!panel) return { inPanel: false, text: "" };
-      const panelText = panel.textContent?.substring(0, 100) || "";
-      const isPanelOk = panelText.includes("Image Effect") || panelText.includes("画像エフェクト");
-      return { inPanel: isPanelOk, text: el.textContent?.trim() || "" };
-    });
-    if (!result.inPanel) continue;
-    // The material button shows key name, or placeholder like "Select from Materials" / "Materialsから選択"
-    if (
-      result.text.includes(MATERIAL_KEY) ||
-      result.text.includes("Select from") ||
-      result.text.includes("Materialsから")
-    ) {
-      return btn;
-    }
-  }
-  return null;
+  return await page.$(IMAGE_EFFECT_SELECTORS.materialButton);
 }
 
 /** Select a material from the MaterialsImageDialog. */
@@ -524,60 +495,20 @@ async function selectMaterialFromDialog(page: Page): Promise<boolean> {
 
 /** Click the "Set" button in the ImageEffect panel. */
 async function clickSetButton(page: Page): Promise<boolean> {
-  const buttons = await page.$$("button");
-  for (const btn of buttons) {
-    const result = await btn.evaluate((el) => {
-      const panel = el.closest(".mb-3.rounded-md.border");
-      if (!panel) return { inPanel: false, text: "", disabled: true };
-      const panelText = panel.textContent?.substring(0, 100) || "";
-      const isPanelOk = panelText.includes("Image Effect") || panelText.includes("画像エフェクト");
-      return {
-        inPanel: isPanelOk,
-        text: el.textContent?.trim() || "",
-        disabled: (el as HTMLButtonElement).disabled,
-      };
-    });
-    if (!result.inPanel) continue;
-    if ((result.text === "Set" || result.text === "セット") && !result.disabled) {
-      await btn.click();
-      return true;
-    }
-  }
-  return false;
+  const setButton = await page.$(IMAGE_EFFECT_SELECTORS.setButton);
+  if (!setButton) return false;
+  const disabled = await setButton.isDisabled();
+  if (disabled) return false;
+  await setButton.click();
+  return true;
 }
 
-/** Set an input field's value inside the ImageEffect panel by label text. */
-async function setEffectInput(page: Page, labelText: string, value: number): Promise<boolean> {
-  return page.evaluate(
-    ({ label, val }) => {
-      const panels = document.querySelectorAll(".mb-3.rounded-md.border");
-      for (const panel of panels) {
-        const panelText = panel.textContent?.substring(0, 100) || "";
-        if (!panelText.includes("Image Effect") && !panelText.includes("画像エフェクト")) continue;
-
-        const labels = panel.querySelectorAll("label");
-        for (const lbl of labels) {
-          if (!lbl.textContent?.includes(label)) continue;
-          // Set only the number input in the same field block as the matched label.
-          const fieldContainer = lbl.parentElement;
-          const input = fieldContainer?.querySelector(":scope > input[type='number']");
-          if (input) {
-            const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-              window.HTMLInputElement.prototype,
-              "value",
-            )?.set;
-            if (nativeInputValueSetter) {
-              nativeInputValueSetter.call(input, String(val));
-              input.dispatchEvent(new Event("input", { bubbles: true }));
-              return true;
-            }
-          }
-        }
-      }
-      return false;
-    },
-    { label: labelText, val: value },
-  );
+/** Set an input field's value inside the ImageEffect panel by stable test id. */
+async function setEffectInput(page: Page, testIdSelector: string, value: number): Promise<boolean> {
+  const input = await page.$(testIdSelector);
+  if (!input) return false;
+  await input.fill(String(value));
+  return true;
 }
 
 /** Apply a single effect: select effect type → select material → click Set. */
@@ -598,8 +529,8 @@ async function applyEffect(
   await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
 
   // 2. Verify ImageEffect panel is visible
-  const panelText = await findEffectPanel(page);
-  if (!panelText) {
+  const panelExists = await findEffectPanel(page);
+  if (!panelExists) {
     record(`Apply ${testName}`, "FAIL", "ImageEffect panel not found on BEAT tab");
     return false;
   }
@@ -843,15 +774,9 @@ async function testAllEffectsDefaults(
   }
 }
 
-// i18n label text for input fields
-const INPUT_LABELS = {
-  en: { duration: "Duration", zoom: "Zoom", panDistance: "Move Distance" },
-  ja: { duration: "時間", zoom: "ズーム", panDistance: "移動量" },
-};
-
 /** Test custom values: change zoom/duration/panDistance → Set → verify exact JSON values. */
 async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[number], lang: "en" | "ja"): Promise<void> {
-  const labels = INPUT_LABELS[lang];
+  void lang;
   const customZoom = 150;
   const customDuration = 8;
   const customPanDistance = 20;
@@ -868,10 +793,10 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
       await toBeatTab(page);
       await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
 
-      const zoomSet = await setEffectInput(page, labels.zoom, customZoom);
+      const zoomSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.zoomInput, customZoom);
       record(`${testLabel} set zoom`, zoomSet ? "PASS" : "FAIL", `zoom=${customZoom}`);
 
-      const durSet = await setEffectInput(page, labels.duration, customDuration);
+      const durSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.durationInput, customDuration);
       record(`${testLabel} set duration`, durSet ? "PASS" : "FAIL", `duration=${customDuration}`);
 
       await page.waitForTimeout(300);
@@ -903,13 +828,13 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
       await toBeatTab(page);
       await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
 
-      const zoomSet = await setEffectInput(page, labels.zoom, customZoom);
+      const zoomSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.zoomInput, customZoom);
       record(`${testLabel} set zoom`, zoomSet ? "PASS" : "FAIL", `zoom=${customZoom}`);
 
-      const durSet = await setEffectInput(page, labels.duration, customDuration);
+      const durSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.durationInput, customDuration);
       record(`${testLabel} set duration`, durSet ? "PASS" : "FAIL", `duration=${customDuration}`);
 
-      const panSet = await setEffectInput(page, labels.panDistance, customPanDistance);
+      const panSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.panDistanceInput, customPanDistance);
       record(`${testLabel} set panDistance`, panSet ? "PASS" : "FAIL", `panDistance=${customPanDistance}`);
 
       await page.waitForTimeout(300);
