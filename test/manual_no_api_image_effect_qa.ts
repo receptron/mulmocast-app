@@ -776,7 +776,6 @@ async function testAllEffectsDefaults(
 
 /** Test custom values: change zoom/duration/panDistance → Set → verify exact JSON values. */
 async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[number], lang: "en" | "ja"): Promise<void> {
-  void lang;
   const customZoom = 150;
   const customDuration = 8;
   const customPanDistance = 20;
