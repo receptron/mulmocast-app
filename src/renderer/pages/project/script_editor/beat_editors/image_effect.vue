@@ -156,11 +156,20 @@ onBeforeUnmount(() => {
   }
 });
 
+interface LastAppliedPayload {
+  effectType: EffectType;
+  materialKey: string;
+  zoom: number;
+  panDistance: number;
+  duration: number;
+  image: {
+    type: "html_tailwind";
+    animation: true;
+  };
+}
+
 // Last applied values for custom detection
-const lastAppliedEffect = ref<EffectType | null>(null);
-const lastAppliedMaterialKey = ref<string | null>(null);
-const lastAppliedZoom = ref<number>(effectDefaults.zoom);
-const lastAppliedPanDistance = ref<number>(effectDefaults.panDistance);
+const lastAppliedPayload = ref<LastAppliedPayload | null>(null);
 
 const materialKeys = computed(() => {
   const images = props.mulmoScript.imageParams?.images;
@@ -182,16 +191,23 @@ const getApplySelection = (): { effectType: EffectType; materialKey: string } | 
 };
 
 const isCustomEdited = computed(() => {
-  if (!lastAppliedEffect.value || !lastAppliedMaterialKey.value) return false;
-  const imageSrc = `image:${lastAppliedMaterialKey.value}`;
-  return !isTemplateMatch(
+  const payload = lastAppliedPayload.value;
+  if (!payload) return false;
+
+  const imageSrc = `image:${payload.materialKey}`;
+  const templateMatches = isTemplateMatch(
     props.beat.image?.html as string | string[] | undefined,
     props.beat.image?.script as string | string[] | undefined,
-    lastAppliedEffect.value,
+    payload.effectType,
     imageSrc,
-    lastAppliedZoom.value,
-    lastAppliedPanDistance.value,
+    payload.zoom,
+    payload.panDistance,
   );
+
+  const typeMatches = props.beat.image?.type === payload.image.type;
+  const animationMatches = props.beat.image?.animation === payload.image.animation;
+  const durationMatches = props.beat.duration === payload.duration;
+  return !(templateMatches && typeMatches && animationMatches && durationMatches);
 });
 
 const normalizeNumber = (value: unknown, fallback: number, min: number, max: number): number => {
@@ -221,26 +237,35 @@ const applyEffect = () => {
   const imageSrc = `image:${selection.materialKey}`;
   const template = generateEffectTemplate(selection.effectType, imageSrc, zoom, panDistance);
 
-  emit("applyImageEffect", {
+  const appliedPayload: LastAppliedPayload = {
+    effectType: selection.effectType,
+    materialKey: selection.materialKey,
+    zoom,
+    panDistance,
+    duration,
     image: {
-      type: "html_tailwind" as const,
-      html: template.html,
-      script: template.script,
+      type: "html_tailwind",
       animation: true,
     },
-    duration,
+  };
+
+  emit("applyImageEffect", {
+    image: {
+      type: appliedPayload.image.type,
+      html: template.html,
+      script: template.script,
+      animation: appliedPayload.image.animation,
+    },
+    duration: appliedPayload.duration,
   });
 
   // Track last applied for custom detection
-  lastAppliedEffect.value = selection.effectType;
-  lastAppliedMaterialKey.value = selection.materialKey;
-  lastAppliedZoom.value = zoom;
-  lastAppliedPanDistance.value = panDistance;
+  lastAppliedPayload.value = appliedPayload;
 };
 
 // Set presets and reset custom detection when effect selection changes
 watch(selectedEffect, () => {
-  lastAppliedEffect.value = null;
+  lastAppliedPayload.value = null;
   durationSec.value = effectDefaults.duration;
   zoomPercent.value = effectDefaults.zoom;
   panDistancePercent.value = effectDefaults.panDistance;
