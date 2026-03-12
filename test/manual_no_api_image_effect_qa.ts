@@ -1026,7 +1026,9 @@ async function generateContentsIfEnabled(page: Page, configLabel: string): Promi
       monitor.errors.length === 0 ? "No errors" : `${monitor.errors.length} error(s)`,
     );
     if (monitor.errors.length > 0) {
-      monitor.errors.slice(0, 10).forEach((e) => console.log(`    ERROR: ${e.substring(0, 200)}`));
+      monitor.errors.slice(0, 10).forEach((e) => {
+        console.log(`    ERROR: ${e.substring(0, 200)}`);
+      });
     }
     record("Console warnings", monitor.warnings.length <= 5 ? "PASS" : "WARN", `${monitor.warnings.length} warning(s)`);
   } catch (error) {

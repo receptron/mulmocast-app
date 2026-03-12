@@ -90,12 +90,14 @@ const fetchImages = async () => {
   try {
     const refs = (await window.electronAPI.mulmoHandler("mulmoReferenceImagesFiles", props.projectId)) as Record<
       string,
-      Uint8Array
+      ArrayBuffer | Uint8Array
     >;
     clearItems();
     imageItems.value = props.materialKeys.map((key) => ({
       key,
-      previewUrl: refs[key] ? bufferToUrl(refs[key]) : null,
+      previewUrl: refs[key]
+        ? bufferToUrl(refs[key] instanceof Uint8Array ? refs[key] : new Uint8Array(refs[key]))
+        : null,
     }));
   } catch (error) {
     console.error("Failed to load material images", error);
