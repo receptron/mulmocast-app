@@ -1,11 +1,11 @@
 <template>
-  <div class="mb-3 rounded-md border p-3">
+  <div class="mb-3 rounded-md border p-3" data-testid="image-effect-panel">
     <Label class="mb-2 block font-medium">{{ t("beat.html_tailwind.effectLabel") }}</Label>
 
     <!-- Effect preset select -->
     <div class="mb-2">
       <Select v-model="selectedEffect">
-        <SelectTrigger class="w-full">
+        <SelectTrigger class="w-full" data-testid="image-effect-effect-select">
           <SelectValue :placeholder="t('beat.html_tailwind.effectPlaceholder')" />
         </SelectTrigger>
         <SelectContent>
@@ -20,10 +20,21 @@
     <div class="mb-2">
       <Label class="mb-1 block text-sm">{{ t("beat.html_tailwind.sourceImage") }}</Label>
       <div class="flex items-center gap-2">
-        <Button variant="outline" size="sm" @click="openMaterialsDialog" :disabled="!hasMaterials">
+        <Button
+          data-testid="image-effect-material-button"
+          variant="outline"
+          size="sm"
+          @click="openMaterialsDialog"
+          :disabled="!hasMaterials"
+        >
           {{ selectedMaterialLabel }}
         </Button>
-        <img v-if="selectedPreviewUrl" :src="selectedPreviewUrl" class="h-8 w-8 rounded object-cover" />
+        <img
+          v-if="selectedPreviewUrl"
+          data-testid="image-effect-selected-preview"
+          :src="selectedPreviewUrl"
+          class="h-8 w-8 rounded object-cover"
+        />
       </div>
       <p v-if="!hasMaterials" class="text-muted-foreground mt-1 text-xs">
         {{ t("beat.html_tailwind.noMaterials") }}
@@ -46,7 +57,7 @@
         <p class="text-muted-foreground text-xs">
           {{ t("beat.html_tailwind.durationMax") }}
         </p>
-        <Input v-model="durationSec" type="number" min="1" />
+        <Input v-model="durationSec" data-testid="image-effect-duration-input" type="number" min="1" />
       </div>
       <div class="flex-1">
         <Label class="mb-1 block text-sm">{{ t("beat.html_tailwind.zoom") }}</Label>
@@ -56,7 +67,7 @@
         <p class="text-muted-foreground text-xs">
           {{ t("beat.html_tailwind.zoomMax") }}
         </p>
-        <Input v-model="zoomPercent" type="number" min="100" max="200" />
+        <Input v-model="zoomPercent" data-testid="image-effect-zoom-input" type="number" min="100" max="200" />
       </div>
     </div>
     <div v-if="isPan" class="mb-2 flex gap-3">
@@ -71,7 +82,13 @@
         <p class="text-muted-foreground text-xs">
           {{ t("beat.html_tailwind.panDistanceNote") }}
         </p>
-        <Input v-model="panDistancePercent" type="number" min="1" max="50" />
+        <Input
+          v-model="panDistancePercent"
+          data-testid="image-effect-pan-distance-input"
+          type="number"
+          min="1"
+          max="50"
+        />
       </div>
     </div>
 
@@ -82,7 +99,7 @@
           {{ t("beat.html_tailwind.customEdited") }}
         </Badge>
       </div>
-      <Button size="sm" @click="applyEffect" :disabled="!canApplyEffect">
+      <Button data-testid="image-effect-set-button" size="sm" @click="applyEffect" :disabled="!canApplyEffect">
         {{ t("ui.actions.set") }}
       </Button>
     </div>
