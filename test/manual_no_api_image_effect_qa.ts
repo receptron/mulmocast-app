@@ -558,20 +558,18 @@ async function setEffectInput(page: Page, labelText: string, value: number): Pro
         const labels = panel.querySelectorAll("label");
         for (const lbl of labels) {
           if (!lbl.textContent?.includes(label)) continue;
-          // Find input in parent container
-          let container = lbl.parentElement;
-          for (let depth = 0; container && depth < 3; depth++, container = container.parentElement) {
-            const input = container.querySelector("input[type='number']");
-            if (input) {
-              const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-                window.HTMLInputElement.prototype,
-                "value",
-              )?.set;
-              if (nativeInputValueSetter) {
-                nativeInputValueSetter.call(input, String(val));
-                input.dispatchEvent(new Event("input", { bubbles: true }));
-                return true;
-              }
+          // Set only the number input in the same field block as the matched label.
+          const fieldContainer = lbl.parentElement;
+          const input = fieldContainer?.querySelector(":scope > input[type='number']");
+          if (input) {
+            const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+              window.HTMLInputElement.prototype,
+              "value",
+            )?.set;
+            if (nativeInputValueSetter) {
+              nativeInputValueSetter.call(input, String(val));
+              input.dispatchEvent(new Event("input", { bubbles: true }));
+              return true;
             }
           }
         }
