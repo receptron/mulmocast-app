@@ -105,7 +105,25 @@ npx tsx test/manual_no_api_vertex_ai_qa.ts
 npx tsx test/manual_no_api_speech_params_qa.ts
 ```
 
-5. `test/manual_no_api_electron_upgrade_qa.ts`
+5. `test/manual_no_api_beat_navigator_qa.ts`
+**Beat Navigator QA テスト（APIコスト: なし）**
+
+- Beat Navigator 機能（グリッドダイアログでビートを選択してスクロール遷移）を検証する QA テストスイート
+- CDP 経由で起動中の Electron アプリに接続
+- Markdown ビート（30件）を使用し、PDF Handout 生成でサムネイル画像を一括作成
+- テストプロジェクトは `[QA] Beat Navigator Test <タイムスタンプ>` というタイトルで作成されるため、手動で識別・削除が容易
+- 4フェーズ構成:
+  - **Phase 1 – Setup**: テストプロジェクト作成、Markdown ビートのスクリプト書き込み、PDF Handout による画像生成
+  - **Phase 2 – MEDIA タブ**: フローティングボタン表示確認、ダイアログ開閉、各ビートへのスクロール遷移（先頭・末尾・中間）
+  - **Phase 3 – TEXT タブ**: MEDIA タブと同等のスクロール遷移確認
+  - **Phase 4 – Console Health**: テスト中のコンソールエラー有無
+
+**使用方法:**
+```bash
+npx tsx test/manual_no_api_beat_navigator_qa.ts
+```
+
+6. `test/manual_no_api_electron_upgrade_qa.ts`
 **Electron アップグレード QA テスト**
 
 - Electron バージョンアップ時の回帰テスト用スイート

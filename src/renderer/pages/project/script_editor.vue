@@ -66,7 +66,8 @@
 
     <TabsContent :value="SCRIPT_EDITOR_TABS.TEXT" class="mt-2">
       <div
-        class="border-border bg-muted/50 max-h-[calc(100vh-340px)] min-h-[400px] space-y-6 overflow-y-auto rounded-lg border p-4 font-mono text-sm"
+        ref="textTabScrollContainerRef"
+        class="border-border bg-muted/50 relative max-h-[calc(100vh-340px)] min-h-[400px] space-y-6 overflow-y-auto rounded-lg border p-4 font-mono text-sm"
       >
         <p class="text-muted-foreground mb-2 text-sm">
           {{ t("project.scriptEditor.text.mode") }} - {{ t("project.scriptEditor.text.modeDescription") }}
@@ -86,7 +87,12 @@
             leave-to-class="opacity-0 translate-y-2 scale-95"
             move-class="transition-all duration-300 ease-in-out"
           >
-            <div v-for="(beat, index) in mulmoScript?.beats ?? []" :key="beat?.id ?? index" class="relative">
+            <div
+              v-for="(beat, index) in mulmoScript?.beats ?? []"
+              :key="beat?.id ?? index"
+              :data-beat-id="beat?.id ?? index"
+              class="relative"
+            >
               <Card class="gap-2 space-y-1 p-4" :class="isValidBeats[index] ? '' : 'border-2 border-red-400'">
                 <TextEditor
                   :index="index"
@@ -139,6 +145,16 @@
             </div>
           </TransitionGroup>
         </div>
+        <Button
+          variant="outline"
+          size="icon"
+          class="bg-card/90 hover:bg-accent sticky bottom-2 left-full z-20 mr-2 shadow-md backdrop-blur-sm"
+          @click="openBeatNavigator(SCRIPT_EDITOR_TABS.TEXT)"
+          :title="t('project.scriptEditor.beatNavigator.title')"
+          data-testid="beat-navigator-button-text"
+        >
+          <LayoutGrid class="h-4 w-4" />
+        </Button>
       </div>
     </TabsContent>
     <TabsContent :value="SCRIPT_EDITOR_TABS.YAML" class="mt-4">
@@ -187,7 +203,8 @@
 
     <TabsContent :value="SCRIPT_EDITOR_TABS.MEDIA" class="mt-4">
       <div
-        class="border-border bg-muted/50 max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border p-4"
+        ref="mediaTabScrollContainerRef"
+        class="border-border bg-muted/50 relative max-h-[calc(100vh-340px)] min-h-[400px] overflow-y-auto rounded-lg border p-4"
       >
         <p class="text-muted-foreground mb-2 text-sm">
           {{ t("project.scriptEditor.media.mode") }} - {{ t("project.scriptEditor.media.modeDescription") }}
@@ -208,7 +225,12 @@
             leave-to-class="opacity-0 translate-y-2 scale-95"
             move-class="transition-all duration-300 ease-in-out"
           >
-            <div v-for="(beat, index) in mulmoScript?.beats ?? []" :key="beat?.id ?? index" class="relative">
+            <div
+              v-for="(beat, index) in mulmoScript?.beats ?? []"
+              :key="beat?.id ?? index"
+              :data-beat-id="beat?.id ?? index"
+              class="relative"
+            >
               <Card class="p-4" :class="isValidBeats[index] ? '' : 'border-2 border-red-400'">
                 <BeatEditor
                   :beat="beat"
@@ -275,6 +297,16 @@
             </div>
           </TransitionGroup>
         </div>
+        <Button
+          variant="outline"
+          size="icon"
+          class="bg-card/90 hover:bg-accent sticky bottom-2 left-full z-20 mr-2 shadow-md backdrop-blur-sm"
+          @click="openBeatNavigator(SCRIPT_EDITOR_TABS.MEDIA)"
+          :title="t('project.scriptEditor.beatNavigator.title')"
+          data-testid="beat-navigator-button-media"
+        >
+          <LayoutGrid class="h-4 w-4" />
+        </Button>
       </div>
     </TabsContent>
     <TabsContent :value="SCRIPT_EDITOR_TABS.STYLE" class="mt-4">
@@ -323,14 +355,22 @@
         />
       </div>
     </TabsContent>
+
+    <BeatNavigatorDialog
+      ref="beatNavigatorDialogRef"
+      :beats="mulmoScript?.beats ?? []"
+      :imageFiles="imageFiles"
+      @navigate="navigateToBeat"
+    />
   </Tabs>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
-import { ArrowUp, ArrowDown, Trash, Copy } from "lucide-vue-next";
+import { ArrowUp, ArrowDown, Trash, Copy, LayoutGrid } from "lucide-vue-next";
+import { Button } from "@/components/ui/button";
 import YAML from "yaml";
 import {
   MulmoPresentationStyleMethods,
@@ -358,6 +398,7 @@ import PresentationStyle from "./script_editor/presentation_style.vue";
 import Charactor from "./script_editor/charactor.vue";
 import TextEditor from "./script_editor/text_editor.vue";
 import StyleInfoDisplay from "./script_editor/style_info_display.vue";
+import BeatNavigatorDialog from "./script_editor/beat_navigator_dialog.vue";
 
 import { MulmoError } from "../../../types";
 import { arrayPositionUp, arrayInsertAfter } from "@/lib/array";
@@ -406,6 +447,38 @@ const globalStore = useMulmoGlobalStore();
 const mulmoScriptHistoryStore = useMulmoScriptHistoryStore();
 
 const currentTab = ref<ScriptEditorTab>(props.scriptEditorActiveTab || SCRIPT_EDITOR_TABS.TEXT);
+const beatNavigatorDialogRef = ref<InstanceType<typeof BeatNavigatorDialog> | null>(null);
+const textTabScrollContainerRef = ref<HTMLElement | null>(null);
+const mediaTabScrollContainerRef = ref<HTMLElement | null>(null);
+const navigatorSourceTab = ref<ScriptEditorTab>(SCRIPT_EDITOR_TABS.TEXT);
+
+const navigateToBeat = async (index: number) => {
+  await nextTick();
+  const beat = props.mulmoScript?.beats?.[index];
+  if (!beat) return;
+  const container =
+    navigatorSourceTab.value === SCRIPT_EDITOR_TABS.MEDIA
+      ? mediaTabScrollContainerRef.value
+      : textTabScrollContainerRef.value;
+  if (!container) return;
+
+  const beatIdValue = String(beat.id ?? index);
+  const escapedBeatId = CSS.escape(beatIdValue);
+  const el = container.querySelector(`[data-beat-id="${escapedBeatId}"]`);
+  if (!el) return;
+  const containerRect = container.getBoundingClientRect();
+  const elRect = el.getBoundingClientRect();
+  const TOP_PADDING_PX = 20;
+  const targetTop = container.scrollTop + (elRect.top - containerRect.top) - TOP_PADDING_PX;
+  const maxTop = Math.max(0, container.scrollHeight - container.clientHeight);
+  const top = Math.min(Math.max(0, targetTop), maxTop);
+  container.scrollTo({ top, behavior: "auto" });
+};
+
+const openBeatNavigator = (tab: ScriptEditorTab) => {
+  navigatorSourceTab.value = tab;
+  beatNavigatorDialogRef.value?.open();
+};
 
 const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
   /*
