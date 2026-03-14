@@ -464,7 +464,7 @@ const navigateToBeat = async (index: number) => {
 
   const beatIdValue = String(beat.id ?? index);
   const escapedBeatId = CSS.escape(beatIdValue);
-  const el = container.querySelector(`[data-beat-id="${escapedBeatId}"]`) as HTMLElement | null;
+  const el = container.querySelector(`[data-beat-id="${escapedBeatId}"]`);
   if (!el) return;
   const containerRect = container.getBoundingClientRect();
   const elRect = el.getBoundingClientRect();
