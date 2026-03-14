@@ -236,6 +236,13 @@ async function waitForDialogToClose(page: Page): Promise<boolean> {
   }
 }
 
+async function dismissDialogIfOpen(page: Page): Promise<void> {
+  const dialog = await page.$('[role="dialog"]');
+  if (!dialog) return;
+  await page.keyboard.press("Escape");
+  await waitForDialogToClose(page);
+}
+
 async function waitForBeatVisible(page: Page, beatId: string): Promise<boolean> {
   try {
     await page.waitForFunction(
@@ -418,12 +425,30 @@ async function phaseMediaTab(page: Page): Promise<void> {
   if (!dialog) return;
 
   // Test: Correct number of beats in dialog
-  const beatButtons = await dialog.$$('[data-testid^="beat-card-"]');
+  const beatButtons = await dialog.$$('button[data-testid^="beat-nav-card-"]');
   record(
     "Dialog beat count",
     beatButtons.length === BEAT_COUNT ? "PASS" : "FAIL",
     `Expected ${BEAT_COUNT}, got ${beatButtons.length}`,
   );
+
+  const beatNumberLabels = await dialog.$$('[data-testid^="beat-nav-card-number-"]');
+  const midIndex = Math.floor(BEAT_COUNT / 2);
+  const [firstNumber, middleNumber, lastNumber] = await Promise.all([
+    beatNumberLabels[0]?.getAttribute("data-beat-number"),
+    beatNumberLabels[midIndex]?.getAttribute("data-beat-number"),
+    beatNumberLabels[BEAT_COUNT - 1]?.getAttribute("data-beat-number"),
+  ]);
+  const beatNumbersOk = firstNumber === "1" && middleNumber === `${midIndex + 1}` && lastNumber === `${BEAT_COUNT}`;
+  record(
+    "Beat number labels (MEDIA)",
+    beatNumbersOk ? "PASS" : "FAIL",
+    `first=${firstNumber}, middle=${middleNumber}, last=${lastNumber}`,
+  );
+  if (!beatNumbersOk) {
+    await dismissDialogIfOpen(page);
+    return;
+  }
 
   // Prepare dialog scroll viewport for wheel tests
   const mediaViewportReady = await dialog.evaluate((el) => {
@@ -516,7 +541,10 @@ async function phaseMediaTab(page: Page): Promise<void> {
     }).length;
   });
   record("Thumbnails present", thumbnailCount >= BEAT_COUNT ? "PASS" : "FAIL", `Found ${thumbnailCount} real images`);
-  if (thumbnailCount < BEAT_COUNT) return;
+  if (thumbnailCount < BEAT_COUNT) {
+    await dismissDialogIfOpen(page);
+    return;
+  }
 
   // Test: Beat text is displayed
   const hasText = await dialog.evaluate((el, rid) => {
@@ -556,6 +584,7 @@ async function phaseMediaTab(page: Page): Promise<void> {
     const dialogClosed = await waitForDialogToClose(page);
     if (!dialogClosed) {
       record("Dialog closes after selection (MEDIA last)", "FAIL", "Dialog did not close after selecting last beat");
+      await dismissDialogIfOpen(page);
       return;
     }
 
@@ -580,7 +609,7 @@ async function phaseMediaTab(page: Page): Promise<void> {
 
     record(
       "Last beat clickable at dialog bottom (MEDIA)",
-      lastBeatVisible ? "PASS" : scrollAfter !== scrollBefore ? "WARN" : "FAIL",
+      lastBeatVisible ? "PASS" : "FAIL",
       `scrollTop: ${scrollBefore} → ${scrollAfter}, beat visible: ${lastBeatVisible}`,
     );
   }
@@ -593,7 +622,7 @@ async function phaseMediaTab(page: Page): Promise<void> {
 
     const dialog2 = await page.$('[role="dialog"]');
     if (dialog2) {
-      const beatButtons2 = await dialog2.$$('[data-testid^="beat-card-"]');
+      const beatButtons2 = await dialog2.$$('button[data-testid^="beat-nav-card-"]');
       const beat5Btn = beatButtons2[4];
       if (beat5Btn) {
         const scrollBeforeBeat5 = await page.evaluate(() => {
@@ -607,6 +636,7 @@ async function phaseMediaTab(page: Page): Promise<void> {
         const dialogClosed = await waitForDialogToClose(page);
         if (!dialogClosed) {
           record("Dialog closes after selection (MEDIA beat5)", "FAIL", "Dialog did not close after selecting beat 5");
+          await dismissDialogIfOpen(page);
           return;
         }
 
@@ -631,7 +661,7 @@ async function phaseMediaTab(page: Page): Promise<void> {
 
         record(
           "Scroll to beat 5 (MEDIA)",
-          beat5Visible ? "PASS" : scrollAfterBeat5 !== scrollBeforeBeat5 ? "WARN" : "FAIL",
+          beat5Visible ? "PASS" : "FAIL",
           `scrollTop: ${scrollBeforeBeat5} → ${scrollAfterBeat5}, beat visible: ${beat5Visible}`,
         );
       }
@@ -646,13 +676,14 @@ async function phaseMediaTab(page: Page): Promise<void> {
 
     const dialog3 = await page.$('[role="dialog"]');
     if (dialog3) {
-      const beatButtons3 = await dialog3.$$('[data-testid^="beat-card-"]');
+      const beatButtons3 = await dialog3.$$('button[data-testid^="beat-nav-card-"]');
       const firstBeatBtn = beatButtons3[0];
       if (firstBeatBtn) {
         await firstBeatBtn.click();
         const dialogClosed = await waitForDialogToClose(page);
         if (!dialogClosed) {
           record("Dialog closes after selection (MEDIA beat1)", "FAIL", "Dialog did not close after selecting beat 1");
+          await dismissDialogIfOpen(page);
           return;
         }
 
@@ -702,13 +733,34 @@ async function phaseTextTab(page: Page): Promise<void> {
   if (!dialog) return;
 
   // Collect beat buttons in dialog
-  const beatButtons = await dialog.$$('[data-testid^="beat-card-"]');
+  const beatButtons = await dialog.$$('button[data-testid^="beat-nav-card-"]');
   record(
     "Dialog beat count (TEXT)",
     beatButtons.length === BEAT_COUNT ? "PASS" : "FAIL",
     `Expected ${BEAT_COUNT}, got ${beatButtons.length}`,
   );
-  if (beatButtons.length !== BEAT_COUNT) return;
+  if (beatButtons.length !== BEAT_COUNT) {
+    await dismissDialogIfOpen(page);
+    return;
+  }
+
+  const beatNumberLabels = await dialog.$$('[data-testid^="beat-nav-card-number-"]');
+  const midIndex = Math.floor(BEAT_COUNT / 2);
+  const [firstNumber, middleNumber, lastNumber] = await Promise.all([
+    beatNumberLabels[0]?.getAttribute("data-beat-number"),
+    beatNumberLabels[midIndex]?.getAttribute("data-beat-number"),
+    beatNumberLabels[BEAT_COUNT - 1]?.getAttribute("data-beat-number"),
+  ]);
+  const beatNumbersOk = firstNumber === "1" && middleNumber === `${midIndex + 1}` && lastNumber === `${BEAT_COUNT}`;
+  record(
+    "Beat number labels (TEXT)",
+    beatNumbersOk ? "PASS" : "FAIL",
+    `first=${firstNumber}, middle=${middleNumber}, last=${lastNumber}`,
+  );
+  if (!beatNumbersOk) {
+    await dismissDialogIfOpen(page);
+    return;
+  }
 
   const textThumbnailCount = await dialog.evaluate((el) => {
     return Array.from(el.querySelectorAll("img")).filter((img) => {
@@ -721,7 +773,10 @@ async function phaseTextTab(page: Page): Promise<void> {
     textThumbnailCount >= BEAT_COUNT ? "PASS" : "FAIL",
     `Found ${textThumbnailCount} real images`,
   );
-  if (textThumbnailCount < BEAT_COUNT) return;
+  if (textThumbnailCount < BEAT_COUNT) {
+    await dismissDialogIfOpen(page);
+    return;
+  }
 
   const hasText = await dialog.evaluate((el, rid) => {
     const paragraphs = el.querySelectorAll("p");
@@ -735,7 +790,10 @@ async function phaseTextTab(page: Page): Promise<void> {
     hasText ? "PASS" : "FAIL",
     hasText ? "Test text found in dialog" : "Test text not found",
   );
-  if (!hasText) return;
+  if (!hasText) {
+    await dismissDialogIfOpen(page);
+    return;
+  }
 
   // Prepare dialog scroll viewport for wheel tests
   const textViewportReady = await dialog.evaluate((el) => {
@@ -841,6 +899,7 @@ async function phaseTextTab(page: Page): Promise<void> {
     const dialogClosed = await waitForDialogToClose(page);
     if (!dialogClosed) {
       record("Dialog closes after selection (TEXT last)", "FAIL", "Dialog did not close after selecting last beat");
+      await dismissDialogIfOpen(page);
       return;
     }
 
@@ -865,7 +924,7 @@ async function phaseTextTab(page: Page): Promise<void> {
 
     record(
       "Last beat clickable at dialog bottom (TEXT)",
-      lastBeatVisible ? "PASS" : scrollAfterLast !== scrollBeforeLast ? "WARN" : "FAIL",
+      lastBeatVisible ? "PASS" : "FAIL",
       `scrollTop: ${scrollBeforeLast} → ${scrollAfterLast}, beat visible: ${lastBeatVisible}`,
     );
   }
@@ -874,6 +933,7 @@ async function phaseTextTab(page: Page): Promise<void> {
   const textBtn2 = await page.$('[data-testid="beat-navigator-button-text"]');
   if (!textBtn2) {
     record("Scroll to beat 5 (TEXT)", "FAIL", "Navigator button not found after bottom-click test");
+    await dismissDialogIfOpen(page);
     return;
   }
   await textBtn2.click();
@@ -882,10 +942,11 @@ async function phaseTextTab(page: Page): Promise<void> {
   const dialogForBeat5 = await page.$('[role="dialog"]');
   if (!dialogForBeat5) {
     record("Scroll to beat 5 (TEXT)", "FAIL", "Dialog not found after re-open");
+    await dismissDialogIfOpen(page);
     return;
   }
 
-  const beatButtonsForBeat5 = await dialogForBeat5.$$('[data-testid^="beat-card-"]');
+  const beatButtonsForBeat5 = await dialogForBeat5.$$('button[data-testid^="beat-nav-card-"]');
 
   // Click beat 5 (second to last)
   const targetBeatIndex = 4; // 0-based
@@ -902,6 +963,7 @@ async function phaseTextTab(page: Page): Promise<void> {
     const dialogClosed = await waitForDialogToClose(page);
     if (!dialogClosed) {
       record("Dialog closes after selection (TEXT beat5)", "FAIL", "Dialog did not close after selecting beat 5");
+      await dismissDialogIfOpen(page);
       return;
     }
 
@@ -926,7 +988,7 @@ async function phaseTextTab(page: Page): Promise<void> {
 
     record(
       "Scroll to beat 5 (TEXT)",
-      targetVisible ? "PASS" : scrollAfter !== scrollBefore ? "WARN" : "FAIL",
+      targetVisible ? "PASS" : "FAIL",
       `scrollTop: ${scrollBefore} → ${scrollAfter}, beat visible: ${targetVisible}`,
     );
 
@@ -938,13 +1000,14 @@ async function phaseTextTab(page: Page): Promise<void> {
 
       const dialog2 = await page.$('[role="dialog"]');
       if (dialog2) {
-        const beatButtons2 = await dialog2.$$('[data-testid^="beat-card-"]');
+        const beatButtons2 = await dialog2.$$('button[data-testid^="beat-nav-card-"]');
         const firstBeatBtn = beatButtons2[0];
         if (firstBeatBtn) {
           await firstBeatBtn.click();
           const dialogClosed = await waitForDialogToClose(page);
           if (!dialogClosed) {
             record("Dialog closes after selection (TEXT beat1)", "FAIL", "Dialog did not close after selecting beat 1");
+            await dismissDialogIfOpen(page);
             return;
           }
 
