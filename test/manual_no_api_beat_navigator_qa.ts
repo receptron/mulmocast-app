@@ -206,8 +206,25 @@ async function navigateToBeatTab(page: Page): Promise<boolean> {
   return false;
 }
 
+async function isAnyTextTabActive(page: Page, variants: string[]): Promise<boolean> {
+  const tabs = await page.locator('[role="tab"]').all();
+  for (const tab of tabs) {
+    const ariaSelected = await tab.getAttribute("aria-selected");
+    if (ariaSelected !== "true") continue;
+    const text = ((await tab.textContent()) || "").trim();
+    if (variants.some((v) => text === v || text.startsWith(v))) return true;
+  }
+  return false;
+}
+
 async function navigateToTextTab(page: Page): Promise<boolean> {
-  return (await clickTabByText(page, "Text")) || (await clickTabByText(page, "翻訳"));
+  const variants = ["Text", "TEXT", "テキスト", "翻訳"];
+  for (const variant of variants) {
+    const clicked = await clickTabByText(page, variant);
+    if (!clicked) continue;
+    if (await isAnyTextTabActive(page, variants)) return true;
+  }
+  return false;
 }
 
 type GenerationOptionKey = "movie" | "audio" | "pdfHandout";
@@ -620,97 +637,115 @@ async function phaseMediaTab(page: Page): Promise<void> {
 
   // Test: Navigate to beat 5
   const navBtn2 = await page.$('[data-testid="beat-navigator-button-media"]');
-  if (navBtn2) {
-    await navBtn2.click();
-    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
-
-    const dialog2 = await page.$('[role="dialog"]');
-    if (dialog2) {
-      const beatButtons2 = await dialog2.$$('button[data-testid^="beat-nav-card-"]');
-      const beat5Btn = beatButtons2[4];
-      if (beat5Btn) {
-        const scrollBeforeBeat5 = await page.evaluate(() => {
-          const container = document
-            .querySelector('[data-testid="beat-navigator-button-media"]')
-            ?.closest(".overflow-y-auto");
-          return container?.scrollTop ?? -1;
-        });
-
-        await beat5Btn.click();
-        const dialogClosed = await waitForDialogToClose(page);
-        if (!dialogClosed) {
-          record("Dialog closes after selection (MEDIA beat5)", "FAIL", "Dialog did not close after selecting beat 5");
-          await dismissDialogIfOpen(page);
-          return;
-        }
-
-        const beat5Id = `${runId}-beat-5`;
-        await waitForBeatVisible(page, beat5Id);
-
-        const scrollAfterBeat5 = await page.evaluate(() => {
-          const container = document
-            .querySelector('[data-testid="beat-navigator-button-media"]')
-            ?.closest(".overflow-y-auto");
-          return container?.scrollTop ?? -1;
-        });
-
-        const beat5Visible = await page.evaluate((beatId) => {
-          const el = document.querySelector(`[data-beat-id="${beatId}"]`);
-          const container = el?.closest(".overflow-y-auto");
-          if (!el || !container) return false;
-          const cRect = container.getBoundingClientRect();
-          const eRect = el.getBoundingClientRect();
-          return eRect.top >= cRect.top - 50 && eRect.top <= cRect.bottom + 50;
-        }, beat5Id);
-
-        record(
-          "Scroll to beat 5 (MEDIA)",
-          beat5Visible ? "PASS" : "FAIL",
-          `scrollTop: ${scrollBeforeBeat5} → ${scrollAfterBeat5}, beat visible: ${beat5Visible}`,
-        );
-      }
-    }
+  if (!navBtn2) {
+    record("Scroll to beat 5 (MEDIA)", "FAIL", "Navigator button missing after re-open");
+    await dismissDialogIfOpen(page);
+    return;
   }
+  await navBtn2.click();
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+  const dialog2 = await page.$('[role="dialog"]');
+  if (!dialog2) {
+    record("Scroll to beat 5 (MEDIA)", "FAIL", "Dialog missing after re-open");
+    await dismissDialogIfOpen(page);
+    return;
+  }
+
+  const beatButtons2 = await dialog2.$$('button[data-testid^="beat-nav-card-"]');
+  const beat5Btn = beatButtons2[4];
+  if (!beat5Btn) {
+    record("Scroll to beat 5 (MEDIA)", "FAIL", "Beat 5 button missing after re-open");
+    await dismissDialogIfOpen(page);
+    return;
+  }
+
+  const scrollBeforeBeat5 = await page.evaluate(() => {
+    const container = document
+      .querySelector('[data-testid="beat-navigator-button-media"]')
+      ?.closest(".overflow-y-auto");
+    return container?.scrollTop ?? -1;
+  });
+
+  await beat5Btn.click();
+  const dialogClosed = await waitForDialogToClose(page);
+  if (!dialogClosed) {
+    record("Dialog closes after selection (MEDIA beat5)", "FAIL", "Dialog did not close after selecting beat 5");
+    await dismissDialogIfOpen(page);
+    return;
+  }
+
+  const beat5Id = `${runId}-beat-5`;
+  await waitForBeatVisible(page, beat5Id);
+
+  const scrollAfterBeat5 = await page.evaluate(() => {
+    const container = document
+      .querySelector('[data-testid="beat-navigator-button-media"]')
+      ?.closest(".overflow-y-auto");
+    return container?.scrollTop ?? -1;
+  });
+
+  const beat5Visible = await page.evaluate((beatId) => {
+    const el = document.querySelector(`[data-beat-id="${beatId}"]`);
+    const container = el?.closest(".overflow-y-auto");
+    if (!el || !container) return false;
+    const cRect = container.getBoundingClientRect();
+    const eRect = el.getBoundingClientRect();
+    return eRect.top >= cRect.top - 50 && eRect.top <= cRect.bottom + 50;
+  }, beat5Id);
+
+  record(
+    "Scroll to beat 5 (MEDIA)",
+    beat5Visible ? "PASS" : "FAIL",
+    `scrollTop: ${scrollBeforeBeat5} → ${scrollAfterBeat5}, beat visible: ${beat5Visible}`,
+  );
 
   // Test: Navigate to first beat (after beat 5)
   const navBtn3 = await page.$('[data-testid="beat-navigator-button-media"]');
-  if (navBtn3) {
-    await navBtn3.click();
-    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
-
-    const dialog3 = await page.$('[role="dialog"]');
-    if (dialog3) {
-      const beatButtons3 = await dialog3.$$('button[data-testid^="beat-nav-card-"]');
-      const firstBeatBtn = beatButtons3[0];
-      if (firstBeatBtn) {
-        await firstBeatBtn.click();
-        const dialogClosed = await waitForDialogToClose(page);
-        if (!dialogClosed) {
-          record("Dialog closes after selection (MEDIA beat1)", "FAIL", "Dialog did not close after selecting beat 1");
-          await dismissDialogIfOpen(page);
-          return;
-        }
-
-        const firstBeatId = `${runId}-beat-1`;
-        await waitForBeatVisible(page, firstBeatId);
-
-        const firstBeatVisible = await page.evaluate((beatId) => {
-          const el = document.querySelector(`[data-beat-id="${beatId}"]`);
-          const container = el?.closest(".overflow-y-auto");
-          if (!el || !container) return false;
-          const cRect = container.getBoundingClientRect();
-          const eRect = el.getBoundingClientRect();
-          return eRect.top >= cRect.top - 50 && eRect.top <= cRect.bottom + 50;
-        }, firstBeatId);
-
-        record(
-          "Scroll to first beat (MEDIA)",
-          firstBeatVisible ? "PASS" : "FAIL",
-          `Beat 1 visible: ${firstBeatVisible}`,
-        );
-      }
-    }
+  if (!navBtn3) {
+    record("Scroll to first beat (MEDIA)", "FAIL", "Navigator button missing after re-open");
+    await dismissDialogIfOpen(page);
+    return;
   }
+  await navBtn3.click();
+  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+  const dialog3 = await page.$('[role="dialog"]');
+  if (!dialog3) {
+    record("Scroll to first beat (MEDIA)", "FAIL", "Dialog missing after re-open");
+    await dismissDialogIfOpen(page);
+    return;
+  }
+
+  const beatButtons3 = await dialog3.$$('button[data-testid^="beat-nav-card-"]');
+  const firstBeatBtn = beatButtons3[0];
+  if (!firstBeatBtn) {
+    record("Scroll to first beat (MEDIA)", "FAIL", "First beat button missing after re-open");
+    await dismissDialogIfOpen(page);
+    return;
+  }
+
+  await firstBeatBtn.click();
+  const dialogClosed2 = await waitForDialogToClose(page);
+  if (!dialogClosed2) {
+    record("Dialog closes after selection (MEDIA beat1)", "FAIL", "Dialog did not close after selecting beat 1");
+    await dismissDialogIfOpen(page);
+    return;
+  }
+
+  const firstBeatId = `${runId}-beat-1`;
+  await waitForBeatVisible(page, firstBeatId);
+
+  const firstBeatVisible = await page.evaluate((beatId) => {
+    const el = document.querySelector(`[data-beat-id="${beatId}"]`);
+    const container = el?.closest(".overflow-y-auto");
+    if (!el || !container) return false;
+    const cRect = container.getBoundingClientRect();
+    const eRect = el.getBoundingClientRect();
+    return eRect.top >= cRect.top - 50 && eRect.top <= cRect.bottom + 50;
+  }, firstBeatId);
+
+  record("Scroll to first beat (MEDIA)", firstBeatVisible ? "PASS" : "FAIL", `Beat 1 visible: ${firstBeatVisible}`);
 }
 
 // =====================================================================
@@ -720,7 +755,13 @@ async function phaseMediaTab(page: Page): Promise<void> {
 async function phaseTextTab(page: Page): Promise<void> {
   console.log("\n--- Phase 3: Beat Navigator - TEXT tab ---");
 
-  await navigateToTextTab(page);
+  const textTabNavigated = await navigateToTextTab(page);
+  record(
+    "Navigate to TEXT tab",
+    textTabNavigated ? "PASS" : "FAIL",
+    textTabNavigated ? "Text tab activated" : "Could not activate Text tab",
+  );
+  if (!textTabNavigated) return;
   await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
 
   // Test: Floating button exists
@@ -998,43 +1039,50 @@ async function phaseTextTab(page: Page): Promise<void> {
 
     // Test: Navigate back to first beat on TEXT tab
     const navBtn2 = await page.$('[data-testid="beat-navigator-button-text"]');
-    if (navBtn2) {
-      await navBtn2.click();
-      await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
-
-      const dialog2 = await page.$('[role="dialog"]');
-      if (dialog2) {
-        const beatButtons2 = await dialog2.$$('button[data-testid^="beat-nav-card-"]');
-        const firstBeatBtn = beatButtons2[0];
-        if (firstBeatBtn) {
-          await firstBeatBtn.click();
-          const dialogClosed = await waitForDialogToClose(page);
-          if (!dialogClosed) {
-            record("Dialog closes after selection (TEXT beat1)", "FAIL", "Dialog did not close after selecting beat 1");
-            await dismissDialogIfOpen(page);
-            return;
-          }
-
-          const firstBeatId = `${runId}-beat-1`;
-          await waitForBeatVisible(page, firstBeatId);
-
-          const firstBeatVisible = await page.evaluate((beatId) => {
-            const el = document.querySelector(`[data-beat-id="${beatId}"]`);
-            const container = el?.closest(".overflow-y-auto");
-            if (!el || !container) return false;
-            const cRect = container.getBoundingClientRect();
-            const eRect = el.getBoundingClientRect();
-            return eRect.top >= cRect.top - 50 && eRect.top <= cRect.bottom + 50;
-          }, firstBeatId);
-
-          record(
-            "Scroll to first beat (TEXT)",
-            firstBeatVisible ? "PASS" : "FAIL",
-            `Beat 1 visible: ${firstBeatVisible}`,
-          );
-        }
-      }
+    if (!navBtn2) {
+      record("Scroll to first beat (TEXT)", "FAIL", "Navigator button missing after re-open");
+      await dismissDialogIfOpen(page);
+      return;
     }
+    await navBtn2.click();
+    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+
+    const dialog2 = await page.$('[role="dialog"]');
+    if (!dialog2) {
+      record("Scroll to first beat (TEXT)", "FAIL", "Dialog missing after re-open");
+      await dismissDialogIfOpen(page);
+      return;
+    }
+
+    const beatButtons2 = await dialog2.$$('button[data-testid^="beat-nav-card-"]');
+    const firstBeatBtn = beatButtons2[0];
+    if (!firstBeatBtn) {
+      record("Scroll to first beat (TEXT)", "FAIL", "First beat button missing after re-open");
+      await dismissDialogIfOpen(page);
+      return;
+    }
+
+    await firstBeatBtn.click();
+    const dialogClosed2 = await waitForDialogToClose(page);
+    if (!dialogClosed2) {
+      record("Dialog closes after selection (TEXT beat1)", "FAIL", "Dialog did not close after selecting beat 1");
+      await dismissDialogIfOpen(page);
+      return;
+    }
+
+    const firstBeatId = `${runId}-beat-1`;
+    await waitForBeatVisible(page, firstBeatId);
+
+    const firstBeatVisible = await page.evaluate((beatId) => {
+      const el = document.querySelector(`[data-beat-id="${beatId}"]`);
+      const container = el?.closest(".overflow-y-auto");
+      if (!el || !container) return false;
+      const cRect = container.getBoundingClientRect();
+      const eRect = el.getBoundingClientRect();
+      return eRect.top >= cRect.top - 50 && eRect.top <= cRect.bottom + 50;
+    }, firstBeatId);
+
+    record("Scroll to first beat (TEXT)", firstBeatVisible ? "PASS" : "FAIL", `Beat 1 visible: ${firstBeatVisible}`);
   } else {
     record("Scroll to beat 5 (TEXT)", "FAIL", `Only ${beatButtonsForBeat5.length} beat buttons found`);
   }
