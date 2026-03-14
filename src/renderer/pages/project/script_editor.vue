@@ -472,7 +472,7 @@ const navigateToBeat = async (index: number) => {
   const targetTop = container.scrollTop + (elRect.top - containerRect.top) - TOP_PADDING_PX;
   const maxTop = Math.max(0, container.scrollHeight - container.clientHeight);
   const top = Math.min(Math.max(0, targetTop), maxTop);
-  container.scrollTo({ top, behavior: "smooth" });
+  container.scrollTo({ top, behavior: "auto" });
 };
 
 const openBeatNavigator = (tab: ScriptEditorTab) => {
