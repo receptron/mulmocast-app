@@ -472,6 +472,7 @@ const lang = {
       beatNavigator: {
         title: "Beat ナビゲーター",
         description: "Beat をクリックすると該当箇所へ移動します",
+        beatNumber: "Beat {number}",
         noText: "(テキストなし)",
       },
       text: {

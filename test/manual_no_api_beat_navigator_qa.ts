@@ -210,6 +210,20 @@ async function navigateToTextTab(page: Page): Promise<boolean> {
   return (await clickTabByText(page, "Text")) || (await clickTabByText(page, "翻訳"));
 }
 
+type GenerationOptionKey = "movie" | "audio" | "pdfHandout";
+
+async function setGenerationOption(page: Page, key: GenerationOptionKey, checked: boolean): Promise<boolean> {
+  const checkbox = page.locator(`[data-testid="generate-option-${key}-checkbox"]`).first();
+  if ((await checkbox.count()) === 0) return false;
+
+  const isChecked = (await checkbox.getAttribute("data-state")) === "checked";
+  if (isChecked !== checked) {
+    await checkbox.click();
+    await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  }
+  return true;
+}
+
 // =====================================================================
 // Monaco Helpers
 // =====================================================================
@@ -293,44 +307,10 @@ async function phaseSetup(page: Page): Promise<boolean> {
   await page.waitForTimeout(CONFIG.EDITOR_SETTLE_DELAY_MS);
   await navigateToBeatTab(page);
 
-  // Enable PDF Handout checkbox
-  const pdfCheckbox = await page.evaluate(() => {
-    const checkboxes = document.querySelectorAll('[role="checkbox"]');
-    for (const cb of checkboxes) {
-      const label = cb.parentElement?.textContent?.trim() || "";
-      if (label.includes("PDF") && label.includes("Handout")) {
-        if (cb.getAttribute("data-state") !== "checked") {
-          (cb as HTMLElement).click();
-        }
-        return true;
-      }
-    }
-    return false;
-  });
-
-  // Disable Movie first, then Podcast (order matters - Podcast is disabled while Movie is checked)
-  await page.evaluate(() => {
-    const checkboxes = document.querySelectorAll('[role="checkbox"]');
-    for (const cb of checkboxes) {
-      const label = cb.parentElement?.textContent?.trim() || "";
-      if (label.includes("Movie") && cb.getAttribute("data-state") === "checked") {
-        (cb as HTMLElement).click();
-        break;
-      }
-    }
-  });
-  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
-  await page.evaluate(() => {
-    const checkboxes = document.querySelectorAll('[role="checkbox"]');
-    for (const cb of checkboxes) {
-      const label = cb.parentElement?.textContent?.trim() || "";
-      if (label.includes("Podcast") && cb.getAttribute("data-state") === "checked") {
-        (cb as HTMLElement).click();
-        break;
-      }
-    }
-  });
-  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
+  // Enable PDF Handout, disable Movie and Podcast for image-only generation
+  const pdfCheckbox = await setGenerationOption(page, "pdfHandout", true);
+  await setGenerationOption(page, "movie", false);
+  await setGenerationOption(page, "audio", false);
 
   if (!pdfCheckbox) {
     record("Enable PDF Handout", "WARN", "PDF Handout checkbox not found, skipping image generation");
@@ -352,7 +332,21 @@ async function phaseSetup(page: Page): Promise<boolean> {
           },
           { timeout: CONFIG.IMAGE_GENERATION_TIMEOUT_MS },
         );
-        record("Generate images", "PASS", "PDF Handout generation complete");
+
+        const realThumbnailCount = await page.evaluate(() => {
+          return Array.from(document.querySelectorAll<HTMLImageElement>("[data-beat-id] img")).filter((img) => {
+            const src = img.getAttribute("src");
+            return typeof src === "string" && src.trim().length > 0;
+          }).length;
+        });
+        const generatedImagesOk = realThumbnailCount >= BEAT_COUNT;
+        record(
+          "Generate images",
+          generatedImagesOk ? "PASS" : "FAIL",
+          generatedImagesOk
+            ? `PDF Handout generation complete (${realThumbnailCount} real thumbnails)`
+            : `Expected >=${BEAT_COUNT} real thumbnails, got ${realThumbnailCount}`,
+        );
       } catch {
         record("Generate images", "WARN", "Generation may still be in progress or timed out");
       }
@@ -362,25 +356,8 @@ async function phaseSetup(page: Page): Promise<boolean> {
   }
 
   // Restore defaults: disable PDF Handout, re-enable Movie (which auto-enables Podcast)
-  await page.evaluate(() => {
-    const checkboxes = document.querySelectorAll('[role="checkbox"]');
-    for (const cb of checkboxes) {
-      const label = cb.parentElement?.textContent?.trim() || "";
-      if (label.includes("PDF") && label.includes("Handout") && cb.getAttribute("data-state") === "checked") {
-        (cb as HTMLElement).click();
-      }
-    }
-  });
-  await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
-  await page.evaluate(() => {
-    const checkboxes = document.querySelectorAll('[role="checkbox"]');
-    for (const cb of checkboxes) {
-      const label = cb.parentElement?.textContent?.trim() || "";
-      if (label.includes("Movie") && cb.getAttribute("data-state") !== "checked") {
-        (cb as HTMLElement).click();
-      }
-    }
-  });
+  await setGenerationOption(page, "pdfHandout", false);
+  await setGenerationOption(page, "movie", true);
 
   return true;
 }
@@ -409,15 +386,7 @@ async function phaseMediaTab(page: Page): Promise<void> {
   if (!dialog) return;
 
   // Test: Correct number of beats in dialog
-  const dialogButtons = await dialog.$$("button:not([class*='Close'])");
-  // Filter out the Close button - count only beat buttons
-  const beatButtons = [];
-  for (const btn of dialogButtons) {
-    const text = (await btn.textContent()) || "";
-    if (text.includes("Beat")) {
-      beatButtons.push(btn);
-    }
-  }
+  const beatButtons = await dialog.$$('[data-testid^="beat-card-"]');
   record(
     "Dialog beat count",
     beatButtons.length === BEAT_COUNT ? "PASS" : "FAIL",
@@ -507,11 +476,14 @@ async function phaseMediaTab(page: Page): Promise<void> {
     record("Dialog wheel scroll up (MEDIA)", "FAIL", "No scrollable viewport found");
   }
 
-  // Test: Each beat has thumbnail (image or placeholder)
+  // Test: Each beat has a real thumbnail image
   const thumbnailCount = await dialog.evaluate((el) => {
-    return el.querySelectorAll("img, svg").length;
+    return Array.from(el.querySelectorAll("img")).filter((img) => {
+      const src = img.getAttribute("src");
+      return typeof src === "string" && src.trim().length > 0;
+    }).length;
   });
-  record("Thumbnails present", thumbnailCount >= BEAT_COUNT ? "PASS" : "WARN", `Found ${thumbnailCount} images/icons`);
+  record("Thumbnails present", thumbnailCount >= BEAT_COUNT ? "PASS" : "WARN", `Found ${thumbnailCount} real images`);
 
   // Test: Beat text is displayed
   const hasText = await dialog.evaluate((el, rid) => {
@@ -583,17 +555,8 @@ async function phaseMediaTab(page: Page): Promise<void> {
 
     const dialog2 = await page.$('[role="dialog"]');
     if (dialog2) {
-      const beat5Btns = [];
-      const allBtns = await dialog2.$$("button");
-      for (const btn of allBtns) {
-        const text = (await btn.textContent()) || "";
-        if (text.includes("Beat 5")) {
-          beat5Btns.push(btn);
-          break;
-        }
-      }
-
-      if (beat5Btns.length > 0) {
+      const beat5Btn = await dialog2.$(`[data-testid="beat-card-${runId}-beat-5"]`);
+      if (beat5Btn) {
         const scrollBeforeBeat5 = await page.evaluate(() => {
           const container = document
             .querySelector('[data-testid="beat-navigator-button-media"]')
@@ -601,7 +564,7 @@ async function phaseMediaTab(page: Page): Promise<void> {
           return container?.scrollTop ?? -1;
         });
 
-        await beat5Btns[0].click();
+        await beat5Btn.click();
         await page.waitForTimeout(CONFIG.DIALOG_CLOSE_DELAY_MS + 500);
 
         const scrollAfterBeat5 = await page.evaluate(() => {
@@ -638,18 +601,9 @@ async function phaseMediaTab(page: Page): Promise<void> {
 
     const dialog3 = await page.$('[role="dialog"]');
     if (dialog3) {
-      const firstBeatBtns = [];
-      const allBtns3 = await dialog3.$$("button");
-      for (const btn of allBtns3) {
-        const text = (await btn.textContent()) || "";
-        if (text.includes("Beat 1")) {
-          firstBeatBtns.push(btn);
-          break;
-        }
-      }
-
-      if (firstBeatBtns.length > 0) {
-        await firstBeatBtns[0].click();
+      const firstBeatBtn = await dialog3.$(`[data-testid="beat-card-${runId}-beat-1"]`);
+      if (firstBeatBtn) {
+        await firstBeatBtn.click();
         await page.waitForTimeout(CONFIG.DIALOG_CLOSE_DELAY_MS + 500);
 
         const firstBeatId = `${runId}-beat-1`;
@@ -696,14 +650,7 @@ async function phaseTextTab(page: Page): Promise<void> {
   if (!dialog) return;
 
   // Collect beat buttons in dialog
-  const beatButtons = [];
-  const allBtns = await dialog.$$("button");
-  for (const btn of allBtns) {
-    const text = (await btn.textContent()) || "";
-    if (text.includes("Beat")) {
-      beatButtons.push(btn);
-    }
-  }
+  const beatButtons = await dialog.$$('[data-testid^="beat-card-"]');
 
   // Prepare dialog scroll viewport for wheel tests
   const textViewportReady = await dialog.evaluate((el) => {
@@ -847,14 +794,7 @@ async function phaseTextTab(page: Page): Promise<void> {
     return;
   }
 
-  const beatButtonsForBeat5 = [];
-  const allBtnsForBeat5 = await dialogForBeat5.$$("button");
-  for (const btn of allBtnsForBeat5) {
-    const text = (await btn.textContent()) || "";
-    if (text.includes("Beat")) {
-      beatButtonsForBeat5.push(btn);
-    }
-  }
+  const beatButtonsForBeat5 = await dialogForBeat5.$$('[data-testid^="beat-card-"]');
 
   // Click beat 5 (second to last)
   const targetBeatIndex = 4; // 0-based
@@ -901,18 +841,9 @@ async function phaseTextTab(page: Page): Promise<void> {
 
       const dialog2 = await page.$('[role="dialog"]');
       if (dialog2) {
-        const firstBeatBtns = [];
-        const allBtns2 = await dialog2.$$("button");
-        for (const btn of allBtns2) {
-          const text = (await btn.textContent()) || "";
-          if (text.includes("Beat 1")) {
-            firstBeatBtns.push(btn);
-            break;
-          }
-        }
-
-        if (firstBeatBtns.length > 0) {
-          await firstBeatBtns[0].click();
+        const firstBeatBtn = await dialog2.$(`[data-testid="beat-card-${runId}-beat-1"]`);
+        if (firstBeatBtn) {
+          await firstBeatBtn.click();
           await page.waitForTimeout(CONFIG.DIALOG_CLOSE_DELAY_MS + 500);
 
           const firstBeatId = `${runId}-beat-1`;
@@ -954,7 +885,9 @@ async function phaseHealth(monitor: ConsoleMonitor): Promise<void> {
     filteredErrors.length === 0 ? "PASS" : "FAIL",
     filteredErrors.length === 0 ? "No errors" : `${filteredErrors.length} error(s)`,
   );
-  filteredErrors.forEach((e) => console.log(`    ERROR: ${e.substring(0, 200)}`));
+  filteredErrors.forEach((e) => {
+    console.log(`    ERROR: ${e.substring(0, 200)}`);
+  });
 }
 
 // =====================================================================

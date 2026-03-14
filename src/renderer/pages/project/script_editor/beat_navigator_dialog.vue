@@ -13,11 +13,14 @@
             <button
               v-for="(beat, index) in beats"
               :key="beat?.id ?? index"
+              :data-testid="`beat-card-${beat?.id ?? index}`"
               type="button"
               @click="handleSelect(index)"
               class="border-border hover:bg-accent/50 focus-visible:ring-ring group flex flex-col gap-1.5 rounded-lg border p-2 text-left transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
             >
-              <div class="text-muted-foreground text-xs font-medium">{{ `Beat ${index + 1}` }}</div>
+              <div class="text-muted-foreground text-xs font-medium">
+                {{ t("project.scriptEditor.beatNavigator.beatNumber", { number: index + 1 }) }}
+              </div>
               <div class="bg-muted aspect-video w-full overflow-hidden rounded-md">
                 <img
                   v-if="imageFiles[beat.id]"

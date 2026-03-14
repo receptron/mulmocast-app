@@ -473,6 +473,7 @@ const lang = {
       beatNavigator: {
         title: "Beat Navigator",
         description: "Click a beat to navigate to it",
+        beatNumber: "Beat {number}",
         noText: "(no text)",
       },
       voice_over: "Voice Over",

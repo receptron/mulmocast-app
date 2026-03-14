@@ -3,8 +3,17 @@
     <!-- Output Buttons -->
     <div class="space-y-4">
       <div class="grid grid-cols-2 gap-1">
-        <label v-for="option in checkboxOptions" :key="option.key" class="flex items-center space-x-2">
-          <Checkbox v-model="options[option.key]" :disabled="option.key === 'audio' && options.movie" />
+        <label
+          v-for="option in checkboxOptions"
+          :key="option.key"
+          class="flex items-center space-x-2"
+          :data-testid="`generate-option-${option.key}-label`"
+        >
+          <Checkbox
+            v-model="options[option.key]"
+            :disabled="option.key === 'audio' && options.movie"
+            :data-testid="`generate-option-${option.key}-checkbox`"
+          />
           <span>{{ t("project.generate." + option.key) }}</span>
         </label>
       </div>
