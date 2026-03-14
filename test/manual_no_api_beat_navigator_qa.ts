@@ -352,7 +352,8 @@ async function phaseSetup(page: Page): Promise<boolean> {
   await setGenerationOption(page, "audio", false);
 
   if (!pdfCheckbox) {
-    record("Enable PDF Handout", "WARN", "PDF Handout checkbox not found, skipping image generation");
+    record("Enable PDF Handout", "FAIL", "PDF Handout checkbox not found");
+    return false;
   } else {
     record("Enable PDF Handout", "PASS", "Enabled");
 
@@ -386,11 +387,14 @@ async function phaseSetup(page: Page): Promise<boolean> {
             ? `PDF Handout generation complete (${realThumbnailCount} real thumbnails)`
             : `Expected >=${BEAT_COUNT} real thumbnails, got ${realThumbnailCount}`,
         );
+        if (!generatedImagesOk) return false;
       } catch {
-        record("Generate images", "WARN", "Generation may still be in progress or timed out");
+        record("Generate images", "FAIL", "Generation timed out before completion");
+        return false;
       }
     } else {
-      record("Generate images", "WARN", "Generate button not found");
+      record("Generate images", "FAIL", "Generate button not found");
+      return false;
     }
   }
 
@@ -1032,7 +1036,7 @@ async function phaseTextTab(page: Page): Promise<void> {
       }
     }
   } else {
-    record("Scroll to beat 5 (TEXT)", "FAIL", `Only ${beatButtons.length} beat buttons found`);
+    record("Scroll to beat 5 (TEXT)", "FAIL", `Only ${beatButtonsForBeat5.length} beat buttons found`);
   }
 }
 
