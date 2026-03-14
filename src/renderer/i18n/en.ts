@@ -470,6 +470,11 @@ const lang = {
     scriptEditor: {
       beatCopied: "Beat copied",
       beatDeleted: "Beat deleted",
+      beatNavigator: {
+        title: "Beat Navigator",
+        description: "Click a beat to navigate to it",
+        noText: "(no text)",
+      },
       voice_over: "Voice Over",
       text: {
         tabLabel: "Text",
@@ -647,6 +652,7 @@ const lang = {
       selectSpeaker: "Select a speaker",
       text: "Text",
       placeholder: "{language} input: {speaker}'s voice content",
+      generateAudioAction: "generate audio",
       // Generate audio requirements
       generateAudioNeedsText:
         "Text required to '{action}'. Leave blank to continue audio from the previous beat (spillover feature).",
