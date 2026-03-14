@@ -224,6 +224,38 @@ async function setGenerationOption(page: Page, key: GenerationOptionKey, checked
   return true;
 }
 
+async function waitForDialogToClose(page: Page): Promise<boolean> {
+  try {
+    await page.waitForSelector('[role="dialog"]', {
+      state: "hidden",
+      timeout: CONFIG.DIALOG_CLOSE_DELAY_MS + 2000,
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function waitForBeatVisible(page: Page, beatId: string): Promise<boolean> {
+  try {
+    await page.waitForFunction(
+      (id) => {
+        const el = document.querySelector(`[data-beat-id="${id}"]`);
+        const container = el?.closest(".overflow-y-auto");
+        if (!el || !container) return false;
+        const cRect = container.getBoundingClientRect();
+        const eRect = el.getBoundingClientRect();
+        return eRect.top >= cRect.top - 50 && eRect.top <= cRect.bottom + 50;
+      },
+      beatId,
+      { timeout: CONFIG.DIALOG_CLOSE_DELAY_MS + 2500 },
+    );
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 // =====================================================================
 // Monaco Helpers
 // =====================================================================
@@ -483,7 +515,8 @@ async function phaseMediaTab(page: Page): Promise<void> {
       return typeof src === "string" && src.trim().length > 0;
     }).length;
   });
-  record("Thumbnails present", thumbnailCount >= BEAT_COUNT ? "PASS" : "WARN", `Found ${thumbnailCount} real images`);
+  record("Thumbnails present", thumbnailCount >= BEAT_COUNT ? "PASS" : "FAIL", `Found ${thumbnailCount} real images`);
+  if (thumbnailCount < BEAT_COUNT) return;
 
   // Test: Beat text is displayed
   const hasText = await dialog.evaluate((el, rid) => {
@@ -520,8 +553,14 @@ async function phaseMediaTab(page: Page): Promise<void> {
     const lastBeatBtn = beatButtons[beatButtons.length - 1];
     await lastBeatBtn.click();
 
-    // Wait for dialog close + scroll
-    await page.waitForTimeout(CONFIG.DIALOG_CLOSE_DELAY_MS + 500);
+    const dialogClosed = await waitForDialogToClose(page);
+    if (!dialogClosed) {
+      record("Dialog closes after selection (MEDIA last)", "FAIL", "Dialog did not close after selecting last beat");
+      return;
+    }
+
+    const lastBeatId = `${runId}-beat-${BEAT_COUNT}`;
+    await waitForBeatVisible(page, lastBeatId);
 
     const scrollAfter = await page.evaluate(() => {
       const container = document
@@ -530,7 +569,6 @@ async function phaseMediaTab(page: Page): Promise<void> {
       return container?.scrollTop ?? -1;
     });
 
-    const lastBeatId = `${runId}-beat-${BEAT_COUNT}`;
     const lastBeatVisible = await page.evaluate((beatId) => {
       const el = document.querySelector(`[data-beat-id="${beatId}"]`);
       const container = el?.closest(".overflow-y-auto");
@@ -555,7 +593,8 @@ async function phaseMediaTab(page: Page): Promise<void> {
 
     const dialog2 = await page.$('[role="dialog"]');
     if (dialog2) {
-      const beat5Btn = await dialog2.$(`[data-testid="beat-card-${runId}-beat-5"]`);
+      const beatButtons2 = await dialog2.$$('[data-testid^="beat-card-"]');
+      const beat5Btn = beatButtons2[4];
       if (beat5Btn) {
         const scrollBeforeBeat5 = await page.evaluate(() => {
           const container = document
@@ -565,7 +604,14 @@ async function phaseMediaTab(page: Page): Promise<void> {
         });
 
         await beat5Btn.click();
-        await page.waitForTimeout(CONFIG.DIALOG_CLOSE_DELAY_MS + 500);
+        const dialogClosed = await waitForDialogToClose(page);
+        if (!dialogClosed) {
+          record("Dialog closes after selection (MEDIA beat5)", "FAIL", "Dialog did not close after selecting beat 5");
+          return;
+        }
+
+        const beat5Id = `${runId}-beat-5`;
+        await waitForBeatVisible(page, beat5Id);
 
         const scrollAfterBeat5 = await page.evaluate(() => {
           const container = document
@@ -574,7 +620,6 @@ async function phaseMediaTab(page: Page): Promise<void> {
           return container?.scrollTop ?? -1;
         });
 
-        const beat5Id = `${runId}-beat-5`;
         const beat5Visible = await page.evaluate((beatId) => {
           const el = document.querySelector(`[data-beat-id="${beatId}"]`);
           const container = el?.closest(".overflow-y-auto");
@@ -601,12 +646,19 @@ async function phaseMediaTab(page: Page): Promise<void> {
 
     const dialog3 = await page.$('[role="dialog"]');
     if (dialog3) {
-      const firstBeatBtn = await dialog3.$(`[data-testid="beat-card-${runId}-beat-1"]`);
+      const beatButtons3 = await dialog3.$$('[data-testid^="beat-card-"]');
+      const firstBeatBtn = beatButtons3[0];
       if (firstBeatBtn) {
         await firstBeatBtn.click();
-        await page.waitForTimeout(CONFIG.DIALOG_CLOSE_DELAY_MS + 500);
+        const dialogClosed = await waitForDialogToClose(page);
+        if (!dialogClosed) {
+          record("Dialog closes after selection (MEDIA beat1)", "FAIL", "Dialog did not close after selecting beat 1");
+          return;
+        }
 
         const firstBeatId = `${runId}-beat-1`;
+        await waitForBeatVisible(page, firstBeatId);
+
         const firstBeatVisible = await page.evaluate((beatId) => {
           const el = document.querySelector(`[data-beat-id="${beatId}"]`);
           const container = el?.closest(".overflow-y-auto");
@@ -651,6 +703,39 @@ async function phaseTextTab(page: Page): Promise<void> {
 
   // Collect beat buttons in dialog
   const beatButtons = await dialog.$$('[data-testid^="beat-card-"]');
+  record(
+    "Dialog beat count (TEXT)",
+    beatButtons.length === BEAT_COUNT ? "PASS" : "FAIL",
+    `Expected ${BEAT_COUNT}, got ${beatButtons.length}`,
+  );
+  if (beatButtons.length !== BEAT_COUNT) return;
+
+  const textThumbnailCount = await dialog.evaluate((el) => {
+    return Array.from(el.querySelectorAll("img")).filter((img) => {
+      const src = img.getAttribute("src");
+      return typeof src === "string" && src.trim().length > 0;
+    }).length;
+  });
+  record(
+    "Thumbnails present (TEXT)",
+    textThumbnailCount >= BEAT_COUNT ? "PASS" : "FAIL",
+    `Found ${textThumbnailCount} real images`,
+  );
+  if (textThumbnailCount < BEAT_COUNT) return;
+
+  const hasText = await dialog.evaluate((el, rid) => {
+    const paragraphs = el.querySelectorAll("p");
+    for (const p of paragraphs) {
+      if (p.textContent?.includes(`run ${rid}`)) return true;
+    }
+    return false;
+  }, runId.toString());
+  record(
+    "Beat text displayed (TEXT)",
+    hasText ? "PASS" : "FAIL",
+    hasText ? "Test text found in dialog" : "Test text not found",
+  );
+  if (!hasText) return;
 
   // Prepare dialog scroll viewport for wheel tests
   const textViewportReady = await dialog.evaluate((el) => {
@@ -753,7 +838,14 @@ async function phaseTextTab(page: Page): Promise<void> {
 
     const lastBeatBtn = beatButtons[beatButtons.length - 1];
     await lastBeatBtn.click();
-    await page.waitForTimeout(CONFIG.DIALOG_CLOSE_DELAY_MS + 500);
+    const dialogClosed = await waitForDialogToClose(page);
+    if (!dialogClosed) {
+      record("Dialog closes after selection (TEXT last)", "FAIL", "Dialog did not close after selecting last beat");
+      return;
+    }
+
+    const lastBeatId = `${runId}-beat-${BEAT_COUNT}`;
+    await waitForBeatVisible(page, lastBeatId);
 
     const scrollAfterLast = await page.evaluate(() => {
       const container = document
@@ -762,7 +854,6 @@ async function phaseTextTab(page: Page): Promise<void> {
       return container?.scrollTop ?? -1;
     });
 
-    const lastBeatId = `${runId}-beat-${BEAT_COUNT}`;
     const lastBeatVisible = await page.evaluate((beatId) => {
       const el = document.querySelector(`[data-beat-id="${beatId}"]`);
       const container = el?.closest(".overflow-y-auto");
@@ -808,7 +899,14 @@ async function phaseTextTab(page: Page): Promise<void> {
     });
 
     await beatButtonsForBeat5[targetBeatIndex].click();
-    await page.waitForTimeout(CONFIG.DIALOG_CLOSE_DELAY_MS + 500);
+    const dialogClosed = await waitForDialogToClose(page);
+    if (!dialogClosed) {
+      record("Dialog closes after selection (TEXT beat5)", "FAIL", "Dialog did not close after selecting beat 5");
+      return;
+    }
+
+    const targetBeatId = `${runId}-beat-${targetBeatIndex + 1}`;
+    await waitForBeatVisible(page, targetBeatId);
 
     const scrollAfter = await page.evaluate(() => {
       const container = document
@@ -817,7 +915,6 @@ async function phaseTextTab(page: Page): Promise<void> {
       return container?.scrollTop ?? -1;
     });
 
-    const targetBeatId = `${runId}-beat-${targetBeatIndex + 1}`;
     const targetVisible = await page.evaluate((beatId) => {
       const el = document.querySelector(`[data-beat-id="${beatId}"]`);
       const container = el?.closest(".overflow-y-auto");
@@ -841,12 +938,19 @@ async function phaseTextTab(page: Page): Promise<void> {
 
       const dialog2 = await page.$('[role="dialog"]');
       if (dialog2) {
-        const firstBeatBtn = await dialog2.$(`[data-testid="beat-card-${runId}-beat-1"]`);
+        const beatButtons2 = await dialog2.$$('[data-testid^="beat-card-"]');
+        const firstBeatBtn = beatButtons2[0];
         if (firstBeatBtn) {
           await firstBeatBtn.click();
-          await page.waitForTimeout(CONFIG.DIALOG_CLOSE_DELAY_MS + 500);
+          const dialogClosed = await waitForDialogToClose(page);
+          if (!dialogClosed) {
+            record("Dialog closes after selection (TEXT beat1)", "FAIL", "Dialog did not close after selecting beat 1");
+            return;
+          }
 
           const firstBeatId = `${runId}-beat-1`;
+          await waitForBeatVisible(page, firstBeatId);
+
           const firstBeatVisible = await page.evaluate((beatId) => {
             const el = document.querySelector(`[data-beat-id="${beatId}"]`);
             const container = el?.closest(".overflow-y-auto");
