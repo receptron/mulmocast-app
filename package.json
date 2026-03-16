@@ -88,6 +88,7 @@
   "resolutions": {
     "dompurify": "^3.3.3",
     "fast-xml-parser": "5.4.2",
+    "yauzl": "^3.2.1",
     "minimatch": "^10.2.4",
     "tar": "7.5.11",
     "unicorn-magic": "0.2.0"
