@@ -11,6 +11,7 @@ import {
   listLocalizedAudioPaths,
   defaultBGMPath,
   resolveAssetPath,
+  getImageRefs,
   type MulmoStudioContext,
   type MulmoStudioMultiLingual,
   type MulmoBeat,
@@ -124,7 +125,8 @@ export const mulmoImageFiles = async (
     if (!context) {
       return { result: false, noContext: true };
     }
-    const dataSet = await Promise.all(context.studio.script.beats.map(beatImage(context)));
+    const imageRefs = await getImageRefs(context);
+    const dataSet = await Promise.all(context.studio.script.beats.map(beatImage(context, imageRefs)));
     return context.studio.script.beats.reduce(
       (tmp, beat, index) => {
         if (beat.id) {
@@ -147,7 +149,8 @@ export const mulmoImageFile = async (projectId: string, index: number) => {
     }
 
     const beat = context.studio.script.beats[0];
-    return await beatImage(context)(beat, 0);
+    const imageRefs = await getImageRefs(context);
+    return await beatImage(context, imageRefs)(beat, 0);
   } catch (error) {
     GraphAILogger.log(error);
   }
@@ -161,12 +164,12 @@ const fileExstsSync = (filePath: string) => {
   return false;
 };
 
-const beatImage = (context: MulmoStudioContext) => {
+const beatImage = (context: MulmoStudioContext, imageRefs: Awaited<ReturnType<typeof getImageRefs>>) => {
   return async (beat: MulmoBeat, index: number) => {
     try {
       const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle, beat);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res = (await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs: {} } as any)) as any;
+      const res = (await imagePreprocessAgent({ context, beat, index, imageAgentInfo, imageRefs } as any)) as any;
       if (res.htmlImageFile && fileExstsSync(res.htmlImageFile)) {
         const buffer = fs.readFileSync(res.htmlImageFile);
         res.imageData = buffer.buffer;
