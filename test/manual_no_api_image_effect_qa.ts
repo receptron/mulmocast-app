@@ -459,7 +459,8 @@ const IMAGE_EFFECT_SELECTORS = {
   setButton: '[data-testid="image-effect-set-button"]',
   durationInput: '[data-testid="image-effect-duration-input"]',
   zoomInput: '[data-testid="image-effect-zoom-input"]',
-  panDistanceInput: '[data-testid="image-effect-pan-distance-input"]',
+  panFromInput: '[data-testid="image-effect-pan-from-input"]',
+  panToInput: '[data-testid="image-effect-pan-to-input"]',
 } as const;
 
 /** Verify ImageEffect panel exists by stable test id. */
@@ -618,7 +619,18 @@ async function applyEffect(
 // Default values from image_effect_data.ts
 const DEFAULT_ZOOM = 120;
 const DEFAULT_DURATION = 5;
-const DEFAULT_PAN_DISTANCE = 10;
+const getDefaultPanRange = (effectType: EffectType): { from: number; to: number } => {
+  switch (effectType) {
+    case "moveToLeft":
+    case "moveToTop":
+      return { from: 100, to: 0 };
+    case "moveToRight":
+    case "moveToBottom":
+      return { from: 0, to: 100 };
+    default:
+      return { from: 0, to: 100 };
+  }
+};
 
 function extractCoverOptions(scriptStr: string, method: "coverZoom" | "coverPan"): Record<string, unknown> | null {
   const regex = new RegExp(`animation\\.${method}\\('#photo_img',\\s*(\\{[\\s\\S]*?\\})\\);`);
@@ -636,7 +648,8 @@ function verifyEffectParamsExact(
   scriptStr: string,
   effectType: EffectType,
   expectedZoom: number,
-  expectedPanDistance: number,
+  expectedPanFrom: number,
+  expectedPanTo: number,
 ): { ok: boolean; detail: string } {
   const expectedScale = expectedZoom / 100;
   const hasAnimation = /const\s+animation\s*=\s*new\s+MulmoAnimation\s*\(\s*\)/.test(scriptStr);
@@ -666,64 +679,20 @@ function verifyEffectParamsExact(
         zoomTo === 1;
       return { ok, detail: `animation=${hasAnimation}, zoomFrom=${zoomFrom}, zoomTo=${zoomTo}` };
     }
-    case "moveToLeft": {
-      const opts = extractCoverOptions(scriptStr, "coverPan");
-      const axis = opts?.axis === "x";
-      const direction = Number(opts?.direction);
-      const requestedDistance = Number(opts?.distance);
-      const scale = Number(opts?.zoom);
-      const ok =
-        hasAnimation && axis && direction === 1 && requestedDistance === expectedPanDistance && scale === expectedScale;
-      return {
-        ok,
-        detail: `animation=${hasAnimation}, axis=x, direction=${direction}, distance=${requestedDistance}, zoom=${scale}`,
-      };
-    }
-    case "moveToRight": {
-      const opts = extractCoverOptions(scriptStr, "coverPan");
-      const axis = opts?.axis === "x";
-      const direction = Number(opts?.direction);
-      const requestedDistance = Number(opts?.distance);
-      const scale = Number(opts?.zoom);
-      const ok =
-        hasAnimation &&
-        axis &&
-        direction === -1 &&
-        requestedDistance === expectedPanDistance &&
-        scale === expectedScale;
-      return {
-        ok,
-        detail: `animation=${hasAnimation}, axis=x, direction=${direction}, distance=${requestedDistance}, zoom=${scale}`,
-      };
-    }
-    case "moveToTop": {
-      const opts = extractCoverOptions(scriptStr, "coverPan");
-      const axis = opts?.axis === "y";
-      const direction = Number(opts?.direction);
-      const requestedDistance = Number(opts?.distance);
-      const scale = Number(opts?.zoom);
-      const ok =
-        hasAnimation && axis && direction === 1 && requestedDistance === expectedPanDistance && scale === expectedScale;
-      return {
-        ok,
-        detail: `animation=${hasAnimation}, axis=y, direction=${direction}, distance=${requestedDistance}, zoom=${scale}`,
-      };
-    }
+    case "moveToLeft":
+    case "moveToRight":
+    case "moveToTop":
     case "moveToBottom": {
+      const expectedAxis = effectType === "moveToLeft" || effectType === "moveToRight" ? "x" : "y";
       const opts = extractCoverOptions(scriptStr, "coverPan");
-      const axis = opts?.axis === "y";
-      const direction = Number(opts?.direction);
-      const requestedDistance = Number(opts?.distance);
+      const axis = opts?.axis === expectedAxis;
+      const from = Number(opts?.from);
+      const to = Number(opts?.to);
       const scale = Number(opts?.zoom);
-      const ok =
-        hasAnimation &&
-        axis &&
-        direction === -1 &&
-        requestedDistance === expectedPanDistance &&
-        scale === expectedScale;
+      const ok = hasAnimation && axis && from === expectedPanFrom && to === expectedPanTo && scale === expectedScale;
       return {
         ok,
-        detail: `animation=${hasAnimation}, axis=y, direction=${direction}, distance=${requestedDistance}, zoom=${scale}`,
+        detail: `animation=${hasAnimation}, axis=${expectedAxis}, from=${from}, to=${to}, zoom=${scale}`,
       };
     }
   }
@@ -737,7 +706,8 @@ async function verifyEffectJson(
   configLabel: string,
   expectedZoom: number = DEFAULT_ZOOM,
   expectedDuration: number = DEFAULT_DURATION,
-  expectedPanDistance: number = DEFAULT_PAN_DISTANCE,
+  expectedPanFrom?: number,
+  expectedPanTo?: number,
 ): Promise<void> {
   const testPrefix = `${effectType} [beat ${beatIndex + 1}] (${configLabel})`;
 
@@ -804,7 +774,14 @@ async function verifyEffectJson(
   );
 
   // 5. Check effect-specific params with exact values (Level 3+ verification)
-  const paramResult = verifyEffectParamsExact(scriptStr, effectType, expectedZoom, expectedPanDistance);
+  const defaults = getDefaultPanRange(effectType);
+  const paramResult = verifyEffectParamsExact(
+    scriptStr,
+    effectType,
+    expectedZoom,
+    expectedPanFrom ?? defaults.from,
+    expectedPanTo ?? defaults.to,
+  );
   record(`${testPrefix} params exact`, paramResult.ok ? "PASS" : "FAIL", paramResult.detail);
 
   // 6. Check duration === expectedDuration (exact match, not just > 0)
@@ -840,16 +817,18 @@ async function testAllEffectsDefaults(
       config.label,
       DEFAULT_ZOOM,
       DEFAULT_DURATION,
-      DEFAULT_PAN_DISTANCE,
+      undefined,
+      undefined,
     );
   }
 }
 
-/** Test custom values: change zoom/duration/panDistance → Set → verify exact JSON values. */
+/** Test custom values: change zoom/duration/pan from-to → Set → verify exact JSON values. */
 async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[number], lang: "en" | "ja"): Promise<void> {
   const customZoom = 150;
   const customDuration = 8;
-  const customPanDistance = 20;
+  const customPanFrom = 20;
+  const customPanTo = 80;
 
   // Test 1: zoomIn with custom zoom and duration
   {
@@ -883,13 +862,14 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
           `${config.label} custom`,
           customZoom,
           customDuration,
-          DEFAULT_PAN_DISTANCE,
+          undefined,
+          undefined,
         );
       }
     }
   }
 
-  // Test 2: moveToLeft with custom zoom, duration, and panDistance
+  // Test 2: moveToLeft with custom zoom, duration, and pan from-to
   {
     const effectType: EffectType = "moveToLeft";
     const testLabel = `${effectType} custom (${config.label})`;
@@ -907,8 +887,11 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
       const durSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.durationInput, beatIndex, customDuration);
       record(`${testLabel} set duration`, durSet ? "PASS" : "FAIL", `duration=${customDuration}`);
 
-      const panSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.panDistanceInput, beatIndex, customPanDistance);
-      record(`${testLabel} set panDistance`, panSet ? "PASS" : "FAIL", `panDistance=${customPanDistance}`);
+      const panFromSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.panFromInput, beatIndex, customPanFrom);
+      record(`${testLabel} set panFrom`, panFromSet ? "PASS" : "FAIL", `panFrom=${customPanFrom}`);
+
+      const panToSet = await setEffectInput(page, IMAGE_EFFECT_SELECTORS.panToInput, beatIndex, customPanTo);
+      record(`${testLabel} set panTo`, panToSet ? "PASS" : "FAIL", `panTo=${customPanTo}`);
 
       await page.waitForTimeout(300);
       const setOk = await clickSetButton(page, beatIndex);
@@ -923,7 +906,8 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
           `${config.label} custom`,
           customZoom,
           customDuration,
-          customPanDistance,
+          customPanFrom,
+          customPanTo,
         );
       }
     }
@@ -1030,7 +1014,7 @@ async function generateContentsIfEnabled(page: Page, configLabel: string): Promi
       console.log("\n  Phase 4: Apply Effects (defaults) & Verify JSON");
       await testAllEffectsDefaults(page, config, lang);
 
-      // Phase 5: Test custom values (zoom/duration/panDistance) on zoomIn + moveToLeft
+      // Phase 5: Test custom values (zoom/duration/pan from-to) on zoomIn + moveToLeft
       console.log("\n  Phase 5: Custom Values & Verify JSON");
       await testCustomValues(page, config, lang);
 
