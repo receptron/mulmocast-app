@@ -11,7 +11,7 @@ import {
   listLocalizedAudioPaths,
   defaultBGMPath,
   resolveAssetPath,
-  getImageRefs,
+  getMediaRefs,
   type MulmoStudioContext,
   type MulmoStudioMultiLingual,
   type MulmoBeat,
@@ -125,7 +125,7 @@ export const mulmoImageFiles = async (
     if (!context) {
       return { result: false, noContext: true };
     }
-    const imageRefs = await getImageRefs(context);
+    const { imageRefs } = await getMediaRefs(context);
     const dataSet = await Promise.all(context.studio.script.beats.map(beatImage(context, imageRefs)));
     return context.studio.script.beats.reduce(
       (tmp, beat, index) => {
@@ -149,7 +149,7 @@ export const mulmoImageFile = async (projectId: string, index: number) => {
     }
 
     const beat = context.studio.script.beats[0];
-    const imageRefs = await getImageRefs(context);
+    const { imageRefs } = await getMediaRefs(context);
     return await beatImage(context, imageRefs)(beat, 0);
   } catch (error) {
     GraphAILogger.log(error);
@@ -164,7 +164,7 @@ const fileExstsSync = (filePath: string) => {
   return false;
 };
 
-const beatImage = (context: MulmoStudioContext, imageRefs: Awaited<ReturnType<typeof getImageRefs>>) => {
+const beatImage = (context: MulmoStudioContext, imageRefs: Record<string, string>) => {
   return async (beat: MulmoBeat, index: number) => {
     try {
       const imageAgentInfo = MulmoPresentationStyleMethods.getImageAgentInfo(context.presentationStyle, beat);
