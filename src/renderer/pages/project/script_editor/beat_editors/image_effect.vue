@@ -93,7 +93,7 @@
       </div>
     </div>
     <p v-if="isPan" class="text-muted-foreground mb-2 text-xs">
-      {{ t("beat.html_tailwind.panRangeNote") }}
+      {{ panRangeNote }}
     </p>
 
     <!-- Set button + custom badge -->
@@ -148,6 +148,12 @@ const panFromPercent = ref<number>(effectDefaults.panFrom);
 const panToPercent = ref<number>(effectDefaults.panTo);
 
 const isPan = computed(() => isPanEffect(selectedEffect.value));
+const panRangeNote = computed(() => {
+  if (selectedEffect.value === "moveToLeft" || selectedEffect.value === "moveToRight") {
+    return t("beat.html_tailwind.panRangeNoteX");
+  }
+  return t("beat.html_tailwind.panRangeNoteY");
+});
 
 const selectedPreviewUrl = ref<string | null>(null);
 const materialsDialogRef = ref<MaterialsImageDialogExposed | null>(null);

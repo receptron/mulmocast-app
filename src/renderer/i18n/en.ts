@@ -785,7 +785,8 @@ const lang = {
       panTo: "Move To (%)",
       panRangeMin: "min = 0%",
       panRangeMax: "max = 100%",
-      panRangeNote: "(0 = one edge, 50 = center, 100 = opposite edge)",
+      panRangeNoteX: "(0 = left, 50 = center, 100 = right)",
+      panRangeNoteY: "(0 = top, 50 = center, 100 = bottom)",
       customEdited: "Custom (manually edited)",
       effect: {
         zoomIn: "Zoom In",

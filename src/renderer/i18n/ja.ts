@@ -784,7 +784,8 @@ const lang = {
       panTo: "移動終了（%）",
       panRangeMin: "min = 0%",
       panRangeMax: "max = 100%",
-      panRangeNote: "（0=端, 50=中央, 100=反対側の端）",
+      panRangeNoteX: "（0=左, 50=中央, 100=右）",
+      panRangeNoteY: "（0=上, 50=中央, 100=下）",
       customEdited: "カスタム（手動編集済み）",
       effect: {
         zoomIn: "ズームイン",
