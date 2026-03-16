@@ -79,9 +79,6 @@
         <p class="text-muted-foreground text-xs">
           {{ t("beat.html_tailwind.panRangeMax") }}
         </p>
-        <p class="text-muted-foreground text-xs">
-          {{ t("beat.html_tailwind.panRangeNote") }}
-        </p>
         <Input v-model="panFromPercent" data-testid="image-effect-pan-from-input" type="number" min="0" max="100" />
       </div>
       <div class="flex-1">
@@ -92,12 +89,12 @@
         <p class="text-muted-foreground text-xs">
           {{ t("beat.html_tailwind.panRangeMax") }}
         </p>
-        <p class="text-muted-foreground text-xs">
-          {{ t("beat.html_tailwind.panRangeNote") }}
-        </p>
         <Input v-model="panToPercent" data-testid="image-effect-pan-to-input" type="number" min="0" max="100" />
       </div>
     </div>
+    <p v-if="isPan" class="text-muted-foreground mb-2 text-xs">
+      {{ t("beat.html_tailwind.panRangeNote") }}
+    </p>
 
     <!-- Set button + custom badge -->
     <div class="flex items-center justify-between">
