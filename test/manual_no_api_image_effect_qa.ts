@@ -620,13 +620,15 @@ const DEFAULT_ZOOM = 120;
 const DEFAULT_DURATION = 5;
 const DEFAULT_PAN_DISTANCE = 10;
 
-function extractConstNumber(scriptStr: string, name: string): number | null {
-  const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const regex = new RegExp(`const\\s+${escapedName}\\s*=\\s*(-?\\d+(?:\\.\\d+)?)`);
+function extractCoverOptions(scriptStr: string, method: "coverZoom" | "coverPan"): Record<string, unknown> | null {
+  const regex = new RegExp(`animation\\.${method}\\('#photo_img',\\s*(\\{[\\s\\S]*?\\})\\);`);
   const match = scriptStr.match(regex);
   if (!match) return null;
-  const value = Number(match[1]);
-  return Number.isFinite(value) ? value : null;
+  try {
+    return JSON.parse(match[1]) as Record<string, unknown>;
+  } catch {
+    return null;
+  }
 }
 
 /** Verify effect-specific parameters with exact value checks. */
@@ -637,67 +639,91 @@ function verifyEffectParamsExact(
   expectedPanDistance: number,
 ): { ok: boolean; detail: string } {
   const expectedScale = expectedZoom / 100;
-  const hasRender = /function\s+render\s*\(\s*frame\s*,\s*totalFrames\s*\)/.test(scriptStr);
+  const hasAnimation = /const\s+animation\s*=\s*new\s+MulmoAnimation\s*\(\s*\)/.test(scriptStr);
 
   switch (effectType) {
     case "zoomIn": {
-      const zoomFrom = extractConstNumber(scriptStr, "zoomFrom");
-      const zoomTo = extractConstNumber(scriptStr, "zoomTo");
-      const ok = hasRender && zoomFrom === 1 && zoomTo === expectedScale;
-      return { ok, detail: `render=${hasRender}, zoomFrom=${zoomFrom}, zoomTo=${zoomTo}` };
+      const opts = extractCoverOptions(scriptStr, "coverZoom");
+      const zoomFrom = Number(opts?.zoomFrom);
+      const zoomTo = Number(opts?.zoomTo);
+      const ok =
+        hasAnimation &&
+        Number.isFinite(zoomFrom) &&
+        Number.isFinite(zoomTo) &&
+        zoomFrom === 1 &&
+        zoomTo === expectedScale;
+      return { ok, detail: `animation=${hasAnimation}, zoomFrom=${zoomFrom}, zoomTo=${zoomTo}` };
     }
     case "zoomOut": {
-      const zoomFrom = extractConstNumber(scriptStr, "zoomFrom");
-      const zoomTo = extractConstNumber(scriptStr, "zoomTo");
-      const ok = hasRender && zoomFrom === expectedScale && zoomTo === 1;
-      return { ok, detail: `render=${hasRender}, zoomFrom=${zoomFrom}, zoomTo=${zoomTo}` };
+      const opts = extractCoverOptions(scriptStr, "coverZoom");
+      const zoomFrom = Number(opts?.zoomFrom);
+      const zoomTo = Number(opts?.zoomTo);
+      const ok =
+        hasAnimation &&
+        Number.isFinite(zoomFrom) &&
+        Number.isFinite(zoomTo) &&
+        zoomFrom === expectedScale &&
+        zoomTo === 1;
+      return { ok, detail: `animation=${hasAnimation}, zoomFrom=${zoomFrom}, zoomTo=${zoomTo}` };
     }
     case "moveToLeft": {
-      const axis = /const\s+axis\s*=\s*["']x["']/.test(scriptStr);
-      const direction = extractConstNumber(scriptStr, "direction");
-      const requestedDistance = extractConstNumber(scriptStr, "requestedDistance");
-      const scale = extractConstNumber(scriptStr, "zoom");
+      const opts = extractCoverOptions(scriptStr, "coverPan");
+      const axis = opts?.axis === "x";
+      const direction = Number(opts?.direction);
+      const requestedDistance = Number(opts?.distance);
+      const scale = Number(opts?.zoom);
       const ok =
-        hasRender && axis && direction === 1 && requestedDistance === expectedPanDistance && scale === expectedScale;
+        hasAnimation && axis && direction === 1 && requestedDistance === expectedPanDistance && scale === expectedScale;
       return {
         ok,
-        detail: `render=${hasRender}, axis=x, direction=${direction}, distance=${requestedDistance}, zoom=${scale}`,
+        detail: `animation=${hasAnimation}, axis=x, direction=${direction}, distance=${requestedDistance}, zoom=${scale}`,
       };
     }
     case "moveToRight": {
-      const axis = /const\s+axis\s*=\s*["']x["']/.test(scriptStr);
-      const direction = extractConstNumber(scriptStr, "direction");
-      const requestedDistance = extractConstNumber(scriptStr, "requestedDistance");
-      const scale = extractConstNumber(scriptStr, "zoom");
+      const opts = extractCoverOptions(scriptStr, "coverPan");
+      const axis = opts?.axis === "x";
+      const direction = Number(opts?.direction);
+      const requestedDistance = Number(opts?.distance);
+      const scale = Number(opts?.zoom);
       const ok =
-        hasRender && axis && direction === -1 && requestedDistance === expectedPanDistance && scale === expectedScale;
+        hasAnimation &&
+        axis &&
+        direction === -1 &&
+        requestedDistance === expectedPanDistance &&
+        scale === expectedScale;
       return {
         ok,
-        detail: `render=${hasRender}, axis=x, direction=${direction}, distance=${requestedDistance}, zoom=${scale}`,
+        detail: `animation=${hasAnimation}, axis=x, direction=${direction}, distance=${requestedDistance}, zoom=${scale}`,
       };
     }
     case "moveToTop": {
-      const axis = /const\s+axis\s*=\s*["']y["']/.test(scriptStr);
-      const direction = extractConstNumber(scriptStr, "direction");
-      const requestedDistance = extractConstNumber(scriptStr, "requestedDistance");
-      const scale = extractConstNumber(scriptStr, "zoom");
+      const opts = extractCoverOptions(scriptStr, "coverPan");
+      const axis = opts?.axis === "y";
+      const direction = Number(opts?.direction);
+      const requestedDistance = Number(opts?.distance);
+      const scale = Number(opts?.zoom);
       const ok =
-        hasRender && axis && direction === 1 && requestedDistance === expectedPanDistance && scale === expectedScale;
+        hasAnimation && axis && direction === 1 && requestedDistance === expectedPanDistance && scale === expectedScale;
       return {
         ok,
-        detail: `render=${hasRender}, axis=y, direction=${direction}, distance=${requestedDistance}, zoom=${scale}`,
+        detail: `animation=${hasAnimation}, axis=y, direction=${direction}, distance=${requestedDistance}, zoom=${scale}`,
       };
     }
     case "moveToBottom": {
-      const axis = /const\s+axis\s*=\s*["']y["']/.test(scriptStr);
-      const direction = extractConstNumber(scriptStr, "direction");
-      const requestedDistance = extractConstNumber(scriptStr, "requestedDistance");
-      const scale = extractConstNumber(scriptStr, "zoom");
+      const opts = extractCoverOptions(scriptStr, "coverPan");
+      const axis = opts?.axis === "y";
+      const direction = Number(opts?.direction);
+      const requestedDistance = Number(opts?.distance);
+      const scale = Number(opts?.zoom);
       const ok =
-        hasRender && axis && direction === -1 && requestedDistance === expectedPanDistance && scale === expectedScale;
+        hasAnimation &&
+        axis &&
+        direction === -1 &&
+        requestedDistance === expectedPanDistance &&
+        scale === expectedScale;
       return {
         ok,
-        detail: `render=${hasRender}, axis=y, direction=${direction}, distance=${requestedDistance}, zoom=${scale}`,
+        detail: `animation=${hasAnimation}, axis=y, direction=${direction}, distance=${requestedDistance}, zoom=${scale}`,
       };
     }
   }
@@ -768,13 +794,13 @@ async function verifyEffectJson(
     hasImageRef ? `Contains "image:${MATERIAL_KEY}"` : "Missing image reference",
   );
 
-  // 4. Check script contains render() function
+  // 4. Check script contains MulmoAnimation usage
   const scriptStr = Array.isArray(image.script) ? (image.script as string[]).join("\n") : String(image.script || "");
-  const hasRenderFunction = /function\s+render\s*\(\s*frame\s*,\s*totalFrames\s*\)/.test(scriptStr);
+  const hasMulmoAnimation = /const\s+animation\s*=\s*new\s+MulmoAnimation\s*\(\s*\)/.test(scriptStr);
   record(
     `${testPrefix} image.script`,
-    hasRenderFunction ? "PASS" : "FAIL",
-    hasRenderFunction ? "Contains render(frame,totalFrames)" : "Missing render function",
+    hasMulmoAnimation ? "PASS" : "FAIL",
+    hasMulmoAnimation ? "Contains MulmoAnimation setup" : "Missing MulmoAnimation setup",
   );
 
   // 5. Check effect-specific params with exact values (Level 3+ verification)

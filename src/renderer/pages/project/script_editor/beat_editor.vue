@@ -147,10 +147,10 @@
         <!-- Error messages for disabled Generate Audio button -->
         <div v-if="beat?.text?.length === 0 || !isValidBeat" class="text-xs text-red-600">
           <span v-if="beat?.text?.length === 0">{{
-            t("beat.speaker.generateAudioNeedsText", { action: t("beat.speaker.generateAudioAction") })
+            t("beat.speaker.generateAudioNeedsText", { action: t("ui.actions.generateAudio").toLowerCase() })
           }}</span>
           <span v-else-if="!isValidBeat">{{
-            t("beat.speaker.generateAudioNeedsMedia", { action: t("beat.speaker.generateAudioAction") })
+            t("beat.speaker.generateAudioNeedsMedia", { action: t("ui.actions.generateAudio").toLowerCase() })
           }}</span>
         </div>
       </div>

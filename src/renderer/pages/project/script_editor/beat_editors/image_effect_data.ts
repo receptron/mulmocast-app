@@ -24,7 +24,7 @@ export const isPanEffect = (effect: EffectType | null): boolean => {
 };
 
 const buildHtml = (imageSrc: string): string[] => {
-  // Shared layout for zoom/move effects: full-frame clip + centered absolute image.
+  // Shared layout for zoom/move effects. Cover helpers resize/move #photo_img per-frame.
   return [
     "<div style='position:absolute;inset:0;overflow:hidden;background:black'>",
     "  <div id='photo_wrap' style='position:absolute;inset:0'>",
@@ -34,55 +34,38 @@ const buildHtml = (imageSrc: string): string[] => {
   ];
 };
 
-const SCRIPT_SETUP =
-  "const img=document.querySelector('#photo_img');const wrap=document.querySelector('#photo_wrap');" +
-  "function render(frame,totalFrames){if(!img||!wrap)return;" +
-  "if(!img.naturalWidth||!img.naturalHeight)return;" +
-  "const ww=wrap.clientWidth||wrap.offsetWidth;const wh=wrap.clientHeight||wrap.offsetHeight;if(!ww||!wh)return;" +
-  "const cover=Math.max(ww/img.naturalWidth,wh/img.naturalHeight);";
-
-const SCRIPT_FRAME_PROGRESS = "const denom=Math.max(1,totalFrames-1);const t=Math.max(0,Math.min(1,frame/denom));";
-
-const SCRIPT_END = "}";
-
-const buildPanScript = (effectType: EffectType, scale: number, panDistance: number): string => {
+const buildPanScript = (effectType: EffectType, scale: number, panDistance: number): string[] => {
   const axis = effectType === "moveToLeft" || effectType === "moveToRight" ? "x" : "y";
+  // Keep legacy direction semantics to preserve existing UI behavior.
   const direction = effectType === "moveToLeft" || effectType === "moveToTop" ? 1 : -1;
-  return [
-    SCRIPT_SETUP,
-    `const axis='${axis}';const direction=${direction};const requestedDistance=${panDistance};const zoom=${scale};`,
-    "const s=cover*zoom;const iw=img.naturalWidth*s;const ih=img.naturalHeight*s;",
-    "img.style.width=iw+'px';img.style.height=ih+'px';img.style.maxWidth='none';img.style.maxHeight='none';",
-    "const viewport=axis==='x'?ww:wh;const imageSize=axis==='x'?iw:ih;",
-    "const maxDistancePercent=Math.max(0,((imageSize-viewport)/2)/viewport*100);",
-    "const distancePercent=Math.min(requestedDistance,maxDistancePercent);",
-    "const from=50;const to=from+(direction*distancePercent);",
-    SCRIPT_FRAME_PROGRESS,
-    "const current=from+(to-from)*t;",
-    "if(axis==='x'){img.style.left=current+'%';}else{img.style.top=current+'%';}",
-    SCRIPT_END,
-  ].join("");
+  const panOptions = JSON.stringify({
+    axis,
+    direction,
+    distance: panDistance,
+    zoom: scale,
+    start: 0,
+    end: "auto",
+    easing: "linear",
+  });
+  return ["const animation = new MulmoAnimation();", `animation.coverPan('#photo_img', ${panOptions});`];
 };
 
-const buildZoomScript = (effectType: EffectType, scale: number): string => {
+const buildZoomScript = (effectType: EffectType, scale: number): string[] => {
   const zoomFrom = effectType === "zoomOut" ? scale : 1.0;
   const zoomTo = effectType === "zoomOut" ? 1.0 : scale;
-  return [
-    SCRIPT_SETUP,
-    `const zoomFrom=${zoomFrom};const zoomTo=${zoomTo};`,
-    SCRIPT_FRAME_PROGRESS,
-    "const z=zoomFrom+((zoomTo-zoomFrom)*t);",
-    "const s=cover*z;",
-    "img.style.width=(img.naturalWidth*s)+'px';img.style.height=(img.naturalHeight*s)+'px';",
-    SCRIPT_END,
-  ].join("");
+  const zoomOptions = JSON.stringify({
+    zoomFrom,
+    zoomTo,
+    start: 0,
+    end: "auto",
+    easing: "linear",
+  });
+  return ["const animation = new MulmoAnimation();", `animation.coverZoom('#photo_img', ${zoomOptions});`];
 };
 
 const buildScript = (effectType: EffectType, zoom: number, panDistance: number): string[] => {
   const scale = zoom / 100;
-  return isPanEffect(effectType)
-    ? [buildPanScript(effectType, scale, panDistance)]
-    : [buildZoomScript(effectType, scale)];
+  return isPanEffect(effectType) ? buildPanScript(effectType, scale, panDistance) : buildZoomScript(effectType, scale);
 };
 
 export const generateEffectTemplate = (

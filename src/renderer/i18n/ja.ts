@@ -469,12 +469,6 @@ const lang = {
     scriptEditor: {
       beatCopied: "Beatをコピーしました",
       beatDeleted: "Beatを削除しました",
-      beatNavigator: {
-        title: "Beat ナビゲーター",
-        description: "Beat をクリックすると該当箇所へ移動します",
-        beatNumber: "Beat {number}",
-        noText: "(テキストなし)",
-      },
       text: {
         tabLabel: "翻訳",
         mode: "翻訳モード",
@@ -650,7 +644,6 @@ const lang = {
       selectSpeaker: "登場人物を選択",
       text: "テキスト",
       placeholder: "{language}で{speaker}の話す内容を書いてください",
-      generateAudioAction: "音声生成",
       // Generate audio requirements
       generateAudioNeedsText:
         "「{action}」には話す内容が必要です。空白のままにすると前のビートの音声が継続されます(スピルオーバー機能)。",
