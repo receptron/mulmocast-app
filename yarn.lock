@@ -1982,7 +1982,7 @@
   dependencies:
     cross-spawn "^7.0.1"
 
-"@modelcontextprotocol/sdk@^1.24.3", "@modelcontextprotocol/sdk@^1.27.1":
+"@modelcontextprotocol/sdk@^1.27.1":
   version "1.27.1"
   resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.27.1.tgz#a602cf823bf8a68e13e7112f50aeb02b09fb83b9"
   integrity sha512-sr6GbP+4edBwFndLbM60gf07z0FQ79gaExpnsjMGePXqFcSSb7t6iscpjk9DhFhwd+mTEQrzNafGP8/iGGFYaA==
@@ -7950,20 +7950,20 @@ muggle-string@^0.4.1:
   resolved "https://registry.yarnpkg.com/muggle-string/-/muggle-string-0.4.1.tgz#3b366bd43b32f809dc20659534dd30e7c8a0d328"
   integrity sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==
 
-mulmocast-vision@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/mulmocast-vision/-/mulmocast-vision-1.0.8.tgz#60d479dfdcfa74413ad6b670f5feedf7686235b1"
-  integrity sha512-08rAaLuonOcJyMYEly4obEyq9OCCGtAqzotl1zBD1yPlVYHt1fZTW4OA5RTjulG+KT+SnpsRyqWNDiZ5MhHaPw==
+mulmocast-vision@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/mulmocast-vision/-/mulmocast-vision-1.0.9.tgz#ea36c4c5cf929f06c3f7b09e93cf4aed0eed794b"
+  integrity sha512-N02Yaacr7nRu6I6kzPYXNGH5BmVfzg7YDNGBw/LgVvNhorSJ/l/Y4Sl4cXYLkCcvr4smJ8NLnVwBLgm8h7K2Fw==
   dependencies:
-    "@modelcontextprotocol/sdk" "^1.24.3"
+    "@modelcontextprotocol/sdk" "^1.27.1"
     nunjucks "^3.2.4"
     pdfkit "^0.17.2"
-    puppeteer "^24.32.0"
+    puppeteer "^24.39.1"
 
-mulmocast@^2.4.8:
-  version "2.4.8"
-  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.4.8.tgz#52f15fbb58f9f8ea13004f0afa7e57661267d028"
-  integrity sha512-HlhO4jFEVLdh69MggJA8SiAsdBjSs+9UoIOLPs/QJ5P1DBAL5HJ8+ld4QQDBXPzAicEv5fKGwOUBCff/Mcj6MA==
+mulmocast@2.6.2:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/mulmocast/-/mulmocast-2.6.2.tgz#20b60c5590867864154335b7e3c4f93bb64fed94"
+  integrity sha512-qsgnydt5HnUTTnphBxi6slOl+wmX3faYAP2tLdl3uunLR7vnfDGzu0hfBDax9klWqWnCr6fQvAtSAeZ4Mrl1Dw==
   dependencies:
     "@google-cloud/text-to-speech" "^6.4.0"
     "@google/genai" "^1.44.0"
@@ -7988,9 +7988,9 @@ mulmocast@^2.4.8:
     graphai "^2.0.16"
     jsdom "^28.1.0"
     marked "^17.0.4"
-    mulmocast-vision "^1.0.8"
+    mulmocast-vision "^1.0.9"
     ora "^9.3.0"
-    puppeteer "^24.38.0"
+    puppeteer "^24.39.1"
     replicate "^1.4.0"
     yaml "^2.8.2"
     yargs "^18.0.0"
@@ -8854,7 +8854,7 @@ puppeteer-core@24.39.1:
     webdriver-bidi-protocol "0.4.1"
     ws "^8.19.0"
 
-puppeteer@24.39.1, puppeteer@^24.32.0, puppeteer@^24.38.0:
+puppeteer@24.39.1, puppeteer@^24.39.1:
   version "24.39.1"
   resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-24.39.1.tgz#5ca7db71508a35d00d4a3b23a9c117ea2022efc3"
   integrity sha512-68Zc9QpcVvfxp2C+3UL88TyUogEAn5tSylXidbEuEXvhiqK1+v65zeBU5ubinAgEHMGr3dcSYqvYrGtdzsPI3w==

@@ -7,7 +7,7 @@ import {
   removeSessionProgressCallback,
   setFfmpegPath,
   setFfprobePath,
-  getImageRefs,
+  getMediaRefs,
   beatId,
   MulmoStudioContextMethods,
   getMultiLingual,
@@ -80,7 +80,7 @@ export const mulmoReferenceImages = async (projectId: string, webContents: WebCo
     const context = await getContext(projectId);
     const imageProjectDirPath = MulmoStudioContextMethods.getImageProjectDirPath(context);
     fs.mkdirSync(imageProjectDirPath, { recursive: true });
-    const images = await getImageRefs(context);
+    const { imageRefs: images } = await getMediaRefs(context);
     removeSessionProgressCallback(mulmoCallback);
     return images;
   } catch (error) {
