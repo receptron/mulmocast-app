@@ -11,12 +11,14 @@ export const EFFECT_TYPES: EffectType[] = [
 
 const DEFAULT_ZOOM = 120;
 const DEFAULT_DURATION = 5;
-const DEFAULT_PAN_DISTANCE = 10;
+const DEFAULT_PAN_FROM = 0;
+const DEFAULT_PAN_TO = 100;
 
 export const effectDefaults = {
   zoom: DEFAULT_ZOOM,
   duration: DEFAULT_DURATION,
-  panDistance: DEFAULT_PAN_DISTANCE,
+  panFrom: DEFAULT_PAN_FROM,
+  panTo: DEFAULT_PAN_TO,
 };
 
 export const isPanEffect = (effect: EffectType | null): boolean => {
@@ -24,7 +26,7 @@ export const isPanEffect = (effect: EffectType | null): boolean => {
 };
 
 const buildHtml = (imageSrc: string): string[] => {
-  // Shared layout for zoom/move effects: full-frame clip + centered absolute image.
+  // Shared layout for zoom/move effects. Cover helpers resize/move #photo_img per-frame.
   return [
     "<div style='position:absolute;inset:0;overflow:hidden;background:black'>",
     "  <div id='photo_wrap' style='position:absolute;inset:0'>",
@@ -34,66 +36,66 @@ const buildHtml = (imageSrc: string): string[] => {
   ];
 };
 
-const SCRIPT_SETUP =
-  "const img=document.querySelector('#photo_img');const wrap=document.querySelector('#photo_wrap');" +
-  "function render(frame,totalFrames){if(!img||!wrap)return;" +
-  "if(!img.naturalWidth||!img.naturalHeight)return;" +
-  "const ww=wrap.clientWidth||wrap.offsetWidth;const wh=wrap.clientHeight||wrap.offsetHeight;if(!ww||!wh)return;" +
-  "const cover=Math.max(ww/img.naturalWidth,wh/img.naturalHeight);";
-
-const SCRIPT_FRAME_PROGRESS = "const denom=Math.max(1,totalFrames-1);const t=Math.max(0,Math.min(1,frame/denom));";
-
-const SCRIPT_END = "}";
-
-const buildPanScript = (effectType: EffectType, scale: number, panDistance: number): string => {
-  const axis = effectType === "moveToLeft" || effectType === "moveToRight" ? "x" : "y";
-  const direction = effectType === "moveToLeft" || effectType === "moveToTop" ? 1 : -1;
-  return [
-    SCRIPT_SETUP,
-    `const axis='${axis}';const direction=${direction};const requestedDistance=${panDistance};const zoom=${scale};`,
-    "const s=cover*zoom;const iw=img.naturalWidth*s;const ih=img.naturalHeight*s;",
-    "img.style.width=iw+'px';img.style.height=ih+'px';img.style.maxWidth='none';img.style.maxHeight='none';",
-    "const viewport=axis==='x'?ww:wh;const imageSize=axis==='x'?iw:ih;",
-    "const maxDistancePercent=Math.max(0,((imageSize-viewport)/2)/viewport*100);",
-    "const distancePercent=Math.min(requestedDistance,maxDistancePercent);",
-    "const from=50;const to=from+(direction*distancePercent);",
-    SCRIPT_FRAME_PROGRESS,
-    "const current=from+(to-from)*t;",
-    "if(axis==='x'){img.style.left=current+'%';}else{img.style.top=current+'%';}",
-    SCRIPT_END,
-  ].join("");
+export const getDefaultPanRange = (effectType: EffectType): { from: number; to: number } => {
+  switch (effectType) {
+    case "moveToLeft":
+      return { from: 0, to: 100 };
+    case "moveToRight":
+      return { from: 100, to: 0 };
+    case "moveToTop":
+      return { from: 0, to: 100 };
+    case "moveToBottom":
+      return { from: 100, to: 0 };
+    default:
+      return { from: DEFAULT_PAN_FROM, to: DEFAULT_PAN_TO };
+  }
 };
 
-const buildZoomScript = (effectType: EffectType, scale: number): string => {
+const buildPanScript = (effectType: EffectType, scale: number, panFrom: number, panTo: number): string[] => {
+  const axis = effectType === "moveToLeft" || effectType === "moveToRight" ? "x" : "y";
+  const panOptions = JSON.stringify({
+    axis,
+    from: panFrom,
+    to: panTo,
+    zoom: scale,
+    start: 0,
+    end: "auto",
+    easing: "linear",
+  });
+  return ["const animation = new MulmoAnimation();", `animation.coverPan('#photo_img', ${panOptions});`];
+};
+
+const buildZoomScript = (effectType: EffectType, scale: number): string[] => {
   const zoomFrom = effectType === "zoomOut" ? scale : 1.0;
   const zoomTo = effectType === "zoomOut" ? 1.0 : scale;
-  return [
-    SCRIPT_SETUP,
-    `const zoomFrom=${zoomFrom};const zoomTo=${zoomTo};`,
-    SCRIPT_FRAME_PROGRESS,
-    "const z=zoomFrom+((zoomTo-zoomFrom)*t);",
-    "const s=cover*z;",
-    "img.style.width=(img.naturalWidth*s)+'px';img.style.height=(img.naturalHeight*s)+'px';",
-    SCRIPT_END,
-  ].join("");
+  const zoomOptions = JSON.stringify({
+    zoomFrom,
+    zoomTo,
+    start: 0,
+    end: "auto",
+    easing: "linear",
+  });
+  return ["const animation = new MulmoAnimation();", `animation.coverZoom('#photo_img', ${zoomOptions});`];
 };
 
-const buildScript = (effectType: EffectType, zoom: number, panDistance: number): string[] => {
+const buildScript = (effectType: EffectType, zoom: number, panFrom: number, panTo: number): string[] => {
   const scale = zoom / 100;
   return isPanEffect(effectType)
-    ? [buildPanScript(effectType, scale, panDistance)]
-    : [buildZoomScript(effectType, scale)];
+    ? buildPanScript(effectType, scale, panFrom, panTo)
+    : buildZoomScript(effectType, scale);
 };
 
 export const generateEffectTemplate = (
   effectType: EffectType,
   imageSrc: string,
   zoom: number,
-  panDistance: number = effectDefaults.panDistance,
+  panFrom?: number,
+  panTo?: number,
 ): { html: string[]; script: string[] } => {
+  const defaults = getDefaultPanRange(effectType);
   return {
     html: buildHtml(imageSrc),
-    script: buildScript(effectType, zoom, panDistance),
+    script: buildScript(effectType, zoom, panFrom ?? defaults.from, panTo ?? defaults.to),
   };
 };
 
@@ -103,9 +105,10 @@ export const isTemplateMatch = (
   effectType: EffectType,
   imageSrc: string,
   zoom: number,
-  panDistance: number = effectDefaults.panDistance,
+  panFrom?: number,
+  panTo?: number,
 ): boolean => {
-  const template = generateEffectTemplate(effectType, imageSrc, zoom, panDistance);
+  const template = generateEffectTemplate(effectType, imageSrc, zoom, panFrom, panTo);
   const htmlArr = Array.isArray(currentHtml) ? currentHtml : [currentHtml ?? ""];
   const scriptArr = Array.isArray(currentScript) ? currentScript : [currentScript ?? ""];
   return (
