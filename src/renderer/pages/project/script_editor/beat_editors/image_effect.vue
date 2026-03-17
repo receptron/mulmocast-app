@@ -27,7 +27,7 @@
           @click="openMaterialsDialog"
           :disabled="!hasMaterials"
         >
-          {{ selectedMaterialLabel }}
+          {{ selectedMaterialKey ?? t("beat.html_tailwind.sourceImagePlaceholder") }}
         </Button>
         <img
           v-if="selectedPreviewUrl"
@@ -72,25 +72,32 @@
     </div>
     <div v-if="isPan" class="mb-2 flex gap-3">
       <div class="flex-1">
-        <Label class="mb-1 block text-sm">{{ t("beat.html_tailwind.panDistance") }}</Label>
+        <Label class="mb-1 block text-sm">{{ t("beat.html_tailwind.panFrom") }}</Label>
         <p class="text-muted-foreground mt-1 text-xs">
-          {{ t("beat.html_tailwind.panDistanceMin") }}
+          {{ t("beat.html_tailwind.panRangeMin") }}
         </p>
         <p class="text-muted-foreground text-xs">
-          {{ t("beat.html_tailwind.panDistanceMax") }}
+          {{ t("beat.html_tailwind.panRangeMax") }}
+        </p>
+        <Input v-model="panFromPercent" data-testid="image-effect-pan-from-input" type="number" min="0" max="100" />
+      </div>
+      <div class="flex-1">
+        <Label class="mb-1 block text-sm">{{ t("beat.html_tailwind.panTo") }}</Label>
+        <p class="text-muted-foreground mt-1 text-xs">
+          {{ t("beat.html_tailwind.panRangeMin") }}
         </p>
         <p class="text-muted-foreground text-xs">
-          {{ t("beat.html_tailwind.panDistanceNote") }}
+          {{ t("beat.html_tailwind.panRangeMax") }}
         </p>
-        <Input
-          v-model="panDistancePercent"
-          data-testid="image-effect-pan-distance-input"
-          type="number"
-          min="1"
-          max="50"
-        />
+        <Input v-model="panToPercent" data-testid="image-effect-pan-to-input" type="number" min="0" max="100" />
       </div>
     </div>
+    <p v-if="isPan" class="text-muted-foreground mb-2 text-xs">
+      {{ panRangeNote }}
+    </p>
+    <p v-if="isPan" class="text-muted-foreground mb-2 text-xs">
+      {{ panDirectionNote }}
+    </p>
 
     <!-- Set button + custom badge -->
     <div class="flex items-center justify-between">
@@ -117,6 +124,7 @@ import {
   type EffectType,
   EFFECT_TYPES,
   effectDefaults,
+  getDefaultPanRange,
   isPanEffect,
   generateEffectTemplate,
   isTemplateMatch,
@@ -139,9 +147,30 @@ const selectedEffect = ref<EffectType | null>(null);
 const selectedMaterialKey = ref<string | null>(null);
 const durationSec = ref<number>(effectDefaults.duration);
 const zoomPercent = ref<number>(effectDefaults.zoom);
-const panDistancePercent = ref<number>(effectDefaults.panDistance);
+const panFromPercent = ref<number>(effectDefaults.panFrom);
+const panToPercent = ref<number>(effectDefaults.panTo);
 
 const isPan = computed(() => isPanEffect(selectedEffect.value));
+const panRangeNote = computed(() => {
+  if (selectedEffect.value === "moveToLeft" || selectedEffect.value === "moveToRight") {
+    return t("beat.html_tailwind.panRangeNoteX");
+  }
+  return t("beat.html_tailwind.panRangeNoteY");
+});
+const panDirectionNote = computed(() => {
+  switch (selectedEffect.value) {
+    case "moveToRight":
+      return t("beat.html_tailwind.panDirectionNoteRight");
+    case "moveToLeft":
+      return t("beat.html_tailwind.panDirectionNoteLeft");
+    case "moveToTop":
+      return t("beat.html_tailwind.panDirectionNoteTop");
+    case "moveToBottom":
+      return t("beat.html_tailwind.panDirectionNoteBottom");
+    default:
+      return "";
+  }
+});
 
 const selectedPreviewUrl = ref<string | null>(null);
 const materialsDialogRef = ref<MaterialsImageDialogExposed | null>(null);
@@ -177,7 +206,8 @@ interface LastAppliedPayload {
   effectType: EffectType;
   materialKey: string;
   zoom: number;
-  panDistance: number;
+  panFrom: number;
+  panTo: number;
   duration: number;
   image: {
     type: "html_tailwind";
@@ -198,9 +228,6 @@ const hasMaterials = computed(() => materialKeys.value.length > 0);
 const hasSelectedEffect = computed(() => selectedEffect.value !== null);
 const hasSelectedMaterialKey = computed(() => selectedMaterialKey.value !== null);
 const canApplyEffect = computed(() => hasSelectedEffect.value && hasSelectedMaterialKey.value);
-const selectedMaterialLabel = computed(
-  () => selectedMaterialKey.value ?? t("beat.html_tailwind.sourceImagePlaceholder"),
-);
 
 const getApplySelection = (): { effectType: EffectType; materialKey: string } | null => {
   if (!selectedEffect.value || !selectedMaterialKey.value) return null;
@@ -218,7 +245,8 @@ const isCustomEdited = computed(() => {
     payload.effectType,
     imageSrc,
     payload.zoom,
-    payload.panDistance,
+    payload.panFrom,
+    payload.panTo,
   );
 
   const typeMatches = props.beat.image?.type === payload.image.type;
@@ -245,20 +273,23 @@ const applyEffect = () => {
 
   const duration = normalizeDuration(durationSec.value);
   const zoom = normalizeNumber(zoomPercent.value, effectDefaults.zoom, 100, 200);
-  const panDistance = normalizeNumber(panDistancePercent.value, effectDefaults.panDistance, 1, 50);
+  const panFrom = normalizeNumber(panFromPercent.value, effectDefaults.panFrom, 0, 100);
+  const panTo = normalizeNumber(panToPercent.value, effectDefaults.panTo, 0, 100);
 
   durationSec.value = duration;
   zoomPercent.value = zoom;
-  panDistancePercent.value = panDistance;
+  panFromPercent.value = panFrom;
+  panToPercent.value = panTo;
 
   const imageSrc = `image:${selection.materialKey}`;
-  const template = generateEffectTemplate(selection.effectType, imageSrc, zoom, panDistance);
+  const template = generateEffectTemplate(selection.effectType, imageSrc, zoom, panFrom, panTo);
 
   const appliedPayload: LastAppliedPayload = {
     effectType: selection.effectType,
     materialKey: selection.materialKey,
     zoom,
-    panDistance,
+    panFrom,
+    panTo,
     duration,
     image: {
       type: "html_tailwind",
@@ -285,6 +316,13 @@ watch(selectedEffect, () => {
   lastAppliedPayload.value = null;
   durationSec.value = effectDefaults.duration;
   zoomPercent.value = effectDefaults.zoom;
-  panDistancePercent.value = effectDefaults.panDistance;
+  if (selectedEffect.value) {
+    const panRange = getDefaultPanRange(selectedEffect.value);
+    panFromPercent.value = panRange.from;
+    panToPercent.value = panRange.to;
+  } else {
+    panFromPercent.value = effectDefaults.panFrom;
+    panToPercent.value = effectDefaults.panTo;
+  }
 });
 </script>
