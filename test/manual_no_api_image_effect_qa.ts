@@ -39,7 +39,7 @@ const CONFIG = {
 const timestamp = new Date().toISOString().replace(/T/, " ").replace(/\..+/, "");
 const runId = Date.now();
 
-const EFFECT_TYPES = ["zoomIn", "zoomOut", "moveToLeft", "moveToRight", "moveToTop", "moveToBottom"] as const;
+const EFFECT_TYPES = ["zoomIn", "zoomOut", "moveToRight", "moveToLeft", "moveToTop", "moveToBottom"] as const;
 type EffectType = (typeof EFFECT_TYPES)[number];
 
 const EFFECT_DISPLAY_NAMES: Record<string, Record<EffectType, string>> = {
@@ -76,7 +76,10 @@ const IMAGE_FILES: Record<string, { filename: string; extension: string }> = {
 
 const MATERIAL_KEY = "testImage";
 const SHOULD_RUN_GENERATE = process.env.RUN_GENERATE === "1";
-const TARGET_BEAT_COUNT = 6;
+const DEFAULT_EFFECT_COUNT = EFFECT_TYPES.length;
+const CUSTOM_ZOOM_BEAT_INDEX = DEFAULT_EFFECT_COUNT;
+const CUSTOM_MOVE_BEAT_INDEX = DEFAULT_EFFECT_COUNT + 1;
+const TARGET_BEAT_COUNT = DEFAULT_EFFECT_COUNT + 2;
 
 const MINIMAL_HTML_TAILWIND_IMAGE = {
   type: "html_tailwind" as const,
@@ -425,7 +428,9 @@ async function setupProjectViaJson(
   imageParams.images = images;
   json.imageParams = imageParams;
 
-  // Keep the first beat and add 5 more beats (6 total), each with minimal valid html_tailwind payload.
+  // Keep the first beat and add more beats:
+  // - 6 beats for defaults (all effects)
+  // - 2 beats for custom re-apply checks (zoom + move)
   const beats = (json.beats as Array<Record<string, unknown>>) || [];
   if (beats.length === 0) {
     record("Setup project JSON", "FAIL", "No base beat found in project JSON");
@@ -622,11 +627,13 @@ const DEFAULT_DURATION = 5;
 const getDefaultPanRange = (effectType: EffectType): { from: number; to: number } => {
   switch (effectType) {
     case "moveToLeft":
-    case "moveToTop":
-      return { from: 100, to: 0 };
-    case "moveToRight":
-    case "moveToBottom":
       return { from: 0, to: 100 };
+    case "moveToRight":
+      return { from: 100, to: 0 };
+    case "moveToTop":
+      return { from: 0, to: 100 };
+    case "moveToBottom":
+      return { from: 100, to: 0 };
     default:
       return { from: 0, to: 100 };
   }
@@ -836,7 +843,7 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
     const testLabel = `${effectType} custom (${config.label})`;
     console.log(`\n    --- ${testLabel} ---`);
 
-    const beatIndex = EFFECT_TYPES.indexOf(effectType);
+    const beatIndex = CUSTOM_ZOOM_BEAT_INDEX;
     const applied = await applyEffect(page, effectType, beatIndex, lang, config.label);
     if (applied) {
       // Go back to BEAT tab to change inputs before re-applying
@@ -875,7 +882,7 @@ async function testCustomValues(page: Page, config: (typeof CANVAS_CONFIGS)[numb
     const testLabel = `${effectType} custom (${config.label})`;
     console.log(`\n    --- ${testLabel} ---`);
 
-    const beatIndex = EFFECT_TYPES.indexOf(effectType);
+    const beatIndex = CUSTOM_MOVE_BEAT_INDEX;
     const applied = await applyEffect(page, effectType, beatIndex, lang, config.label);
     if (applied) {
       await toBeatTab(page);

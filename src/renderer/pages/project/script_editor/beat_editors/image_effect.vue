@@ -95,6 +95,9 @@
     <p v-if="isPan" class="text-muted-foreground mb-2 text-xs">
       {{ panRangeNote }}
     </p>
+    <p v-if="isPan" class="text-muted-foreground mb-2 text-xs">
+      {{ panDirectionNote }}
+    </p>
 
     <!-- Set button + custom badge -->
     <div class="flex items-center justify-between">
@@ -153,6 +156,20 @@ const panRangeNote = computed(() => {
     return t("beat.html_tailwind.panRangeNoteX");
   }
   return t("beat.html_tailwind.panRangeNoteY");
+});
+const panDirectionNote = computed(() => {
+  switch (selectedEffect.value) {
+    case "moveToRight":
+      return t("beat.html_tailwind.panDirectionNoteRight");
+    case "moveToLeft":
+      return t("beat.html_tailwind.panDirectionNoteLeft");
+    case "moveToTop":
+      return t("beat.html_tailwind.panDirectionNoteTop");
+    case "moveToBottom":
+      return t("beat.html_tailwind.panDirectionNoteBottom");
+    default:
+      return "";
+  }
 });
 
 const selectedPreviewUrl = ref<string | null>(null);

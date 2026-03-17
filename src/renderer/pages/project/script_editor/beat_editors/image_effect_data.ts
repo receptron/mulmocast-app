@@ -39,11 +39,13 @@ const buildHtml = (imageSrc: string): string[] => {
 export const getDefaultPanRange = (effectType: EffectType): { from: number; to: number } => {
   switch (effectType) {
     case "moveToLeft":
-    case "moveToTop":
-      return { from: 100, to: 0 };
-    case "moveToRight":
-    case "moveToBottom":
       return { from: 0, to: 100 };
+    case "moveToRight":
+      return { from: 100, to: 0 };
+    case "moveToTop":
+      return { from: 0, to: 100 };
+    case "moveToBottom":
+      return { from: 100, to: 0 };
     default:
       return { from: DEFAULT_PAN_FROM, to: DEFAULT_PAN_TO };
   }
