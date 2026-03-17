@@ -37,6 +37,13 @@ const buildHtml = (imageSrc: string): string[] => {
 };
 
 export const getDefaultPanRange = (effectType: EffectType): { from: number; to: number } => {
+  // NOTE:
+  // from/to are image-position values consumed by coverPan, not camera coordinates.
+  // We intentionally choose defaults by "visual movement direction" in preview/output:
+  // - moveToRight: image 100 -> 0
+  // - moveToLeft:  image 0 -> 100
+  // - moveToTop:   image 0 -> 100
+  // - moveToBottom:image 100 -> 0
   switch (effectType) {
     case "moveToLeft":
       return { from: 0, to: 100 };
