@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, Menu } from "electron";
+import { app, autoUpdater, BrowserWindow, shell, Menu } from "electron";
 import path from "node:path";
 import os from "node:os";
 import fs from "node:fs";
@@ -232,6 +232,21 @@ const createWindow = (splashWindow?: BrowserWindow) => {
       // If URL parsing fails, prevent navigation for safety
       event.preventDefault();
       GraphAILogger.error("Failed to parse URL for navigation:", error);
+    }
+  });
+
+  let updateDownloaded = false;
+
+  autoUpdater.on("update-downloaded", () => {
+    updateDownloaded = true;
+  });
+
+  app.on("before-quit", (event) => {
+    if (updateDownloaded) {
+      GraphAILogger.log("[AutoUpdate] Applying downloaded update on quit");
+      updateDownloaded = false;
+      event.preventDefault();
+      autoUpdater.quitAndInstall();
     }
   });
 
