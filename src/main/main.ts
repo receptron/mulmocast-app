@@ -235,21 +235,6 @@ const createWindow = (splashWindow?: BrowserWindow) => {
     }
   });
 
-  let updateDownloaded = false;
-
-  autoUpdater.on("update-downloaded", () => {
-    updateDownloaded = true;
-  });
-
-  app.on("before-quit", (event) => {
-    if (updateDownloaded) {
-      GraphAILogger.log("[AutoUpdate] Applying downloaded update on quit");
-      updateDownloaded = false;
-      event.preventDefault();
-      autoUpdater.quitAndInstall();
-    }
-  });
-
   const updateCallBack = (response: number) => {
     if (response === 1) {
       GraphAILogger.log("[AutoUpdate] Later selected; navigating to /updateInstall");
@@ -322,6 +307,22 @@ app.on("ready", () => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
+  }
+});
+
+// Apply downloaded update automatically when the user quits (macOS needs explicit quitAndInstall)
+let updateDownloaded = false;
+
+autoUpdater.on("update-downloaded", () => {
+  updateDownloaded = true;
+});
+
+app.on("before-quit", (event) => {
+  if (updateDownloaded) {
+    GraphAILogger.log("[AutoUpdate] Applying downloaded update on quit");
+    updateDownloaded = false;
+    event.preventDefault();
+    autoUpdater.quitAndInstall();
   }
 });
 
