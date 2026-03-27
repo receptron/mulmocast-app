@@ -3,6 +3,35 @@ import { GraphAILogger } from "graphai";
 
 import type { IUpdateDialogStrings, IUpdateInfo } from "update-electron-app";
 
+let isInstallingUpdate = false;
+let updateDownloaded = false;
+
+autoUpdater.on("update-downloaded", () => {
+  updateDownloaded = true;
+});
+
+/**
+ * Guarded wrapper around autoUpdater.quitAndInstall().
+ * Prevents re-entry when quitAndInstall() triggers before-quit.
+ */
+export function safeQuitAndInstall(): void {
+  if (isInstallingUpdate) return;
+  isInstallingUpdate = true;
+  GraphAILogger.log("[AutoUpdate] Invoking quitAndInstall");
+  autoUpdater.quitAndInstall();
+}
+
+/**
+ * If an update was downloaded, apply it via quitAndInstall().
+ * Intended to be called from app "before-quit" handler.
+ */
+export function applyUpdateOnQuit(): void {
+  if (updateDownloaded && !isInstallingUpdate) {
+    GraphAILogger.log("[AutoUpdate] Applying downloaded update on quit");
+    safeQuitAndInstall();
+  }
+}
+
 // copy from update-electron-app.
 /**
  * Helper function that generates a callback for use with {@link IUpdateElectronAppOptions.onNotifyUser}.
@@ -45,8 +74,8 @@ export function makeUserNotifier(
         const { response } = await dialog.showMessageBox(dialogOpts);
 
         if (response === 0) {
-          GraphAILogger.log("[AutoUpdate] User chose restart; invoking quitAndInstall");
-          autoUpdater.quitAndInstall();
+          GraphAILogger.log("[AutoUpdate] User chose restart");
+          safeQuitAndInstall();
         } else {
           GraphAILogger.log("[AutoUpdate] User deferred update");
         }

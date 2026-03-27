@@ -1,4 +1,4 @@
-import { app, autoUpdater, BrowserWindow, shell, Menu } from "electron";
+import { app, BrowserWindow, shell, Menu } from "electron";
 import path from "node:path";
 import os from "node:os";
 import fs from "node:fs";
@@ -17,7 +17,7 @@ import { getWindowState, saveWindowState } from "./utils/windw_state";
 import config from "../renderer/i18n/index";
 
 import { getMenu } from "./menu";
-import { makeUserNotifier } from "./update";
+import { makeUserNotifier, applyUpdateOnQuit } from "./update";
 import { setupLogger } from "./logger";
 
 import packageJSON from "../../package.json";
@@ -310,20 +310,8 @@ app.on("window-all-closed", () => {
   }
 });
 
-// Apply downloaded update automatically when the user quits (macOS needs explicit quitAndInstall)
-let updateDownloaded = false;
-
-autoUpdater.on("update-downloaded", () => {
-  updateDownloaded = true;
-});
-
-app.on("before-quit", (event) => {
-  if (updateDownloaded) {
-    GraphAILogger.log("[AutoUpdate] Applying downloaded update on quit");
-    updateDownloaded = false;
-    event.preventDefault();
-    autoUpdater.quitAndInstall();
-  }
+app.on("before-quit", () => {
+  applyUpdateOnQuit();
 });
 
 app.on("activate", () => {
