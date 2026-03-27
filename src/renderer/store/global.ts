@@ -115,7 +115,7 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
     return userMode.value.id === "beginner";
   });
 
-  const upadteInstall = () => {
+  const updateInstall = () => {
     hasUpdateInstall.value = true;
   };
 
@@ -145,6 +145,6 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
     hasOpenAIKeyForFeature,
 
     hasUpdateInstall,
-    upadteInstall,
+    updateInstall,
   };
 });

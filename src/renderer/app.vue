@@ -89,8 +89,8 @@ onMounted(async () => {
     if (path === "/settings") {
       globalStore.toggleSettingModal();
     }
-    if (path === "/upadteInstall") {
-      globalStore.upadteInstall();
+    if (path === "/updateInstall") {
+      globalStore.updateInstall();
     }
   });
 });

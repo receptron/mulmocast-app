@@ -1,4 +1,4 @@
-import { app, BrowserWindow, shell, Menu } from "electron";
+import { app, autoUpdater, BrowserWindow, shell, Menu } from "electron";
 import path from "node:path";
 import os from "node:os";
 import fs from "node:fs";
@@ -307,6 +307,22 @@ app.on("ready", () => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
+  }
+});
+
+// Apply downloaded update automatically when the user quits (macOS needs explicit quitAndInstall)
+let updateDownloaded = false;
+
+autoUpdater.on("update-downloaded", () => {
+  updateDownloaded = true;
+});
+
+app.on("before-quit", (event) => {
+  if (updateDownloaded) {
+    GraphAILogger.log("[AutoUpdate] Applying downloaded update on quit");
+    updateDownloaded = false;
+    event.preventDefault();
+    autoUpdater.quitAndInstall();
   }
 });
 
