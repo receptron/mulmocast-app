@@ -312,16 +312,16 @@ app.on("window-all-closed", () => {
 
 // Apply downloaded update automatically when the user quits (macOS needs explicit quitAndInstall)
 let updateDownloaded = false;
+let isInstallingUpdate = false;
 
 autoUpdater.on("update-downloaded", () => {
   updateDownloaded = true;
 });
 
-app.on("before-quit", (event) => {
-  if (updateDownloaded) {
+app.on("before-quit", () => {
+  if (updateDownloaded && !isInstallingUpdate) {
+    isInstallingUpdate = true;
     GraphAILogger.log("[AutoUpdate] Applying downloaded update on quit");
-    updateDownloaded = false;
-    event.preventDefault();
     autoUpdater.quitAndInstall();
   }
 });
