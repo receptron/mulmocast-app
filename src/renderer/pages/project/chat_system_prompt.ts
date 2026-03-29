@@ -7,11 +7,12 @@ const anthropicSystemPrompt = [
   "</use_parallel_tool_calls>",
 ].join("\n");
 
-type ConversationMode = "presentation" | "dialogue" | "story";
+type ConversationMode = "presentation" | "dialogue" | "story" | "shortForm";
 export const conversationModes = [
   { value: "presentation", label: "presentation" },
   { value: "dialogue", label: "dialogue" },
   { value: "story", label: "story" },
+  { value: "shortForm", label: "shortForm" },
 ];
 
 export const useSystemPrompt = () => {
@@ -24,6 +25,8 @@ export const useSystemPrompt = () => {
         "You are generating a script in the style of a two-person dialogue. The script should alternate between two characters, making it clear who is speaking each time. The tone should resemble a natural conversation.",
       story:
         "You are generating a script in the style of a story or multi-person conversation. The script should involve three or more characters, each with a distinct voice. Clearly indicate the speaker for each line, and write in a narrative or dialogue style suitable for storytelling.",
+      shortForm:
+        "You are generating a script for a SHORT-FORM VERTICAL VIDEO (9:16 aspect ratio) optimized for social media.\nCRITICAL: Generate EXACTLY 5 beats, no more, no less.\n- Each beat should be concise (10-15 seconds of speech).\n- Focus on visual storytelling with simple, clear images.\n- Avoid complex or text-heavy visuals.\n- Make it engaging and suitable for social media platforms.",
     };
     return conversationSystemPrompts[conversationMode.value];
   });
