@@ -17,7 +17,7 @@ import { getWindowState, saveWindowState } from "./utils/windw_state";
 import config from "../renderer/i18n/index";
 
 import { getMenu } from "./menu";
-import { makeUserNotifier, applyUpdateOnQuit } from "./update";
+import { makeUserNotifier, safeQuitAndInstall } from "./update";
 import { setupLogger } from "./logger";
 
 import packageJSON from "../../package.json";
@@ -311,7 +311,7 @@ app.on("window-all-closed", () => {
 });
 
 app.on("before-quit", () => {
-  applyUpdateOnQuit();
+  safeQuitAndInstall();
 });
 
 app.on("activate", () => {
