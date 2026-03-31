@@ -3,6 +3,25 @@ import { GraphAILogger } from "graphai";
 
 import type { IUpdateDialogStrings, IUpdateInfo } from "update-electron-app";
 
+// Update state machine: none → downloaded → installing
+type UpdateStatus = "none" | "downloaded" | "installing";
+let updateStatus: UpdateStatus = "none";
+
+autoUpdater.on("update-downloaded", () => {
+  updateStatus = "downloaded";
+});
+
+/**
+ * Guarded wrapper around autoUpdater.quitAndInstall().
+ * Only proceeds if an update has been downloaded and is not already being installed.
+ */
+export function safeQuitAndInstall(): void {
+  if (updateStatus !== "downloaded") return;
+  updateStatus = "installing";
+  GraphAILogger.log("[AutoUpdate] Invoking quitAndInstall");
+  autoUpdater.quitAndInstall();
+}
+
 // copy from update-electron-app.
 /**
  * Helper function that generates a callback for use with {@link IUpdateElectronAppOptions.onNotifyUser}.
@@ -45,8 +64,8 @@ export function makeUserNotifier(
         const { response } = await dialog.showMessageBox(dialogOpts);
 
         if (response === 0) {
-          GraphAILogger.log("[AutoUpdate] User chose restart; invoking quitAndInstall");
-          autoUpdater.quitAndInstall();
+          GraphAILogger.log("[AutoUpdate] User chose restart");
+          safeQuitAndInstall();
         } else {
           GraphAILogger.log("[AutoUpdate] User deferred update");
         }

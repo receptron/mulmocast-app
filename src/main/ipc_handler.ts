@@ -1,7 +1,8 @@
-import { ipcMain, shell, clipboard, autoUpdater, dialog, type IpcMainInvokeEvent } from "electron";
+import { ipcMain, shell, clipboard, dialog, type IpcMainInvokeEvent } from "electron";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { mulmoHandler } from "./mulmo/handler";
+import { safeQuitAndInstall } from "./update";
 import * as projectManager from "./project_manager";
 import { saveSettings, loadSettings } from "./settings_manager";
 import type { ProjectMetadata, Lang, Settings } from "../types";
@@ -79,7 +80,7 @@ export const registerIPCHandler = () => {
   });
 
   ipcMain.handle("updateInstall", (__event: IpcMainInvokeEvent) => {
-    autoUpdater.quitAndInstall();
+    safeQuitAndInstall();
   });
 
   ipcMain.handle("dialog:openFile", async (_event: IpcMainInvokeEvent, fileType?: "image" | "video" | "media") => {
