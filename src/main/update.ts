@@ -3,20 +3,21 @@ import { GraphAILogger } from "graphai";
 
 import type { IUpdateDialogStrings, IUpdateInfo } from "update-electron-app";
 
-let isInstallingUpdate = false;
-let updateDownloaded = false;
+// Update state machine: none → downloaded → installing
+type UpdateStatus = "none" | "downloaded" | "installing";
+let updateStatus: UpdateStatus = "none";
 
 autoUpdater.on("update-downloaded", () => {
-  updateDownloaded = true;
+  updateStatus = "downloaded";
 });
 
 /**
  * Guarded wrapper around autoUpdater.quitAndInstall().
- * Prevents re-entry when quitAndInstall() triggers before-quit.
+ * Only proceeds if an update has been downloaded and is not already being installed.
  */
 export function safeQuitAndInstall(): void {
-  if (isInstallingUpdate) return;
-  isInstallingUpdate = true;
+  if (updateStatus !== "downloaded") return;
+  updateStatus = "installing";
   GraphAILogger.log("[AutoUpdate] Invoking quitAndInstall");
   autoUpdater.quitAndInstall();
 }
@@ -26,7 +27,7 @@ export function safeQuitAndInstall(): void {
  * Intended to be called from app "before-quit" handler.
  */
 export function applyUpdateOnQuit(): void {
-  if (updateDownloaded && !isInstallingUpdate) {
+  if (updateStatus === "downloaded") {
     GraphAILogger.log("[AutoUpdate] Applying downloaded update on quit");
     safeQuitAndInstall();
   }
