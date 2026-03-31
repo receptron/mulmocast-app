@@ -1,7 +1,7 @@
 {
   "name": "mulmocast-app",
   "productName": "MulmoCast",
-  "version": "1.0.12",
+  "version": "1.0.13-rc-4",
   "description": "MulmoCast",
   "main": ".vite/build/main.js",
   "scripts": {
