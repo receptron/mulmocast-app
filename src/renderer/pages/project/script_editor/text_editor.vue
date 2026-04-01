@@ -39,7 +39,7 @@
     class="w-fit"
     :disabled="isArtifactGenerating || !isValidBeat || beat?.text?.length === 0"
   >
-    <template v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">
+    <template v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[beat.id]">
       <Loader2 class="mr-1 h-4 w-4 animate-spin" />{{ t("ui.status.generating") }}
     </template>
     <template v-else>{{ t("ui.actions.generateAudio") }}</template>
