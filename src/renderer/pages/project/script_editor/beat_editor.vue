@@ -132,8 +132,12 @@
             @click="generateAudio()"
             class="w-fit"
             :disabled="!isValidBeat || isArtifactGenerating || beat?.text?.length === 0"
-            >{{ t("ui.actions.generateAudio") }}</Button
           >
+            <template v-if="isAudioGenerating">
+              <Loader2 class="mr-1 h-4 w-4 animate-spin" />{{ t("ui.status.generating") }}
+            </template>
+            <template v-else>{{ t("ui.actions.generateAudio") }}</template>
+          </Button>
           <!-- Audio Player for generate mode -->
           <audio
             ref="audioPlayerRef"
@@ -664,7 +668,7 @@ import {
   provider2MovieAgent,
 } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
-import { ChevronDown, CircleUserRound, Music, X } from "lucide-vue-next";
+import { ChevronDown, CircleUserRound, Loader2, Music, X } from "lucide-vue-next";
 import { getLipSyncModelDescription, getLipSyncTargetInfo } from "./lip_sync_utils";
 import {
   TRANSITION_TYPES,
@@ -958,6 +962,9 @@ const isLipSyncGenerating = computed(() => {
 });
 const isHtmlGenerating = computed(() => {
   return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["html"]?.[beatId.value] ?? false;
+});
+const isAudioGenerating = computed(() => {
+  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["audio"]?.[beatId.value] ?? false;
 });
 const disabledImageGenearte = computed(() => {
   return beatType.value === "imagePrompt" && (props.beat.text || "") === "" && (props.beat.imagePrompt || "") === "";

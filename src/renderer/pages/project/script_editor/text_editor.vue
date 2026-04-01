@@ -38,11 +38,12 @@
     @click="generateAudio(index)"
     class="w-fit"
     :disabled="isArtifactGenerating || !isValidBeat || beat?.text?.length === 0"
-    >{{ t("ui.actions.generateAudio") }}</Button
   >
-  <span v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">{{
-    t("ui.status.generating")
-  }}</span>
+    <template v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[index]">
+      <Loader2 class="mr-1 h-4 w-4 animate-spin" />{{ t("ui.status.generating") }}
+    </template>
+    <template v-else>{{ t("ui.actions.generateAudio") }}</template>
+  </Button>
   <audio :src="audioFile" v-if="!!audioFile" controls />
   <!-- multi lingal -->
   <div v-if="supporLanguages.length > 0">
@@ -67,6 +68,7 @@
 
 <script setup lang="ts">
 import { computed, watch, ref } from "vue";
+import { Loader2 } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
 import {
   type MulmoBeat,
