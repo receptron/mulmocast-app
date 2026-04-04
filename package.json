@@ -46,7 +46,7 @@
     "@electron-forge/plugin-fuses": "^7.11.1",
     "@electron-forge/plugin-vite": "^7.11.1",
     "@electron-forge/publisher-s3": "^7.11.1",
-    "@electron/fuses": "^2.1.0",
+    "@electron/fuses": "^2.1.1",
     "@eslint/js": "^10.0.1",
     "@google/generative-ai": "^0.24.1",
     "@intlify/eslint-plugin-vue-i18n": "^4.3.0",
