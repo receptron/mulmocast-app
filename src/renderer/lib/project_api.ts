@@ -16,7 +16,7 @@ export const projectApi = {
     return await window.electronAPI.project.getProjectMetadata(id);
   },
   async getProjectMulmoScript(id: string): Promise<MulmoScript> {
-    return await window.electronAPI.project.getProjectMulmoScript(id);
+    return (await window.electronAPI.project.getProjectMulmoScript(id)) as MulmoScript;
   },
 
   async delete(id: string): Promise<boolean> {

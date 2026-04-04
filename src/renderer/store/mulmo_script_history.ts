@@ -84,7 +84,7 @@ export const useMulmoScriptHistoryStore = defineStore("mulmoScriptHistory", () =
     return mulmoScriptSchema.safeParse(currentMulmoScript.value ?? {});
   });
 
-  const mulmoError = computed<MulmoError>(() => {
+  const mulmoError = computed<MulmoError | null>(() => {
     if (!zodError.value.success) {
       console.log(zodError.value.error);
       return zodError2MulmoError(zodError.value.error);

@@ -70,7 +70,7 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
   const useLanguages = computed(() => {
     return Object.keys(settings.value?.USE_LANGUAGES ?? {})
       .map((lang) => {
-        return settings.value?.USE_LANGUAGES[lang] ? lang : null;
+        return settings.value?.USE_LANGUAGES?.[lang] ? lang : null;
       })
       .filter((v) => v);
   });

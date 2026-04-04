@@ -20,7 +20,7 @@ const __mulmoImageFetchURL = async (
       return {
         result: true,
         imageType: res.imageType,
-        path: path.join(dirPath, dirKey, res.filename),
+        path: path.join(dirPath, dirKey, res.filename ?? ""),
       };
     }
     if ("error" in res && res.error) {

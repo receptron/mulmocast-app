@@ -134,8 +134,9 @@ export const listProjectScriptImages = async (projectId: string): Promise<Projec
     return images
       .filter((image): image is ProjectScriptMedia => image !== null)
       .sort((a, b) => b.fileName.localeCompare(a.fileName));
-  } catch (error) {
-    if ("code" in error && error.code !== "ENOENT") {
+  } catch (error: unknown) {
+    const errCode = error instanceof Error && "code" in error ? (error as { code: string }).code : undefined;
+    if (errCode !== "ENOENT") {
       GraphAILogger.error("Failed to list project script images:", error);
     }
     return [];
@@ -195,15 +196,14 @@ export const createProject = async (title: string, lang: Lang, onboardProject: n
 
     const newScript = mulmoScriptSchema
       .strip()
-      .safeParse(onboardProject < 3 ? onboardProjects[lang][onboardProject] : initMulmoScript(title, lang));
-    const mulmoScript = newScript.data;
+      .parse(onboardProject < 3 ? onboardProjects[lang][onboardProject] : initMulmoScript(title, lang));
 
     await saveProjectMetadata(id, initialData);
-    await saveProjectScript(id, mulmoScript);
+    await saveProjectScript(id, newScript);
 
     return {
       metadata: initialData,
-      script: mulmoScript,
+      script: newScript,
     };
   } catch (error) {
     // Cleanup on failure
@@ -300,9 +300,10 @@ export const copyBeatMediaFiles = async (
           filesCopied = true;
           GraphAILogger.info(`Copied media file: ${file} -> ${targetFileName}`);
         }
-      } catch (error) {
+      } catch (error: unknown) {
         // Directory might not exist, which is fine - just continue
-        if ("code" in error && error.code !== "ENOENT") {
+        const errCode = error instanceof Error && "code" in error ? (error as { code: string }).code : undefined;
+        if (errCode !== "ENOENT") {
           GraphAILogger.warn(`Error copying from ${dir}:`, error);
         }
       }

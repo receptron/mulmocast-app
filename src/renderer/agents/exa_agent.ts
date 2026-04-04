@@ -25,7 +25,7 @@ export const exaToolsAgent: AgentFunction<
     ...params,
     ...namedInputs,
   };
-  const { query, search_args } = arg;
+  const { query, search_args } = arg ?? { query: "" };
 
   const { apiKey } = {
     ...(config || {}),

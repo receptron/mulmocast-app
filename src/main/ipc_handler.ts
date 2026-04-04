@@ -6,6 +6,7 @@ import { safeQuitAndInstall } from "./update";
 import * as projectManager from "./project_manager";
 import { saveSettings, loadSettings } from "./settings_manager";
 import type { ProjectMetadata, Lang, Settings } from "../types";
+import type { MulmoScript } from "mulmocast";
 import { MEDIA_FILE_EXTENSIONS, MIME_TYPES } from "../shared/constants";
 
 export const registerIPCHandler = () => {
@@ -52,7 +53,7 @@ export const registerIPCHandler = () => {
     projectManager.saveProjectMetadata(id, metaData),
   );
 
-  ipcMain.handle("project:saveProjectScript", (_event: IpcMainInvokeEvent, id: string, data: unknown) =>
+  ipcMain.handle("project:saveProjectScript", (_event: IpcMainInvokeEvent, id: string, data: Partial<MulmoScript>) =>
     projectManager.saveProjectScript(id, data),
   );
 

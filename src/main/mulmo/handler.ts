@@ -56,6 +56,7 @@ import { bgmList, bgmAudioFile, bgmGenerate, bgmUpdateTitle, bgmDelete } from ".
 import { getClonedVoices, updateVoiceName, uploadVoiceClone, deleteVoice } from "./handler_voice_clone";
 import { publishMulmoView } from "./handler_media";
 import type { ChatMessage } from "../../types";
+import { getErrorCause } from "./error_utils";
 
 const isDev = !app.isPackaged;
 
@@ -78,6 +79,9 @@ export const mulmoReferenceImages = async (projectId: string, webContents: WebCo
   try {
     addSessionProgressCallback(mulmoCallback);
     const context = await getContext(projectId);
+    if (!context) {
+      return null;
+    }
     const imageProjectDirPath = MulmoStudioContextMethods.getImageProjectDirPath(context);
     fs.mkdirSync(imageProjectDirPath, { recursive: true });
     const { imageRefs: images } = await getMediaRefs(context);
@@ -97,15 +101,16 @@ export const mulmoReferenceImages = async (projectId: string, webContents: WebCo
 // TODO pdf
 const mediaFilePath = async (projectId: string, actionName: string) => {
   const context = await getContext(projectId);
+  if (!context) {
+    throw Error("no context");
+  }
   if (actionName === "audio") {
     return getAudioArtifactFilePath(context);
-    // return audioFilePath(context);
   }
   if (actionName === "movie") {
     return movieFilePath(context);
   }
   if (actionName === "pdf") {
-    // return pdfFilePath(context, "slide");
     return pdfFilePath(context, "handout");
   }
   throw Error("no download file");
@@ -122,6 +127,9 @@ const mulmoDownload = async (projectId: string, actionName: string) => {
 
 const mulmoUpdateMultiLingual = async (projectId: string, index: number, data: MultiLingualTexts) => {
   const context = await getContext(projectId);
+  if (!context) {
+    throw Error("no context");
+  }
   const { outputMultilingualFilePath } = getOutputMultilingualFilePathAndMkdir(context);
   const multiLingual = getMultiLingual(outputMultilingualFilePath, context.studio.beats);
 
@@ -249,7 +257,7 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
           webContents.send("progress-update", {
             type: "error",
             data: error,
-            cause: error?.cause,
+            cause: getErrorCause(error),
           });
           return { error };
         }
@@ -261,31 +269,31 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         try {
           return await getClonedVoices();
         } catch (error) {
-          return { error, cause: error?.cause };
+          return { error, cause: getErrorCause(error) };
         }
       case "updateVoiceName":
         try {
           return await updateVoiceName(args[0] as string, args[1] as string);
         } catch (error) {
-          return { error, cause: error?.cause };
+          return { error, cause: getErrorCause(error) };
         }
       case "uploadVoiceClone":
         try {
           return await uploadVoiceClone(args[0] as string, args[1] as ArrayBuffer, args[2] as string);
         } catch (error) {
-          return { error, cause: error?.cause };
+          return { error, cause: getErrorCause(error) };
         }
       case "deleteVoice":
         try {
           return await deleteVoice(args[0] as string);
         } catch (error) {
-          return { error, cause: error?.cause };
+          return { error, cause: getErrorCause(error) };
         }
       case "publishMulmoView":
         try {
           return await publishMulmoView(args[0] as string, webContents);
         } catch (error) {
-          return { error, cause: error?.cause };
+          return { error, cause: getErrorCause(error) };
         }
       default:
         throw new Error(`Unknown method: ${method}`);

@@ -50,7 +50,7 @@ export const useStreamData = () => {
       streamData.value[nodeId] = "";
     }
     if (toolsData.value[nodeId]) {
-      toolsData.value[nodeId] = null;
+      delete toolsData.value[nodeId];
     }
   };
 

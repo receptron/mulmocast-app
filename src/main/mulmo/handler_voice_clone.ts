@@ -136,7 +136,7 @@ export const getClonedVoices = async (): Promise<ClonedVoice[]> => {
   // Extract relevant voice information
   const voices: ClonedVoice[] = result.voices.map((voice) => ({
     voice_id: voice.voiceId,
-    name: voice.name,
+    name: voice.name ?? "",
     category: voice.category,
     previewUrl: voice.previewUrl,
   }));

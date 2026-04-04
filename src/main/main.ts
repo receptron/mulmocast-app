@@ -181,7 +181,7 @@ const createWindow = (splashWindow?: BrowserWindow) => {
     setTimeout(() => {
       if (splashWindow) {
         splashWindow.close();
-        splashWindow = null;
+        splashWindow = undefined;
       }
       mainWindow?.show();
     }, 2000);
@@ -269,7 +269,7 @@ app.on("ready", () => {
         try {
           // Use a PNG file for the Dock icon, as it's more reliable in dev mode.
           const dockIconPath = path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png");
-          app.dock.setIcon(dockIconPath);
+          app.dock?.setIcon(dockIconPath);
         } catch (error) {
           GraphAILogger.error("Failed to set dock icon:", error);
         }
