@@ -1153,10 +1153,10 @@
     minimist "^1.2.8"
     postject "^1.0.0-alpha.6"
 
-"@elevenlabs/elevenlabs-js@^2.39.0":
-  version "2.39.0"
-  resolved "https://registry.yarnpkg.com/@elevenlabs/elevenlabs-js/-/elevenlabs-js-2.39.0.tgz#42291cb26d27a064ccb8c143bbb60f7baa40fb73"
-  integrity sha512-Yfh2wa5Y7wwoEHi2Na1YWrkc3z21oeHMo8qhGc5kcbQoWfgQfIxWuGfXHZSmUXOJz0mNL5bAfp3hHaJEX68DIA==
+"@elevenlabs/elevenlabs-js@2.42.0":
+  version "2.42.0"
+  resolved "https://registry.yarnpkg.com/@elevenlabs/elevenlabs-js/-/elevenlabs-js-2.42.0.tgz#f9bb11bdf0e811f539be2a4ec1ecdacdcc5ad706"
+  integrity sha512-SNql5kYylTJ6u2xEHBfE+DkM1K6bttqwGIlJUshqdvNlbxDGtXaf5Ot59cJJ/YS2+LP85cjSdQ2/49nyC0IG9w==
   dependencies:
     command-exists "^1.2.9"
     node-fetch "^2.7.0"
@@ -2015,10 +2015,10 @@
   dependencies:
     "@inquirer/type" "^1.5.5"
 
-"@lucide/vue@^1.7.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@lucide/vue/-/vue-1.7.0.tgz#ed72d008f8714d745225ef5d005f011953603db1"
-  integrity sha512-X3gTarOkNh2ThNK7IaDa4gdjFAtZyoKH/eoScklvmtNTWE5uxkycBQOuchGExY5swCqh1WptEIAWrmbuQcy2fA==
+"@lucide/vue@1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@lucide/vue/-/vue-1.8.0.tgz#e5baec754a64f79d1a94850dd72a115e597e2d90"
+  integrity sha512-Rgy2rxfOx9yP6fWneE3QO6xwUbF2o7f9+MRbzGLRakee4tzUeVWHdX23uRH4ymwEzoq2+8vqRI9yGsxeZhYlWw==
 
 "@malept/cross-spawn-promise@^1.0.0":
   version "1.1.1"
@@ -3931,10 +3931,10 @@ acorn@^8.11.0, acorn@^8.15.0, acorn@^8.16.0, acorn@^8.4.1, acorn@^8.5.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.16.0.tgz#4ce79c89be40afe7afe8f3adb902a1f1ce9ac08a"
   integrity sha512-UVJyE9MttOsBQIDKw1skb9nAwQuR5wuGD3+82K6JgJlm/Y+KI92oNsMNGZCYdDsVtRHSak0pcV5Dno5+4jh9sw==
 
-adm-zip@^0.5.16:
-  version "0.5.16"
-  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.5.16.tgz#0b5e4c779f07dedea5805cdccb1147071d94a909"
-  integrity sha512-TGw5yVi4saajsSEgz25grObGHEUaDrniwvA2qwSC060KfqGPdglhvPMA2lPIoxs3PQIItj2iag35fONcQqgUaQ==
+adm-zip@0.5.17:
+  version "0.5.17"
+  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.5.17.tgz#5c0b65f37aeec5c2a94995c024f931f62e4bbc5a"
+  integrity sha512-+Ut8d9LLqwEvHHJl1+PIHqoyDxFgVN847JTVM3Izi3xHDWPE4UtzzXysMZQs64DMcrJfBeS/uoEP4AD3HQHnQQ==
 
 agent-base@6, agent-base@^6.0.2:
   version "6.0.2"
