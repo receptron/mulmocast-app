@@ -180,7 +180,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, computed } from "vue";
-import { Mic, Loader2, Play, Pause, Pencil, Plus, Trash2 } from "lucide-vue-next";
+import { Mic, Loader2, Play, Pause, Pencil, Plus, Trash2 } from "@lucide/vue";
 import { useI18n } from "vue-i18n";
 
 import Layout from "@/components/layout.vue";

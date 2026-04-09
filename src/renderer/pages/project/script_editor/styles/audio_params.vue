@@ -203,7 +203,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import { computed, ref, watch, onUnmounted } from "vue";
-import { Music } from "lucide-vue-next";
+import { Music } from "@lucide/vue";
 import {
   Card,
   Label,

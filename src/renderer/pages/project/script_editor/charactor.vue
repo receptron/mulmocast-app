@@ -131,7 +131,7 @@
 </template>
 
 <script setup lang="ts">
-import { Trash, Sparkles, FileImage, Loader2 } from "lucide-vue-next";
+import { Trash, Sparkles, FileImage, Loader2 } from "@lucide/vue";
 import { ref, computed, nextTick, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { z } from "zod";

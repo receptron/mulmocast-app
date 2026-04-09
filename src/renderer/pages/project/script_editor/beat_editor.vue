@@ -668,7 +668,7 @@ import {
   provider2MovieAgent,
 } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
-import { ChevronDown, CircleUserRound, Loader2, Music, X } from "lucide-vue-next";
+import { ChevronDown, CircleUserRound, Loader2, Music, X } from "@lucide/vue";
 import { getLipSyncModelDescription, getLipSyncTargetInfo } from "./lip_sync_utils";
 import {
   TRANSITION_TYPES,

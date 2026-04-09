@@ -105,7 +105,7 @@
 </template>
 
 <script setup lang="ts">
-import { FileImage, Video, Loader2, Sparkles } from "lucide-vue-next";
+import { FileImage, Video, Loader2, Sparkles } from "@lucide/vue";
 import { computed, ref } from "vue";
 import type { MulmoBeat } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";

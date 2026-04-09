@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { Eye, EyeOff, ExternalLink } from "lucide-vue-next";
+import { Eye, EyeOff, ExternalLink } from "@lucide/vue";
 
 import { Button, Input, Label } from "@/components/ui";
 

@@ -94,7 +94,7 @@
 <script setup lang="ts">
 import { ref, reactive, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { ChevronDown, Eye, EyeOff } from "lucide-vue-next";
+import { ChevronDown, Eye, EyeOff } from "@lucide/vue";
 
 import { Button, Input, Label } from "@/components/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

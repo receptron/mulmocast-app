@@ -87,7 +87,7 @@
 <script setup lang="ts">
 import { ref, watch, computed, onMounted, onBeforeUnmount } from "vue";
 import { useI18n } from "vue-i18n";
-import { FileImage, ChevronLeft, ChevronRight } from "lucide-vue-next";
+import { FileImage, ChevronLeft, ChevronRight } from "@lucide/vue";
 import { type MultiLingualTexts, beatId } from "mulmocast/browser";
 import { sleep } from "graphai";
 

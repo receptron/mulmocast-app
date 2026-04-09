@@ -89,7 +89,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { Home, Settings, Activity, Music, Mic } from "lucide-vue-next";
+import { Home, Settings, Activity, Music, Mic } from "@lucide/vue";
 import { useI18n } from "vue-i18n";
 
 import { Button } from "@/components/ui/button";

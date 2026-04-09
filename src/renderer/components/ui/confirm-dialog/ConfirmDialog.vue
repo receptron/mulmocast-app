@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { AlertTriangle, Loader2, Info, CheckCircle, XCircle, HelpCircle } from "lucide-vue-next";
+import { AlertTriangle, Loader2, Info, CheckCircle, XCircle, HelpCircle } from "@lucide/vue";
 import {
   Dialog,
   DialogContent,
