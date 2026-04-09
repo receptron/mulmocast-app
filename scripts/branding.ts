@@ -3,6 +3,7 @@ import path from "node:path";
 
 export type Branding = {
   appName: string;
+  executableName?: string;
 };
 
 export type BrandingResolution = {
@@ -13,6 +14,7 @@ export type BrandingResolution = {
 };
 
 const DEFAULT_BRAND_ID = "default";
+const BRAND_ID_PATTERN = /^[a-zA-Z0-9_-]+$/;
 const BRANDING_DIR = path.resolve(__dirname, "../branding");
 const defaultBrandingPath = path.join(BRANDING_DIR, `${DEFAULT_BRAND_ID}.json`);
 
@@ -29,6 +31,12 @@ const readBrandingFile = (filePath: string): Branding => {
 };
 
 export const loadBranding = (requestedBrandId = process.env.BRAND?.trim() || DEFAULT_BRAND_ID): BrandingResolution => {
+  if (!BRAND_ID_PATTERN.test(requestedBrandId)) {
+    throw new Error(
+      `[branding] Invalid BRAND value "${requestedBrandId}". Only alphanumeric characters, hyphens, and underscores are allowed.`,
+    );
+  }
+
   const defaultBranding = readBrandingFile(defaultBrandingPath);
   const candidatePath = path.join(BRANDING_DIR, `${requestedBrandId}.json`);
 
@@ -49,6 +57,16 @@ export const loadBranding = (requestedBrandId = process.env.BRAND?.trim() || DEF
     branding: readBrandingFile(sourcePath),
     sourcePath,
   };
+};
+
+/** Filesystem-safe executable name: uses explicit executableName or derives from appName */
+export const getExecutableName = (branding: Branding): string => {
+  if (branding.executableName) return branding.executableName;
+  // Remove non-ASCII and special characters, collapse spaces to hyphens
+  return branding.appName
+    .replace(/[^a-zA-Z0-9 _-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-");
 };
 
 export const createBrandDefines = (branding = loadBranding()) => {

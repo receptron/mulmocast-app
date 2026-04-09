@@ -12,7 +12,7 @@ import { execSync } from "child_process";
 import path from "node:path";
 import packageJSON from "./package.json";
 import { resolveTargetAndVersion } from "./src/shared/version";
-import { loadBranding } from "./scripts/branding";
+import { loadBranding, getExecutableName } from "./scripts/branding";
 
 const gitBranch = process.env.BRANCH_NAME || execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
 console.log(`gitBranch: ${gitBranch}`);
@@ -24,8 +24,11 @@ const { version: packageVersion } = packageJSON;
 console.log(`packageVersion: ${packageVersion}`);
 
 const activeBranding = loadBranding();
+const brandDisplayName = activeBranding.branding.appName;
+const brandExeName = getExecutableName(activeBranding.branding);
 console.log(`brandId: ${activeBranding.brandId}`);
-console.log(`brandName: ${activeBranding.branding.appName}`);
+console.log(`brandName: ${brandDisplayName}`);
+console.log(`brandExeName: ${brandExeName}`);
 
 const { target, version } = resolveTargetAndVersion(gitBranch, packageVersion);
 console.log(`target: ${target}`);
@@ -33,8 +36,8 @@ console.log(`version: ${version}`);
 
 const config: ForgeConfig = {
   packagerConfig: {
-    name: activeBranding.branding.appName,
-    executableName: activeBranding.branding.appName,
+    name: brandExeName,
+    executableName: brandExeName,
     buildVersion: buildDate,
     asar: true,
     extraResource: [
@@ -45,10 +48,10 @@ const config: ForgeConfig = {
       "chromium",
     ],
     win32metadata: {
-      FileDescription: activeBranding.branding.appName,
-      ProductName: activeBranding.branding.appName,
-      InternalName: activeBranding.branding.appName,
-      OriginalFilename: `${activeBranding.branding.appName}.exe`,
+      FileDescription: brandDisplayName,
+      ProductName: brandDisplayName,
+      InternalName: brandExeName,
+      OriginalFilename: `${brandExeName}.exe`,
     },
     // Use extension-less icon path so Electron Packager picks the right format per platform.
     icon: path.resolve(__dirname, "images/mulmocast_icon"),
@@ -73,7 +76,7 @@ const config: ForgeConfig = {
   makers: [
     new MakerSquirrel({
       setupIcon: path.resolve(__dirname, "images/mulmocast_icon.ico"),
-      setupExe: `${activeBranding.branding.appName}-${packageVersion}-setup.exe`,
+      setupExe: `${brandExeName}-${packageVersion}-setup.exe`,
     }),
     new MakerZIP({ macUpdateManifestBaseUrl: `https://s3.aws.mulmocast.com/releases/${target}/darwin/arm64` }, [
       "darwin",
