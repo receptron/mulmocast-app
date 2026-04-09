@@ -48,7 +48,7 @@ export const insertSpeakers = (data: MulmoScript) => {
       speakers.add(beat.speaker);
     }
     return speakers;
-  }, new Set());
+  }, new Set<string>());
   Object.keys(data?.speechParams?.speakers ?? {}).map((speaker) => {
     existsSpeakersOnBeats.delete(speaker);
   });

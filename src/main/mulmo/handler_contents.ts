@@ -32,7 +32,7 @@ const beatAudio = (context: MulmoStudioContext) => {
       const text = lang && multiLingual ? localizedText(beat, multiLingual as any, lang) : beat.text;
 
       const fileName = getBeatAudioPathOrUrl(text, context, beat, lang ?? context.studio.script?.lang ?? "en");
-      if (fileExstsSync(fileName)) {
+      if (fileName && fileExstsSync(fileName)) {
         const buffer = fs.readFileSync(fileName);
         return buffer.buffer;
       }
@@ -58,8 +58,7 @@ export const mulmoAudioFiles = async (
     return context.studio.script.beats.reduce(
       (tmp, beat, index) => {
         const fileName = audios[index];
-        // GraphAILogger.log(fileName);
-        if (fileExstsSync(fileName)) {
+        if (fileName && fileExstsSync(fileName)) {
           const buffer = fs.readFileSync(fileName);
           tmp[beatId(beat?.id, index)] = buffer.buffer;
         }
@@ -74,7 +73,7 @@ export const mulmoAudioFiles = async (
 };
 export const mulmoAudioFile = async (projectId: string, index: number) => {
   try {
-    const context = await getContext(projectId, null, index);
+    const context = await getContext(projectId, undefined, index);
     if (!context) {
       return { result: false, noContext: true };
     }
@@ -88,7 +87,7 @@ export const mulmoAudioFile = async (projectId: string, index: number) => {
 // Get generated TTS audio file only (ignore beat.audio)
 export const mulmoGeneratedAudioFile = async (projectId: string, index: number) => {
   try {
-    const context = await getContext(projectId, null, index);
+    const context = await getContext(projectId, undefined, index);
     if (!context) {
       return { result: false, noContext: true };
     }
@@ -143,7 +142,7 @@ export const mulmoImageFiles = async (
 };
 export const mulmoImageFile = async (projectId: string, index: number) => {
   try {
-    const context = await getContext(projectId, null, index);
+    const context = await getContext(projectId, undefined, index);
     if (!context) {
       return { result: false, noContext: true };
     }

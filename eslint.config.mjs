@@ -74,6 +74,9 @@ const sonarjsRules = {
   "sonarjs/no-nested-conditional": "off",
   "sonarjs/slow-regex": "warn",
   "sonarjs/prefer-regexp-exec": "off",
+  "sonarjs/function-return-type": "off", // union return types (string | null, T | undefined) are idiomatic TS
+  "sonarjs/argument-type": "off", // false positives with Array.includes() in TS 6
+  "sonarjs/different-types-comparison": "off", // false positives with defensive null checks in TS 6
   "no-useless-assignment": "warn",
   "preserve-caught-error": "warn",
 };

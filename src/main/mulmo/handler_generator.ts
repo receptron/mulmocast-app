@@ -27,14 +27,20 @@ import z from "zod";
 import fs from "fs";
 import { loadSettings } from "../settings_manager";
 import { Settings } from "../../types/index";
+import { getErrorCause } from "./error_utils";
 
 /**
  * Build settings object for mulmocast library that includes both regular API keys
  * and Azure OpenAI keys in the format expected by settings2GraphAIConfig.
  * Azure keys are mapped with prefixes (TTS_, IMAGE_, LLM_) for service-specific access.
  */
-const buildMulmoSettings = (settings: Settings): Record<string, string | undefined> => {
-  const result: Record<string, string | undefined> = { ...settings.APIKEY };
+const buildMulmoSettings = (settings: Settings): Record<string, string> => {
+  const result: Record<string, string> = {};
+  Object.entries(settings.APIKEY).forEach(([key, value]) => {
+    if (value !== undefined) {
+      result[key] = value;
+    }
+  });
 
   // Add Azure OpenAI keys with service-specific prefixes
   if (settings.AZURE_OPENAI) {
@@ -147,7 +153,7 @@ export const mulmoActionRunner = async (
         projectId,
         type: "error",
         data: error,
-        cause: error?.cause,
+        cause: getErrorCause(error),
       });
     }
     return {
@@ -171,7 +177,7 @@ export const mulmoGenerateBeatImage = async (
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   addSessionProgressCallback(mulmoCallback);
   try {
-    const context = await getContext(projectId, null, index);
+    const context = await getContext(projectId, undefined, index);
     if (!context) {
       return { result: false, noContext: true };
     }
@@ -244,7 +250,7 @@ export const mulmoGenerateBeatImage = async (
       projectId,
       type: "error",
       data: error,
-      cause: error?.cause,
+      cause: getErrorCause(error),
     });
     return {
       result: false,
@@ -257,7 +263,7 @@ export const mulmoGenerateBeatAudio = async (projectId: string, index: number, w
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   try {
     addSessionProgressCallback(mulmoCallback);
-    const context = await getContext(projectId, null, index);
+    const context = await getContext(projectId, undefined, index);
     if (!context) {
       return { result: false, noContext: true };
     }
@@ -282,7 +288,7 @@ export const mulmoGenerateBeatAudio = async (projectId: string, index: number, w
       projectId,
       type: "error",
       data: error,
-      cause: error?.cause,
+      cause: getErrorCause(error),
     });
     return {
       result: false,
@@ -323,7 +329,7 @@ export const mulmoReferenceImage = async (
       projectId,
       type: "error",
       data: error,
-      cause: error?.cause,
+      cause: getErrorCause(error),
     });
     return {
       result: false,
@@ -341,7 +347,7 @@ export const mulmoTranslateBeat = async (
   const mulmoCallback = mulmoCallbackGenerator(projectId, webContents);
   try {
     addSessionProgressCallback(mulmoCallback);
-    const context = await getContext(projectId, null, index);
+    const context = await getContext(projectId, undefined, index);
     if (!context) {
       return { result: false, noContext: true };
     }
@@ -355,7 +361,7 @@ export const mulmoTranslateBeat = async (
       projectId,
       type: "error",
       data: error,
-      cause: error?.cause,
+      cause: getErrorCause(error),
     });
     return {
       result: false,
@@ -381,7 +387,7 @@ export const mulmoTranslate = async (projectId: string, targetLangs: string[], w
       projectId,
       type: "error",
       data: error,
-      cause: error?.cause,
+      cause: getErrorCause(error),
     });
     return {
       result: false,

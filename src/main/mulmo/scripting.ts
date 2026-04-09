@@ -76,5 +76,8 @@ export const createMulmoScript = async (messages: ChatMessage[], templateName: s
   graph.injectValue("chatMessages", messages.map((message) => `${message.role}: ${message.content}`).join("\n"));
   graph.injectValue("systemPrompt", readTemplatePrompt(templateName));
   const result = await graph.run<{ data: MulmoScript }>();
+  if (!result.mulmoScript) {
+    throw new Error("mulmoScript not found in graph result");
+  }
   return result.mulmoScript.data;
 };

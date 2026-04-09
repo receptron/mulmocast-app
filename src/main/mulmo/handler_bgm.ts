@@ -177,7 +177,8 @@ export const bgmGenerate = async (prompt: string, duration: string, title: strin
   }
 
   // Web ReadableStream → Node.js Readable
-  const nodeStream = Readable.fromWeb(readable);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const nodeStream = Readable.fromWeb(readable as any);
 
   // Generate filename and save
   const fileName = generateFileName();

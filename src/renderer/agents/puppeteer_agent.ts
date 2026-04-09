@@ -1,4 +1,4 @@
-import { AgentFunction, AgentFunctionInfo } from "graphai";
+import { type AgentFunction, type AgentFunctionInfo, type DefaultResultData } from "graphai";
 
 export const puppeteerAgent: AgentFunction = async ({ namedInputs }) => {
   const { arg } = {
@@ -7,7 +7,7 @@ export const puppeteerAgent: AgentFunction = async ({ namedInputs }) => {
   const { url } = arg;
   const content = await window.electronAPI.mulmoHandler("graphaiPuppeteerAgent", { url });
   console.log(content);
-  return content;
+  return content as DefaultResultData;
 };
 
 const puppeteerAgentInfo: AgentFunctionInfo = {
