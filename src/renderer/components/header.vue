@@ -4,7 +4,7 @@
       <!-- Logo/Brand -->
       <RouterLink to="/">
         <h1 class="text-foreground hover:text-primary cursor-pointer text-2xl font-bold transition-colors duration-200">
-          {{ t("ui.common.applicationName") }}
+          {{ BRAND.appName }}
         </h1>
       </RouterLink>
 
@@ -91,6 +91,7 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { Home, Settings, Activity, Music, Mic } from "lucide-vue-next";
 import { useI18n } from "vue-i18n";
+import { BRAND } from "../../shared/branding";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";

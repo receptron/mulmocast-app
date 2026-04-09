@@ -109,3 +109,10 @@ docs/release_notes/*/output/
 
 # i18n
 .i18n-cache/
+
+# Local OEM branding files
+branding/*.json
+branding/*.ts
+!branding/default.json
+!branding/foobar.json
+!branding/README.md

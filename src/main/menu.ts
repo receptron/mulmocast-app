@@ -2,8 +2,10 @@ import { Menu, MenuItemConstructorOptions, BrowserWindow, shell } from "electron
 import * as settingsManager from "./settings_manager";
 import config from "../renderer/i18n/index";
 import { LOG_DIR } from "./logger";
+import { BRAND } from "../shared/branding";
 
 const isDev = process.env.NODE_ENV === "development";
+const formatBrandLabel = (label: string) => label.replaceAll("{appName}", BRAND.appName);
 
 // https://github.com/electron/electron/blob/main/lib/browser/api/menu-item-roles.ts
 export const getMenu = async () => {
@@ -89,7 +91,7 @@ export const getMenu = async () => {
     {
       label: menuProps["help"],
       submenu: [
-        { role: "about", label: menuProps["about"] },
+        { role: "about", label: formatBrandLabel(menuProps["about"]) },
         {
           label: menuProps["settings"],
           click: () => {
@@ -143,11 +145,11 @@ export const getMenu = async () => {
     template.unshift({
       role: "appMenu",
       submenu: [
-        { role: "about", label: menuProps["about"] },
+        { role: "about", label: formatBrandLabel(menuProps["about"]) },
         { type: "separator" },
         { role: "services" },
         { type: "separator" },
-        { role: "hide", label: menuProps["hide"] },
+        { role: "hide", label: formatBrandLabel(menuProps["hide"]) },
         { role: "hideOthers", label: menuProps["hideOthers"] },
         { role: "unhide", label: menuProps["unhide"] },
         { type: "separator" },

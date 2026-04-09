@@ -13,6 +13,7 @@ import { registerIPCHandler } from "./ipc_handler";
 import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
 import { resolveTargetFromVersion } from "../shared/version";
+import { BRAND } from "../shared/branding";
 import { getWindowState, saveWindowState } from "./utils/windw_state";
 import config from "../renderer/i18n/index";
 
@@ -24,6 +25,7 @@ import packageJSON from "../../package.json";
 
 log.initialize();
 setupLogger();
+app.setName(BRAND.appName);
 
 // --- Runtime Puppeteer Patch ---
 const originalLaunch = puppeteer.launch.bind(puppeteer);
@@ -135,6 +137,7 @@ const createSplashWindow = async () => {
     frame: false,
     alwaysOnTop: true,
     transparent: true,
+    title: BRAND.appName,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -158,6 +161,7 @@ const createWindow = (splashWindow?: BrowserWindow) => {
   const mainWindow = new BrowserWindow({
     ...windowState,
     show: false,
+    title: BRAND.appName,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
@@ -262,26 +266,23 @@ const createWindow = (splashWindow?: BrowserWindow) => {
 // Some APIs can only be used after this event occurs.
 app.on("ready", () => {
   void (async () => {
-    // In development mode, configure app appearance
-    if (isDev) {
-      // On macOS, force set the Dock icon for reliable display in dev mode
-      if (os.platform() === "darwin") {
-        try {
+    if (os.platform() === "darwin") {
+      try {
+        if (isDev) {
           // Use a PNG file for the Dock icon, as it's more reliable in dev mode.
           const dockIconPath = path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png");
           app.dock?.setIcon(dockIconPath);
-        } catch (error) {
-          GraphAILogger.error("Failed to set dock icon:", error);
         }
+      } catch (error) {
+        GraphAILogger.error("Failed to set dock icon:", error);
       }
-
-      // Set About panel options to match build configuration
-      app.setAboutPanelOptions({
-        iconPath: path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png"),
-        applicationName: "MulmoCast",
-        applicationVersion: app.getVersion(),
-      });
     }
+
+    app.setAboutPanelOptions({
+      iconPath: path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png"),
+      applicationName: BRAND.appName,
+      applicationVersion: app.getVersion(),
+    });
 
     const splashWindow = await createSplashWindow();
 

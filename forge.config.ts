@@ -12,6 +12,7 @@ import { execSync } from "child_process";
 import path from "node:path";
 import packageJSON from "./package.json";
 import { resolveTargetAndVersion } from "./src/shared/version";
+import { loadBranding } from "./scripts/branding";
 
 const gitBranch = process.env.BRANCH_NAME || execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
 console.log(`gitBranch: ${gitBranch}`);
@@ -22,12 +23,18 @@ const buildDate = now.toISOString().slice(0, 10).replace(/-/g, "");
 const { version: packageVersion } = packageJSON;
 console.log(`packageVersion: ${packageVersion}`);
 
+const activeBranding = loadBranding();
+console.log(`brandId: ${activeBranding.brandId}`);
+console.log(`brandName: ${activeBranding.branding.appName}`);
+
 const { target, version } = resolveTargetAndVersion(gitBranch, packageVersion);
 console.log(`target: ${target}`);
 console.log(`version: ${version}`);
 
 const config: ForgeConfig = {
   packagerConfig: {
+    name: activeBranding.branding.appName,
+    executableName: activeBranding.branding.appName,
     buildVersion: buildDate,
     asar: true,
     extraResource: [
@@ -37,6 +44,12 @@ const config: ForgeConfig = {
       "node_modules/mulmocast-vision/html",
       "chromium",
     ],
+    win32metadata: {
+      FileDescription: activeBranding.branding.appName,
+      ProductName: activeBranding.branding.appName,
+      InternalName: activeBranding.branding.appName,
+      OriginalFilename: `${activeBranding.branding.appName}.exe`,
+    },
     // Use extension-less icon path so Electron Packager picks the right format per platform.
     icon: path.resolve(__dirname, "images/mulmocast_icon"),
     osxSign: process.env.CODESIGN_IDENTITY
@@ -60,7 +73,7 @@ const config: ForgeConfig = {
   makers: [
     new MakerSquirrel({
       setupIcon: path.resolve(__dirname, "images/mulmocast_icon.ico"),
-      setupExe: `MulmoCast-${packageVersion}-setup.exe`,
+      setupExe: `${activeBranding.branding.appName}-${packageVersion}-setup.exe`,
     }),
     new MakerZIP({ macUpdateManifestBaseUrl: `https://s3.aws.mulmocast.com/releases/${target}/darwin/arm64` }, [
       "darwin",

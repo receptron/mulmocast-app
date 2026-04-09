@@ -1,5 +1,6 @@
 import { type MulmoImageParams, provider2LLMAgent } from "mulmocast/browser";
 import { bgmAssets } from "mulmocast/data";
+import { BRAND } from "./branding";
 export { pdf_modes, languages } from "mulmocast/browser";
 
 // Define all valid feature keys as a readonly tuple
@@ -310,7 +311,7 @@ export const VIEW_MODE = {
   grid: "grid",
 } as const;
 
-export const INITIAL_DESCRIPTION = "mulmocast";
+export const INITIAL_DESCRIPTION = BRAND.appName;
 
 export const IMAGE_PARAMS_DEFAULT_VALUES: MulmoImageParams = {
   provider: "openai",
