@@ -43,7 +43,6 @@ export const loadBranding = (requestedBrandId = process.env.BRAND?.trim() || DEF
     );
   }
 
-  const defaultBranding = readBrandingFile(defaultBrandingPath);
   const candidatePath = path.join(BRANDING_DIR, `${requestedBrandId}.json`);
 
   if (requestedBrandId !== DEFAULT_BRAND_ID && !fs.existsSync(candidatePath)) {
