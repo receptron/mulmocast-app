@@ -68,7 +68,7 @@
 
 <script setup lang="ts">
 import { computed, watch, ref } from "vue";
-import { Loader2 } from "lucide-vue-next";
+import { Loader2 } from "@lucide/vue";
 import { useI18n } from "vue-i18n";
 import {
   type MulmoBeat,

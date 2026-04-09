@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { Bot } from "lucide-vue-next";
+import { Bot } from "@lucide/vue";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { useFormatedDate } from "./date_format";

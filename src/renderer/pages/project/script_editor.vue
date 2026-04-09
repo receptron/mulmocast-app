@@ -370,7 +370,7 @@
 import { ref, computed, watch, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
-import { ArrowUp, ArrowDown, Trash, Copy, LayoutGrid } from "lucide-vue-next";
+import { ArrowUp, ArrowDown, Trash, Copy, LayoutGrid } from "@lucide/vue";
 import { Button } from "@/components/ui/button";
 import YAML from "yaml";
 import {

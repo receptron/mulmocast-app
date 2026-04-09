@@ -19,7 +19,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { User, Edit } from "lucide-vue-next";
+import { User, Edit } from "@lucide/vue";
 
 import { useFormatedDate } from "./date_format";
 

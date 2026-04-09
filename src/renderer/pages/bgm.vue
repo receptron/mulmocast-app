@@ -157,7 +157,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import { Plus, Music, Play, Pause, Pencil, Trash2, Loader2 } from "lucide-vue-next";
+import { Plus, Music, Play, Pause, Pencil, Trash2, Loader2 } from "@lucide/vue";
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
 

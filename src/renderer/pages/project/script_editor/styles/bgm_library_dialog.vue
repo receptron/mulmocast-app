@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { Music, Play, Pause } from "lucide-vue-next";
+import { Music, Play, Pause } from "@lucide/vue";
 import { useI18n } from "vue-i18n";
 import dayjs from "dayjs";
 

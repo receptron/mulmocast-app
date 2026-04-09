@@ -31,7 +31,7 @@ import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import { useGraphAIDebugLogStore } from "@/store";
 import { Button } from "@/components/ui";
-import { Copy } from "lucide-vue-next";
+import { Copy } from "@lucide/vue";
 import { notifySuccess, notifyError } from "@/lib/notification";
 
 const { t } = useI18n();

@@ -185,7 +185,7 @@
 <script setup lang="ts">
 // vue
 import { ref, computed, useTemplateRef, onMounted, watch } from "vue";
-import { Send, Loader2, FileCode } from "lucide-vue-next";
+import { Send, Loader2, FileCode } from "@lucide/vue";
 import { useI18n } from "vue-i18n";
 
 // graphai

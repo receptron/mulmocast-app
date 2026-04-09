@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { Search, ScrollText, Globe, Loader2 } from "lucide-vue-next";
+import { Search, ScrollText, Globe, Loader2 } from "@lucide/vue";
 import { computed, ref } from "vue";
 import { useFormatedDate } from "./date_format";
 

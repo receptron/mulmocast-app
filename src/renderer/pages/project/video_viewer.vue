@@ -21,7 +21,7 @@
 </template>
 <script setup lang="ts">
 import { notifyProgress } from "@/lib/notification";
-import { Monitor } from "lucide-vue-next";
+import { Monitor } from "@lucide/vue";
 import { Button } from "@/components/ui/button";
 
 import MovieTab from "../../components/product/tabs/movie_tab.vue";
