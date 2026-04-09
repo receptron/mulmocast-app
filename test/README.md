@@ -166,6 +166,44 @@ npx tsx test/manual_no_api_electron_upgrade_qa.ts 144
 npx tsx test/manual_no_api_image_effect_qa.ts
 ```
 
+7. `test/manual_no_api_typescript6_qa.ts`
+**TypeScript 6 アップグレード QA テスト（APIコスト: なし）**
+
+- TypeScript 5.9 → 6.0 アップグレード時の回帰テスト用スイート（24項目）
+- CDP 経由で起動中の Electron アプリに接続
+- 7フェーズ構成:
+  - **Phase 1 – Dashboard**: 初期表示、プロジェクト一覧確認
+  - **Phase 2 – Project Creation & Edit**: 新規プロジェクト作成（`safeParse` → `parse` 変更の検証）、Monaco Editor で JSON 編集、リロード後の title 永続化確認
+  - **Phase 3 – Existing Project Load**: 最古プロジェクトを読み取り専用で開き、null チェック追加箇所の動作確認
+  - **Phase 4 – Voice Clone**: `getErrorCause`、`name ?? ""` の検証、TypeError 検出
+  - **Phase 5 – Settings Modal**: 開閉確認
+  - **Phase 6 – BGM Page**: ページ遷移確認
+  - **Phase 7 – Console & Runtime Health**: コンソールエラー、`ERR_INVALID_ARG_VALUE` / `TypeError` の critical パターン検出、`pageerror` 監視
+
+**使用方法:**
+```bash
+npx tsx test/manual_no_api_typescript6_qa.ts
+```
+
+8. `test/manual_no_api_vite8_qa.ts`
+**Vite 8 アップグレード QA テスト（APIコスト: なし）**
+
+- Vite 7 → 8 アップグレード時の回帰テスト用スイート（16項目）
+- CDP 経由で起動中の Electron アプリに接続
+- 6フェーズ構成:
+  - **Phase 1 – App Boot**: 起動・初期表示（`rolldownOptions` + `platform: "node"` の動作確認）
+  - **Phase 2 – Page Navigation**: 全主要ルート遷移（Dashboard / BGM / Voice Clone / Project）
+  - **Phase 3 – createRequire Check**: `ERR_INVALID_ARG_VALUE` / `createRequire` エラー検出
+  - **Phase 4 – HMR**: WebSocket 接続確認（dev モード）
+  - **Phase 5 – Settings Modal**: 開閉確認
+  - **Phase 6 – Console & Runtime Health**: コンソールエラー、critical パターン検出、`pageerror` 監視
+- 末尾に手動チェックリスト（`yarn make:ci:mac`、パッケージ後の起動、HMR 実動作確認）を表示
+
+**使用方法:**
+```bash
+npx tsx test/manual_no_api_vite8_qa.ts
+```
+
 ## 前提条件
 
 ### 1. 依存関係のインストール
