@@ -45,7 +45,39 @@ Task sub-agent で以下を実行し、結果をファイルに書き出す:
    gh pr view <number> --json title,body,labels,files
    ```
 
-4. PRをカテゴリ分類して `docs/release_notes/v<version>/release_notes_v<version>_pr_summary.md` に書き出す。
+4. **mulmocast パッケージ更新がある場合、上流の変更を詳細調査する**:
+
+   a. バージョン範囲を特定（前回リリースの mulmocast バージョン → 今回のバージョン）
+
+   b. **前バージョンと現バージョンのコードを実際に diff して新規追加を特定する**（最重要）:
+      上流のリリースノートやPRタイトルだけで「新機能」と判断してはならない。上流リリースノートには app が既に取り込み済みの機能も含まれるため、必ず実コードで差分を確認する。
+      ```bash
+      # 前バージョンの tarball をダウンロードして比較
+      mkdir -p /tmp/mulmocast-old-<old-ver>
+      cd /tmp/mulmocast-old-<old-ver>
+      curl -sL https://registry.npmjs.org/mulmocast/-/mulmocast-<old-ver>.tgz | tar xzf -
+
+      # モデル一覧の diff（provider2agent.js が動的ロードの定義元）
+      diff <(grep -E "google/|xai/|bytedance/|runwayml/|kwaivgi/" /tmp/mulmocast-old-<old-ver>/package/lib/types/provider2agent.js | sort) \
+           <(grep -E "google/|xai/|bytedance/|runwayml/|kwaivgi/" node_modules/mulmocast/lib/types/provider2agent.js | sort)
+      ```
+      この diff で追加された行のみを「新規モデル」として記載する。
+
+   c. 上流リポジトリのリリースノートは補足情報として参照（モデル以外の機能変更を把握するため）:
+      ```bash
+      gh release list --repo receptron/mulmocast --limit 20
+      gh release view <tag> --repo receptron/mulmocast  # 各バージョンごと
+      ```
+
+   d. app 側の対応範囲を調査し、リリースノートに記載する範囲を判断する:
+      - **記載する**: app の PR で実装したもの（UI 追加、バグ修正等）
+      - **記載する**: mulmocast 更新で app に自動反映されるもの（新モデルがドロップダウンに追加される等）
+      - **記載しない**: MulmoScript の JSON 編集で利用可能だが app UI がないもの（`elements` 配列、`canvasSize`、オーディオミキシング等）。これらは CLI の機能であり、app のリリースノートには含めない
+      - 明示的なコード変更（API 移行、新 UI 対応等）があったかを PR diff で確認
+
+   e. PR要約にはバージョン別に構造化して記載し、「2.4.8 時点で既存」と「今回新規」を明確に区別する
+
+5. PRをカテゴリ分類して `docs/release_notes/v<version>/release_notes_v<version>_pr_summary.md` に書き出す。
 
 **PR要約の記述ルール**:
 - UI変更を含むPRは、具体的なUI要素の種類を明記する（例: 「数値入力フィールド」「トグルスイッチ」「ドロップダウン」等）。PRの body や変更ファイルから判断できない場合は、実装コード（`.vue` ファイル等）を読んで確認する

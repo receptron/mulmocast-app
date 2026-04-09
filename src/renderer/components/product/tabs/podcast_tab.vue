@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { ref, watch, computed, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
-import { Volume2 } from "lucide-vue-next";
+import { Volume2 } from "@lucide/vue";
 import { Button } from "@/components/ui/button";
 import { formatFileSize, formatDuration } from "@/lib/format";
 import { useMulmoEventStore } from "@/store";

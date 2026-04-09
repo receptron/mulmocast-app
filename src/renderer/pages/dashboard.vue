@@ -110,7 +110,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
-import { Plus, List, Grid } from "lucide-vue-next";
+import { Plus, List, Grid } from "@lucide/vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { mulmoScriptSchema } from "mulmocast/browser";

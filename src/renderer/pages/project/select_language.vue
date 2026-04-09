@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui";
-import { Languages } from "lucide-vue-next";
+import { Languages } from "@lucide/vue";
 import { LANGUAGES } from "../../../shared/constants";
 
 import type { MulmoScript } from "mulmocast/browser";

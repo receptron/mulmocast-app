@@ -103,6 +103,8 @@ chromium/
 
 # Release notes output (generated media files)
 docs/release_notes/*/output/
+docs/release_notes/*/images/*.mp4
+docs/release_notes/*/images/*.gif
 
 # emacs
 *~

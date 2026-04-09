@@ -43,7 +43,7 @@
 import { ref, watch } from "vue";
 import { useMulmoScriptHistoryStore } from "../../store";
 import { notifyProgress } from "@/lib/notification";
-import { FileText, Monitor, Volume2Icon } from "lucide-vue-next";
+import { FileText, Monitor, Volume2Icon } from "@lucide/vue";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 

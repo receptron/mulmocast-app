@@ -74,7 +74,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import { Checkbox, Card, Button } from "@/components/ui";
-import { ChevronRight } from "lucide-vue-next";
+import { ChevronRight } from "@lucide/vue";
 import { type MulmoImageParamsImages, type MulmoBeat } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";

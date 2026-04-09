@@ -168,7 +168,7 @@
 <script setup lang="ts">
 import { ref, computed, toRaw } from "vue";
 import { useI18n } from "vue-i18n";
-import { Loader2, AlertCircle, Check, FileText, Palette, BarChart3, Globe } from "lucide-vue-next";
+import { Loader2, AlertCircle, Check, FileText, Palette, BarChart3, Globe } from "@lucide/vue";
 
 import { Button } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";

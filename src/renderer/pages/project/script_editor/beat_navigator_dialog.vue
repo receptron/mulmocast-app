@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { FileImage } from "lucide-vue-next";
+import { FileImage } from "@lucide/vue";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui";
 import { useI18n } from "vue-i18n";

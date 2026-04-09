@@ -309,7 +309,7 @@ import {
   PanelRightOpen,
   Expand,
   Monitor,
-} from "lucide-vue-next";
+} from "@lucide/vue";
 import dayjs from "dayjs";
 import {
   mulmoScriptSchema,

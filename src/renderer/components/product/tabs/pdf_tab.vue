@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { FileText } from "lucide-vue-next";
+import { FileText } from "@lucide/vue";
 import { VuePDF, usePDF } from "@tato30/vue-pdf";
 import { Button } from "@/components/ui/button";
 import { formatFileSize } from "@/lib/format";
