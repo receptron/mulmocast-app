@@ -1,0 +1,252 @@
+{
+  "$mulmocast": {
+    "version": "1.1",
+    "credit": "closing"
+  },
+  "canvasSize": {
+    "width": 1280,
+    "height": 720
+  },
+  "speechParams": {
+    "speakers": {
+      "Presenter": {
+        "displayName": {
+          "ja": "ナレーター"
+        },
+        "voiceId": "shimmer",
+        "speechOptions": {
+          "instruction": "Speak clearly and professionally like a news announcer reading release notes. Use a neutral, informative tone with clear enunciation."
+        },
+        "provider": "openai"
+      }
+    }
+  },
+  "imageParams": {
+    "provider": "openai",
+    "images": {}
+  },
+  "movieParams": {
+    "provider": "mock",
+    "model": "",
+    "transition": {
+      "type": "fade",
+      "duration": 1
+    }
+  },
+  "soundEffectParams": {
+    "provider": "replicate"
+  },
+  "textSlideParams": {
+    "cssStyles": [
+      "h3 {margin-left: 20px; margin-top: 20px}"
+    ]
+  },
+  "captionParams": {
+    "lang": "ja",
+    "captionSplit": "estimate",
+    "textSplit": {
+      "type": "delimiters",
+      "delimiters": [
+        "。",
+        "．",
+        "、",
+        ",",
+        ".",
+        "！",
+        "!",
+        "？",
+        "?",
+        "；",
+        ";",
+        "\n"
+      ]
+    }
+  },
+  "audioParams": {
+    "padding": 0.3,
+    "introPadding": 1,
+    "closingPadding": 0.8,
+    "outroPadding": 1,
+    "bgm": {
+      "kind": "path",
+      "path": "../bgm/20251217031931-8c55b232.mp3"
+    },
+    "bgmVolume": 0.1,
+    "audioVolume": 1,
+    "suppressSpeech": false
+  },
+  "title": "MulmoCast v1.0.13 リリースノート",
+  "description": "MulmoCast v1.0.13の新機能と改善点を紹介するリリースノート動画",
+  "lang": "ja",
+  "beats": [
+    {
+      "speaker": "Presenter",
+      "text": "マルモキャスト バージョン1.0.13をリリースしました！",
+      "captionParams": {
+        "captionSplit": "none",
+        "textSplit": { "type": "none" }
+      },
+      "id": "title-slide",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "# 🎉 MulmoCast v1.0.13 Released!",
+          "## April 8, 2026",
+          "",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "今回のアップデートでは、静止画にモーションを付けるImage Effect UIや、\nビート間を素早く移動できるBeat Navigatorを追加しました。\nさらに、新しい動画生成モデルが追加されています。",
+      "id": "title-overview",
+      "image": {
+        "type": "beat",
+        "id": "title-slide"
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "1：Image Effect UIを追加しました。\n静止画にズームやパンのモーションを付ける\nKen Burnsエフェクトを、UIから簡単に設定できます。",
+      "id": "image-effect-video",
+      "image": {
+        "type": "movie",
+        "source": {
+          "kind": "path",
+          "path": "images/01-01_image_effect_video_noBGM.mp4"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "まず、エフェクトを適用したい画像をMaterialsに登録します。",
+      "id": "image-effect-materials",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "path",
+          "path": "images/01-02_image_effect_materials.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "デュレーションやズーム倍率、\n移動の開始位置と終了位置など、\nパラメータを細かく調整できます。",
+      "id": "image-effect-params",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "path",
+          "path": "images/01-03_image_effect_params.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "エフェクトのプリセットはドロップダウンから選択できます。\nズームインやズームアウト、\n上下左右への移動など6種類が用意されています。",
+      "id": "image-effect-dropdown",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "path",
+          "path": "images/01-04_image_effect_dropdown.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "2：Beat Navigator機能を追加しました。\nスクリプトエディタのTEXTタブとMEDIAタブに、\nBeat Navigatorボタンが追加されました。",
+      "id": "beat-navigator-button",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "path",
+          "path": "images/02-02_beat_navigator_button.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "ダイアログを開くと、\nビートカードがサムネイル付きのグリッドで一覧表示されます。\nカードをクリックすると該当ビートにジャンプできます。",
+      "id": "beat-navigator-dialog",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "path",
+          "path": "images/02-03_beat_navigator_dialog.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "3：新しい動画生成モデルが追加されました。",
+      "id": "new-models",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "path",
+          "path": "images/03-01_movie_model_dropdown.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "Googleの Veo 3.1 LiteとVeo 3.1 Fastが追加されました。",
+      "captionParams": {
+        "captionSplit": "none",
+        "textSplit": { "type": "none" }
+      },
+      "id": "new-models-google",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "path",
+          "path": "images/03-02_movie_model_google_dropdown.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "また、Replicate経由でGrok、Kling、RunwayMLなどの\n新しい動画生成モデルが利用可能になりました。",
+      "id": "new-models-replicate",
+      "image": {
+        "type": "beat",
+        "id": "new-models"
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "その他、macOSの自動アップデート修正など、\n軽微な改善を行いました。\n起動中のアプリに更新通知が届きます。\nダウンロードは公式サイトから行えます。",
+      "id": "thank-you-slide",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "# Thank You!",
+          "",
+          "## MulmoCast v1.0.13",
+          "",
+          "### Happy Creating!",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "マルモキャスト バージョン1.0.13をお楽しみください！",
+      "captionParams": {
+        "captionSplit": "none",
+        "textSplit": { "type": "none" }
+      },
+      "id": "thank-you-closing",
+      "image": {
+        "type": "beat",
+        "id": "thank-you-slide"
+      }
+    }
+  ]
+}
