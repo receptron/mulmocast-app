@@ -157,7 +157,7 @@ git commit -m "chore: bump version to <version>"
 GitHub Release のタグが最新の main を指すようにするため、リリース PR をマージしてから進む。
 
 1. ユーザーにリリース PR（`release/<version>` → `main`）のマージを依頼する
-2. マージ後、ローカルの main を最新にしてもらう: `git pull origin main`
+2. マージ後、main ブランチに切り替えてから最新にしてもらう: `git checkout main && git pull origin main`
 
 ✅ main が最新になったら Phase 3 へ進む。
 
@@ -221,7 +221,7 @@ source .env 2>/dev/null || true
 
 環境変数 `RELEASE_ARCHIVE_DIR` が設定されている場合:
 
-- **ローカルパスの場合**（`/` で始まる）: zip をコピーする
+- **ローカルパスの場合**（`http://` / `https://` で始まらない）: zip をコピーする
   ```bash
   mkdir -p "$RELEASE_ARCHIVE_DIR"
   cp docs/release_notes/v<version>/output/mulmocast_v<version>_output.zip "$RELEASE_ARCHIVE_DIR/"

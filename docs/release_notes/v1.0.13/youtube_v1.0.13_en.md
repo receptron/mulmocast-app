@@ -46,7 +46,7 @@ MulmoCast Release Note
 
 ## Thumbnail
 
-beat 1（タイトルスライド）の画像を使用
+Use the image from beat 1 (title slide)
 
 ## URL
 
