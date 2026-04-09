@@ -19,7 +19,13 @@ const BRANDING_DIR = path.resolve(__dirname, "../branding");
 const defaultBrandingPath = path.join(BRANDING_DIR, `${DEFAULT_BRAND_ID}.json`);
 
 const isBranding = (value: unknown): value is Branding => {
-  return typeof value === "object" && value !== null && typeof (value as Branding).appName === "string";
+  if (typeof value !== "object" || value === null) return false;
+  const { appName, executableName } = value as Record<string, unknown>;
+  return (
+    typeof appName === "string" &&
+    appName.trim().length > 0 &&
+    (executableName === undefined || typeof executableName === "string")
+  );
 };
 
 const readBrandingFile = (filePath: string): Branding => {
@@ -41,13 +47,7 @@ export const loadBranding = (requestedBrandId = process.env.BRAND?.trim() || DEF
   const candidatePath = path.join(BRANDING_DIR, `${requestedBrandId}.json`);
 
   if (requestedBrandId !== DEFAULT_BRAND_ID && !fs.existsSync(candidatePath)) {
-    console.warn(`[branding] branding/${requestedBrandId}.json not found, falling back to default branding`);
-    return {
-      requestedBrandId,
-      brandId: DEFAULT_BRAND_ID,
-      branding: defaultBranding,
-      sourcePath: defaultBrandingPath,
-    };
+    throw new Error(`[branding] branding/${requestedBrandId}.json not found`);
   }
 
   const sourcePath = requestedBrandId === DEFAULT_BRAND_ID ? defaultBrandingPath : candidatePath;
@@ -59,14 +59,22 @@ export const loadBranding = (requestedBrandId = process.env.BRAND?.trim() || DEF
   };
 };
 
+const EXECUTABLE_NAME_PATTERN = /^[a-zA-Z0-9._-]+$/;
+
 /** Filesystem-safe executable name: uses explicit executableName or derives from appName */
 export const getExecutableName = (branding: Branding): string => {
-  if (branding.executableName) return branding.executableName;
-  // Remove non-ASCII and special characters, collapse spaces to hyphens
-  return branding.appName
-    .replace(/[^a-zA-Z0-9 _-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-");
+  const candidate =
+    branding.executableName?.trim() ||
+    branding.appName
+      .replace(/[^a-zA-Z0-9 _-]/g, "")
+      .trim()
+      .replace(/\s+/g, "-");
+
+  if (candidate.length === 0 || !EXECUTABLE_NAME_PATTERN.test(candidate)) {
+    throw new Error(`[branding] Invalid executable name "${candidate}" derived from appName "${branding.appName}"`);
+  }
+
+  return candidate;
 };
 
 export const createBrandDefines = (branding = loadBranding()) => {
