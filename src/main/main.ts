@@ -282,7 +282,7 @@ app.on("ready", () => {
       // Set About panel options to match build configuration
       app.setAboutPanelOptions({
         iconPath: path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png"),
-        applicationName: "MulmoCast",
+        applicationName: BRAND.appName,
         applicationVersion: app.getVersion(),
       });
     }
