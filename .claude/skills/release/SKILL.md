@@ -13,6 +13,8 @@ argument-hint: "<version> (例: 1.0.11)"
 Phase 1: リリースノート作成        → /release-notes の手順に従う
 Phase 1.5: リリース候補ビルド確認  → RC ブランチ作成 + ビルド版で最終確認
 Phase 2: X投稿ドラフト作成        → /release-xpost の手順に従う
+Phase 2.5: X投稿（手動）          → ユーザーが X に投稿、URL を控える
+Phase 2.7: リリース PR マージ     → ユーザーがマージ、main を最新に
 Phase 3 (直列):
   3a. GitHub Release作成          → /release-tag の手順に従う
   3b. Discord 投稿                → /discord-release の手順に従う
@@ -139,7 +141,25 @@ git commit -m "chore: bump version to <version>"
 - 各投稿の文字数は280以内か
 - スクリーンショットは正しいか
 
-✅ 確認が取れたら Phase 3 へ進む。
+✅ 確認が取れたら Phase 2.5 へ進む。
+
+### Phase 2.5: X投稿（手動）
+
+ユーザーが X にドラフトの内容を手動で投稿する。
+
+1. ユーザーに X への投稿を依頼する
+2. 投稿後、X 投稿 URL を控えてもらう（Discord 投稿で使用）
+
+✅ X 投稿 URL を受け取ったら Phase 2.7 へ進む。
+
+### Phase 2.7: リリース PR マージ
+
+GitHub Release のタグが最新の main を指すようにするため、リリース PR をマージしてから進む。
+
+1. ユーザーにリリース PR（`release/<version>` → `main`）のマージを依頼する
+2. マージ後、ローカルの main を最新にしてもらう: `git pull origin main`
+
+✅ main が最新になったら Phase 3 へ進む。
 
 ### Phase 3: GitHub Release → Discord → MulmoScript → YouTube → Zenn（直列実行）
 
@@ -199,18 +219,16 @@ zip -r output/mulmocast_v<version>_output.zip output/ -x "output/mulmocast_v<ver
 source .env 2>/dev/null || true
 ```
 
-環境変数 `RELEASE_ARCHIVE_DIR` が設定されている場合、zip をコピーする:
+環境変数 `RELEASE_ARCHIVE_DIR` が設定されている場合:
 
-```bash
-if [ -n "${RELEASE_ARCHIVE_DIR:-}" ]; then
+- **ローカルパスの場合**（`/` で始まる）: zip をコピーする
+  ```bash
   mkdir -p "$RELEASE_ARCHIVE_DIR"
   cp docs/release_notes/v<version>/output/mulmocast_v<version>_output.zip "$RELEASE_ARCHIVE_DIR/"
-fi
-```
+  ```
+- **URL の場合**（`http` で始まる）: zip のパスとアップロード先 URL をユーザーに表示し、手動アップロードを案内する
 
-`RELEASE_ARCHIVE_DIR` はローカルパスでも Google Drive マウントポイントでもよい。
-
-**未設定の場合**: ユーザーに「`RELEASE_ARCHIVE_DIR` が設定されていないため、zip のコピーをスキップします。アーカイブ先を設定する場合は `.env` に `RELEASE_ARCHIVE_DIR=/path/to/dir` を追加してください」と伝える。
+**未設定の場合**: ユーザーに「`RELEASE_ARCHIVE_DIR` が設定されていないため、zip のコピーをスキップします」と伝える。
 
 ✅ 完了したら Phase 5 へ進む。
 
