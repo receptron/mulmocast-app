@@ -266,23 +266,26 @@ const createWindow = (splashWindow?: BrowserWindow) => {
 // Some APIs can only be used after this event occurs.
 app.on("ready", () => {
   void (async () => {
-    if (os.platform() === "darwin") {
-      try {
-        if (isDev) {
+    // In development mode, configure app appearance
+    if (isDev) {
+      // On macOS, force set the Dock icon for reliable display in dev mode
+      if (os.platform() === "darwin") {
+        try {
           // Use a PNG file for the Dock icon, as it's more reliable in dev mode.
           const dockIconPath = path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png");
           app.dock?.setIcon(dockIconPath);
+        } catch (error) {
+          GraphAILogger.error("Failed to set dock icon:", error);
         }
-      } catch (error) {
-        GraphAILogger.error("Failed to set dock icon:", error);
       }
-    }
 
-    app.setAboutPanelOptions({
-      iconPath: path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png"),
-      applicationName: BRAND.appName,
-      applicationVersion: app.getVersion(),
-    });
+      // Set About panel options to match build configuration
+      app.setAboutPanelOptions({
+        iconPath: path.join(__dirname, "../../images/mulmocast_credit_1024x1024.png"),
+        applicationName: "MulmoCast",
+        applicationVersion: app.getVersion(),
+      });
+    }
 
     const splashWindow = await createSplashWindow();
 
