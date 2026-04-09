@@ -123,6 +123,9 @@ export default [
         // Electron main process globals
         MAIN_WINDOW_VITE_DEV_SERVER_URL: "readonly",
         MAIN_WINDOW_VITE_NAME: "readonly",
+        // Vite define globals (injected at build time via scripts/branding.ts)
+        __APP_BRAND__: "readonly",
+        __APP_BRAND_ID__: "readonly",
       },
     },
     plugins: {
