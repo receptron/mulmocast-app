@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import path from "path";
 import fs from "fs";
 import ffmpegFfprobeStatic from "ffmpeg-ffprobe-static";
+import { createBrandDefines } from "./scripts/branding";
 
 // Packages to exclude from bundle and load directly from node_modules
 const external_packages = ["jsdom", "mulmocast-vision", "puppeteer", "puppeteer-core"];
@@ -10,9 +11,11 @@ const external_packages = ["jsdom", "mulmocast-vision", "puppeteer", "puppeteer-
 const additional_packages = ["punycode"];
 
 const isDev = process.env.NODE_ENV === "development";
+const brandDefines = createBrandDefines();
 
 // https://vitejs.dev/config
 export default defineConfig({
+  define: brandDefines,
   build: {
     rolldownOptions: {
       external: external_packages,

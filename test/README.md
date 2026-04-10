@@ -204,6 +204,27 @@ npx tsx test/manual_no_api_typescript6_qa.ts
 npx tsx test/manual_no_api_vite8_qa.ts
 ```
 
+### `automated_`（ブランディング）
+
+9. `test/automated_branding_e2e_test.ts`
+**Branding E2E テスト（APIコスト: なし）**
+
+- OEM ブランディングが UI 全体に正しく適用されているかを検証する自動 E2E テスト
+- ブランドごとに Electron アプリを自動起動→CDP 接続→検証→終了
+- テストマトリクス:
+  1. デフォルト（BRAND 未設定）→ "MulmoCast" を期待
+  2. `BRAND=foobar` → "Foobar" を期待
+- 各ブランドで検証する項目（5項目）:
+  - `document.title` がブランド名と一致するか
+  - ヘッダー h1 テキストがブランド名と一致するか
+  - 新規プロジェクト作成時の description がブランド名と一致するか（作成後に削除）
+  - ページ遷移後もタイトルとヘッダーが維持されるか
+
+**使用方法:**
+```bash
+npx tsx test/automated_branding_e2e_test.ts
+```
+
 ## 前提条件
 
 ### 1. 依存関係のインストール
