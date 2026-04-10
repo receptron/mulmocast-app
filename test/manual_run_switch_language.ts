@@ -37,6 +37,7 @@ async function testChangeLanguage(targetLanguage: "en" | "ja"): Promise<void> {
         if (attempts === CONFIG.CDP_MAX_ATTEMPTS) {
           throw new Error(
             `Failed to connect to CDP after ${CONFIG.CDP_MAX_ATTEMPTS} attempts: ${error instanceof Error ? error.message : String(error)}`,
+            { cause: error },
           );
         }
         if (attempts === 1) {
