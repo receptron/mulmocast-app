@@ -61,6 +61,7 @@ async function connectCDP(): Promise<Browser> {
       if (attempts === CONFIG.CDP_MAX_ATTEMPTS) {
         throw new Error(
           `Failed to connect after ${CONFIG.CDP_MAX_ATTEMPTS} attempts: ${error instanceof Error ? error.message : String(error)}`,
+          { cause: error },
         );
       }
       if (attempts === 1) {
@@ -567,7 +568,7 @@ async function testExternalLinkButton(page: Page) {
   console.log("");
 
   const resources: { browser: Browser | null } = { browser: null };
-  let exitCode = 1;
+  let exitCode: number;
 
   try {
     resources.browser = await connectCDP();

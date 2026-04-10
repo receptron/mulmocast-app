@@ -144,6 +144,7 @@ async function createProject(page: Page, jsonFile: string, step: { value: number
     console.error(`[DEBUG] JSON validation FAILED:`, parseError);
     throw new Error(
       `Invalid JSON in ${jsonFile}: ${parseError instanceof Error ? parseError.message : String(parseError)}`,
+      { cause: parseError },
     );
   }
 
@@ -690,6 +691,7 @@ async function runGenerationE2ETest(): Promise<void> {
         if (attempts === CONFIG.CDP_MAX_ATTEMPTS) {
           throw new Error(
             `Failed to connect to CDP after ${CONFIG.CDP_MAX_ATTEMPTS} attempts: ${error instanceof Error ? error.message : String(error)}`,
+            { cause: error },
           );
         }
         if (attempts === 1) {
