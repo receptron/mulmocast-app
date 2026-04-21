@@ -21,6 +21,22 @@ yarn install
 yarn run start
 ```
 
+
+## 🧪 Vue + Express Development Mode (mulmoclaude)
+
+```bash
+npx mulmoclaude
+```
+
+- Vue (Vite): `http://127.0.0.1:5173`
+- Express API: `http://127.0.0.1:3001` (`/health`, `/api/message`, `/api/echo`)
+
+You can override ports with environment variables if needed.
+
+```bash
+MULMOCLAUDE_VITE_PORT=5174 MULMOCLAUDE_EXPRESS_PORT=3002 npx mulmoclaude
+```
+
 ## Build Application
 
 There are two ways to build the application:
