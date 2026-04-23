@@ -61,7 +61,7 @@
     "@vue/eslint-config-typescript": "^14.7.0",
     "bufferutil": "^4.1.0",
     "dotenv": "^17.4.1",
-    "electron": "41.2.0",
+    "electron": "41.3.0",
     "electron-devtools-installer": "^4.0.0",
     "esbuild": "^0.28.0",
     "eslint": "^10.2.1",
@@ -87,8 +87,8 @@
     "yaml-eslint-parser": "^2.0.0"
   },
   "resolutions": {
-    "dompurify": "^3.3.3",
-    "fast-xml-parser": "5.5.11",
+    "dompurify": "^3.4.1",
+    "fast-xml-parser": "5.7.1",
     "yauzl": "^3.2.1",
     "minimatch": "^10.2.5",
     "tar": "7.5.13",
