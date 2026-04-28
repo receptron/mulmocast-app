@@ -1012,6 +1012,15 @@ const lang = {
       customDescription1: "ここで設定した内容は、このビートでのみ使われます。",
       customDescription2: "設定していない場合は、スタイルで指定した共通設定が使われます。",
     },
+    concurrencyParams: {
+      title: "並列実行設定",
+      autoDetectNote: "未指定の場合はプロバイダごとに自動検出されます。",
+      imageMovie: "画像 / 動画",
+      imageMovieDescription:
+        "画像生成と動画生成の両方に適用されます（内部で同じ実行グラフを共有するため、別々に設定された場合は小さい方の値が使われます）。",
+      audio: "音声",
+      audioDescription: "音声（TTS）生成に適用されます。",
+    },
     audioParams: {
       title: "オーディオ設定",
       padding: "パディング",

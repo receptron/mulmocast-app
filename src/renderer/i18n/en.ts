@@ -1011,6 +1011,15 @@ const lang = {
       customDescription1: "Settings here apply only to this Beat.",
       customDescription2: "If not set, the shared style settings will be used.",
     },
+    concurrencyParams: {
+      title: "Concurrency",
+      autoDetectNote: "Leave blank to auto-detect per provider.",
+      imageMovie: "Image / Movie",
+      imageMovieDescription:
+        "Applied to both image and movie generation (they share the same execution graph; the smaller value wins when set separately).",
+      audio: "Audio",
+      audioDescription: "Applied to audio (TTS) generation.",
+    },
     audioParams: {
       title: "Audio Parameters",
       padding: "Padding",
