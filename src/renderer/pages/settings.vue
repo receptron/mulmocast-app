@@ -324,9 +324,13 @@ const updateVertexAIConfig = (config: VertexAIConfig) => {
   vertexAIConfig.value = config;
 };
 
+const updateConcurrencyConfig = (config: ConcurrencyConfig) => {
+  concurrencyConfig.value = config;
+};
+
 // Watch for changes in text
 watch(
-  [apiKeys, llmConfigs, azureOpenAIConfig, vertexAIConfig],
+  [apiKeys, llmConfigs, azureOpenAIConfig, vertexAIConfig, concurrencyConfig],
   () => {
     // Skip save during initial load
     if (!isInitialLoad.value) {
