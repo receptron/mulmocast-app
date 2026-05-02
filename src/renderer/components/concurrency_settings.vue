@@ -58,6 +58,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 import type { ConcurrencyConfig } from "../../types/index";
+import { parseConcurrency } from "../../shared/concurrency";
 
 type Props = {
   config: ConcurrencyConfig;
@@ -76,11 +77,6 @@ const isExpanded = ref(false);
 
 const imageMovieValue = computed(() => props.config?.imageMovie ?? "");
 const audioValue = computed(() => props.config?.audio ?? "");
-
-const parseConcurrency = (value: string | number): number | undefined => {
-  const num = Number(value);
-  return Number.isFinite(num) && num > 0 ? Math.floor(num) : undefined;
-};
 
 const updateField = (field: keyof ConcurrencyConfig, value: string | number) => {
   emit("update:config", {

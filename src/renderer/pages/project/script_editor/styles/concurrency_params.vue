@@ -36,8 +36,15 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { Card, Label, Input } from "@/components/ui";
 import type { MulmoImageParams, MulmoMovieParams, MulmoPresentationStyle } from "mulmocast/browser";
+import { parseConcurrency } from "../../../../../shared/concurrency";
 
 type AudioParams = MulmoPresentationStyle["audioParams"];
+
+export type ConcurrencyUpdate = {
+  imageParams?: MulmoImageParams;
+  movieParams?: MulmoMovieParams;
+  audioParams?: AudioParams;
+};
 
 const { t } = useI18n();
 
@@ -47,10 +54,10 @@ const props = defineProps<{
   audioParams?: AudioParams;
 }>();
 
+// A single combined emit prevents the "second handler reads stale props" race
+// when the parent rebuilds the whole presentation style on every update.
 const emit = defineEmits<{
-  "update:imageParams": [imageParams: MulmoImageParams];
-  "update:movieParams": [movieParams: MulmoMovieParams];
-  "update:audioParams": [audioParams: AudioParams];
+  update: [updates: ConcurrencyUpdate];
 }>();
 
 const imageMovieValue = computed(() => {
@@ -62,19 +69,18 @@ const imageMovieValue = computed(() => {
 
 const audioValue = computed(() => props.audioParams?.concurrency ?? "");
 
-const parseConcurrency = (value: string | number): number | undefined => {
-  const num = Number(value);
-  return Number.isFinite(num) && num > 0 ? Math.floor(num) : undefined;
-};
-
 const handleImageMovieUpdate = (value: string | number) => {
   const concurrency = parseConcurrency(value);
-  emit("update:imageParams", { ...(props.imageParams ?? {}), concurrency });
-  emit("update:movieParams", { ...(props.movieParams ?? {}), concurrency });
+  emit("update", {
+    imageParams: { ...(props.imageParams ?? {}), concurrency },
+    movieParams: { ...(props.movieParams ?? {}), concurrency },
+  });
 };
 
 const handleAudioUpdate = (value: string | number) => {
   const concurrency = parseConcurrency(value);
-  emit("update:audioParams", { ...((props.audioParams ?? {}) as AudioParams), concurrency } as AudioParams);
+  emit("update", {
+    audioParams: { ...((props.audioParams ?? {}) as AudioParams), concurrency } as AudioParams,
+  });
 };
 </script>

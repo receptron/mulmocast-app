@@ -564,7 +564,6 @@ async function testSettingsSection(page: Page) {
   await page.waitForTimeout(CONFIG.ACTION_DELAY_MS);
 
   // Clear both fields → blank
-  await setSettingsConcurrencyInput(page, "画像");
   // Try both Japanese and English label fragments (Card uses the same label key)
   const clearImageMovieJa = await setSettingsConcurrencyInput(page, "画像", "");
   const clearImageMovieEn = clearImageMovieJa ? false : await setSettingsConcurrencyInput(page, "Image", "");
@@ -980,7 +979,7 @@ async function testConsoleHealth(monitor: ConsoleMonitor) {
 // ==========================================
 
 (async () => {
-  let exitCode = 0;
+  let exitCode = 1;
   const resources: { browser: Browser | null } = { browser: null };
 
   console.log("\n========================================");
@@ -1075,7 +1074,6 @@ async function testConsoleHealth(monitor: ConsoleMonitor) {
     console.log("\n========================================");
   } catch (error) {
     console.error("\nTest suite failed:", error);
-    exitCode = 1;
   } finally {
     if (resources.browser) {
       await resources.browser.close().catch(() => {});

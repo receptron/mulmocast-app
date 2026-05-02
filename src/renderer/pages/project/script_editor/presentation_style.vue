@@ -57,9 +57,7 @@
       :image-params="presentationStyle?.imageParams"
       :movie-params="presentationStyle?.movieParams"
       :audio-params="presentationStyle?.audioParams"
-      @update:image-params="(value) => updateParam('imageParams', value)"
-      @update:movie-params="(value) => updateParam('movieParams', value)"
-      @update:audio-params="(value) => updateParam('audioParams', value)"
+      @update="updateConcurrencyParams"
     />
   </div>
 </template>
@@ -76,6 +74,7 @@ import LipSyncParams from "./styles/lip_sync_params.vue";
 import TextSlideParams from "./styles/text_slide_params.vue";
 import CaptionParams from "./styles/caption_params.vue";
 import ConcurrencyParams from "./styles/concurrency_params.vue";
+import type { ConcurrencyUpdate } from "./styles/concurrency_params.vue";
 
 import { MulmoError } from "../../../../../types";
 
@@ -119,5 +118,15 @@ const updateParam = (path: string, value: unknown) => {
 
 const updatePresentationStyle = (style: Partial<MulmoPresentationStyle>) => {
   emit("update:presentationStyle", style);
+};
+
+// Single combined handler for ConcurrencyParams: applying image/movie/audio
+// updates one by one would race because each `updateParam` call rebuilds the
+// style from `props.presentationStyle`, which is stale until the next render.
+const updateConcurrencyParams = (updates: ConcurrencyUpdate) => {
+  emit("update:presentationStyle", {
+    ...(props.presentationStyle ?? {}),
+    ...updates,
+  });
 };
 </script>
