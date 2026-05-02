@@ -361,8 +361,7 @@ const lang = {
         "新規作成されるプロジェクトに適用される並列実行数の初期値です。既存プロジェクトには影響しません。プロジェクトごとの値は Style タブで変更できます。",
       placeholder: "自動",
       imageMovie: "画像 / 動画",
-      imageMovieDescription:
-        "画像生成と動画生成の両方に適用されます（内部で同じ実行グラフを共有するため、別々に設定された場合は小さい方の値が使われます）。",
+      imageMovieDescription: "画像生成と動画生成の両方に適用されます。",
       audio: "音声",
       audioDescription: "音声（TTS）生成に適用されます。",
     },
@@ -1027,8 +1026,7 @@ const lang = {
       title: "並列実行設定",
       autoDetectNote: "未指定の場合はプロバイダごとに自動検出されます。",
       imageMovie: "画像 / 動画",
-      imageMovieDescription:
-        "画像生成と動画生成の両方に適用されます（内部で同じ実行グラフを共有するため、別々に設定された場合は小さい方の値が使われます）。",
+      imageMovieDescription: "画像生成と動画生成の両方に適用されます。",
       audio: "音声",
       audioDescription: "音声（TTS）生成に適用されます。",
     },

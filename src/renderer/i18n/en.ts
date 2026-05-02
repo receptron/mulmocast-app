@@ -361,8 +361,7 @@ const lang = {
         "Default concurrency applied to newly created projects. Existing projects are not affected; per-project values can be changed under the Style tab.",
       placeholder: "Auto",
       imageMovie: "Image / Movie",
-      imageMovieDescription:
-        "Applied to both image and movie generation (they share the same execution graph; the smaller value wins when set separately).",
+      imageMovieDescription: "Applied to both image and movie generation.",
       audio: "Audio",
       audioDescription: "Applied to audio (TTS) generation.",
     },
@@ -1026,8 +1025,7 @@ const lang = {
       title: "Concurrency",
       autoDetectNote: "Leave blank to auto-detect per provider.",
       imageMovie: "Image / Movie",
-      imageMovieDescription:
-        "Applied to both image and movie generation (they share the same execution graph; the smaller value wins when set separately).",
+      imageMovieDescription: "Applied to both image and movie generation.",
       audio: "Audio",
       audioDescription: "Applied to audio (TTS) generation.",
     },

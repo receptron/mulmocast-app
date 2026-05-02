@@ -5,7 +5,7 @@
       <p class="text-muted-foreground text-xs">
         {{ t("parameters.concurrencyParams.autoDetectNote") }}
       </p>
-      <div class="grid grid-cols-2 gap-4">
+      <div class="space-y-4">
         <div>
           <Label>{{ t("parameters.concurrencyParams.imageMovie") }}</Label>
           <p class="text-muted-foreground mt-1 text-xs">
