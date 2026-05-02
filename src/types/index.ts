@@ -82,6 +82,12 @@ export type Settings = {
   CHAT_TEMPLATE_INDEX?: number;
   AZURE_OPENAI?: AzureOpenAIConfig;
   VERTEX_AI?: VertexAIConfig;
+  CONCURRENCY?: ConcurrencyConfig;
+};
+
+export type ConcurrencyConfig = {
+  imageMovie?: number;
+  audio?: number;
 };
 
 export type MediaType = "image" | "movie";

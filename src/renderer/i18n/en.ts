@@ -355,6 +355,16 @@ const lang = {
       location: "Location",
       locationPlaceholder: "us-central1",
     },
+    concurrency: {
+      title: "Concurrency Defaults",
+      description:
+        "Default concurrency applied to newly created projects. Existing projects are not affected; per-project values can be changed under the Style tab.",
+      placeholder: "Auto",
+      imageMovie: "Image / Movie",
+      imageMovieDescription: "Applied to both image and movie generation.",
+      audio: "Audio",
+      audioDescription: "Applied to audio (TTS) generation.",
+    },
     azureOpenAI: {
       title: "Azure OpenAI",
       description: "Azure OpenAI Service settings",
@@ -1010,6 +1020,14 @@ const lang = {
       customTitle: "Override image generation settings for this Beat",
       customDescription1: "Settings here apply only to this Beat.",
       customDescription2: "If not set, the shared style settings will be used.",
+    },
+    concurrencyParams: {
+      title: "Concurrency",
+      autoDetectNote: "Leave blank to auto-detect per provider.",
+      imageMovie: "Image / Movie",
+      imageMovieDescription: "Applied to both image and movie generation.",
+      audio: "Audio",
+      audioDescription: "Applied to audio (TTS) generation.",
     },
     audioParams: {
       title: "Audio Parameters",

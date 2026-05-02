@@ -10,6 +10,7 @@ import type { Project, ProjectMetadata, Lang, ProjectScriptMedia, MediaType } fr
 import { SCRIPT_EDITOR_TABS, MULMO_VIEWER_TABS } from "../shared/constants";
 import { initMulmoScript } from "../shared/beat_data";
 import { onboardProjects } from "../shared/onboard";
+import { loadSettings } from "./settings_manager";
 
 // import { onboardMulmoScript }
 
@@ -175,6 +176,24 @@ export const listProjects = async (): Promise<Project[]> => {
   }
 };
 
+// Apply global concurrency defaults from app settings to a freshly created script.
+// Only runs at project creation time — existing projects are never mutated on open.
+const applyGlobalConcurrencyDefaults = async (script: MulmoScript): Promise<MulmoScript> => {
+  const settings = await loadSettings();
+  const concurrency = settings?.CONCURRENCY;
+  if (!concurrency) return script;
+
+  const next: MulmoScript = { ...script };
+  if (concurrency.imageMovie !== undefined) {
+    next.imageParams = { ...(next.imageParams ?? {}), concurrency: concurrency.imageMovie };
+    next.movieParams = { ...(next.movieParams ?? {}), concurrency: concurrency.imageMovie };
+  }
+  if (concurrency.audio !== undefined) {
+    next.audioParams = { ...(next.audioParams ?? {}), concurrency: concurrency.audio };
+  }
+  return next;
+};
+
 // Create a new project
 export const createProject = async (title: string, lang: Lang, onboardProject: number): Promise<Project> => {
   const id = generateId();
@@ -194,9 +213,11 @@ export const createProject = async (title: string, lang: Lang, onboardProject: n
       mulmoViewerActiveTab: MULMO_VIEWER_TABS.MOVIE,
     };
 
-    const newScript = mulmoScriptSchema
+    const baseScript = mulmoScriptSchema
       .strip()
       .parse(onboardProject < 3 ? onboardProjects[lang][onboardProject] : initMulmoScript(title, lang));
+
+    const newScript = await applyGlobalConcurrencyDefaults(baseScript);
 
     await saveProjectMetadata(id, initialData);
     await saveProjectScript(id, newScript);

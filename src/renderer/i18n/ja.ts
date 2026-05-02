@@ -355,6 +355,16 @@ const lang = {
       location: "ロケーション",
       locationPlaceholder: "us-central1",
     },
+    concurrency: {
+      title: "並列実行のデフォルト値",
+      description:
+        "新規作成されるプロジェクトに適用される並列実行数の初期値です。既存プロジェクトには影響しません。プロジェクトごとの値は Style タブで変更できます。",
+      placeholder: "自動",
+      imageMovie: "画像 / 動画",
+      imageMovieDescription: "画像生成と動画生成の両方に適用されます。",
+      audio: "音声",
+      audioDescription: "音声（TTS）生成に適用されます。",
+    },
     azureOpenAI: {
       title: "Azure OpenAI",
       description: "Azure OpenAI Serviceの設定",
@@ -1011,6 +1021,14 @@ const lang = {
       customTitle: "このビートの画像生成設定を上書きする",
       customDescription1: "ここで設定した内容は、このビートでのみ使われます。",
       customDescription2: "設定していない場合は、スタイルで指定した共通設定が使われます。",
+    },
+    concurrencyParams: {
+      title: "並列実行設定",
+      autoDetectNote: "未指定の場合はプロバイダごとに自動検出されます。",
+      imageMovie: "画像 / 動画",
+      imageMovieDescription: "画像生成と動画生成の両方に適用されます。",
+      audio: "音声",
+      audioDescription: "音声（TTS）生成に適用されます。",
     },
     audioParams: {
       title: "オーディオ設定",

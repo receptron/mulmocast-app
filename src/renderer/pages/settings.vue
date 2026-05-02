@@ -82,6 +82,9 @@
       <!-- Vertex AI Settings Section -->
       <VertexAISettings :config="vertexAIConfig" @update:config="updateVertexAIConfig" />
 
+      <!-- Concurrency Settings Section -->
+      <ConcurrencySettings :config="concurrencyConfig" @update:config="updateConcurrencyConfig" />
+
       <!-- language -->
       <Card>
         <CardHeader>
@@ -151,9 +154,10 @@ import LlmSettings from "@/components/llm_settings.vue";
 import ApiKeyInput from "@/components/api_key_input.vue";
 import AzureOpenAISettings from "@/components/azure_openai_settings.vue";
 import VertexAISettings from "@/components/vertex_ai_settings.vue";
+import ConcurrencySettings from "@/components/concurrency_settings.vue";
 
 import { notifySuccess, notifyError } from "@/lib/notification";
-import { LlmConfigs, AzureOpenAIConfig, VertexAIConfig } from "../../types/index";
+import { LlmConfigs, AzureOpenAIConfig, VertexAIConfig, ConcurrencyConfig } from "../../types/index";
 import {
   ENV_KEYS,
   languages,
@@ -195,6 +199,7 @@ const llmConfigs = ref<LlmConfigs>({
 
 const azureOpenAIConfig = ref<AzureOpenAIConfig>({});
 const vertexAIConfig = ref<VertexAIConfig>({});
+const concurrencyConfig = ref<ConcurrencyConfig>({});
 
 // Initialize all keys
 Object.keys(ENV_KEYS).forEach((envKey) => {
@@ -254,6 +259,9 @@ onMounted(async () => {
     if (settings?.VERTEX_AI) {
       vertexAIConfig.value = settings.VERTEX_AI;
     }
+    if (settings?.CONCURRENCY) {
+      concurrencyConfig.value = settings.CONCURRENCY;
+    }
     // Wait for the next tick to avoid triggering save during initial load
     await nextTick();
     isInitialLoad.value = false;
@@ -279,6 +287,7 @@ const saveSettings = async () => {
       DARK_MODE,
       AZURE_OPENAI: toRaw(azureOpenAIConfig.value),
       VERTEX_AI: toRaw(vertexAIConfig.value),
+      CONCURRENCY: toRaw(concurrencyConfig.value),
     };
     await window.electronAPI.settings.set(data);
     globalStore.updateSettings(data);
@@ -315,9 +324,13 @@ const updateVertexAIConfig = (config: VertexAIConfig) => {
   vertexAIConfig.value = config;
 };
 
+const updateConcurrencyConfig = (config: ConcurrencyConfig) => {
+  concurrencyConfig.value = config;
+};
+
 // Watch for changes in text
 watch(
-  [apiKeys, llmConfigs, azureOpenAIConfig, vertexAIConfig],
+  [apiKeys, llmConfigs, azureOpenAIConfig, vertexAIConfig, concurrencyConfig],
   () => {
     // Skip save during initial load
     if (!isInitialLoad.value) {
