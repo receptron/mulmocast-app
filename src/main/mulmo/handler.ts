@@ -56,7 +56,7 @@ import { bgmList, bgmAudioFile, bgmGenerate, bgmUpdateTitle, bgmDelete } from ".
 import { getClonedVoices, updateVoiceName, uploadVoiceClone, deleteVoice } from "./handler_voice_clone";
 import { publishMulmoView } from "./handler_media";
 import type { ChatMessage } from "../../types";
-import { getErrorCause } from "./error_utils";
+import { getErrorCause, logCaughtError } from "./error_utils";
 
 const isDev = !app.isPackaged;
 
@@ -299,7 +299,7 @@ export const mulmoHandler = async (method: string, webContents: WebContents, ...
         throw new Error(`Unknown method: ${method}`);
     }
   } catch (error) {
-    GraphAILogger.log(error);
+    logCaughtError(error);
     return { error };
   }
 };

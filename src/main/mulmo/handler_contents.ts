@@ -16,11 +16,11 @@ import {
   type MulmoStudioMultiLingual,
   type MulmoBeat,
 } from "mulmocast";
-import { GraphAILogger } from "graphai";
 
 import fs from "fs";
 import path from "path";
 import { getContext } from "./handler_common";
+import { logCaughtError } from "./error_utils";
 import { getProjectPath, getProjectMulmoScript } from "../project_manager";
 
 // audio
@@ -38,7 +38,7 @@ const beatAudio = (context: MulmoStudioContext) => {
       }
       return;
     } catch (e) {
-      GraphAILogger.log(e);
+      logCaughtError(e);
       return;
     }
   };
@@ -67,7 +67,7 @@ export const mulmoAudioFiles = async (
       {} as Record<string, ArrayBuffer>,
     );
   } catch (error) {
-    GraphAILogger.log(error);
+    logCaughtError(error);
     return [];
   }
 };
@@ -80,7 +80,7 @@ export const mulmoAudioFile = async (projectId: string, index: number) => {
     const beat = context.studio.script.beats[0];
     return beatAudio(context)(beat);
   } catch (error) {
-    GraphAILogger.log(error);
+    logCaughtError(error);
   }
 };
 
@@ -110,7 +110,7 @@ export const mulmoGeneratedAudioFile = async (projectId: string, index: number) 
     }
     return;
   } catch (error) {
-    GraphAILogger.log(error);
+    logCaughtError(error);
   }
 };
 
@@ -136,7 +136,7 @@ export const mulmoImageFiles = async (
       {} as Record<string, unknown>,
     );
   } catch (error) {
-    GraphAILogger.log(error);
+    logCaughtError(error);
     return [];
   }
 };
@@ -151,7 +151,7 @@ export const mulmoImageFile = async (projectId: string, index: number) => {
     const { imageRefs } = await getMediaRefs(context);
     return await beatImage(context, imageRefs)(beat, 0);
   } catch (error) {
-    GraphAILogger.log(error);
+    logCaughtError(error);
   }
 };
 
@@ -195,7 +195,7 @@ const beatImage = (context: MulmoStudioContext, imageRefs: Record<string, string
       }
       return res;
     } catch (e) {
-      GraphAILogger.log(e);
+      logCaughtError(e);
       return "";
     }
   };
@@ -238,7 +238,7 @@ export const mulmoReferenceImagesFiles = async (projectId: string) => {
             }
           }
         } catch (error) {
-          GraphAILogger.log(error);
+          logCaughtError(error);
         }
       }),
   );
@@ -268,7 +268,7 @@ export const mulmoReferenceImagesFile = async (projectId: string, key: string) =
       return buffer.buffer;
     }
   } catch (error) {
-    GraphAILogger.log(error);
+    logCaughtError(error);
   }
   return null;
 };
@@ -364,7 +364,7 @@ const mulmoMediaBackupList = async (projectId: string, beatId: string, mediaType
       }),
     );
   } catch (error) {
-    GraphAILogger.log(error);
+    logCaughtError(error);
     return [];
   }
 };
@@ -401,7 +401,7 @@ const mulmoMediaRestoreBackup = async (
 
     return { result: true };
   } catch (error) {
-    GraphAILogger.log(error);
+    logCaughtError(error);
     return { result: false, error: String(error) };
   }
 };
