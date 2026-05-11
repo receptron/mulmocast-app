@@ -101,6 +101,9 @@ chromium/
 # Playwright MCP
 .playwright-mcp/
 
+# Claude Code worktrees
+.claude/worktrees/
+
 # Release notes output (generated media files)
 docs/release_notes/*/output/
 docs/release_notes/*/images/*.mp4
