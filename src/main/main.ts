@@ -9,7 +9,10 @@ import log from "electron-log/main";
 import puppeteer from "puppeteer";
 import { GraphAILogger } from "graphai";
 
+import { setMulmoErrorFormatter } from "mulmocast";
+
 import { registerIPCHandler } from "./ipc_handler";
+import { formatZodError } from "./mulmo/error_utils";
 import * as projectManager from "./project_manager";
 import * as settingsManager from "./settings_manager";
 import { resolveTargetFromVersion } from "../shared/version";
@@ -326,4 +329,5 @@ app.on("activate", () => {
   }
 });
 
+setMulmoErrorFormatter(formatZodError);
 registerIPCHandler();
