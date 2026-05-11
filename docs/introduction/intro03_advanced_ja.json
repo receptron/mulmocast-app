@@ -57,7 +57,7 @@
   },
   "imageParams": {
     "provider": "openai",
-    "model": "dall-e-3",
+    "model": "gpt-image-1-mini",
     "quality": "auto",
     "images": {}
   },
@@ -102,7 +102,7 @@
           "",
           "## AIプロバイダーを使いこなす",
           "",
-          "- **OpenAI 上位モデル (gpt-image-1)**",
+          "- **OpenAI 上位モデル (gpt-image-2)**",
           "- **Google**",
           "- **Replicate**",
           "> スタイル設定からプロバイダーを切り替えよう！",
