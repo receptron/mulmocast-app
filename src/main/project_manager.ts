@@ -11,6 +11,7 @@ import { SCRIPT_EDITOR_TABS, MULMO_VIEWER_TABS } from "../shared/constants";
 import { initMulmoScript } from "../shared/beat_data";
 import { onboardProjects } from "../shared/onboard";
 import { loadSettings } from "./settings_manager";
+import { formatZodError } from "./mulmo/error_utils";
 
 // import { onboardMulmoScript }
 
@@ -76,7 +77,12 @@ export const getProjectMulmoScript = async (projectId: string): Promise<MulmoScr
   try {
     return MulmoScriptMethods.validate(mulmo);
   } catch (__error) {
-    GraphAILogger.warn("Validation failed for mulmo script:", __error);
+    const formatted = formatZodError(__error);
+    if (formatted !== null) {
+      GraphAILogger.warn(`Validation failed for mulmo script:\n${formatted}`);
+    } else {
+      GraphAILogger.warn("Validation failed for mulmo script:", __error);
+    }
     return mulmo;
   }
 };

@@ -1,5 +1,5 @@
 import { WebContents } from "electron";
-import { NodeState, GraphAILogger, type CallbackFunction } from "graphai";
+import { NodeState, type CallbackFunction } from "graphai";
 
 import { mulmoCallbackGenerator, getContext } from "./handler_common";
 import {
@@ -27,7 +27,7 @@ import z from "zod";
 import fs from "fs";
 import { loadSettings } from "../settings_manager";
 import { Settings } from "../../types/index";
-import { getErrorCause } from "./error_utils";
+import { getErrorCause, logCaughtError } from "./error_utils";
 
 /**
  * Build settings object for mulmocast library that includes both regular API keys
@@ -137,7 +137,7 @@ export const mulmoActionRunner = async (
       result: true,
     };
   } catch (error) {
-    GraphAILogger.log(error);
+    logCaughtError(error);
     if (error instanceof z.ZodError) {
       if (error.issues) {
         error.issues.forEach((e) => {
@@ -243,7 +243,7 @@ export const mulmoGenerateBeatImage = async (
     });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
-    GraphAILogger.log(error);
+    logCaughtError(error);
     removeSessionProgressCallback(mulmoCallback);
 
     webContents.send("progress-update", {
@@ -355,7 +355,7 @@ export const mulmoTranslateBeat = async (
     await translateBeat(0, context, targetLangs, { settings: buildMulmoSettings(settings) });
     removeSessionProgressCallback(mulmoCallback);
   } catch (error) {
-    GraphAILogger.log(error);
+    logCaughtError(error);
     removeSessionProgressCallback(mulmoCallback);
     webContents.send("progress-update", {
       projectId,
