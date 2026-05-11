@@ -110,7 +110,7 @@ export const intro03_ja = {
           "",
           "> ※ 各プロバイダーの利用にはAPIキーの設定が必要です。",
           "",
-          "> ※ OpenAI (gpt-image-2) の利用にはOrganization認証が別途必要です。",
+          "> ※ OpenAI (gpt-image-1) の利用にはOrganization認証が別途必要です。",
         ],
       },
     },

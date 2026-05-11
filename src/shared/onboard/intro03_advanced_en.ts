@@ -111,7 +111,7 @@ export const intro03_en = {
           "",
           "> * An API key is required to use each provider.",
           "",
-          "> * Organization authentication is separately required to use OpenAI (gpt-image-2).",
+          "> * Organization authentication is separately required to use OpenAI (gpt-image-1).",
         ],
       },
     },
