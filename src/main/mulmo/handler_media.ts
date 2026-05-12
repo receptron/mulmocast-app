@@ -72,7 +72,7 @@ async function uploadBundleToServer(
   try {
     // zipファイルを展開
     const zip = new AdmZip(zipFilePath);
-    // eslint-disable-next-line sonarjs/no-unsafe-unzip
+
     zip.extractAllTo(extractDir, true);
 
     // mulmo_view.jsonのパスを探す
