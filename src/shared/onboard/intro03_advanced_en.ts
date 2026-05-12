@@ -57,7 +57,7 @@ export const intro03_en = {
   },
   imageParams: {
     provider: "openai",
-    model: "dall-e-3",
+    model: "gpt-image-1-mini",
     quality: "auto",
     images: {},
   },
@@ -104,7 +104,7 @@ export const intro03_en = {
           "",
           "## Master AI Providers",
           "",
-          "- **OpenAI Superior Model (gpt-image-1)**",
+          "- **OpenAI Superior Model (gpt-image-2)**",
           "- **Google**",
           "- **Replicate**",
           "> Switch providers from the style settings!",

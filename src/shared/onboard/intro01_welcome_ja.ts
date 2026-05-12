@@ -46,7 +46,7 @@ export const intro01_ja = {
   },
   imageParams: {
     provider: "openai",
-    model: "dall-e-3",
+    model: "gpt-image-1-mini",
     quality: "auto",
     images: {},
   },
