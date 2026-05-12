@@ -88,7 +88,7 @@
   },
   "resolutions": {
     "dompurify": "^3.4.2",
-    "fast-xml-parser": "5.7.3",
+    "fast-xml-parser": "5.8.0",
     "yauzl": "^3.2.1",
     "minimatch": "^10.2.5",
     "tar": "7.5.15",
@@ -120,7 +120,7 @@
     "graphai": "^2.0.16",
     "monaco-editor": "^0.55.1",
     "monaco-yaml": "^5.5.0",
-    "mulmocast": "2.6.13",
+    "mulmocast": "2.6.14",
     "pinia": "^3.0.4",
     "punycode": "^2.3.1",
     "puppeteer": "24.43.1",
