@@ -1829,15 +1829,6 @@
   dependencies:
     "@swc/helpers" "^0.5.0"
 
-"@intlify/core-base@11.4.2":
-  version "11.4.2"
-  resolved "https://registry.yarnpkg.com/@intlify/core-base/-/core-base-11.4.2.tgz#36c23b50406ba9185d98799b4e13ee6ea65fc19e"
-  integrity sha512-7fpuCcVmeLv2T9qHsARqGvh8xt+sV2fH+Q+gMHFwB/rPXzo85DpbJFKn7dBH1L5p0c2cSh2DW+2h/64EKrISmA==
-  dependencies:
-    "@intlify/devtools-types" "11.4.2"
-    "@intlify/message-compiler" "11.4.2"
-    "@intlify/shared" "11.4.2"
-
 "@intlify/core-base@11.4.4", "@intlify/core-base@^11.0.0":
   version "11.4.4"
   resolved "https://npm.flatt.tech/@intlify/core-base/-/core-base-11.4.4.tgz#ea20ab23eae5e96657fdd006e6b7fd57851fbbc8"
@@ -1846,14 +1837,6 @@
     "@intlify/devtools-types" "11.4.4"
     "@intlify/message-compiler" "11.4.4"
     "@intlify/shared" "11.4.4"
-
-"@intlify/devtools-types@11.4.2":
-  version "11.4.2"
-  resolved "https://registry.yarnpkg.com/@intlify/devtools-types/-/devtools-types-11.4.2.tgz#ca0d11d1694447160171a9263c3e9c9b695e5168"
-  integrity sha512-3u8EN1kB6EMSi96KXs5k7a8y2X2g4+h3X6iwVZU47cP4n+mTuq//WMjG588BzSp/2XQ/dTXo2BLUXX+XS+PNfA==
-  dependencies:
-    "@intlify/core-base" "11.4.2"
-    "@intlify/shared" "11.4.2"
 
 "@intlify/devtools-types@11.4.4":
   version "11.4.4"
@@ -1885,14 +1868,6 @@
     semver "^7.5.4"
     synckit "^0.11.0"
 
-"@intlify/message-compiler@11.4.2":
-  version "11.4.2"
-  resolved "https://registry.yarnpkg.com/@intlify/message-compiler/-/message-compiler-11.4.2.tgz#82a1eb96bf6bc51e34e3fc32dccbb468f74552ef"
-  integrity sha512-a6CDSGSMTGrg0BjD97x8TBYPf7qQMDlZipJ6UDfv/pd4OIym8TMlHu3MsH0bTNnRdAG2D6EFEykIgiQPqvtTkA==
-  dependencies:
-    "@intlify/shared" "11.4.2"
-    source-map-js "^1.0.2"
-
 "@intlify/message-compiler@11.4.4", "@intlify/message-compiler@^11.0.0":
   version "11.4.4"
   resolved "https://npm.flatt.tech/@intlify/message-compiler/-/message-compiler-11.4.4.tgz#946d5de62a9129a5009382def22cc4e0e2532df9"
@@ -1900,11 +1875,6 @@
   dependencies:
     "@intlify/shared" "11.4.4"
     source-map-js "^1.0.2"
-
-"@intlify/shared@11.4.2":
-  version "11.4.2"
-  resolved "https://registry.yarnpkg.com/@intlify/shared/-/shared-11.4.2.tgz#23c918058160ccb3d68ce876ec62692df3eddbb2"
-  integrity sha512-NzpHbguRCsOHDwxmlBa9qu/imc+/QWgsYUaK6FZeNC0wK8QfAbhqrktEp/haVzxU1aikH8IX4ytD+mfFEMi/9A==
 
 "@intlify/shared@11.4.4":
   version "11.4.4"
