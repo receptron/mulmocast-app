@@ -31,8 +31,12 @@ setupLogger();
 app.setName(BRAND.appName);
 
 // --- Runtime Puppeteer Patch ---
+// puppeteer の CJS エントリでは exports.launch = puppeteer.launch として関数参照を
+// スナップショットしており、default インスタンスの launch を差し替えても named export
+// 側には届かない。ESM の mulmocast 等が bundler 経由で `require("puppeteer").launch`
+// を直接呼ぶケースをカバーするため、両方を同時に上書きする。
 const originalLaunch = puppeteer.launch.bind(puppeteer);
-puppeteer.launch = function (options = {}) {
+const patchedLaunch: typeof puppeteer.launch = (options = {}) => {
   const finalOptions = {
     ...options,
     executablePath: options.executablePath || process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
@@ -47,7 +51,12 @@ puppeteer.launch = function (options = {}) {
   return originalLaunch(finalOptions);
 };
 
-GraphAILogger.log("[PUPPETEER_PATCH] Runtime patch applied");
+puppeteer.launch = patchedLaunch;
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const puppeteerCJS = require("puppeteer") as { launch: typeof puppeteer.launch };
+puppeteerCJS.launch = patchedLaunch;
+
+GraphAILogger.log("[PUPPETEER_PATCH] Runtime patch applied (default + named export)");
 // end of Patch
 
 // Production環境でのChromiumパス設定
