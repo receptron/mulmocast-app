@@ -41,7 +41,8 @@ const detect = (): BootstrapStatus => {
       .readdirSync(chromiumDir)
       .filter(
         (dir) => dir.startsWith(WIN_VERSION_PREFIX) || MAC_VERSION_DIR_FILTER_PREFIXES.some((p) => dir.startsWith(p)),
-      );
+      )
+      .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
     if (versionDirs.length === 0) {
       return { kind: "no-version-dir", chromiumDir };
     }
