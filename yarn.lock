@@ -5035,14 +5035,7 @@ doctrine@^2.1.0:
   dependencies:
     esutils "^2.0.2"
 
-dompurify@3.2.7:
-  version "3.4.2"
-  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.4.2.tgz#f0ff81be682c485505097ba8195a058d8f575218"
-  integrity sha512-lHeS9SA/IKeIFFyYciHBr2n0v1VMPlSj843HdLOwjb2OxNwdq9Xykxqhk+FE42MzAdHvInbAolSE4mhahPpjXA==
-  optionalDependencies:
-    "@types/trusted-types" "^2.0.7"
-
-dompurify@^3.4.2, dompurify@^3.4.3:
+dompurify@3.2.7, dompurify@^3.4.2, dompurify@^3.4.3:
   version "3.4.3"
   resolved "https://npm.flatt.tech/dompurify/-/dompurify-3.4.3.tgz#3ef336e7a757c3bf1efbd3781afb149a3ae5cfa4"
   integrity sha512-VVwJidIJcp1hpg2OMXML3ZVRPYSZiq4aX7qBh83BSIpOaRDqI+qxhXjjIWnpzkOXhmp0L81lnoME1mnCc9H48A==
@@ -10282,11 +10275,6 @@ undici-types@~7.16.0:
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-7.16.0.tgz#ffccdff36aea4884cbfce9a750a0580224f58a46"
   integrity sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==
-
-undici-types@~7.21.0:
-  version "7.21.0"
-  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-7.21.0.tgz#433f7dd1b5daa9ab4dacb721a5e11a8de51eadda"
-  integrity sha512-w9IMgQrz4O0YN1LtB7K5P63vhlIOvC7opSmouCJ+ZywlPAlO9gIkJ+otk6LvGpAs2wg4econaCz3TvQ9xPoyuQ==
 
 undici@^7.24.4, undici@^7.25.0:
   version "7.25.0"
