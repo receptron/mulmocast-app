@@ -1,7 +1,11 @@
+// 重要: puppeteer (および puppeteer を間接 import するモジュール = mulmocast 等) より「前」に
+// PUPPETEER_EXECUTABLE_PATH を確定させる必要がある。puppeteer の getConfiguration() が
+// import 時に env var を読んで configuration.executablePath にコピーするため、import 順を変えない。
+import { puppeteerBootstrapStatus } from "./puppeteer_bootstrap";
+
 import { app, BrowserWindow, shell, Menu } from "electron";
 import path from "node:path";
 import os from "node:os";
-import fs from "node:fs";
 import started from "electron-squirrel-startup";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { updateElectronApp, UpdateSourceType } from "update-electron-app";
@@ -30,9 +34,13 @@ log.initialize();
 setupLogger();
 app.setName(BRAND.appName);
 
-// --- Runtime Puppeteer Patch ---
+// --- Runtime Puppeteer Patch (defense in depth) ---
+// 第一防衛線は puppeteer_bootstrap で env var を設定し、puppeteer の configuration.executablePath
+// を import 時に確定させること。本パッチはバンドル経路に応じて呼び出し形が
+// `puppeteer.launch` (default) / `require("puppeteer").launch` (named export スナップショット) の
+// どちらでも options.executablePath を確実に通すための安全網。
 const originalLaunch = puppeteer.launch.bind(puppeteer);
-puppeteer.launch = function (options = {}) {
+const patchedLaunch: typeof puppeteer.launch = (options = {}) => {
   const finalOptions = {
     ...options,
     executablePath: options.executablePath || process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
@@ -47,64 +55,17 @@ puppeteer.launch = function (options = {}) {
   return originalLaunch(finalOptions);
 };
 
-GraphAILogger.log("[PUPPETEER_PATCH] Runtime patch applied");
-// end of Patch
+puppeteer.launch = patchedLaunch;
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const puppeteerCJS = require("puppeteer") as { launch: typeof puppeteer.launch };
+puppeteerCJS.launch = patchedLaunch;
 
-// Production環境でのChromiumパス設定
-if (!app.isPackaged) {
-  GraphAILogger.log("[PUPPETEER] Development environment detected, skipping Chromium path configuration");
-} else {
-  GraphAILogger.log("[PUPPETEER] Production environment detected, configuring Chromium path");
-  const chromiumDir = path.join(process.resourcesPath, "chromium", "chrome");
-  GraphAILogger.log(`[PUPPETEER] Looking for Chromium in: ${chromiumDir}`);
-
-  try {
-    const versionDirs = fs
-      .readdirSync(chromiumDir)
-      .filter((dir) => dir.startsWith("win64-") || dir.startsWith("mac-") || dir.startsWith("mac_"));
-    GraphAILogger.log(`[PUPPETEER] Found version directories: ${versionDirs.join(", ")}`);
-
-    if (versionDirs.length < 1) {
-      GraphAILogger.warn("[PUPPETEER] No Chromium version directories found");
-    } else {
-      const platform = os.platform() === "win32" ? "win64" : "mac-arm64";
-      GraphAILogger.log(`[PUPPETEER] Detected platform: ${platform}`);
-
-      const macPrefixes = ["mac-arm64-", "mac-arm-", "mac_arm-"];
-      const targetDir =
-        os.platform() === "win32"
-          ? versionDirs.find((dir) => dir.startsWith("win64-"))
-          : versionDirs.find((dir) => macPrefixes.some((prefix) => dir.startsWith(prefix)));
-      GraphAILogger.log(`[PUPPETEER] Target directory: ${targetDir || "none found"}`);
-
-      if (!targetDir) {
-        GraphAILogger.warn(`[PUPPETEER] No matching directory found for platform: ${platform}`);
-      } else {
-        const subDir = os.platform() === "win32" ? "chrome-win64" : "chrome-mac-arm64";
-        const finalPath =
-          os.platform() === "win32"
-            ? path.join(chromiumDir, targetDir, subDir, "chrome.exe")
-            : path.join(
-                chromiumDir,
-                targetDir,
-                subDir,
-                "Google Chrome for Testing.app",
-                "Contents",
-                "MacOS",
-                "Google Chrome for Testing",
-              );
-
-        if (!fs.existsSync(finalPath)) {
-          GraphAILogger.warn(`[PUPPETEER] Resolved path does not exist: ${finalPath}`);
-        }
-        process.env.PUPPETEER_EXECUTABLE_PATH = finalPath;
-        GraphAILogger.log(`[PUPPETEER] Set PUPPETEER_EXECUTABLE_PATH: ${finalPath}`);
-      }
-    }
-  } catch (error) {
-    GraphAILogger.error("[PUPPETEER] Failed to auto-detect Chromium path:", error);
-  }
-}
+// 起動時のカバレッジ確認ログ。1.0.14-rc-1 の事故は default だけ patch されて named export 側に
+// 届いていなかったケース。このログがあれば default=true / named=false で差分が即座にわかる。
+GraphAILogger.log(
+  `[PUPPETEER_PATCH] Runtime patch applied: default=${puppeteer.launch === patchedLaunch} named=${puppeteerCJS.launch === patchedLaunch}`,
+);
+GraphAILogger.log(`[PUPPETEER] Bootstrap status: ${JSON.stringify(puppeteerBootstrapStatus)}`);
 
 // Cross-platform icon path
 const iconPath =
