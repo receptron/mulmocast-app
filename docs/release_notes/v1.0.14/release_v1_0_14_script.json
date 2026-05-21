@@ -1,0 +1,269 @@
+{
+  "$mulmocast": {
+    "version": "1.1",
+    "credit": "closing"
+  },
+  "canvasSize": {
+    "width": 1280,
+    "height": 720
+  },
+  "speechParams": {
+    "speakers": {
+      "Presenter": {
+        "displayName": {
+          "ja": "ナレーター"
+        },
+        "voiceId": "shimmer",
+        "speechOptions": {
+          "instruction": "Speak clearly and professionally like a news announcer reading release notes. Use a neutral, informative tone with clear enunciation."
+        },
+        "provider": "openai"
+      }
+    }
+  },
+  "imageParams": {
+    "provider": "openai",
+    "images": {}
+  },
+  "movieParams": {
+    "provider": "mock",
+    "model": "",
+    "transition": {
+      "type": "fade",
+      "duration": 1
+    }
+  },
+  "soundEffectParams": {
+    "provider": "replicate"
+  },
+  "textSlideParams": {
+    "cssStyles": [
+      "h3 {margin-left: 20px; margin-top: 20px}"
+    ]
+  },
+  "captionParams": {
+    "lang": "ja",
+    "captionSplit": "estimate",
+    "textSplit": {
+      "type": "delimiters",
+      "delimiters": [
+        "。",
+        "．",
+        "、",
+        ",",
+        ".",
+        "！",
+        "!",
+        "？",
+        "?",
+        "；",
+        ";",
+        "\n"
+      ]
+    }
+  },
+  "audioParams": {
+    "padding": 0.3,
+    "introPadding": 1,
+    "closingPadding": 0.8,
+    "outroPadding": 1,
+    "bgm": {
+      "kind": "path",
+      "path": "../bgm/20251217031931-8c55b232.mp3"
+    },
+    "bgmVolume": 0.1,
+    "audioVolume": 1,
+    "suppressSpeech": false
+  },
+  "title": "MulmoCast v1.0.14 リリースノート",
+  "description": "MulmoCast v1.0.14の新機能と改善点を紹介するリリースノート動画",
+  "lang": "ja",
+  "beats": [
+    {
+      "speaker": "Presenter",
+      "text": "マルモキャスト バージョン1.0.14をリリースしました！",
+      "captionParams": {
+        "captionSplit": "none",
+        "textSplit": { "type": "none" }
+      },
+      "id": "title-slide",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "# 🎉 MulmoCast v1.0.14 Released!",
+          "## May 19, 2026",
+          "",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "1：19種類のAIモデルを新たに利用可能にしました。\n画像生成モデルが13種類、動画生成モデルが6種類追加されています。\nOpenAIには、最新の画像生成モデルが追加されています。",
+      "id": "new-image-models-openai",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: flex-start; height: 100vh; padding-left: 80px; padding-top: 40px;'>",
+          "",
+          "# OpenAI · Image",
+          "",
+          "- gpt-image-2",
+          "- gpt-image-1-mini",
+          "",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "Replicate経由でも、Flux、Ideogram、Recraft、Stable Diffusion、Luma Photonなど、画像モデルの選択肢が大きく広がります。",
+      "id": "new-image-models-replicate",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: flex-start; height: 100vh; padding-left: 80px; padding-top: 40px;'>",
+          "",
+          "# Replicate · Image",
+          "",
+          "- Black Forest Labs · Flux 2 Pro / Dev",
+          "- Black Forest Labs · Flux 1.1 Pro / Pro Ultra",
+          "- Black Forest Labs · Flux Pro / Dev / Schnell",
+          "- Ideogram V3 · Turbo / Balanced / Quality",
+          "- Recraft V3",
+          "- Stable Diffusion 3.5 Large",
+          "- Luma Photon",
+          "",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "動画生成モデルは、Replicate経由で6種類を新たに追加しました。",
+      "id": "new-movie-models",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: flex-start; height: 100vh; padding-left: 80px; padding-top: 40px;'>",
+          "",
+          "# Replicate · Video",
+          "",
+          "- ByteDance Seedance 2.0 / 2.0 Fast",
+          "- Alibaba HappyHorse 1.0",
+          "- MiniMax Hailuo 2.3 / 2.3 Fast",
+          "- PixVerse v5",
+          "",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "gpt-image-2 と Seedance 2.0 で生成した映像です",
+      "id": "title-overview",
+      "audioParams": { "movieVolume": 0.5 },
+      "captionParams": {
+        "captionSplit": "none",
+        "textSplit": { "type": "none" }
+      },
+      "image": {
+        "type": "movie",
+        "source": {
+          "kind": "path",
+          "path": "images/01-01_sample_seedance_2.mp4"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "2：並列実行数を設定するUIを追加しました。\n画像・動画・音声の同時生成数を、設定画面からデフォルト値として指定できます。",
+      "id": "concurrency-settings",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "path",
+          "path": "images/03-01_settings_concurrency.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "プロジェクトごとに上書きも可能で、\nご利用のAPIプランのレート制限に合わせて、生成スピードを調整できます。",
+      "id": "concurrency-project",
+      "image": {
+        "type": "image",
+        "source": {
+          "kind": "path",
+          "path": "images/03-02_project_style_concurrency.png"
+        }
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "3：提供元のサポート終了に伴い、いくつかの画像モデルが選択肢から外れました。",
+      "id": "model-deprecated-intro",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: flex-start; height: 100vh; padding-left: 80px; padding-top: 40px;'>",
+          "",
+          "# Model lineup updated",
+          "",
+          "## No longer available",
+          "",
+          "- dall-e-3 (OpenAI)",
+          "- Imagen 4.0 (Google)",
+          "",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "dall-e-3とImagen 4.0が利用できなくなり、オンボーディングのデフォルトはgpt-image-1-miniに切り替えています。",
+      "captionParams": {
+        "captionSplit": "none",
+        "textSplit": { "type": "none" }
+      },
+      "id": "model-deprecated-detail",
+      "image": {
+        "type": "beat",
+        "id": "model-deprecated-intro"
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "その他、軽微な改善を行いました。\n起動中のアプリに更新通知が届きます。\nダウンロードは公式サイトから行えます。",
+      "id": "thank-you-slide",
+      "image": {
+        "type": "markdown",
+        "markdown": [
+          "<div style='display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center;'>",
+          "",
+          "# Thank You!",
+          "",
+          "## MulmoCast v1.0.14",
+          "",
+          "### Happy Creating!",
+          "</div>"
+        ]
+      }
+    },
+    {
+      "speaker": "Presenter",
+      "text": "マルモキャスト バージョン1.0.14をお楽しみください！",
+      "captionParams": {
+        "captionSplit": "none",
+        "textSplit": { "type": "none" }
+      },
+      "id": "thank-you-closing",
+      "image": {
+        "type": "beat",
+        "id": "thank-you-slide"
+      }
+    }
+  ]
+}
