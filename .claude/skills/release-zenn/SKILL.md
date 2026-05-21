@@ -93,9 +93,25 @@ grep -A2 '## URL' docs/release_notes/v<version>/youtube_v<version>_en.md
 :::
 ```
 
-#### 5e. 機能ごとの見出し追加
+#### 5e. 機能ごとの見出し追加と本文の番号削除
 
-ナレーションの番号付け（「1：」「2：」等）を `## 1. 機能名` の見出しに変換する。
+ナレーションの番号付け（「1：」「2：」「3：」等）を `## 1. 機能名` の見出しに変換し、**本文側の `1：` `2：` `3：` プレフィックスは削除する**。
+
+NG（変換漏れ）:
+```markdown
+## 1. 新しいAIモデル
+
+1：19種類のAIモデルを新たに利用可能にしました。
+```
+
+OK（変換後）:
+```markdown
+## 1. 新しいAIモデル
+
+19種類のAIモデルを新たに利用可能にしました。
+```
+
+過去のリリース記事でも変換漏れが発生していたので、保存前に `grep -nE "^[1-9]：" <記事ファイル>` を実行してプレフィックスが残っていないか確認すること。
 
 #### 5f. 「動画で見る」セクションの追加
 
@@ -124,12 +140,27 @@ publication_name: singularity
 ---
 ```
 
-### Step 6: 画像のコピー
+### Step 6: 画像のコピー（記事で参照されているものだけ）
+
+**重要**: `cp images/*.png` で全コピーしてはいけない。Markdown 一覧スライドへの構成変更などで「ソースには残っているが記事では使わない」画像が必ず混じるため、未使用画像が zenn-content 側に堆積する。記事で実際に参照されているファイルだけコピーすること。
 
 ```bash
-mkdir -p "$ZENN_CONTENT_DIR/images/release_v<version>_script/"
-cp docs/release_notes/v<version>/images/*.png "$ZENN_CONTENT_DIR/images/release_v<version>_script/"
+ARTICLE="$ZENN_CONTENT_DIR/articles/<YYYY-MM-DD>-mulmocast-release_v<version>.md"
+DEST="$ZENN_CONTENT_DIR/images/release_v<version>_script/"
+mkdir -p "$DEST"
+
+# 記事内の /images/release_v<version>_script/<ファイル名> 参照を抽出してコピー
+grep -oE "/images/release_v<version>_script/[^)\"' ]+" "$ARTICLE" \
+  | awk -F/ '{print $NF}' | sort -u \
+  | while read name; do
+      cp "docs/release_notes/v<version>/images/$name" "$DEST"
+    done
+
+# 確認: コピー後の DEST に未使用ファイルが残っていないか
+ls "$DEST"
 ```
+
+すでに過去リリースで未使用画像をコピーしてしまっている場合は、削除してから本ステップを再実行する。
 
 ### Step 7: 記事ファイルの保存
 
