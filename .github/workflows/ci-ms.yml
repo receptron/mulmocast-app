@@ -26,7 +26,7 @@ jobs:
 
       # Puppeteer Chromium cache restore (speeds up downloads)
       - name: Restore Puppeteer cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}\\.puppeteer-cache
           key: puppeteer-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
