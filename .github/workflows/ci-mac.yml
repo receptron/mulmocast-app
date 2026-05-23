@@ -26,12 +26,12 @@ jobs:
       # 1. ソースコードのチェックアウト
       # ワークフローを実行する仮想環境に、リポジトリのコードをコピーしてくる
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # 2. Node.js環境のセットアップ
       # アプリのビルドに必要なNode.jsとYarnを準備する
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           # Yarnのキャッシュを有効にし、インストールを高速化
