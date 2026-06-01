@@ -87,7 +87,7 @@
     "yaml-eslint-parser": "^2.0.0"
   },
   "resolutions": {
-    "dompurify": "^3.4.4",
+    "dompurify": "^3.4.5",
     "fast-xml-parser": "5.8.0",
     "yauzl": "^3.2.1",
     "minimatch": "^10.2.5",
@@ -112,7 +112,7 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.20",
     "deep-equal": "^2.2.3",
-    "dompurify": "^3.4.4",
+    "dompurify": "^3.4.5",
     "electron-log": "^5.4.4",
     "electron-squirrel-startup": "^1.0.1",
     "exa-js": "^1.9.3",
