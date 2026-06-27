@@ -31,6 +31,7 @@ export const useMulmoEventStore = defineStore("mulmoEvent", () => {
           pdf: false,
           markdown: false,
           html: false,
+          viewer: false,
         },
         beat: {
           audio: {},
