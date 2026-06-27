@@ -73,6 +73,7 @@ const sonarjsRules = {
   "sonarjs/todo-tag": "off",
   "sonarjs/no-nested-conditional": "off",
   "sonarjs/slow-regex": "warn",
+  "sonarjs/super-linear-regex": "warn", // renamed from slow-regex in eslint-plugin-sonarjs 4.1.0
   "sonarjs/prefer-regexp-exec": "off",
   "sonarjs/function-return-type": "off", // union return types (string | null, T | undefined) are idiomatic TS
   "sonarjs/argument-type": "off", // false positives with Array.includes() in TS 6
