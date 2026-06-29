@@ -126,8 +126,7 @@ const loadReference = async () => {
   }
 
   const refs = (await window.electronAPI.mulmoHandler("mulmoReferenceImagesFiles", projectId.value)) as
-    | Record<string, ArrayBuffer | null>
-    | undefined;
+    Record<string, ArrayBuffer | null> | undefined;
 
   const nextRefs: Record<string, string | null> = {};
   Object.keys(props.images ?? {}).forEach((key) => {

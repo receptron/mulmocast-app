@@ -129,9 +129,7 @@ const fetchScriptMedia = async () => {
 
   try {
     const response = (await window.electronAPI.project.listScriptImages(props.projectId)) as
-      | ProjectScriptMedia[]
-      | null
-      | undefined;
+      ProjectScriptMedia[] | null | undefined;
 
     if (requestId !== fetchRequestId) {
       return;
