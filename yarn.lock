@@ -1957,10 +1957,10 @@
   dependencies:
     "@inquirer/type" "^1.5.5"
 
-"@lucide/vue@^1.21.0":
-  version "1.21.0"
-  resolved "https://npm.flatt.tech/@lucide/vue/-/vue-1.21.0.tgz#658eeb23bf0fdc20dec63a190edf9c2e83dc8549"
-  integrity sha512-eoFn3tppjKAc12ZqdnRSMFdtwQ1ZMRQFb6SV1Eub6Y8kU28ccnqKeSFdnur9hMg8gIbosU2Y3WFJr/J/xS/IlQ==
+"@lucide/vue@^1.22.0":
+  version "1.22.0"
+  resolved "https://npm.flatt.tech/@lucide/vue/-/vue-1.22.0.tgz#ab1d138e4ce9c410a9ebdd2654a72cf118b93e0b"
+  integrity sha512-2/+mGF+NrHieiGTwq5wHRVsLhtzoY8x64ovvQkVYDXLrLHKqE/58xR/hveFsxkH0Ey4M8UsvsYNxAHjPgbTyqQ==
 
 "@malept/cross-spawn-promise@^1.0.0":
   version "1.1.1"
@@ -8514,10 +8514,15 @@ prettier-plugin-tailwindcss@^0.8.0:
   resolved "https://registry.yarnpkg.com/prettier-plugin-tailwindcss/-/prettier-plugin-tailwindcss-0.8.0.tgz#766469c006717d6342cdf48eda262e8bfeabfa95"
   integrity sha512-V8ITGH87yuBDF6JpEZTOVlUz/saAwqb8f3HRgUj8Lh+tGCcrmorhsLpYqzygwFwK0PE2Ib6Mv3M7T/uE2tZV1g==
 
-prettier@^3.0.0, prettier@^3.4.2, prettier@^3.8.5:
+prettier@^3.0.0, prettier@^3.4.2:
   version "3.8.5"
   resolved "https://npm.flatt.tech/prettier/-/prettier-3.8.5.tgz#81cf9de0cf46db973fa85103ff06dfcdb0d9bc39"
   integrity sha512-zxcTTCedNGJM4R8sj/Cq/F0W/c4iE0afWBcBwMTRtw4WHYP9TWkYjdiH3npPRUYsXQCPR0hTU9yjovOu+E6EQA==
+
+prettier@^3.9.1:
+  version "3.9.1"
+  resolved "https://npm.flatt.tech/prettier/-/prettier-3.9.1.tgz#5868bcf16456bfe145ddbfa107c623b6f39e332c"
+  integrity sha512-ppiDo2CSwexck1eyZUwJHg/N3nf1+6IRCv7W/VJ5vaLnVCmB7+3CdRfMwoCHBBX6xTrREDTksZ4OZl5SSf4zXA==
 
 pretty-ms@^9.2.0:
   version "9.3.0"
@@ -10102,10 +10107,10 @@ update-browserslist-db@^1.2.3:
     escalade "^3.2.0"
     picocolors "^1.1.1"
 
-update-electron-app@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/update-electron-app/-/update-electron-app-3.2.0.tgz#33e584ce1a76aab95a413fb65d9b03ce7e4ec53c"
-  integrity sha512-l2e7bzsW+rw70pfyyQeA9E/ofpNY2ZS99XuYxD2qWL4fEy3qMjpqwwgB0me7ESpGogIQE1CM0SaDvKGsK4Jg3Q==
+update-electron-app@^3.3.0:
+  version "3.3.0"
+  resolved "https://npm.flatt.tech/update-electron-app/-/update-electron-app-3.3.0.tgz#aba8afe2d84475ce9154bd34fdd398b2dac4dfcc"
+  integrity sha512-5s73OcyNhAvogjxzAy8pbephY+bP6aXpXFv68OT1dNiEbcUpIUCv/ZZPalqGclnXUgx3oyn+yVdAIIVUpn/C1g==
   dependencies:
     github-url-to-object "^4.0.4"
     ms "^2.1.1"
