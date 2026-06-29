@@ -251,8 +251,7 @@ async function writeEditorJson(page: Page, json: Record<string, unknown>): Promi
 
 function getSpeakers(json: Record<string, unknown>): Record<string, Record<string, unknown>> {
   const sp = (json.speechParams || (json.presentationStyle as Record<string, unknown>)?.speechParams) as
-    | Record<string, unknown>
-    | undefined;
+    Record<string, unknown> | undefined;
   return (sp?.speakers || {}) as Record<string, Record<string, unknown>>;
 }
 
