@@ -106,7 +106,7 @@
     "@tailwindcss/vite": "^4.3.2",
     "@tato30/vue-pdf": "^2.1.0",
     "@vueuse/core": "^14.3.0",
-    "adm-zip": "^0.5.17",
+    "adm-zip": "^0.6.0",
     "class-variance-authority": "^0.7.1",
     "clone-deep": "^4.0.1",
     "clsx": "^2.1.1",
