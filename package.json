@@ -122,7 +122,7 @@
     "exa-js": "^2.25.0",
     "ffmpeg-ffprobe-static": "^6.1.2-rc.1",
     "graphai": "^2.0.18",
-    "monaco-editor": "^0.57.0",
+    "monaco-editor": "^0.55.1",
     "monaco-yaml": "^5.5.1",
     "mulmocast": "^2.17.0",
     "node-fetch": "^2.7.0",
