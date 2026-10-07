@@ -43,7 +43,7 @@ import { nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import { Checkbox } from "../../../components/ui/checkbox";
 import { Label } from "../../../components/ui/label";
-import { type MulmoBeat, type MulmoImageParams } from "mulmocast";
+import type { MulmoBeat, MulmoImageParams } from "mulmocast";
 import { IMAGE_PARAMS_DEFAULT_VALUES } from "../../../../shared/constants";
 import ImageParams from "./styles/image_params.vue";
 

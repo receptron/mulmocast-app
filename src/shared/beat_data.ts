@@ -1,4 +1,4 @@
-import { type MulmoBeat } from "mulmocast";
+import type { MulmoBeat } from "mulmocast";
 import { INITIAL_DESCRIPTION } from "./constants";
 
 export const initMulmoScript = (title: string, lang: string = "en") => ({
