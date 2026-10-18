@@ -97,7 +97,7 @@ const toArrayBuffer = (data: unknown): ArrayBuffer | null => {
     return data;
   }
   if (ArrayBuffer.isView(data)) {
-    return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength);
+    return new Uint8Array(data.buffer, data.byteOffset, data.byteLength).slice().buffer;
   }
   if (Array.isArray(data)) {
     return Uint8Array.from(data).buffer;
@@ -199,7 +199,6 @@ const handleDialogOpenChange = (open: boolean) => {
 const handleSelect = (media: ScriptMediaWithPreview) => {
   emit("select", {
     fileName: media.fileName,
-    fullPath: media.fullPath,
     projectRelativePath: media.projectRelativePath,
     data: media.data,
     mediaType: media.mediaType,

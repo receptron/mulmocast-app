@@ -76,7 +76,7 @@ import CaptionParams from "./styles/caption_params.vue";
 import ConcurrencyParams from "./styles/concurrency_params.vue";
 import type { ConcurrencyUpdate } from "./styles/concurrency_params.vue";
 
-import { MulmoError } from "../../../../../types";
+import type { MulmoError } from "../../../../types";
 
 import { useMulmoGlobalStore } from "@/store";
 

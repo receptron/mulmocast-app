@@ -115,6 +115,7 @@ import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { mulmoScriptSchema } from "mulmocast/browser";
 import dayjs from "dayjs";
+import type { AcceptableValue } from "reka-ui";
 
 import Layout from "@/components/layout.vue";
 import ProjectItems from "./dashboard/project_items.vue";
@@ -146,14 +147,14 @@ const sortOrder = ref<typeof SORT_ORDER.desc | typeof SORT_ORDER.asc>(SORT_ORDER
 const projects = ref<Project[]>([]);
 const loading = ref(true);
 const creating = ref(false);
-const projectThumbnails = ref<Record<string, ArrayBuffer | string | null>>({});
+const projectThumbnails = ref<Record<string, ArrayBuffer | string | null | undefined>>({});
 const thumbnailsLoading = ref<Record<string, boolean>>({});
 
 const loadProjects = async () => {
   projects.value = await projectApi.list();
   projects.value.map((project) => {
     const res = mulmoScriptSchema.safeParse(project.script);
-    project.isValud = res.success;
+    project.isValid = res.success;
   });
 };
 
@@ -289,7 +290,10 @@ const handleViewProject = async (project: Project) => {
   globalStore.setMulmoViewerProjectId(project.metadata.id);
 };
 
-const updateSort = (value: string) => {
+const updateSort = (value: AcceptableValue) => {
+  if (typeof value !== "string") {
+    return;
+  }
   const [newSortBy, newSortOrder] = value.split("-") as ["updatedAt" | "title", "desc" | "asc"];
   sortBy.value = newSortBy;
   sortOrder.value = newSortOrder;

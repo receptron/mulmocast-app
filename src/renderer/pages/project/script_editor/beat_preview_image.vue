@@ -116,7 +116,7 @@ import { mediaUri } from "@/lib/utils";
 import { isLocalSourceMediaBeat } from "@/lib/beat_util";
 import MediaBackupDialog from "./beat_editors/media_backup_dialog.vue";
 
-type ImageFile = ArrayBuffer | string | null;
+type ImageFile = ArrayBuffer | string | null | undefined;
 
 interface Props {
   beat: MulmoBeat;

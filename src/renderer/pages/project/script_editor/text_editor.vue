@@ -39,7 +39,7 @@
     class="w-fit"
     :disabled="isArtifactGenerating || !isValidBeat || beat?.text?.length === 0"
   >
-    <template v-if="mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio']?.[beat.id]">
+    <template v-if="valueForKey(mulmoEventStore.sessionState?.[projectId]?.['beat']?.['audio'], beat.id)">
       <Loader2 class="mr-1 h-4 w-4 animate-spin" />{{ t("ui.status.generating") }}
     </template>
     <template v-else>{{ t("ui.actions.generateAudio") }}</template>
@@ -61,7 +61,7 @@
     <Input
       :model-value="multiLingualDataset[lang]"
       @blur="saveMultiLingual"
-      @update:model-value="(val) => (multiLingualDataset[lang] = val)"
+      @update:model-value="(val) => (multiLingualDataset[lang] = String(val))"
     />
   </div>
 </template>
@@ -84,6 +84,7 @@ import {
 import { Button, Label, Input, Badge, Textarea } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getBadge } from "@/lib/beat_util.js";
+import { valueForKey } from "@/lib/key_lookup";
 
 import { useMulmoEventStore, useMulmoGlobalStore } from "@/store";
 import { notifyProgress, notifyError } from "@/lib/notification";
@@ -98,7 +99,7 @@ const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 interface Props {
   index: number;
   beat: MulmoBeat;
-  audioFile?: string;
+  audioFile?: string | null;
   projectId: string;
   lang: string;
   isValidBeat: boolean;
@@ -113,7 +114,7 @@ const emit = defineEmits(["update", "justSaveAndPushToHistory", "updateMultiLing
 
 const supporLanguages = computed(() => {
   const data = (globalStore.settings ?? {})?.USE_LANGUAGES ?? {};
-  return Object.keys(data).reduce((tmp, current) => {
+  return Object.keys(data).reduce<string[]>((tmp, current) => {
     if (data[current]) {
       tmp.push(current);
     }
@@ -167,11 +168,11 @@ const translateBeat = async (index: number) => {
   });
 };
 
-const multiLingualDataset = ref({});
+const multiLingualDataset = ref<Record<string, string>>({});
 
 const saveMultiLingual = async () => {
   console.log(props.mulmoMultiLingual);
-  const data = supporLanguages.value.reduce((tmp, key) => {
+  const data = supporLanguages.value.reduce<MultiLingualTexts>((tmp, key) => {
     tmp[key] = {
       ...(props.mulmoMultiLingual?.[key] ?? {}),
       text: multiLingualDataset.value[key] ?? "",
@@ -186,7 +187,7 @@ const saveMultiLingual = async () => {
 };
 
 const convMultiLingualData = (mulmoMultiLingual?: MultiLingualTexts) => {
-  const newData = {};
+  const newData: Record<string, string> = {};
   languages.forEach((lang) => {
     if (mulmoMultiLingual?.[lang]?.text) {
       newData[lang] = mulmoMultiLingual?.[lang]?.text;

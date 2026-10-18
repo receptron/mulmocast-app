@@ -30,9 +30,11 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { type MultiLingualTexts } from "mulmocast/browser";
+import { type MulmoStudioMultiLingual } from "mulmocast/browser";
+import type { StringOrNumber } from "reka-ui";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import type { Project } from "@/lib/project_api";
+import { isOneOf } from "@/lib/type_guards";
 
 import MovieTab from "./tabs/movie_tab.vue";
 import PdfTab from "./tabs/pdf_tab.vue";
@@ -46,7 +48,7 @@ const { t } = useI18n();
 interface Props {
   project: Project;
   mulmoViewerActiveTab?: MulmoViewerTab;
-  mulmoMultiLinguals?: MultiLingualTexts;
+  mulmoMultiLinguals?: MulmoStudioMultiLingual;
 }
 
 const props = defineProps<Props>();
@@ -67,7 +69,10 @@ const updateMultiLingual = () => {
   emit("updateMultiLingual");
 };
 
-const handleUpdateTab = (tab: MulmoViewerTab) => {
+const handleUpdateTab = (tab: StringOrNumber) => {
+  if (!isOneOf(Object.values(MULMO_VIEWER_TABS), tab)) {
+    return;
+  }
   currentTab.value = tab;
   emit("update:mulmoViewerActiveTab", tab);
 };

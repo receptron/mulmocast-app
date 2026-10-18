@@ -30,7 +30,7 @@ export const removeEmptyValues = <T>(obj: T): T | undefined => {
   return obj;
 };
 
-export const mediaUri = (file: ArrayBuffer | string | null): string => {
+export const mediaUri = (file: ArrayBuffer | string | null | undefined): string => {
   if (!file) {
     return "";
   }

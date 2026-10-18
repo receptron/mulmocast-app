@@ -1,5 +1,6 @@
 import type { ZodError, ZodIssue } from "zod";
 import type { MulmoError } from "../../types/index.js";
+import { isObject } from "graphai";
 import { unknownMediaType, apiKeyInvalidType, apiRateLimitErrorType, apiKeyMissingType } from "mulmocast/browser";
 
 const prioritizedApiErrorTargets = new Set(["videoDuration", "unsupportedModel", "multiLingualFile"]);
@@ -144,9 +145,9 @@ export const zodError2MulmoError = (error: ZodError) => {
 
 // for throw Error. convert error cause to notify
 // refere: mulmocast-cli/src/utils/error_cause.ts
-export const convCauseToErrorMessage = (cause: {
-  action: string;
-  type: string;
+export type ErrorCause = {
+  action?: string;
+  type?: string;
   target?: string;
   beatIndex?: number;
   url?: string;
@@ -155,7 +156,41 @@ export const convCauseToErrorMessage = (cause: {
   envVarName?: string;
   errorCode?: string;
   errorType?: string;
-}) => {
+};
+
+export type ErrorMessage = [messageKey: string, params?: Record<string, unknown>];
+
+const ERROR_CAUSE_STRING_KEYS = [
+  "action",
+  "type",
+  "target",
+  "url",
+  "key",
+  "agentName",
+  "envVarName",
+  "errorCode",
+  "errorType",
+] as const;
+
+// The cause arrives over IPC untyped; a field of the wrong type reads as absent.
+export const toErrorCause = (cause: unknown): ErrorCause => {
+  if (!isObject(cause)) {
+    return {};
+  }
+  const errorCause: ErrorCause = {};
+  ERROR_CAUSE_STRING_KEYS.forEach((key) => {
+    const value = cause[key];
+    if (typeof value === "string") {
+      errorCause[key] = value;
+    }
+  });
+  if (typeof cause.beatIndex === "number") {
+    errorCause.beatIndex = cause.beatIndex;
+  }
+  return errorCause;
+};
+
+export const convCauseToErrorMessage = (cause: ErrorCause): ErrorMessage => {
   // notify.error.{action}.{type}
 
   // agentGenerationError(apiError)  -> agentName

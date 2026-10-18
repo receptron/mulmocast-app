@@ -24,7 +24,7 @@ const modelValue = useVModel(props, "modelValue", emits, {
 
 onMounted(() => {
   if (props.autoFocus) {
-    inputRef.value.focus();
+    inputRef.value?.focus();
   }
 });
 </script>

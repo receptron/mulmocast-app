@@ -59,15 +59,15 @@ interface Props {
 defineProps<Props>();
 
 const emit = defineEmits<{
-  update: [key: string, imageParams: ImageParams | undefined];
+  update: [key: string, imageParams: MulmoImageParams | undefined];
   justSaveAndPushToHistory: [];
 }>();
 
-const updateParam = (value: ImageParams | undefined) => {
+const updateParam = (value: MulmoImageParams | undefined) => {
   emit("update", "imageParams", value);
 };
 
-const updateBeatImageParams = async (event) => {
+const updateBeatImageParams = async (event: boolean | "indeterminate") => {
   if (event) {
     emit("update", "imageParams", IMAGE_PARAMS_DEFAULT_VALUES);
   } else {

@@ -20,14 +20,14 @@
 
   <Input
     :placeholder="t('beat.mermaid.titleField')"
-    :model-value="beat?.image?.title"
+    :model-value="mermaidImage?.title"
     @update:model-value="(value) => update('image.title', String(value))"
     @blur="save"
     class="mb-2"
   />
   <Textarea
     :placeholder="t('beat.mermaid.placeholder')"
-    :model-value="beat?.image?.code?.text"
+    :model-value="mermaidImage?.code?.kind === 'text' ? mermaidImage.code.text : undefined"
     @update:model-value="(value) => update('image.code.text', String(value))"
     @blur="save"
     class="font-mono"
@@ -36,10 +36,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { Label, Input, Textarea, Button } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { MulmoBeat } from "mulmocast/browser";
+import { imageOfType } from "@/lib/beat_util";
 import { useI18n } from "vue-i18n";
 
 import { mermaid_presets } from "./mermaid_data";
@@ -49,7 +50,8 @@ const { t } = useI18n();
 interface Props {
   beat: MulmoBeat;
 }
-defineProps<Props>();
+const props = defineProps<Props>();
+const mermaidImage = computed(() => imageOfType(props.beat, "mermaid"));
 const emit = defineEmits(["update", "save"]);
 
 const update = (path: string, value: unknown) => {

@@ -17,6 +17,7 @@
 import { toolsToTemplateNames, tools } from "mulmocast-vision/lib/browser";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useI18n } from "vue-i18n";
+import type { AcceptableValue } from "reka-ui";
 
 const { t } = useI18n();
 
@@ -28,7 +29,10 @@ const emit = defineEmits<{
   (e: "update:modelValue", value: string): void;
 }>();
 
-const updateValue = (val: string) => {
+const updateValue = (val: AcceptableValue) => {
+  if (typeof val !== "string") {
+    return;
+  }
   emit("update:modelValue", val);
 };
 

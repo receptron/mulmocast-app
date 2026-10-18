@@ -189,7 +189,7 @@ const selectedUserLevel = ref("beginner");
 
 const selectedLLM = ref("openAIAgent");
 
-const llmConfigs = ref<LlmConfigs>({
+const llmConfigs = ref<Required<LlmConfigs>>({
   ollama: { ...LLM_OLLAMA_DEFAULT_CONFIG },
   openai: { ...LLM_OPENAI_DEFAULT_CONFIG },
   anthropic: { ...LLM_ANTHROPIC_DEFAULT_CONFIG },
@@ -312,7 +312,7 @@ const updateShowKey = (envKey: string, value: boolean) => {
   showKeys[envKey] = value;
 };
 
-const updateLlmConfigs = (configs: LlmConfigs) => {
+const updateLlmConfigs = (configs: Required<LlmConfigs>) => {
   llmConfigs.value = configs;
 };
 

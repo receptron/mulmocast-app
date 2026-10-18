@@ -25,7 +25,7 @@ import type { SessionProgressEvent } from "mulmocast/browser";
 
 import { notifyError } from "@/lib/notification";
 import { useI18n } from "vue-i18n";
-import { convCauseToErrorMessage } from "./lib/error";
+import { convCauseToErrorMessage, toErrorCause } from "./lib/error";
 
 const { t } = useI18n();
 
@@ -62,7 +62,7 @@ onMounted(async () => {
     if (message.type === "error") {
       const errorData = message.data as { message?: string };
       if (message.cause) {
-        const data = convCauseToErrorMessage(message.cause);
+        const data = convCauseToErrorMessage(toErrorCause(message.cause));
         const params = data[1] ?? {};
 
         // Add link button if linkKey is provided

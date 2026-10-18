@@ -55,10 +55,10 @@
         {{ message }}
       </div>
 
-      <div v-for="objectKey in Object.keys(zodErrors ?? {})" :key="objectKey">
-        <div v-if="zodErrors[objectKey].length > 0">
-          <div v-for="(error, index) in zodErrors[objectKey]" key="${objectKey}_${index}">
-            {{ objectKey }}:{{ zodErrors[objectKey]?.[index] }}
+      <div v-for="[objectKey, objectErrors] in Object.entries(zodErrors ?? {})" :key="objectKey">
+        <div v-if="objectErrors.length > 0">
+          <div v-for="(error, index) in objectErrors" key="${objectKey}_${index}">
+            {{ objectKey }}:{{ objectErrors?.[index] }}
           </div>
         </div>
       </div>
@@ -97,7 +97,7 @@
                 <TextEditor
                   :index="index"
                   :beat="beat"
-                  :audioFile="audioFiles[beat.id]"
+                  :audioFile="valueForKey(audioFiles, beat.id)"
                   :projectId="projectId"
                   :mulmoScript="mulmoScript"
                   :lang="mulmoScript.lang ?? globalStore.settings.APP_LANGUAGE"
@@ -242,10 +242,10 @@
                   :isValidBeat="isValidBeats[index]"
                   :isArtifactGenerating="isArtifactGenerating"
                   :lang="mulmoScript.lang ?? globalStore.settings.APP_LANGUAGE"
-                  :audioFile="audioFiles[beat.id]"
-                  :imageFile="imageFiles[beat.id]"
-                  :movieFile="movieFiles[beat.id]"
-                  :lipSyncFiles="lipSyncFiles[beat.id]"
+                  :audioFile="valueForKey(audioFiles, beat.id)"
+                  :imageFile="valueForKey(imageFiles, beat.id)"
+                  :movieFile="valueForKey(movieFiles, beat.id)"
+                  :lipSyncFiles="valueForKey(lipSyncFiles, beat.id)"
                   :imageFiles="imageFiles"
                   :movieFiles="movieFiles"
                   :mulmoError="mulmoError?.['beats']?.[index] ?? []"
@@ -385,9 +385,10 @@ import {
   type MulmoImagePromptMedia,
   type MulmoImageMedia,
   type MulmoImageAsset,
-  type MultiLingualTexts,
+  type MulmoStudioMultiLingual,
 } from "mulmocast/browser";
 import { z } from "zod";
+import type { StringOrNumber } from "reka-ui";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui";
@@ -403,6 +404,8 @@ import BeatNavigatorDialog from "./script_editor/beat_navigator_dialog.vue";
 
 import { MulmoError } from "../../../types";
 import { arrayPositionUp, arrayInsertAfter } from "@/lib/array";
+import { valueForKey } from "@/lib/key_lookup";
+import { isOneOf } from "@/lib/type_guards";
 import { SCRIPT_EDITOR_TABS, type ScriptEditorTab } from "../../../shared/constants";
 
 import { getBeatType, setRandomBeatId } from "@/lib/beat_util";
@@ -422,7 +425,7 @@ interface Props {
   lipSyncFiles: Record<string, string | null>;
   mulmoError: MulmoError | null;
   scriptEditorActiveTab?: ScriptEditorTab;
-  mulmoMultiLinguals: MultiLingualTexts;
+  mulmoMultiLinguals: MulmoStudioMultiLingual;
 }
 
 const props = defineProps<Props>();
@@ -481,7 +484,10 @@ const openBeatNavigator = (tab: ScriptEditorTab) => {
   beatNavigatorDialogRef.value?.open();
 };
 
-const handleUpdateScriptEditorActiveTab = (tab: ScriptEditorTab) => {
+const handleUpdateScriptEditorActiveTab = (tab: StringOrNumber) => {
+  if (!isOneOf(Object.values(SCRIPT_EDITOR_TABS), tab)) {
+    return;
+  }
   /*
   if (!props.isValidScriptData) {
     return;
@@ -722,12 +728,14 @@ const updateImage = (imageKey: string, prompt: string) => {
 
 const updateImagePath = (imageKey: string, path: string) => {
   const currentImages = props.mulmoScript?.imageParams?.images ?? {};
+  const currentImage = currentImages[imageKey];
+  const currentSource = currentImage && "source" in currentImage ? currentImage.source : undefined;
   const updatedImages = {
     ...currentImages,
     [imageKey]: {
-      ...(currentImages[imageKey] ?? {}),
+      ...(currentImage ?? {}),
       source: {
-        ...(currentImages[imageKey]?.source ?? {}),
+        ...(currentSource ?? {}),
         path,
       },
     },

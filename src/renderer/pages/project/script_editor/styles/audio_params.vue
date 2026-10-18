@@ -202,6 +202,8 @@
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
+import type { AcceptableValue } from "reka-ui";
+import { isOneOf } from "@/lib/type_guards";
 import { computed, ref, watch, onUnmounted } from "vue";
 import { Music } from "@lucide/vue";
 import {
@@ -360,7 +362,12 @@ const handleUpdate = (field: keyof typeof AUDIO_PARAMS_DEFAULT_VALUES, value: nu
   });
 };
 
-const handleBgmTypeChange = (type: "preset" | "custom" | "silent" | "library") => {
+const BGM_TYPES = ["preset", "custom", "silent", "library"] as const;
+
+const handleBgmTypeChange = (type: AcceptableValue) => {
+  if (!isOneOf(BGM_TYPES, type)) {
+    return;
+  }
   const currentParams = props.audioParams || ({} as AudioParams);
 
   if (type === "silent") {
@@ -399,7 +406,10 @@ const handleBgmTypeChange = (type: "preset" | "custom" | "silent" | "library") =
   }
 };
 
-const handlePresetSelection = (url: string) => {
+const handlePresetSelection = (url: AcceptableValue) => {
+  if (typeof url !== "string") {
+    return;
+  }
   const currentParams = props.audioParams || ({} as AudioParams);
   bgmState.value = { type: "preset", url };
   emit("update", {

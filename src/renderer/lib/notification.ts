@@ -1,4 +1,5 @@
 import { toast } from "vue-sonner";
+import { isObject } from "graphai";
 
 export const notifySuccess = (message: string, description?: string) => {
   toast.success(message, {
@@ -28,17 +29,17 @@ export const notifyError = (
   });
 };
 
-export const notifyProgress = async <T>(
-  promise: Promise<T & { result?: boolean; error?: unknown; noContext?: boolean }>,
+export const notifyProgress = async (
+  promise: Promise<unknown>,
   {
     successMessage,
     errorMessage,
     errorDescription,
-  }: { successMessage: string; errorMessage: string; errorDescription: string },
+  }: { successMessage: string; errorMessage: string; errorDescription?: string },
 ) => {
   try {
     const result = await promise;
-    if (result?.result === false) {
+    if (isObject(result) && result.result === false) {
       if (result.noContext) {
         notifyError(errorMessage, errorDescription);
       } else {

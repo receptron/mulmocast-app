@@ -17,6 +17,7 @@
 <script setup lang="ts">
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui";
 import { Languages } from "@lucide/vue";
+import type { AcceptableValue } from "reka-ui";
 
 import { useI18n } from "vue-i18n";
 
@@ -31,7 +32,7 @@ const emit = defineEmits(["update:modelValue"]);
 
 const { t } = useI18n();
 
-const handleLanguageChange = (value: string) => {
+const handleLanguageChange = (value: AcceptableValue) => {
   emit("update:modelValue", value);
 };
 </script>

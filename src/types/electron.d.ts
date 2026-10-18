@@ -28,10 +28,14 @@ export interface ElectronAPI {
     saveProjectScript: (id: string, data: unknown) => Promise<boolean>;
     openProjectFolder: (id: string) => Promise<void>;
   };
+  updateInstall: () => Promise<void>;
   settings: {
     get: () => Promise<Settings>;
     set: (settings: Settings) => Promise<void>;
   };
+  writeClipboardText: (text: string) => Promise<void>;
+  readClipboardText: () => Promise<string>;
+  openExternal: (url: string) => Promise<void>;
   onNavigate: (callback: (path: string) => void) => Promise<void>;
 }
 

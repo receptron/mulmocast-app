@@ -22,6 +22,7 @@ import { LANGUAGES } from "../../../shared/constants";
 
 import type { MulmoScript } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
+import type { AcceptableValue } from "reka-ui";
 import { useMulmoGlobalStore } from "@/store";
 
 const props = defineProps<{
@@ -47,7 +48,10 @@ watch(
   },
 );
 
-const handleLanguageChange = (value: string) => {
+const handleLanguageChange = (value: AcceptableValue) => {
+  if (typeof value !== "string") {
+    return;
+  }
   currentLanguage.value = value;
   emit("updateMulmoScript", {
     ...props.mulmoScript,

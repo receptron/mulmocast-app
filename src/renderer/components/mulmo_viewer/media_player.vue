@@ -59,10 +59,10 @@
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 interface Props {
-  videoWithAudioSource?: string;
-  videoSource?: string;
-  imageSource?: string;
-  audioSource?: string;
+  videoWithAudioSource?: string | null;
+  videoSource?: string | null;
+  imageSource?: string | null;
+  audioSource?: string | null;
 }
 const props = defineProps<Props>();
 
@@ -87,7 +87,7 @@ const handleVideoPlay = () => {
   }
   emit("play");
 };
-const handleVideoPause = (e) => {
+const handleVideoPause = (e: Event) => {
   // If the video is not at the end, it is determined to be a human operation.
   if (!videoRef.value?.ended && audioSyncRef?.value) {
     audioSyncRef.value?.pause();
@@ -118,7 +118,7 @@ const generateAudio = () => {
   emit("generateAudio");
 };
 
-const handlePause = (e) => {
+const handlePause = (e: Event) => {
   const video = e.target as HTMLVideoElement;
   // It also fires on the end event, so pause is not sent in that case.
   if (video.duration !== video.currentTime) {

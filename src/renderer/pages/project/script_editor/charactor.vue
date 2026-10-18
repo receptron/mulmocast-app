@@ -142,6 +142,7 @@ import {
   type MulmoImageMedia,
   type MulmoImagePromptMedia,
   type MulmoImageParamsImages,
+  type MulmoImageParamsImagesValue,
   MulmoPresentationStyleMethods,
   mulmoImageMediaSchema,
   mulmoImagePromptMediaSchema,
@@ -154,10 +155,8 @@ import { bufferToUrl } from "@/lib/utils";
 import { readFileAsArrayBuffer, type BinaryFileData } from "@/lib/file";
 
 import CharactorSelector from "./charactor_selector.vue";
-import MediaLibraryDialog, {
-  type MediaLibraryDialogExposed,
-  type ProjectScriptMedia,
-} from "./beat_editors/media_library_dialog.vue";
+import MediaLibraryDialog, { type MediaLibraryDialogExposed } from "./beat_editors/media_library_dialog.vue";
+import type { ProjectScriptMedia } from "../../../../types/index";
 
 import { notifySuccess, notifyProgress, notifyError } from "@/lib/notification";
 import { useApiErrorNotify } from "@/composables/notify";
@@ -175,6 +174,10 @@ const { t } = useI18n();
 const mulmoEventStore = useMulmoEventStore();
 
 const props = defineProps<Props>();
+
+const promptOf = (image: MulmoImageParamsImagesValue): string | undefined => {
+  return "prompt" in image ? image.prompt : undefined;
+};
 const emit = defineEmits([
   "updateImage",
   "updateImagePath",
@@ -399,7 +402,7 @@ const generateReferenceImage = async (imageKey: string, key: number) => {
     await notifyProgress(
       window.electronAPI.mulmoHandler("mulmoReferenceImage", props.projectId, key, imageKey, {
         type: "imagePrompt",
-        prompt: props.images[imageKey].prompt,
+        prompt: promptOf(props.images[imageKey]),
       }),
       {
         successMessage: t("notify.imageReference.successMessage"),
