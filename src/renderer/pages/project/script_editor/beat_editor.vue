@@ -225,7 +225,7 @@
           <template v-else-if="isMediaBeat(beat)">
             <Label class="mb-1 block">{{ t("beat.mediaFile.remoteLabel") }}</Label>
             <div v-if="isURLSourceMediaBeat(beat)" class="break-words whitespace-pre-wrap">
-              {{ beat.image.source.url }}
+              {{ urlSourceOf(beat) }}
             </div>
           </template>
 
@@ -571,7 +571,11 @@
             </div>
             <Card v-if="beat.speechOptions" class="mt-4 p-4">
               <div class="space-y-3">
-                <div v-if="providerSupportsInstruction(mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider)">
+                <div
+                  v-if="
+                    providerSupportsInstruction(valueForKey(mulmoScript.speechParams?.speakers, beat.speaker)?.provider)
+                  "
+                >
                   <Label class="text-xs">{{ t("parameters.speechParams.instruction") }}</Label>
                   <Input
                     :model-value="beat.speechOptions?.instruction || ''"
@@ -580,7 +584,9 @@
                     :placeholder="t('parameters.speechParams.instructionPlaceholder')"
                   />
                 </div>
-                <div v-if="providerSupportsSpeed(mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider)">
+                <div
+                  v-if="providerSupportsSpeed(valueForKey(mulmoScript.speechParams?.speakers, beat.speaker)?.provider)"
+                >
                   <Label class="text-xs">{{ t("parameters.speechParams.speed") }}</Label>
                   <Input
                     :model-value="beat.speechOptions?.speed !== undefined ? String(beat.speechOptions.speed) : ''"
@@ -594,7 +600,11 @@
                   />
                 </div>
                 <div
-                  v-if="providerSupportsElevenLabsOptions(mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider)"
+                  v-if="
+                    providerSupportsElevenLabsOptions(
+                      valueForKey(mulmoScript.speechParams?.speakers, beat.speaker)?.provider,
+                    )
+                  "
                 >
                   <div class="group relative inline-block">
                     <Label class="text-xs">{{ t("parameters.speechParams.stability") }}</Label>
@@ -618,7 +628,11 @@
                   />
                 </div>
                 <div
-                  v-if="providerSupportsElevenLabsOptions(mulmoScript.speechParams?.speakers?.[beat.speaker]?.provider)"
+                  v-if="
+                    providerSupportsElevenLabsOptions(
+                      valueForKey(mulmoScript.speechParams?.speakers, beat.speaker)?.provider,
+                    )
+                  "
                 >
                   <div class="group relative inline-block">
                     <Label class="text-xs">{{ t("parameters.speechParams.similarityBoost") }}</Label>
@@ -677,6 +691,7 @@ import {
   type AudioExtension,
 } from "../../../../shared/constants";
 import { isNull } from "graphai";
+import type { AcceptableValue } from "reka-ui";
 
 // components
 import MediaModal from "@/components/media_modal.vue";
@@ -699,10 +714,13 @@ import {
   enableMovieType,
   enableLipSyncType,
   isMediaBeat,
+  urlSourceOf,
   isURLSourceMediaBeat,
   isLocalSourceMediaBeat,
 } from "@/lib/beat_util.js";
 import { mediaUri } from "@/lib/utils";
+import { valueForKey } from "@/lib/key_lookup";
+import { isOneOf } from "@/lib/type_guards";
 import { notifyProgress, notifyError } from "@/lib/notification";
 import type { MulmoTransition } from "@/types";
 import {
@@ -721,14 +739,14 @@ import Vision from "./beat_editors/vision.vue";
 import ImageEffect from "./beat_editors/image_effect.vue";
 import { useApiErrorNotify } from "@/composables/notify";
 
-type FileData = ArrayBuffer | string | null;
+type FileData = ArrayBuffer | string | null | undefined;
 
 interface Props {
   beat: MulmoBeat;
   mulmoScript: MulmoScript;
   index: number;
   lang: string;
-  audioFile?: string;
+  audioFile?: string | null;
   imageFile: FileData;
   movieFile: FileData;
   lipSyncFiles: FileData;
@@ -774,7 +792,8 @@ const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 const toggleTypeMode = ref(false);
 const toggleSpeakerMode = ref(false);
 
-const audioSourceType = ref<"generate" | "upload">(
+const AUDIO_SOURCE_TYPES = ["generate", "upload"] as const;
+const audioSourceType = ref<(typeof AUDIO_SOURCE_TYPES)[number]>(
   props.beat.audio?.type === "audio" && props.beat.audio.source?.kind === "path" ? "upload" : "generate",
 );
 const isAudioUploading = ref(false);
@@ -814,7 +833,7 @@ const showTransitionSettings = computed(() => {
 });
 
 const beatSpeedConfig = computed(() => {
-  const provider = props.mulmoScript.speechParams?.speakers?.[props.beat.speaker]?.provider;
+  const provider = valueForKey(props.mulmoScript.speechParams?.speakers, props.beat.speaker)?.provider;
   return getSpeedConfig(provider);
 });
 
@@ -952,19 +971,19 @@ const lipSyncRequiresMediaMessage = computed(() => {
 });
 
 const isImageGenerating = computed(() => {
-  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["image"]?.[beatId.value] ?? false;
+  return valueForKey(mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["image"], beatId.value) ?? false;
 });
 const isMovieGenerating = computed(() => {
-  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["movie"]?.[beatId.value] ?? false;
+  return valueForKey(mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["movie"], beatId.value) ?? false;
 });
 const isLipSyncGenerating = computed(() => {
-  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["lipSync"]?.[beatId.value] ?? false;
+  return valueForKey(mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["lipSync"], beatId.value) ?? false;
 });
 const isHtmlGenerating = computed(() => {
-  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["html"]?.[beatId.value] ?? false;
+  return valueForKey(mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["html"], beatId.value) ?? false;
 });
 const isAudioGenerating = computed(() => {
-  return mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["audio"]?.[beatId.value] ?? false;
+  return valueForKey(mulmoEventStore.sessionState?.[projectId.value]?.["beat"]["audio"], beatId.value) ?? false;
 });
 const disabledImageGenearte = computed(() => {
   return beatType.value === "imagePrompt" && (props.beat.text || "") === "" && (props.beat.imagePrompt || "") === "";
@@ -1073,7 +1092,10 @@ const generateAudio = async () => {
   }
 };
 
-const handleAudioSourceChange = (type: "generate" | "upload") => {
+const handleAudioSourceChange = (type: AcceptableValue) => {
+  if (!isOneOf(AUDIO_SOURCE_TYPES, type)) {
+    return;
+  }
   audioSourceType.value = type;
   // Don't clear data when switching modes - keep both options available
 };
@@ -1165,7 +1187,7 @@ const handleAudioFileRemove = (event: Event) => {
   emit("audioRemoved", props.index, props.beat.id);
 };
 
-const handleTransitionToggle = async (checked: boolean) => {
+const handleTransitionToggle = async (checked: boolean | "indeterminate") => {
   if (checked) {
     // Set default transition type to "fade" when enabled
     const movieParams = {
@@ -1186,7 +1208,10 @@ const handleTransitionToggle = async (checked: boolean) => {
   emit("justSaveAndPushToHistory");
 };
 
-const handleBeatTransitionTypeChange = (value: string) => {
+const handleBeatTransitionTypeChange = (value: AcceptableValue) => {
+  if (typeof value !== "string") {
+    return;
+  }
   const type = value === "__undefined__" ? undefined : value;
   if (type === undefined) {
     // Remove transition entirely when set to "None"
@@ -1225,7 +1250,7 @@ const handleBeatTransitionDurationChange = (value: string | number) => {
 };
 
 // Speech Options handlers
-const handleSpeechOptionsToggle = async (checked: boolean) => {
+const handleSpeechOptionsToggle = async (checked: boolean | "indeterminate") => {
   if (checked) {
     // Initialize empty speechOptions when enabled
     update("speechOptions", {});
@@ -1237,7 +1262,7 @@ const handleSpeechOptionsToggle = async (checked: boolean) => {
   emit("justSaveAndPushToHistory");
 };
 
-const handleSpeechOptionChange = (key: string, value: string | undefined, isNumeric = false) => {
+const handleSpeechOptionChange = (key: string, value: string | number | undefined, isNumeric = false) => {
   const speechOptions = {
     ...props.beat.speechOptions,
   };
@@ -1251,19 +1276,19 @@ const handleSpeechOptionChange = (key: string, value: string | undefined, isNume
   update("speechOptions", speechOptions);
 };
 
-const handleInstructionChange = (value: string | undefined) => {
+const handleInstructionChange = (value: string | number) => {
   handleSpeechOptionChange("instruction", value);
 };
 
-const handleSpeedChange = (value: string | undefined) => {
+const handleSpeedChange = (value: string | number) => {
   handleSpeechOptionChange("speed", value, true);
 };
 
-const handleStabilityChange = (value: string | undefined) => {
+const handleStabilityChange = (value: string | number) => {
   handleSpeechOptionChange("stability", value, true);
 };
 
-const handleSimilarityBoostChange = (value: string | undefined) => {
+const handleSimilarityBoostChange = (value: string | number) => {
   handleSpeechOptionChange("similarity_boost", value, true);
 };
 

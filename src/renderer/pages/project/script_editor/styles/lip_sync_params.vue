@@ -49,6 +49,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import type { AcceptableValue } from "reka-ui";
 import { Card, Label } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
@@ -56,7 +57,7 @@ import SettingsAlert from "../settings_alert.vue";
 import { provider2LipSyncAgent, defaultProviders, type MulmoPresentationStyle } from "mulmocast/browser";
 import { getLipSyncModelDescription } from "../lip_sync_utils";
 
-type LipSyncParams = MulmoPresentationStyle["lipSyncParams"];
+type LipSyncParams = NonNullable<MulmoPresentationStyle["lipSyncParams"]>;
 
 const PROVIDERS = Object.entries(provider2LipSyncAgent)
   .filter(([provider, __]) => {
@@ -113,11 +114,17 @@ const updateParams = (partial: Partial<LipSyncParams>) => {
   emit("update", params);
 };
 
-const handleProviderChange = (value: LipSyncParams["provider"]) => {
+const handleProviderChange = (value: AcceptableValue) => {
+  if (typeof value !== "string") {
+    return;
+  }
   updateParams({ provider: value == "__undefined__" ? undefined : value, model: undefined });
 };
 
-const handleModelChange = (value: LipSyncParams["model"]) => {
+const handleModelChange = (value: AcceptableValue) => {
+  if (typeof value !== "string") {
+    return;
+  }
   updateParams({ model: value });
 };
 </script>

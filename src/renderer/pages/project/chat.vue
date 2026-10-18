@@ -256,7 +256,7 @@ const { apiErrorNotify, hasApiKey } = useApiErrorNotify();
 
 const props = defineProps<{
   messages: ChatMessage[];
-  mulmoScript?: MulmoScript;
+  mulmoScript?: MulmoScript | null;
   projectMetadata: ProjectMetadata;
 }>();
 

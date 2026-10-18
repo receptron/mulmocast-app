@@ -9,7 +9,7 @@
           <div class="flex-1">
             <!-- Supports both parameterized and non-parameterized i18n keys
                  Examples: t('ui.actions.delete') or t('ui.actions.deleteThing', {thing: 'project'}) -->
-            <DialogTitle class="text-left">{{ t(dialogTitleKey, dialogTitleParams) }}</DialogTitle>
+            <DialogTitle class="text-left">{{ t(dialogTitleKey, dialogTitleParams ?? {}) }}</DialogTitle>
             <DialogDescription v-if="dialogDescriptionKey" class="mt-2 text-left">
               {{ t(dialogDescriptionKey) }}
             </DialogDescription>

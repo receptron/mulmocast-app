@@ -4,7 +4,7 @@
       <div
         :class="[
           cardClass,
-          project.isValud
+          project.isValid
             ? 'border-border hover:border-primary/50 dark:hover:border-primary/30'
             : 'border-red-400 hover:border-red-800',
         ]"
@@ -59,7 +59,7 @@
           </div>
           <!-- Error status for invalid projects (List view only) -->
           <div
-            v-if="!project.isValud && viewMode === 'list'"
+            v-if="!project.isValid && viewMode === 'list'"
             class="inline-flex items-center space-x-1 rounded border border-red-200 bg-red-50 px-2 py-1 dark:border-red-800 dark:bg-red-900/20"
           >
             <span class="text-xs font-medium text-red-600 dark:text-red-400">{{
@@ -72,7 +72,7 @@
         <div class="actions">
           <!-- Error status for invalid projects (Grid view only) -->
           <div
-            v-if="!project.isValud && viewMode === 'grid'"
+            v-if="!project.isValid && viewMode === 'grid'"
             class="inline-flex items-center space-x-1 rounded border border-red-200 bg-red-50 px-2 py-1 dark:border-red-800 dark:bg-red-900/20"
           >
             <span class="text-xs font-medium text-red-600 dark:text-red-400">{{
@@ -135,7 +135,7 @@ const emit = defineEmits<{
 
 const props = defineProps<{
   projects: Project[];
-  projectThumbnails: Record<string, ArrayBuffer | string | null>;
+  projectThumbnails: Record<string, ArrayBuffer | string | null | undefined>;
   thumbnailsLoading: Record<string, boolean>;
   viewMode?: "grid" | "list";
 }>();

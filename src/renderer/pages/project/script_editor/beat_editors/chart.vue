@@ -21,7 +21,7 @@
 
   <Input
     :placeholder="t('beat.chart.titleField')"
-    :model-value="beat?.image?.title"
+    :model-value="chartImage?.title"
     @update:model-value="(value) => update('image.title', String(value))"
     @blur="save"
     class="mb-2"
@@ -29,7 +29,7 @@
   <Textarea
     :placeholder="t('beat.chart.placeholder')"
     :model-value="
-      isObject(beat.image?.chartData) ? JSON.stringify(beat.image?.chartData, null, 2) : beat.image?.chartData
+      isObject(chartImage?.chartData) ? JSON.stringify(chartImage?.chartData, null, 2) : chartImage?.chartData
     "
     @update:model-value="
       (value) => {
@@ -48,11 +48,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { Label, Input, Textarea, Button } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import type { MulmoBeat } from "mulmocast/browser";
+import { imageOfType } from "@/lib/beat_util";
 import { isObject } from "graphai";
 
 import {
@@ -73,7 +74,8 @@ const { t } = useI18n();
 interface Props {
   beat: MulmoBeat;
 }
-defineProps<Props>();
+const props = defineProps<Props>();
+const chartImage = computed(() => imageOfType(props.beat, "chart"));
 const emit = defineEmits(["update", "save"]);
 
 const update = (path: string, value: unknown) => {

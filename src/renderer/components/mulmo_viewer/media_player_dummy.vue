@@ -8,7 +8,11 @@
       <audio :src="audioSource" v-if="audioSource" />
     </div>
     <div v-else-if="audioSource">
-      <video class="mx-auto h-auto max-h-[80vh] w-auto object-contain" :src="audioSource" :poster="imageSource" />
+      <video
+        class="mx-auto h-auto max-h-[80vh] w-auto object-contain"
+        :src="audioSource"
+        :poster="imageSource ?? undefined"
+      />
     </div>
     <div v-else-if="imageSource" class="relative inline-block">
       <img :src="imageSource" class="mx-auto h-auto max-h-[80vh] w-auto object-contain" />
@@ -17,10 +21,10 @@
 </template>
 <script setup lang="ts">
 interface Props {
-  videoWithAudioSource?: string;
-  videoSource?: string;
-  imageSource?: string;
-  audioSource?: string;
+  videoWithAudioSource?: string | null;
+  videoSource?: string | null;
+  imageSource?: string | null;
+  audioSource?: string | null;
 }
 defineProps<Props>();
 </script>

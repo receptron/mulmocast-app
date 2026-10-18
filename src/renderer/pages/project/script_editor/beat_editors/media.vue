@@ -20,7 +20,7 @@
       :class="
         isDragging
           ? 'border-primary bg-primary/5 text-primary shadow-lg'
-          : isBeginner && !beat.image.source.path
+          : isBeginner && !pathSourceOf(beat)
             ? 'border-2 border-red-600'
             : 'border-border bg-card text-muted-foreground'
       "
@@ -58,15 +58,14 @@ import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { Label, Input, Button } from "@/components/ui";
 import type { MulmoBeat, MulmoImageAsset } from "mulmocast/browser";
-import { isLocalSourceMediaBeat } from "@/lib/beat_util.js";
+import { isLocalSourceMediaBeat, pathSourceOf } from "@/lib/beat_util.js";
+import { isOneOf } from "@/lib/type_guards";
 
 import { notifyError } from "@/lib/notification";
 import { readFileAsArrayBuffer, type BinaryFileData } from "@/lib/file";
 import { useMediaUrl } from "../../composable/media_url";
-import MediaLibraryDialog, {
-  type MediaLibraryDialogExposed,
-  type ProjectScriptMedia,
-} from "./media_library_dialog.vue";
+import MediaLibraryDialog, { type MediaLibraryDialogExposed } from "./media_library_dialog.vue";
+import type { ProjectScriptMedia } from "../../../../../types/index";
 import { MEDIA_FILE_EXTENSIONS } from "../../../../../shared/constants";
 
 import { sleep } from "graphai";
@@ -151,10 +150,10 @@ const processMediaFile = async (fileData: BinaryFileData) => {
   const fileType = mimeType || fileExtension;
 
   const imageType = (() => {
-    if (MEDIA_FILE_EXTENSIONS.image.includes(fileType)) {
+    if (isOneOf(MEDIA_FILE_EXTENSIONS.image, fileType)) {
       return "image";
     }
-    if (MEDIA_FILE_EXTENSIONS.video.includes(fileType)) {
+    if (isOneOf(MEDIA_FILE_EXTENSIONS.video, fileType)) {
       return "movie";
     }
     return undefined;

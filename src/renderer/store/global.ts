@@ -2,7 +2,8 @@ import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 
 import { ENV_KEYS, userLevels } from "../../shared/constants";
-import { type UserLevel, type AzureOpenAIConfig, type VertexAIConfig } from "../../types/index";
+import { isNonEmptyString } from "../lib/type_guards";
+import { type AzureOpenAIConfig, type VertexAIConfig } from "../../types/index";
 
 type SETTINGS = {
   APP_LANGUAGE?: string;
@@ -11,7 +12,7 @@ type SETTINGS = {
   CHAT_LLM?: string;
   llmConfigs?: Record<string, Record<string, string>>;
   APIKEY?: Record<string, string>;
-  USER_LEVEL?: UserLevel;
+  USER_LEVEL?: string;
   AZURE_OPENAI?: AzureOpenAIConfig;
   VERTEX_AI?: VertexAIConfig;
 };
@@ -72,7 +73,7 @@ export const useMulmoGlobalStore = defineStore("mulmoGlobal", () => {
       .map((lang) => {
         return settings.value?.USE_LANGUAGES?.[lang] ? lang : null;
       })
-      .filter((v) => v);
+      .filter(isNonEmptyString);
   });
 
   const settingPresence = computed(() => {

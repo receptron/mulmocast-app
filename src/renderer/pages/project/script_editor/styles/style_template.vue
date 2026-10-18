@@ -13,9 +13,9 @@
             {{ t("project.chat.applyStyle") }}
           </Button>
           <img
-            :src="templateImageDataSet[currentTemplate?.filename]"
+            :src="valueForKey(templateImageDataSet, currentTemplate?.filename)"
             class="w-20"
-            v-if="currentTemplate && templateImageDataSet[currentTemplate.filename]"
+            v-if="currentTemplate && valueForKey(templateImageDataSet, currentTemplate.filename)"
           />
         </div>
         <!-- Note after template selection -->
@@ -34,6 +34,7 @@ import { Card, Label, Button } from "@/components/ui";
 import type { MulmoScript } from "mulmocast/browser";
 import { templateImageDataSet } from "mulmocast/data";
 import { notifySuccess } from "@/lib/notification";
+import { valueForKey } from "@/lib/key_lookup";
 import StyleTemplateSelect from "../../chat/style_template.vue";
 
 const { t } = useI18n();

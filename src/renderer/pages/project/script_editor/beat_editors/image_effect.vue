@@ -118,6 +118,7 @@ import { ref, computed, watch, onBeforeUnmount } from "vue";
 import { Label, Input, Button, Badge } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { bufferToUrl } from "@/lib/utils";
+import { imageOfType } from "@/lib/beat_util";
 import type { MulmoBeat, MulmoScript } from "mulmocast/browser";
 import { useI18n } from "vue-i18n";
 import {
@@ -141,6 +142,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const htmlImage = computed(() => imageOfType(props.beat, "html_tailwind"));
 const emit = defineEmits(["applyImageEffect", "save"]);
 
 const selectedEffect = ref<EffectType | null>(null);
@@ -240,8 +242,8 @@ const isCustomEdited = computed(() => {
 
   const imageSrc = `image:${payload.materialKey}`;
   const templateMatches = isTemplateMatch(
-    props.beat.image?.html as string | string[] | undefined,
-    props.beat.image?.script as string | string[] | undefined,
+    htmlImage.value?.html,
+    htmlImage.value?.script,
     payload.effectType,
     imageSrc,
     payload.zoom,
@@ -250,7 +252,7 @@ const isCustomEdited = computed(() => {
   );
 
   const typeMatches = props.beat.image?.type === payload.image.type;
-  const animationMatches = props.beat.image?.animation === payload.image.animation;
+  const animationMatches = htmlImage.value?.animation === payload.image.animation;
   const durationMatches = props.beat.duration === payload.duration;
   return !(templateMatches && typeMatches && animationMatches && durationMatches);
 });

@@ -94,10 +94,8 @@ import { useI18n } from "vue-i18n";
 
 type Provider = keyof typeof VOICE_LISTS;
 
-const providers = Object.keys(VOICE_LISTS);
-
-const DEFAULT_VOICE_IDS: Record<string, string> = providers.reduce((tmp, provider) => {
-  tmp[provider] = VOICE_LISTS[provider][0].id;
+const DEFAULT_VOICE_IDS = Object.entries(VOICE_LISTS).reduce<Record<string, string>>((tmp, [provider, voices]) => {
+  tmp[provider] = voices[0].id;
   return tmp;
 }, {});
 

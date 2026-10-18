@@ -27,8 +27,8 @@
               </div>
               <div class="bg-muted aspect-video w-full overflow-hidden rounded-md">
                 <img
-                  v-if="imageFiles[beat.id]"
-                  :src="mediaUri(imageFiles[beat.id])"
+                  v-if="valueForKey(imageFiles, beat.id)"
+                  :src="mediaUri(valueForKey(imageFiles, beat.id))"
                   class="h-full w-full object-cover transition-transform group-hover:scale-[1.02]"
                 />
                 <div v-else class="flex h-full items-center justify-center">
@@ -53,6 +53,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { ScrollArea } from "@/components/ui";
 import { useI18n } from "vue-i18n";
 import { mediaUri } from "@/lib/utils";
+import { valueForKey } from "@/lib/key_lookup";
 import type { MulmoBeat } from "mulmocast/browser";
 
 const { t } = useI18n();

@@ -311,13 +311,7 @@ import {
   Monitor,
 } from "@lucide/vue";
 import dayjs from "dayjs";
-import {
-  mulmoScriptSchema,
-  mulmoBeatSchema,
-  type MulmoScript,
-  type BeatSessionType,
-  type SessionType,
-} from "mulmocast/browser";
+import { mulmoScriptSchema, mulmoBeatSchema, type MulmoScript } from "mulmocast/browser";
 
 import { z } from "zod";
 import { toast } from "vue-sonner";
@@ -460,6 +454,9 @@ const handleUpdateMulmoScript = (script: MulmoScript) => {
 // Delete beat and its associated media files
 const deleteBeat = (index: number) => {
   const currentScript = mulmoScriptHistoryStore.currentMulmoScript;
+  if (!currentScript) {
+    return;
+  }
   if (index >= 0 && index < currentScript.beats.length) {
     const beat = currentScript.beats[index];
     const beatIdToDelete = beat.id;
@@ -494,6 +491,9 @@ const refreshBeatMedia = async (beatId: string, index: number) => {
 // internal use
 const saveMulmoScript = async () => {
   await projectApi.saveProjectScript(projectId.value, mulmoScriptHistoryStore.currentMulmoScript);
+  if (!projectMetadata.value) {
+    return;
+  }
   projectMetadata.value.updatedAt = dayjs().toISOString();
   await projectApi.saveProjectMetadata(projectId.value, projectMetadata.value);
 };
@@ -504,6 +504,9 @@ const saveMulmoScriptDebounced = useDebounceFn(saveMulmoScript, 1000);
 
 const saveProjectMetadata = async (options: { updateTimestamp?: boolean } = {}) => {
   const { updateTimestamp = true } = options;
+  if (!projectMetadata.value) {
+    return;
+  }
   if (updateTimestamp) {
     projectMetadata.value.updatedAt = dayjs().toISOString();
   }
@@ -513,6 +516,9 @@ const saveProjectMetadata = async (options: { updateTimestamp?: boolean } = {}) 
 const saveProjectMetadataDebounced = useDebounceFn(saveProjectMetadata, 1000);
 
 const handleUpdateChatMessages = (messages: ChatMessage[]) => {
+  if (!projectMetadata.value) {
+    return;
+  }
   projectMetadata.value.chatMessages = messages;
   saveProjectMetadataDebounced();
 };
@@ -523,6 +529,9 @@ const handleUpdateProjectMetadata = (updatedMetadata: ProjectMetadata) => {
 };
 
 const handleUpdateScriptEditorActiveTab = async (tab: ScriptEditorTab) => {
+  if (!projectMetadata.value) {
+    return;
+  }
   projectMetadata.value.scriptEditorActiveTab = tab;
   await projectApi.saveProjectScript(projectId.value, mulmoScriptHistoryStore.currentMulmoScript);
   saveProjectMetadata({ updateTimestamp: false });
@@ -557,6 +566,9 @@ const handleAudioGenerated = async (index: number, beatId: string) => {
 };
 
 const handleUpdateMulmoViewerActiveTab = (tab: MulmoViewerTab) => {
+  if (!projectMetadata.value) {
+    return;
+  }
   projectMetadata.value.mulmoViewerActiveTab = tab;
   saveProjectMetadata({ updateTimestamp: false });
 };
@@ -574,6 +586,9 @@ const formatAndPushHistoryMulmoScript = () => {
     // push store //
   } else {
     const current = mulmoScriptHistoryStore.currentMulmoScript;
+    if (!current) {
+      return;
+    }
     if (!current["$mulmocast"] || !current["beats"] || !current["lang"]) {
       if (!current["$mulmocast"]) {
         current["$mulmocast"] = {
@@ -699,13 +714,13 @@ const generatingMessage = computed(() => {
     return "";
   }
   const ret: string[] = [];
-  Object.keys(data["artifact"] ?? {}).forEach((key: SessionType) => {
-    if (data["artifact"][key]) {
+  Object.entries(data["artifact"] ?? {}).forEach(([key, isActive]) => {
+    if (isActive) {
       ret.push(t(`notify.task.${key}`));
     }
   });
-  Object.keys(data["beat"] ?? {}).forEach((beatSessionType: BeatSessionType) => {
-    if (data["beat"][beatSessionType] && Object.values(data["beat"][beatSessionType]).some((value) => value)) {
+  Object.entries(data["beat"] ?? {}).forEach(([beatSessionType, beatStates]) => {
+    if (beatStates && Object.values(beatStates).some((value) => value)) {
       /*
       const indexes = Object.keys(data["beat"][beatSessionType])
         .filter((index: string) => {
@@ -728,7 +743,7 @@ const ConcurrentTaskStatusMessageComponent = getConcurrentTaskStatusMessageCompo
   generatingMessage,
 );
 
-const toastId = ref<null | string>(null);
+const toastId = ref<null | string | number>(null);
 watch(
   generatingMessage,
   (value) => {

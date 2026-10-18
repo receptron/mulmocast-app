@@ -16,7 +16,7 @@ export const downloadFile = async (projectId: string, mediaType: string, mimeTyp
   }
 };
 
-export const useMediaContents = (mediaType: string, mimeType: string, callback: () => void) => {
+export const useMediaContents = (mediaType: string, mimeType: string | undefined, callback: () => void) => {
   const mediaUrl = ref("");
   const bufferLength = ref(0);
   const updateResources = async (projectId: string) => {

@@ -55,6 +55,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { ScrollArea } from "@/components/ui";
 import { useI18n } from "vue-i18n";
 import { bufferToUrl } from "@/lib/utils";
+import { isArrayBufferUint8Array } from "@/lib/type_guards";
 
 const { t } = useI18n();
 
@@ -96,7 +97,7 @@ const fetchImages = async () => {
     imageItems.value = props.materialKeys.map((key) => ({
       key,
       previewUrl: refs[key]
-        ? bufferToUrl(refs[key] instanceof Uint8Array ? refs[key] : new Uint8Array(refs[key]))
+        ? bufferToUrl(isArrayBufferUint8Array(refs[key]) ? refs[key] : new Uint8Array(refs[key]))
         : null,
     }));
   } catch (error) {

@@ -2,7 +2,7 @@
   <Label class="mb-1 block">{{ t("beat.markdown.label") }}</Label>
   <Textarea
     :placeholder="t('beat.markdown.placeholder')"
-    :model-value="Array.isArray(beat.image?.markdown) ? beat.image?.markdown.join('\n') : beat.image?.markdown"
+    :model-value="Array.isArray(markdownImage?.markdown) ? markdownImage?.markdown.join('\n') : markdownImage?.markdown"
     @update:model-value="(value) => update('image.markdown', String(value).split('\n'))"
     @blur="save"
     class="font-mono"
@@ -15,6 +15,7 @@
 import { computed } from "vue";
 import { Label, Textarea } from "@/components/ui";
 import type { MulmoBeat } from "mulmocast/browser";
+import { imageOfType } from "@/lib/beat_util";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
@@ -23,6 +24,7 @@ interface Props {
   isBeginner: boolean;
 }
 const props = defineProps<Props>();
+const markdownImage = computed(() => imageOfType(props.beat, "markdown"));
 const emit = defineEmits(["update", "save"]);
 
 const update = (path: string, value: unknown) => {
@@ -31,8 +33,9 @@ const update = (path: string, value: unknown) => {
 
 const isEmpty = computed(() => {
   const text =
-    (Array.isArray(props.beat.image?.markdown) ? props.beat.image?.markdown.join("\n") : props.beat.image?.markdown) ??
-    "";
+    (Array.isArray(markdownImage.value?.markdown)
+      ? markdownImage.value?.markdown.join("\n")
+      : markdownImage.value?.markdown) ?? "";
   return !text?.trim();
 });
 

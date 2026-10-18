@@ -42,6 +42,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import type { AcceptableValue } from "reka-ui";
 import { Card, Label, Input } from "@/components/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MulmoError from "./mulmo_error.vue";
@@ -62,7 +63,14 @@ const emit = defineEmits<{
   update: [value: { width: number; height: number }];
 }>();
 
-const handlePresetChange = (value: keyof typeof PRESET_CANVAS_SIZE | "custom") => {
+const isCanvasPresetOption = (value: AcceptableValue): value is keyof typeof PRESET_CANVAS_SIZE | "custom" => {
+  return value === "custom" || (typeof value === "string" && value in PRESET_CANVAS_SIZE);
+};
+
+const handlePresetChange = (value: AcceptableValue) => {
+  if (!isCanvasPresetOption(value)) {
+    return;
+  }
   selectedPreset.value = value;
   if (value !== "custom" && value in PRESET_CANVAS_SIZE) {
     showCustom.value = false;

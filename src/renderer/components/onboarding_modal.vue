@@ -195,7 +195,7 @@ import {
   LLM_GEMINI_DEFAULT_CONFIG,
 } from "../../shared/constants";
 import { useMulmoGlobalStore } from "../store";
-import { Settings } from "../../main/settings_manager";
+import type { Settings } from "../../types/index";
 
 const { t, locale } = useI18n();
 const globalStore = useMulmoGlobalStore();

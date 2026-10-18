@@ -16,10 +16,10 @@
           <ChevronLeft class="h-4 w-4" />
         </Button>
         <MediaPlayer
-          :videoWithAudioSource="lipSyncFiles?.[currentBeat?.id]"
-          :videoSource="movieFiles?.[currentBeat?.id]"
-          :imageSource="imageFiles?.[currentBeat?.id]"
-          :audioSource="audioFiles[currentLanguage]?.[currentBeat?.id]"
+          :videoWithAudioSource="valueForKey(lipSyncFiles, currentBeat?.id)"
+          :videoSource="valueForKey(movieFiles, currentBeat?.id)"
+          :imageSource="valueForKey(imageFiles, currentBeat?.id)"
+          :audioSource="valueForKey(audioFiles[currentLanguage], currentBeat?.id)"
           @play="handlePlay"
           @pause="handlePause"
           @ended="handleEnded"
@@ -39,10 +39,10 @@
 
       <MediaPlayerDummy
         v-if="nextBeat"
-        :videoWithAudioSource="lipSyncFiles?.[nextBeat?.id]"
-        :videoSource="movieFiles?.[nextBeat?.id]"
-        :imageSource="imageFiles?.[nextBeat?.id]"
-        :audioSource="audioFiles[currentLanguage]?.[nextBeat?.id]"
+        :videoWithAudioSource="valueForKey(lipSyncFiles, nextBeat?.id)"
+        :videoSource="valueForKey(movieFiles, nextBeat?.id)"
+        :imageSource="valueForKey(imageFiles, nextBeat?.id)"
+        :audioSource="valueForKey(audioFiles[currentLanguage], nextBeat?.id)"
         class="hidden"
       />
 
@@ -69,7 +69,7 @@
         <Button
           variant="outline"
           @click="generateLocalizeAudio"
-          v-if="!audioFiles[currentLanguage]?.[currentBeat?.id]"
+          v-if="!valueForKey(audioFiles[currentLanguage], currentBeat?.id)"
           >{{ t("ui.actions.generateAudio") }}</Button
         >
         <label class="flex items-center gap-2">
@@ -88,10 +88,11 @@
 import { ref, watch, computed, onMounted, onBeforeUnmount } from "vue";
 import { useI18n } from "vue-i18n";
 import { FileImage, ChevronLeft, ChevronRight } from "@lucide/vue";
-import { type MultiLingualTexts, beatId } from "mulmocast/browser";
+import { type MulmoStudioMultiLingual, beatId } from "mulmocast/browser";
 import { sleep } from "graphai";
 
 import { bufferToUrl } from "@/lib/utils";
+import { valueForKey } from "@/lib/key_lookup";
 import { Button, Checkbox } from "@/components/ui";
 
 import MediaPlayer from "./media_player.vue";
@@ -110,7 +111,7 @@ const mulmoEventStore = useMulmoEventStore();
 interface Props {
   projectId: string;
   project: Project;
-  mulmoMultiLinguals?: MultiLingualTexts;
+  mulmoMultiLinguals?: MulmoStudioMultiLingual;
 }
 const props = defineProps<Props>();
 
@@ -122,7 +123,7 @@ const currentPage = ref(0);
 const audioRef = ref();
 const autoPlay = ref(true);
 
-const boxRef = ref(null);
+const boxRef = ref<HTMLElement | null>(null);
 const boxHeight = ref(0);
 const ratio = 0.5625; // 16:9（height = width * 9/16）
 

@@ -56,8 +56,12 @@
           :value="voice.id"
         >
           {{
-            voice.name ||
-            t(["voiceList", localizedSpeaker?.provider || defaultSpeechProvider, voice.key ?? voice.id].join("."))
+            voiceNameOf(voice) ||
+            t(
+              ["voiceList", localizedSpeaker?.provider || defaultSpeechProvider, voiceKeyOf(voice) ?? voice.id].join(
+                ".",
+              ),
+            )
           }}
         </SelectItem>
       </SelectContent>
@@ -75,13 +79,13 @@
       </SelectTrigger>
       <SelectContent>
         <SelectItem v-for="decoration in getDecorationList('kotodama')" :key="decoration.id" :value="decoration.id">
-          {{ t(["decorationList", "kotodama", decoration.key ?? decoration.id].join(".")) }}
+          {{ t(["decorationList", "kotodama", decoration.key].join(".")) }}
         </SelectItem>
       </SelectContent>
     </Select>
   </div>
   <div v-if="audioPreviewUrl">
-    <audio :src="audioPreviewUrl" controls @loadedmetadata="(e) => (e.target.volume = 0.3)" />
+    <audio :src="audioPreviewUrl" controls @loadedmetadata="setPreviewVolume" />
   </div>
   <div v-if="providerSupportsSpeed(localizedSpeaker.provider)">
     <!-- speed -->
@@ -219,10 +223,13 @@ import {
 } from "../../../utils";
 
 import { useI18n } from "vue-i18n";
+import type { AcceptableValue } from "reka-ui";
 const { t } = useI18n();
 
+const PREVIEW_VOLUME = 0.3;
+
 const props = defineProps<{
-  speaker?: Speaker;
+  speaker: Speaker;
   name: string;
   settingPresence: Record<string, boolean>;
 }>();
@@ -232,8 +239,8 @@ const emit = defineEmits<{
 }>();
 
 const providers = Object.keys(VOICE_LISTS);
-const DEFAULT_VOICE_IDS: Record<string, string> = providers.reduce((tmp, provider) => {
-  tmp[provider] = VOICE_LISTS[provider][0].id;
+const DEFAULT_VOICE_IDS = Object.entries(VOICE_LISTS).reduce<Record<string, string>>((tmp, [provider, voices]) => {
+  tmp[provider] = voices[0].id;
   return tmp;
 }, {});
 
@@ -256,6 +263,22 @@ const getVoiceList = (provider: string) => {
   }
 
   return baseVoices;
+};
+
+type VoiceOption = ReturnType<typeof getVoiceList>[number];
+
+const voiceKeyOf = (voice: VoiceOption | undefined): string | undefined => {
+  return voice && "key" in voice ? voice.key : undefined;
+};
+
+const voiceNameOf = (voice: VoiceOption): string | undefined => {
+  return "name" in voice ? voice.name : undefined;
+};
+
+const setPreviewVolume = (event: Event) => {
+  if (event.target instanceof HTMLMediaElement) {
+    event.target.volume = PREVIEW_VOLUME;
+  }
 };
 
 type DecorationProvider = keyof typeof DECORATION_LISTS;
@@ -286,11 +309,11 @@ const localizedSpeaker = computed(() => {
 
 const modelList = computed(() => {
   const ttsProvider = provider2TTSAgent[localizedSpeaker.value.provider as TTSProvider];
-  return ttsProvider?.models || [];
+  return (ttsProvider && "models" in ttsProvider ? ttsProvider.models : undefined) || [];
 });
 const currentModel = computed(() => {
   const ttsProvider = provider2TTSAgent[localizedSpeaker.value.provider as TTSProvider];
-  return localizedSpeaker.value.model ?? ttsProvider.defaultModel;
+  return localizedSpeaker.value.model ?? ("defaultModel" in ttsProvider ? ttsProvider.defaultModel : undefined);
 });
 
 const currentDecoration = computed(() => {
@@ -329,15 +352,15 @@ const audioPreviewUrl = computed(() => {
       }
 
       // Fall back to built-in voices
-      const voice = getVoiceList(provider).find((a) => a.id === voiceId);
-      if (!voice?.key) return null;
-      return `${baseUrl}/${provider}/${currentModel.value}/${voice.key}.mp3`;
+      const voiceKey = voiceKeyOf(getVoiceList(provider).find((a) => a.id === voiceId));
+      if (!voiceKey) return null;
+      return `${baseUrl}/${provider}/${currentModel.value}/${voiceKey}.mp3`;
     }
 
     case "kotodama": {
-      const voice = getVoiceList(provider).find((a) => a.id === voiceId);
-      if (!voice?.key) return null;
-      return `${baseUrl}/${provider}/${voice.key}_${currentDecoration.value}.mp3`;
+      const voiceKey = voiceKeyOf(getVoiceList(provider).find((a) => a.id === voiceId));
+      if (!voiceKey) return null;
+      return `${baseUrl}/${provider}/${voiceKey}_${currentDecoration.value}.mp3`;
     }
 
     default:
@@ -358,11 +381,16 @@ const handleSpeakerVoiceChange = (voiceId: string) => {
   }
 };
 
-const handleProviderChange = async (provider: string) => {
+const handleProviderChange = async (provider: AcceptableValue) => {
+  if (typeof provider !== "string") {
+    return;
+  }
   type ProviderKey = keyof typeof provider2TTSAgent;
   const providerConfig = provider2TTSAgent[provider as ProviderKey];
 
-  const voiceId = providerConfig?.defaultVoice || DEFAULT_VOICE_IDS[provider];
+  const voiceId =
+    (providerConfig && "defaultVoice" in providerConfig ? providerConfig.defaultVoice : undefined) ||
+    DEFAULT_VOICE_IDS[provider];
   const updatedSpeakers: Partial<Speaker> = {
     provider,
     voiceId,
@@ -370,9 +398,11 @@ const handleProviderChange = async (provider: string) => {
   };
 
   // Set default decoration for kotodama
-  if (provider === "kotodama" && providerConfig?.defaultDecoration) {
+  const defaultDecoration =
+    providerConfig && "defaultDecoration" in providerConfig ? providerConfig.defaultDecoration : undefined;
+  if (provider === "kotodama" && defaultDecoration) {
     updatedSpeakers.speechOptions = {
-      decoration: providerConfig.defaultDecoration,
+      decoration: defaultDecoration,
     };
   }
 
@@ -388,7 +418,7 @@ const handleProviderChange = async (provider: string) => {
   }
 };
 
-const handleSpeechOptionsChange = (key: string, value: string) => {
+const handleSpeechOptionsChange = (key: string, value: AcceptableValue) => {
   // 空文字列の場合は削除
   if (isNull(value) || value === "") {
     const newSpeechOptions = { ...props.speaker?.speechOptions };

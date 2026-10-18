@@ -1,5 +1,5 @@
 import type { MulmoScript, MulmoPresentationStyle } from "mulmocast";
-import type { ScriptEditorTab, MulmoViewerTab } from "../shared/constants";
+import type { ScriptEditorTab, MulmoViewerTab, EnvKey } from "../shared/constants";
 
 export type ChatMessage = {
   role: "user" | "assistant";
@@ -32,6 +32,7 @@ export type MulmoProgressLog<T = unknown> = {
   projectId: string;
   type: string;
   data: T;
+  cause?: unknown;
 };
 
 export type MulmoError = {
@@ -83,7 +84,10 @@ export type Settings = {
   AZURE_OPENAI?: AzureOpenAIConfig;
   VERTEX_AI?: VertexAIConfig;
   CONCURRENCY?: ConcurrencyConfig;
-};
+  SORT_BY?: string;
+  SORT_ORDER?: string;
+  VIEW_MODE?: string;
+} & Partial<Record<EnvKey, string>>;
 
 export type ConcurrencyConfig = {
   imageMovie?: number;

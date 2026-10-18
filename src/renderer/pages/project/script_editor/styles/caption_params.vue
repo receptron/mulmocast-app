@@ -57,6 +57,7 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
+import type { AcceptableValue } from "reka-ui";
 
 import { Card, Label, Textarea } from "@/components/ui";
 import { Switch } from "@/components/ui/switch";
@@ -114,8 +115,8 @@ const delimitersCategories = computed(() => {
   return { fullWidth, halfWidth, other };
 });
 
-const handleLangInput = (value: string) => {
-  if (value && value !== "__undefined__") {
+const handleLangInput = (value: AcceptableValue) => {
+  if (typeof value === "string" && value && value !== "__undefined__") {
     emit("update", {
       ...props.captionParams,
       lang: value,

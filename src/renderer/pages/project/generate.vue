@@ -83,7 +83,9 @@ watch(
 );
 
 const generateContents = () => {
-  const keys = Object.keys(options.value).filter((key) => options.value[key]);
+  const keys = Object.entries(options.value)
+    .filter(([, isSelected]) => isSelected)
+    .map(([key]) => key);
   notifyProgress(window.electronAPI.mulmoHandler("mulmoActionRunner", props.projectId, keys), {
     successMessage: t("notify.content.successMessage"),
     errorMessage: t("notify.content.errorMessage"),

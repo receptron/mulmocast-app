@@ -72,7 +72,7 @@ import MediaBackupDialog from "./beat_editors/media_backup_dialog.vue";
 interface Props {
   beat: MulmoBeat;
   index: number;
-  movieFile: ArrayBuffer | string | null;
+  movieFile: ArrayBuffer | string | null | undefined;
   isMovieGenerating: boolean;
   enableMovieGenerate: boolean;
   enableMovie: boolean;
