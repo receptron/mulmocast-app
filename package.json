@@ -63,7 +63,7 @@
     "@vue/eslint-config-typescript": "^14.9.0",
     "bufferutil": "^4.1.0",
     "dotenv": "^18.0.8",
-    "electron": "44.9.0",
+    "electron": "44.9.1",
     "electron-devtools-installer": "^4.0.0",
     "esbuild": "^0.28.2",
     "eslint": "^10.13.0",
